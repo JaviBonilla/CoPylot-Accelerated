@@ -24,55 +24,55 @@ perf sampling was attempted but software events are blocked by perf_event_parano
 
 | Function | Calls/simulate | Inclusive ms | Exclusive ms | Inclusive % |
 |---|---:|---:|---:|---:|
-| API | 1 | 71.428 | 0.257 | 100.00 |
-| PerformanceSimulationPrep | 1 | 9.381 | 0.025 | 13.13 |
-| calcHeliostatShadows | 1 | 0.177 | 0.177 | 0.25 |
-| HermiteFluxSimulation | 1 | 61.612 | 0.001 | 86.26 |
-| AnalyticalFluxSimulation | 1 | 61.585 | 0.005 | 86.22 |
-| CalcDimensionalFluxProfiles | 1 | 0.026 | 0.026 | 0.04 |
-| Flux::fluxDensity | 1 | 61.580 | 61.580 | 86.21 |
-| Flux::imagePlaneIntercept | 1000 | 6.532 | 6.532 | 9.15 |
-| UpdateNeighborList | 1 | 0.058 | 0.058 | 0.08 |
-| SolarField::Simulate | 1 | 9.356 | 1.354 | 13.10 |
-| ShadingBlockingNeighbors | 1000 | 1.411 | 1.411 | 1.98 |
+| API | 1 | 68.058 | 0.257 | 100.00 |
+| PerformanceSimulationPrep | 1 | 9.137 | 0.025 | 13.43 |
+| calcHeliostatShadows | 1 | 0.163 | 0.163 | 0.24 |
+| HermiteFluxSimulation | 1 | 58.501 | 0.001 | 85.96 |
+| AnalyticalFluxSimulation | 1 | 58.481 | 0.004 | 85.93 |
+| CalcDimensionalFluxProfiles | 1 | 0.019 | 0.019 | 0.03 |
+| Flux::fluxDensity | 1 | 58.477 | 58.477 | 85.92 |
+| Flux::imagePlaneIntercept | 1000 | 6.371 | 6.371 | 9.36 |
+| UpdateNeighborList | 1 | 0.053 | 0.053 | 0.08 |
+| SolarField::Simulate | 1 | 9.112 | 1.298 | 13.39 |
+| ShadingBlockingNeighbors | 1000 | 1.389 | 1.389 | 2.04 |
 
-Profile/original median wall-time ratio: 1.016. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
+Profile/original median wall-time ratio: 1.004. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
 
 ### medium
 
 | Function | Calls/simulate | Inclusive ms | Exclusive ms | Inclusive % |
 |---|---:|---:|---:|---:|
-| API | 1 | 348.442 | 0.847 | 100.00 |
-| PerformanceSimulationPrep | 1 | 51.284 | 0.135 | 14.72 |
-| calcHeliostatShadows | 1 | 0.858 | 0.858 | 0.25 |
-| HermiteFluxSimulation | 1 | 295.452 | 0.001 | 84.79 |
-| AnalyticalFluxSimulation | 1 | 295.329 | 0.005 | 84.76 |
-| CalcDimensionalFluxProfiles | 1 | 0.122 | 0.122 | 0.04 |
-| Flux::fluxDensity | 1 | 295.324 | 295.324 | 84.76 |
-| Flux::imagePlaneIntercept | 5000 | 33.110 | 33.110 | 9.50 |
-| UpdateNeighborList | 1 | 0.312 | 0.312 | 0.09 |
-| SolarField::Simulate | 1 | 51.149 | 6.655 | 14.68 |
-| ShadingBlockingNeighbors | 5000 | 11.072 | 11.072 | 3.18 |
+| API | 1 | 337.166 | 0.794 | 100.00 |
+| PerformanceSimulationPrep | 1 | 49.124 | 0.114 | 14.57 |
+| calcHeliostatShadows | 1 | 0.843 | 0.843 | 0.25 |
+| HermiteFluxSimulation | 1 | 286.405 | 0.001 | 84.94 |
+| AnalyticalFluxSimulation | 1 | 286.280 | 0.006 | 84.91 |
+| CalcDimensionalFluxProfiles | 1 | 0.125 | 0.125 | 0.04 |
+| Flux::fluxDensity | 1 | 286.274 | 286.274 | 84.91 |
+| Flux::imagePlaneIntercept | 5000 | 31.790 | 31.790 | 9.43 |
+| UpdateNeighborList | 1 | 0.320 | 0.320 | 0.09 |
+| SolarField::Simulate | 1 | 49.010 | 6.487 | 14.54 |
+| ShadingBlockingNeighbors | 5000 | 10.413 | 10.413 | 3.09 |
 
-Profile/original median wall-time ratio: 1.057. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
+Profile/original median wall-time ratio: 1.027. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
 
 ### large
 
 | Function | Calls/simulate | Inclusive ms | Exclusive ms | Inclusive % |
 |---|---:|---:|---:|---:|
-| API | 1 | 721.898 | 1.813 | 100.00 |
-| PerformanceSimulationPrep | 1 | 109.401 | 0.251 | 15.15 |
-| calcHeliostatShadows | 1 | 1.794 | 1.794 | 0.25 |
-| HermiteFluxSimulation | 1 | 608.890 | 0.001 | 84.35 |
-| AnalyticalFluxSimulation | 1 | 608.643 | 0.006 | 84.31 |
-| CalcDimensionalFluxProfiles | 1 | 0.246 | 0.246 | 0.03 |
-| Flux::fluxDensity | 1 | 608.637 | 608.637 | 84.31 |
-| Flux::imagePlaneIntercept | 10000 | 66.672 | 66.672 | 9.24 |
-| UpdateNeighborList | 1 | 0.620 | 0.620 | 0.09 |
-| SolarField::Simulate | 1 | 109.149 | 13.737 | 15.12 |
-| ShadingBlockingNeighbors | 10000 | 28.121 | 28.121 | 3.90 |
+| API | 1 | 710.545 | 1.708 | 100.00 |
+| PerformanceSimulationPrep | 1 | 107.837 | 0.237 | 15.18 |
+| calcHeliostatShadows | 1 | 1.754 | 1.754 | 0.25 |
+| HermiteFluxSimulation | 1 | 599.245 | 0.001 | 84.34 |
+| AnalyticalFluxSimulation | 1 | 599.010 | 0.006 | 84.30 |
+| CalcDimensionalFluxProfiles | 1 | 0.235 | 0.235 | 0.03 |
+| Flux::fluxDensity | 1 | 599.004 | 599.004 | 84.30 |
+| Flux::imagePlaneIntercept | 10000 | 65.949 | 65.949 | 9.28 |
+| UpdateNeighborList | 1 | 0.647 | 0.647 | 0.09 |
+| SolarField::Simulate | 1 | 107.600 | 13.501 | 15.14 |
+| ShadingBlockingNeighbors | 10000 | 27.503 | 27.503 | 3.87 |
 
-Profile/original median wall-time ratio: 1.064. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
+Profile/original median wall-time ratio: 1.063. This mixes timer overhead and host variability; it is not a calibrated pure instrumentation overhead estimate.
 
 ## Hypotheses and implications
 

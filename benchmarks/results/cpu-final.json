@@ -1,0 +1,375 @@
+{
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "cpu": "12th Gen Intel(R) Core(TM) i5-1240P",
+  "threads": 1,
+  "repos": {
+    "SolarPILOT": "53640fdfd671f06255a6b35db2e139ea0d6d1b24",
+    "ssc": "9ce2c8c6424bbc8e91718734404266c8137170ae",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "dirty_tracked_sources": {
+    "SolarPILOT": false,
+    "ssc": false,
+    "SolTrace": false
+  },
+  "source_sha256": {
+    "CMakeLists.txt": "c6c09b062a89557ca106312c0f2bae08dd450065107d0df639d937355a1ca85b",
+    "benchmarks/cases.py": "599eb5208fad36538f5d3d9597cd5eacdeccab51664458816713892d6324d998",
+    "SolarPILOT/deploy/api/copylot.py": "02dce014d4b53ee422af47544cc9cbe295349812ca4d273d264938ff7de34c28",
+    "ssc/solarpilot/API_structures.cpp": "c490e477c659570ccc6e1bd36af2eabaaf1e730c9b148fd86fd3075b6404c2e2",
+    "ssc/solarpilot/API_structures.h": "36c0cefb7e4ec728fb1708f4c802f1331d8e26647c7932bd36abb3989938cec1",
+    "ssc/solarpilot/Ambient.cpp": "e22aa86acb5e60d883dc3a3c6c918c635b747d0dbfa995534173decfaf8bb61b",
+    "ssc/solarpilot/Ambient.h": "b101f000e03154eb069829160e06b55782dc15ef2255ba99d83be5dda02b4db6",
+    "ssc/solarpilot/AutoPilot_API.cpp": "2f67f7c68b50dd8eee9340ce1e710d5403b351527fa338002cc8c5870fa67311",
+    "ssc/solarpilot/AutoPilot_API.h": "e165dc05147f4fcdfd840c06247ce1331c124c3046be50b5e41e057e229eaf0b",
+    "ssc/solarpilot/CMakeLists.txt": "3752e6612e3f55aa2df57b05c90bbc3128462ea8ef43ef5d2cb98d33fa63e3bb",
+    "ssc/solarpilot/CoPilot_API.cpp": "d7d762a4ad4a7052c06d96616a68c8049551ddc4e14c18e39dfd54234056a997",
+    "ssc/solarpilot/CoPilot_API.h": "eb595d8c3d4e602e5fbf7bd3cd1fd314b630a7b9426c989473f8258092e6a62a",
+    "ssc/solarpilot/ComputeBackend.cpp": "437e2674eb01d3b541c8e0ca260c30f4a6b001978e0894bfac3f7df34c07d09d",
+    "ssc/solarpilot/ComputeBackend.h": "e635395ee1950d215f6f9cc2a8ea58e54a39ce3b784bcd57f449cba69ff2d5d5",
+    "ssc/solarpilot/CoreProfile.cpp": "7f9ad58f751304092ab0b76fb57a263537d042450ec2c774f31bd1bb4a87c308",
+    "ssc/solarpilot/CoreProfile.h": "b2fda293fbd3f2fb64c9deb349a70e354eab2ad03eb2dab6591c4380245e8707",
+    "ssc/solarpilot/CudaProbe.cu": "9a6a8c839b18aafa978acc96c31ab5739174208e0af73eb46376cb215b3ddfb6",
+    "ssc/solarpilot/Financial.cpp": "d2c77e31012934bf56681c2b257620ecffe4ba8000da53d32095ca964bed4704",
+    "ssc/solarpilot/Financial.h": "ef664ba7648dcac63b30c7ac8398d5d8d089a47f5a4d1640fbb69ae968e5aa85",
+    "ssc/solarpilot/Flux.cpp": "fac85c70b46abae4fc4e7767267e8b75890b79039fd89e01840f9c36157acbdb",
+    "ssc/solarpilot/Flux.h": "8de86f5c4c0144928cc3209bfa41ace87b0e7039f6512c78f88068ffc59b3815",
+    "ssc/solarpilot/Heliostat.cpp": "2f4004368c3b463183059f37769ef54bc2dd2f25428b13b99afd326747e3b1ec",
+    "ssc/solarpilot/Heliostat.h": "3ce77e4ab0ab69dfb8e48047ce64b134627e5a7451ea7bd6f10add5e786eafd5",
+    "ssc/solarpilot/IOUtil.cpp": "df01420162ef61dcc3b76e053ceb8930284e2ec0a228143d9a3f984babfdc21f",
+    "ssc/solarpilot/IOUtil.h": "93dbae27c0ba34c129020dbdeb87fa86b299f193a291ae85b41fda6a393faf1a",
+    "ssc/solarpilot/Land.cpp": "c64f8504e3db1f63ff3742969b5a38f87b551adfe3c68899232a5423c427bed3",
+    "ssc/solarpilot/Land.h": "86479ff7fb2270290db5335bc522e630195e1a38786f21db8cb3f7a69328919d",
+    "ssc/solarpilot/LayoutSimulateThread.cpp": "06dd2cfed7947b9ac60ff3d00803a3461afc6651f3c3927eac10cfb99f874469",
+    "ssc/solarpilot/LayoutSimulateThread.h": "c26fdfb30e70d9ef66150b5a5e1705fd269086ff72d1ad30c017c8df2b7fc42d",
+    "ssc/solarpilot/MultiRecOptimize.cpp": "1cc4cced3897fc6c2aa24afec272d24ca3804941f4f22708aed5efe6ed86656e",
+    "ssc/solarpilot/MultiRecOptimize.h": "4e45a6309ba997fce0842850839aa030fa546bce76b09b0661c6698fa4f89cd6",
+    "ssc/solarpilot/OpticalMesh.cpp": "4b9d5be3b9fcfada088cfb7f8aafdb355b4facb2abdedb2efdbc365d233e38b8",
+    "ssc/solarpilot/OpticalMesh.h": "47865d02b7f168b2561e1ddb112a9b5d71428a22bd01a2c690934d07b850af1c",
+    "ssc/solarpilot/Receiver.cpp": "645ee73b61aea344de2818649cddedfb03aea07e3622f1c1f47a8f29a44e8781",
+    "ssc/solarpilot/Receiver.h": "984f422eb8842afef0cb753469e76674bdaa27ff7970378e923e3268935c13dd",
+    "ssc/solarpilot/STObject.cpp": "6c4ae4f6f62a8a4da93355327e56a51213ee1b4e098f3ca647027f789aa0d19f",
+    "ssc/solarpilot/STObject.h": "26001e2b666525a76bd0601b703e46b944d507701490c02f8dccd217a95a6f83",
+    "ssc/solarpilot/STSimulateThread.cpp": "56e822b576afe8acda46c084f49bb6ef444ecffb4c6fd9cead7626ff5b182577",
+    "ssc/solarpilot/STSimulateThread.h": "1d091385df56cce2296cc4e9425b674d0a4db8161dc01f2e72123b250c0c3b0c",
+    "ssc/solarpilot/SolarField.cpp": "ef32fc9d16d3b16c303ce71d62ad9cdcef6d619e7781116cb20f7bafa428f7db",
+    "ssc/solarpilot/SolarField.h": "c3e95285791be4010a1870c4f4745c32cf071bd8beeb3498a9e64c79d5db7fc5",
+    "ssc/solarpilot/Toolbox.cpp": "42dfb03c8b2b197265ac2e95b72fc0b15c50fe9a85b1e9d3669dcbc0d341179c",
+    "ssc/solarpilot/Toolbox.h": "e8ab9deb8de21c2a4a6e38d15336e505ac17cd785cc01f925e86e5135115dfce",
+    "ssc/solarpilot/definitions.cpp": "3f18a94142da83d495c2462a16ff514991a3970442cc37baa8981ef1684e0422",
+    "ssc/solarpilot/definitions.h": "70d0a26cae0b4c330841199aa6fb0c01e809de20b498188f90aa961405a4a561",
+    "ssc/solarpilot/exceptions.hpp": "833635a2c0a00607c32f19bc87cb9741a496e62a2e779e2cc908f755a8adbaf5",
+    "ssc/solarpilot/fluxsim.cpp": "47f5e28575710fe2da328ad5a0696a992568033d58dad9304bc81646216c4c74",
+    "ssc/solarpilot/fluxsim.h": "74145a02549a6d7dd8d9bd9dff0898dd1335ade7eb9c6555411495f428a088dd",
+    "ssc/solarpilot/heliodata.cpp": "54feca5c2a81bd838324c1e511a279bd4f2cc2efc80987024c668b9fad6fe58d",
+    "ssc/solarpilot/heliodata.h": "6ebf460016a951ad7f078b5493243c437454aba382da31b07185329c2061e4bd",
+    "ssc/solarpilot/interop.cpp": "df778dbaaabb96d6c655d41d6f509803c8776be8e2376a392b9d79e599520a27",
+    "ssc/solarpilot/interop.h": "c831be80c00f1a3d34fad3268a4738190c009f4d4eba69ce9ed370726d1af77b",
+    "ssc/solarpilot/mod_base.cpp": "87aa93bb009b8a95e8101abe8d4de52e97ca0a909e2e35c2561d3d2b9ff3f36d",
+    "ssc/solarpilot/mod_base.h": "8210fe0e1c33cbb6c4eb6684a75d3ca52fcc502acab93e5f0b8ee6ebff4e4ab6",
+    "ssc/solarpilot/optimize.cpp": "a6456c36302cd2be3ede4b87383c2db75e6641a64ae4d136370da42d0f6b109d",
+    "ssc/solarpilot/optimize.h": "8f4578036a3137f7cda58545a5adf65c293fd8df033945f757220354c43252f1",
+    "ssc/solarpilot/rapidxml.hpp": "c04935cc8a3ee13c8880a789da95af673186d013fc0d64f8eb074dfdce8c4e30",
+    "ssc/solarpilot/rapidxml_iterators.hpp": "05091ab5d98aa49d9eab6328cdfe9aed0947bc9f66ca54d6fc6b204537ea4d3f",
+    "ssc/solarpilot/rapidxml_print.hpp": "3a90dfc636cc27bbf33100222265121b504de3c2c2db447b5fdec627df612758",
+    "ssc/solarpilot/rapidxml_utils.hpp": "c03fa975a81609af53329f3e69dc3f3d110efde393eabe5c5f77b4be6c1fd9d1",
+    "ssc/solarpilot/solpos.cpp": "f6cee89b822368e7440d6db25dff9a76039c6bbfe42d2c84ba95213d4fe9ed2b",
+    "ssc/solarpilot/solpos00.h": "4f32e24bc177b033f4f8e57601bf943c2fb2c58d5e15a0fad857feb822cd24a6",
+    "ssc/solarpilot/sort_method.h": "c7ea432bc9478bfc24de1fcb8ccb9552f4edb94dfed3065fae8390a2103f323c",
+    "ssc/solarpilot/string_util.cpp": "962a64bc40a781cdb17e55f870078268f670c71028056490aa1b4d1fcfdf76e0",
+    "ssc/solarpilot/string_util.h": "2bbb75f59243c731181764f1cb0a94f06dabd8371c44b3479fdf097327767c36",
+    "SolTrace/coretrace/CMakeLists.txt": "511adc814776cf19cfe4e01d542ba2e32e2a171fc7507937cc78161e067ec0ce",
+    "SolTrace/coretrace/apertureplane.cpp": "5e4cf3d0dd2400f72a354f5ce64bc8fba3346476f0d189946dd3a06f77577e9e",
+    "SolTrace/coretrace/determineelementintersectionnew.cpp": "c60a3d5f9bb6c96fe436ce11ec9a991b8063fad6462453613ed6e2f30e362d00",
+    "SolTrace/coretrace/dumpsys.cpp": "097ee1ee7fce1e8a993f99c14fcbdd84cb643055a9c07c2f767d1c53e8eb3043",
+    "SolTrace/coretrace/errors.cpp": "8268b92bc7d89c416799f35b0fd92d3265e8c6472209410db0a64760c7040e3f",
+    "SolTrace/coretrace/generateray.cpp": "ff3c8f448605185b907ea055aab384ee8f75a918edc1547373dd402b2d201b49",
+    "SolTrace/coretrace/hpvm.h": "31bdaf0df00d18ebadee6d2e30499a46d3db2343bfe31dccee6a84e2561cfbf8",
+    "SolTrace/coretrace/input.cpp": "2446feec5c3e410dcc34b421fdfcec59a59ebb5125c47ec3cb994244f6950d5d",
+    "SolTrace/coretrace/interaction.cpp": "3ecdf5773d5a2a85305ae0f587325f357ad8d810163f9b22253d53aa809a7db4",
+    "SolTrace/coretrace/interpolate.cpp": "2dd884dec3a8406b4a6d24d6f3ec36b082481ac8c87733ccc6f7270e2e3bf2f3",
+    "SolTrace/coretrace/interpolate.h": "1b074bd8fad7d6afe2ea5a2c9c66fc2ccfa7482ba65412a0c8fff7da6bee435c",
+    "SolTrace/coretrace/intersect.cpp": "9e3def1cd2d7485b136406ecbf68bb1d7c511bfef6a6f14c603242e0e0737fa5",
+    "SolTrace/coretrace/mathproc.cpp": "973f8726fc57b608dadb3d3cc6402680970594b138e041011b675010773cbad5",
+    "SolTrace/coretrace/mtrand.h": "347726784c8587d12eab4e5746e8acf10b2e8ac6ca11411f8f574a2702414198",
+    "SolTrace/coretrace/newzstartforcubicsplinesurf.cpp": "28d222b820bb2fbfefeea24b53e0349b274d34192731b75acf60cac9010a94ff",
+    "SolTrace/coretrace/procs.h": "5fcd0d80e226da56c83ef199433c60f0c13a424d9726488cd1b22901c5c4ca48",
+    "SolTrace/coretrace/quadricsurfaceclosedform.cpp": "cc51788119862ed444e0f58ea0bcfc75de3b1de7c25e5c9f9adc5fce26fd95b0",
+    "SolTrace/coretrace/raytrace.cpp": "b717f059c2064e53afbaecfd53d47cc8e9551f9ec4e343ca65df1d45042b7d3c",
+    "SolTrace/coretrace/root432.cpp": "324b103d9cdf49bc9ca6ab428b9e92f47a59485810b4ef06a9bbf9e183125594",
+    "SolTrace/coretrace/spencerandmurtysurfaceclosedform.cpp": "8b213a19ab9982c9213d5a28f9a4905e4d724efe2fe9c8124b29a4e2b9e0c43d",
+    "SolTrace/coretrace/stapi.cpp": "e18d5c6e98ee3690630cfc846402fa64e827dc7523fec570c0b7fe4383a4a2c2",
+    "SolTrace/coretrace/stapi.h": "29b57f37ae7a5bf28168f44b95cef40fcf75ead17cfab223e80d3dc3ac614ef8",
+    "SolTrace/coretrace/suntoprimarystage.cpp": "fa83d655db732e369f0382e9b75524431610a2393c60edc04af0925491e3567e",
+    "SolTrace/coretrace/surface.cpp": "e754ab60b2f881203fa20340ef6ac8cb8a3ca380e7e644eb90ebf6d25f6c2c2f",
+    "SolTrace/coretrace/surfacenormalerrors.cpp": "5c5bb3912d22bcb5f53f91a654ee3435e3cd8b0bbc9c4c5245b44ba57f552ce7",
+    "SolTrace/coretrace/surfacezatxypair.cpp": "2459adba2e2034c533e3bcfe20d4950be8732c2efc449f0c57525679e6b3b955",
+    "SolTrace/coretrace/torusclosedform.cpp": "f4284b305c60f2e84e118445e3fdb065e35e2e2ce00c80e33d9c80e2f638e290",
+    "SolTrace/coretrace/treemesh.cpp": "c7492e464eeb5921d18249108c2d3286bf9e0920f194afc43bded51d9cf69bca",
+    "SolTrace/coretrace/treemesh.h": "bf10e2f8feb0f019270a4c246a9b1e406f727d1d5267b88a63faef2ebfb6eb5c",
+    "SolTrace/coretrace/types.cpp": "68a56f058f903c8b598628bffca56bc0e580217667290ce27f72b0d0711f77df",
+    "SolTrace/coretrace/types.h": "1660907ba7728c43b5d40d2569b63404dfe68bae667c8705dd14d7a8978a876c",
+    "SolTrace/coretrace/vshot.cpp": "58dafab2029e8a65719b52c54b10739f0e2fd14aeb41e5edac1dc2b99d3b91f3"
+  },
+  "cases": {
+    "small": {
+      "heliostats": 1000,
+      "metrics": {
+        "receiver_power_kw": 89947.0,
+        "optical_efficiency_pct": 69.77,
+        "cosine_efficiency_pct": 81.83,
+        "intercept_efficiency_pct": 100.0,
+        "attenuation_efficiency_pct": 94.69,
+        "blocking_efficiency_pct": 99.77,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 426.01170982710215,
+        "integrated_incident_flux_kw": 95688.42236276573
+      },
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+      "generate_layout_s": 0.0839836089999153,
+      "generated_heliostats": 1421,
+      "assign_layout_s": 0.054544270999940636,
+      "samples": [
+        {
+          "simulate_s": 0.06435592500019993,
+          "get_fluxmap_s": 8.919700030673994e-05,
+          "detail_results_s": 0.0020560070006467868
+        },
+        {
+          "simulate_s": 0.06419472800007497,
+          "get_fluxmap_s": 9.077400045498507e-05,
+          "detail_results_s": 0.0021446690006996505
+        },
+        {
+          "simulate_s": 0.06449938799960364,
+          "get_fluxmap_s": 7.438500051648589e-05,
+          "detail_results_s": 0.001938460000019404
+        },
+        {
+          "simulate_s": 0.06613553300030617,
+          "get_fluxmap_s": 6.760199994459981e-05,
+          "detail_results_s": 0.0019123700003547128
+        },
+        {
+          "simulate_s": 0.06445357099983084,
+          "get_fluxmap_s": 6.205699992278824e-05,
+          "detail_results_s": 0.0018488289997549145
+        },
+        {
+          "simulate_s": 0.06434427500062156,
+          "get_fluxmap_s": 9.876599960989552e-05,
+          "detail_results_s": 0.001919858999826829
+        },
+        {
+          "simulate_s": 0.06418453900005261,
+          "get_fluxmap_s": 6.106999990151962e-05,
+          "detail_results_s": 0.0018429329993523424
+        },
+        {
+          "simulate_s": 0.06452073200034647,
+          "get_fluxmap_s": 6.136799947853433e-05,
+          "detail_results_s": 0.0018482570003470755
+        },
+        {
+          "simulate_s": 0.06473821800045698,
+          "get_fluxmap_s": 6.242800009204075e-05,
+          "detail_results_s": 0.0018007489998126402
+        },
+        {
+          "simulate_s": 0.06457719799982442,
+          "get_fluxmap_s": 6.048300019756425e-05,
+          "detail_results_s": 0.0018416860002616886
+        }
+      ]
+    },
+    "medium": {
+      "heliostats": 5000,
+      "metrics": {
+        "receiver_power_kw": 358035.0,
+        "optical_efficiency_pct": 55.54,
+        "cosine_efficiency_pct": 76.19,
+        "intercept_efficiency_pct": 97.43,
+        "attenuation_efficiency_pct": 90.93,
+        "blocking_efficiency_pct": 91.17,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 1036.0880784982076,
+        "integrated_incident_flux_kw": 380888.43139991345
+      },
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+      "generate_layout_s": 0.17492267499983427,
+      "generated_heliostats": 6291,
+      "assign_layout_s": 0.12442520599961426,
+      "samples": [
+        {
+          "simulate_s": 0.3386981690000539,
+          "get_fluxmap_s": 7.213800017780159e-05,
+          "detail_results_s": 0.010897037999711756
+        },
+        {
+          "simulate_s": 0.3337739379994673,
+          "get_fluxmap_s": 7.715799983998295e-05,
+          "detail_results_s": 0.010368760999881488
+        },
+        {
+          "simulate_s": 0.3256241700000828,
+          "get_fluxmap_s": 6.80010007272358e-05,
+          "detail_results_s": 0.009421892999853299
+        },
+        {
+          "simulate_s": 0.32215067699962674,
+          "get_fluxmap_s": 9.791599950403906e-05,
+          "detail_results_s": 0.009629140000470215
+        },
+        {
+          "simulate_s": 0.3209867959994881,
+          "get_fluxmap_s": 7.20329999239766e-05,
+          "detail_results_s": 0.009359745000438124
+        },
+        {
+          "simulate_s": 0.3219424769995385,
+          "get_fluxmap_s": 7.040099990263116e-05,
+          "detail_results_s": 0.009246633000657312
+        },
+        {
+          "simulate_s": 0.3206949249997706,
+          "get_fluxmap_s": 8.28930005809525e-05,
+          "detail_results_s": 0.009180787000332202
+        },
+        {
+          "simulate_s": 0.32369450599981064,
+          "get_fluxmap_s": 8.512600015819771e-05,
+          "detail_results_s": 0.010055828000076872
+        },
+        {
+          "simulate_s": 0.32341371300026367,
+          "get_fluxmap_s": 5.8927999816660304e-05,
+          "detail_results_s": 0.009117319999859319
+        },
+        {
+          "simulate_s": 0.32184061399948405,
+          "get_fluxmap_s": 6.596100047318032e-05,
+          "detail_results_s": 0.009314224000263494
+        }
+      ]
+    },
+    "large": {
+      "heliostats": 10000,
+      "metrics": {
+        "receiver_power_kw": 573347.0,
+        "optical_efficiency_pct": 44.47,
+        "cosine_efficiency_pct": 74.31,
+        "intercept_efficiency_pct": 89.85,
+        "attenuation_efficiency_pct": 88.33,
+        "blocking_efficiency_pct": 83.55,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 1369.8423138766227,
+        "integrated_incident_flux_kw": 609943.5009656108
+      },
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+      "generate_layout_s": 0.22673734799991507,
+      "generated_heliostats": 13704,
+      "assign_layout_s": 0.20432374899974093,
+      "samples": [
+        {
+          "simulate_s": 0.6500409500004025,
+          "get_fluxmap_s": 7.913599984021857e-05,
+          "detail_results_s": 0.02027602499947534
+        },
+        {
+          "simulate_s": 0.6524786959998892,
+          "get_fluxmap_s": 7.193900000856956e-05,
+          "detail_results_s": 0.020741508999890357
+        },
+        {
+          "simulate_s": 0.654552214999967,
+          "get_fluxmap_s": 6.742799996573012e-05,
+          "detail_results_s": 0.019590769999922486
+        },
+        {
+          "simulate_s": 0.658090214999902,
+          "get_fluxmap_s": 6.249099988053786e-05,
+          "detail_results_s": 0.020280752999497054
+        },
+        {
+          "simulate_s": 0.6552138340002784,
+          "get_fluxmap_s": 6.740299977536779e-05,
+          "detail_results_s": 0.01917560399942886
+        },
+        {
+          "simulate_s": 0.6601135109995084,
+          "get_fluxmap_s": 6.479300009232247e-05,
+          "detail_results_s": 0.020225858999765478
+        },
+        {
+          "simulate_s": 0.6615082020007321,
+          "get_fluxmap_s": 7.046500013530022e-05,
+          "detail_results_s": 0.019110375000309432
+        },
+        {
+          "simulate_s": 0.6693363700005648,
+          "get_fluxmap_s": 6.298300013440894e-05,
+          "detail_results_s": 0.01968574999955308
+        },
+        {
+          "simulate_s": 0.6640245089993186,
+          "get_fluxmap_s": 6.450699947890826e-05,
+          "detail_results_s": 0.019457655000223895
+        },
+        {
+          "simulate_s": 0.6675986400005058,
+          "get_fluxmap_s": 6.750600005034357e-05,
+          "detail_results_s": 0.020029995000186318
+        }
+      ]
+    }
+  }
+}
