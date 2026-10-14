@@ -64,6 +64,8 @@ class SptFiles(unittest.TestCase):
                     'fluxsim.0.flux_model', 'fluxsim.0.aim_method', 'fluxsim.0.flux_time_type'):
             self.assertEqual(cp.data_get_string(target, key), cp.data_get_string(source, key))
         self.assertEqual(len(cp.get_layout_info(target, restype='matrix')[0]), 0)
+        self.assertFalse(cp.simulate(target, nthreads=1))
+        self.assertIn('Call generate_layout or assign_layout', cp.get_last_backend_error(target))
         reexport = self.base / 'reexport.spt'
         self.assertTrue(cp.save_spt(target, reexport))
         before, after = exported_values(filename), exported_values(reexport)
@@ -111,6 +113,8 @@ class SptFiles(unittest.TestCase):
         # Reloading a used context must not expose stale runtime objects or results.
         self.assertTrue(cp.load_spt(source, filename))
         self.assertEqual(cp.get_layout_info(source, restype='matrix')[0], [])
+        self.assertFalse(cp.simulate(source, nthreads=1))
+        self.assertIn('no prepared heliostat field', cp.get_last_backend_error(source))
         self.assertTrue(cp.generate_layout(source, nthreads=1))
         self.assertTrue(cp.simulate(source, nthreads=1))
         np.testing.assert_allclose(cp.get_fluxmap(source), restored['flux'], rtol=1e-9, atol=1e-10)
@@ -194,6 +198,8 @@ class SptFiles(unittest.TestCase):
         self.assertEqual(cp.data_get_string(target, 'ambient.0.weather_file'), absent)
         self.assertFalse(cp.generate_layout(target, nthreads=1))
         self.assertEqual(cp.get_layout_info(target, restype='matrix')[0], [])
+        self.assertFalse(cp.simulate(target, nthreads=1))
+        self.assertIn('no prepared heliostat field', cp.get_last_backend_error(target))
 
     def test_existing_serializer_does_not_preserve_arbitrary_double_precision(self):
         cp, source, target = self.cp, self.context(), self.context()
