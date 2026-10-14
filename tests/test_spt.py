@@ -75,6 +75,10 @@ class SptFiles(unittest.TestCase):
     def test_roundtrip_cpu_simulation_and_reused_context(self):
         cp, source, target = self.cp, self.context(), self.context()
         configure(cp, source, 'small')
+        # Keep net HTF power positive for a tiny synthetic field. Upstream summary
+        # formatting applies log10 to net power and is undefined for nonpositive values.
+        self.assertTrue(cp.data_set_number(source, 'receiver.0.therm_loss_base', 0.1))
+        self.assertTrue(cp.data_set_number(source, 'receiver.0.piping_loss_coef', 0.01))
         # Integer coordinates avoid introducing layout string rounding artifacts.
         positions = [[0, x, y, 0] for x in (-200, 0, 200) for y in (200, 300, 400, 500)]
         self.assertTrue(cp.assign_layout(source, positions, nthreads=1))
@@ -87,6 +91,7 @@ class SptFiles(unittest.TestCase):
         with patch.dict(os.environ, {'SOLARPILOT_FLUX_PATH': 'flat'}):
             self.assertTrue(cp.simulate(source, nthreads=1))
             original, _ = collect(cp, source)
+            self.assertGreater(original['summary']['Power absorbed by HTF'], 0)
             filename = self.base / 'roundtrip.spt'
             self.assertTrue(cp.save_spt(source, filename))
             self.assertTrue(cp.load_spt(target, filename))
@@ -208,6 +213,8 @@ class SptFiles(unittest.TestCase):
             self.skipTest('CUDA build/device required')
         source, target = self.context(), self.context()
         configure(cp, source, 'small')
+        self.assertTrue(cp.data_set_number(source, 'receiver.0.therm_loss_base', 0.1))
+        self.assertTrue(cp.data_set_number(source, 'receiver.0.piping_loss_coef', 0.01))
         self.assertTrue(cp.assign_layout(source, [[0, x, y, 0] for x in (-200, 0, 200)
                                                  for y in (200, 300, 400, 500)], nthreads=1))
         filename = self.base / 'cuda-roundtrip.spt'
@@ -217,6 +224,7 @@ class SptFiles(unittest.TestCase):
         with patch.dict(os.environ, {'SOLARPILOT_FLUX_PATH': 'flat', 'SOLARPILOT_CUDA_TIMING_FILE': ''}):
             self.assertTrue(cp.simulate(source, nthreads=1))
             expected, _ = collect(cp, source)
+            self.assertGreater(expected['summary']['Power absorbed by HTF'], 0)
             self.assertTrue(cp.set_compute_backend(source, 'cuda'))
             self.assertTrue(cp.save_spt(source, filename))
             self.assertTrue(cp.load_spt(target, filename))
