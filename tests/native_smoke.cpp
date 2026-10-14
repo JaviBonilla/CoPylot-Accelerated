@@ -14,6 +14,7 @@ double* sp_get_fluxmap(void*, int*, int*, int, int);
 double* sp_detail_results(void*, int*, int*, double*, int, bool);
 void _sp_free_var(double*);
 }
+namespace Toolbox { double factorial_d(int); }
 static void require(bool value, const char* message) {
     if (!value) throw std::runtime_error(message);
 }
@@ -27,6 +28,8 @@ struct Array {
 };
 int main() {
     try {
+        require(Toolbox::factorial_d(0) == 1., "0 factorial");
+        require(Toolbox::factorial_d(13) == 6227020800., "13 factorial without int overflow");
         Context c;
         require(c.data != nullptr, "context");
         require(sp_set_string(c.data, "ambient.0.weather_file", COPILOT_WEATHER), "weather");
