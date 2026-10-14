@@ -18,6 +18,7 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 Documentation:
 
 * [Phase 2B report](docs/phase2b-report.md), [implemented CUDA contract](docs/cuda-flux-density.md).
+* [Python SPT load/save, preparation semantics and limits](docs/spt-files.md).
 * [Phase 2A report](docs/phase2a-report.md), [flux density analysis](docs/flux-density-analysis.md), [scaling evidence](docs/flux-density-scaling.md), [CUDA design](docs/flux-density-cuda-design.md).
 * [Remote CPU/CUDA validation report](docs/remote-validation.md), [remote environment](docs/remote-gpu-environment.md).
 * [Phase 0/1 report](docs/report.md).
