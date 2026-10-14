@@ -23,7 +23,7 @@ ldd -r build/cpu/lib/solarpilot.so
 
 `CMakeLists.txt` includes only SolTrace/coretrace (legacy release) and SSC's headless superbuild. A generated NLopt `config.h` is produced by its bundled configure script under `build/cpu/nlopt-config`, never in the source checkout. The solarpilot target links coretrace + shared (weather/util only) + nlopt + lpsolve + Threads. `--no-undefined` rejects incomplete linking. CORETRACEDIR is set internally to the pinned sibling repository; no persistent shell environment variables are needed.
 
-Library: `build/cpu/lib/solarpilot.so`. Upstream CMake also copies it into workspace root. Benchmarks load the build-specific file and briefly set cwd because upstream `CoPylot()` loads relative to cwd. Set `COPILOT_LIB_DIR=/absolute/path/build/other/lib` to test another build without copying over the CPU reference.
+Library: `build/cpu/lib/solarpilot.so`. Upstream CMake also copies it into `SolarPILOT/deploy/api`; that copy reflects the last linked build. Use the explicit build/lib path below when testing multiple configurations. Benchmarks load the build-specific file and briefly set cwd because upstream `CoPylot()` loads relative to cwd. Set `COPILOT_LIB_DIR=/absolute/path/build/other/lib` to test another build without copying over the CPU reference.
 
 Build-only compatibility fixes: SolTrace's treemesh.cpp explicitly includes `<limits>`; SSC's HELIO_INTERCEPT macro is `0` rather than invalid `false;`, preserving its disabled state. These are required before a clean Linux baseline can compile. SSC shared's unrelated MPFIT produces a GCC 13 `-Werror=alloc-size-larger-than` diagnostic; our dependency closure excludes it instead of modifying numerical code or disabling warnings globally.
 
