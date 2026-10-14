@@ -46,6 +46,6 @@ Outputs: intercept, sigma_x/y, 16 hcoef terms and any moment arrays still consum
 
 ## Neighbor and batch representation
 
-Shading/blocking later uses CSR neighbor_offsets[N+1], neighbor_indices[n_edges], stable heliostat IDs, corner geometry/tracking and sun vector. Storage may remain allocated across calls, but adjacency/geometry validity depends on sun/tracking epochs. Device receiver IDs refer to a numeric receiver table, never Receiver pointers.
+Shading/blocking later uses CSR neighbor_offsets[N+1], neighbor_indices[n_edges], stable heliostat IDs, corner geometry/tracking and sun vector. Storage may remain allocated across calls, but adjacency/geometry validity depends on sun/tracking epochs. Device receiver IDs refer to a numeric receiver table, never Receiver pointers. Pack canonical C++ geometry after layout assignment: sp_assign_layout serializes supplied positions through a stringstream, so packing original Python coordinates at greater precision could diverge from the CPU geometry.
 
 For evaluate_batch, distinguish static N-heliostat arrays from candidate-dependent state. Prefer candidate tiles and bounded buffers, explicit strides [candidate][term][heliostat] or [term][candidate][heliostat] chosen by kernel access. Keep objective, peak flux and constraint reductions on device. Return objectives/flags to Python; download full flux or heliostat details only when requested. Memory costs scale with candidate_count × heliostats × coefficients/cells; tile candidates rather than duplicating the complete field for every candidate.
