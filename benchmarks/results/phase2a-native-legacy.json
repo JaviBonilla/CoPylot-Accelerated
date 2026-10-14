@@ -1,0 +1,470 @@
+{
+  "platform": "Linux-6.8.0-117-generic-x86_64-with-glibc2.39",
+  "cpu": "Intel(R) Xeon(R) w5-3423",
+  "python": "3.12.3",
+  "parameters": {
+    "solarfield.0.des_sim_detail": 0,
+    "fluxsim.0.flux_model": 0,
+    "fluxsim.0.flux_time_type": 0,
+    "fluxsim.0.flux_solar_az_in": 180.0,
+    "fluxsim.0.flux_solar_el_in": 55.0,
+    "fluxsim.0.flux_dni": 950.0,
+    "fluxsim.0.aim_method": 0,
+    "fluxsim.0.x_res": 25,
+    "fluxsim.0.y_res": 25,
+    "land.0.is_bounds_scaled": 0,
+    "land.0.is_bounds_fixed": 1,
+    "land.0.max_fixed_rad": 5000.0,
+    "land.0.min_fixed_rad": 160.0
+  },
+  "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+  "commits": {
+    ".": "5b465b2759b3b6f15dc5d902d41233a338240e4d",
+    "ssc": "c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d",
+    "SolarPILOT": "53640fdfd671f06255a6b35db2e139ea0d6d1b24",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 625000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 0.07244369201362133,
+        "minimum": 0.07144285924732685,
+        "maximum": 0.07399152219295502
+      },
+      "density_s": {
+        "median": 0.06232188,
+        "minimum": 0.061555425,
+        "maximum": 0.063903248
+      },
+      "simulate_samples_s": [
+        0.07244369201362133,
+        0.07144285924732685,
+        0.07399152219295502
+      ],
+      "density_samples_s": [
+        0.06232188,
+        0.061555425,
+        0.063903248
+      ],
+      "peak_flux_kw_m2": 426.01170982710215,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "9499e53e217022468c669976ad5d25c6d32d5154f1ba5487b8aa2aa47e6d86ed",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 2500000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 0.26205853931605816,
+        "minimum": 0.25979943946003914,
+        "maximum": 0.2632499560713768
+      },
+      "density_s": {
+        "median": 0.252040787,
+        "minimum": 0.250394459,
+        "maximum": 0.253153573
+      },
+      "simulate_samples_s": [
+        0.26205853931605816,
+        0.2632499560713768,
+        0.25979943946003914
+      ],
+      "density_samples_s": [
+        0.252040787,
+        0.253153573,
+        0.250394459
+      ],
+      "peak_flux_kw_m2": 425.1940279363388,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "a1bfd837d8f2989e9a009d6f6347760f92ed22c791ec2b687b2083b1b52a309b",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 10000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 1.0056563932448626,
+        "minimum": 0.9941704124212265,
+        "maximum": 1.013475252315402
+      },
+      "density_s": {
+        "median": 0.995322648,
+        "minimum": 0.984017392,
+        "maximum": 1.003150962
+      },
+      "simulate_samples_s": [
+        1.0056563932448626,
+        0.9941704124212265,
+        1.013475252315402
+      ],
+      "density_samples_s": [
+        0.995322648,
+        0.984017392,
+        1.003150962
+      ],
+      "peak_flux_kw_m2": 426.5924080228785,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "d67f87598ea8ca2220aeb632aeb8686840abe0057399eeac212bf979005ec0e2",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 3125000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 0.36131003126502037,
+        "minimum": 0.3572601657360792,
+        "maximum": 0.36414760164916515
+      },
+      "density_s": {
+        "median": 0.305134745,
+        "minimum": 0.304109588,
+        "maximum": 0.310910891
+      },
+      "simulate_samples_s": [
+        0.3572601657360792,
+        0.36131003126502037,
+        0.36414760164916515
+      ],
+      "density_samples_s": [
+        0.304109588,
+        0.305134745,
+        0.310910891
+      ],
+      "peak_flux_kw_m2": 1036.0880784982076,
+      "integrated_incident_flux_kw": 380888.43139991345,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "d3beb8dd330ba82a96afbd41670dc925c23cd6575c82adf40037c72f7473f978",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 12500000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 1.2832803968340158,
+        "minimum": 1.2774503733962774,
+        "maximum": 1.2929857559502125
+      },
+      "density_s": {
+        "median": 1.228061528,
+        "minimum": 1.224265323,
+        "maximum": 1.239260852
+      },
+      "simulate_samples_s": [
+        1.2929857559502125,
+        1.2832803968340158,
+        1.2774503733962774
+      ],
+      "density_samples_s": [
+        1.239260852,
+        1.228061528,
+        1.224265323
+      ],
+      "peak_flux_kw_m2": 1033.785204336356,
+      "integrated_incident_flux_kw": 380888.4313999128,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "411bc08c64bd4a3babafa27cbd31f6ff83463a105ec36deb422a9f8a29786c35",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 50000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 4.961830509826541,
+        "minimum": 4.942343143746257,
+        "maximum": 4.965882392600179
+      },
+      "density_s": {
+        "median": 4.907587418,
+        "minimum": 4.886360886,
+        "maximum": 4.91125688
+      },
+      "simulate_samples_s": [
+        4.965882392600179,
+        4.961830509826541,
+        4.942343143746257
+      ],
+      "density_samples_s": [
+        4.91125688,
+        4.907587418,
+        4.886360886
+      ],
+      "peak_flux_kw_m2": 1036.1322835767824,
+      "integrated_incident_flux_kw": 380888.43139991397,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "308d37b141ebc7723073b06514dbfa32a2f860f9a38bed96781f5529674ebb20",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 6250000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 0.7400823924690485,
+        "minimum": 0.7395348642021418,
+        "maximum": 0.741474311798811
+      },
+      "density_s": {
+        "median": 0.619421044,
+        "minimum": 0.617997281,
+        "maximum": 0.622267157
+      },
+      "simulate_samples_s": [
+        0.741474311798811,
+        0.7395348642021418,
+        0.7400823924690485
+      ],
+      "density_samples_s": [
+        0.619421044,
+        0.622267157,
+        0.617997281
+      ],
+      "peak_flux_kw_m2": 1369.8423138766227,
+      "integrated_incident_flux_kw": 609943.5009656108,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "bd8946a7434709fad082bd6d57796e368316c74f3c6244f05bac7f378fa9da79",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 25000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 2.6337590869516134,
+        "minimum": 2.607851982116699,
+        "maximum": 2.634248871356249
+      },
+      "density_s": {
+        "median": 2.514156688,
+        "minimum": 2.485578436,
+        "maximum": 2.517879719
+      },
+      "simulate_samples_s": [
+        2.6337590869516134,
+        2.607851982116699,
+        2.634248871356249
+      ],
+      "density_samples_s": [
+        2.514156688,
+        2.485578436,
+        2.517879719
+      ],
+      "peak_flux_kw_m2": 1367.1457595828476,
+      "integrated_incident_flux_kw": 609943.5009656098,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "c087ce99f5a9dd989c361a13f0044986fe45f930a24af2a8651aa892f780f068",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 100000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0
+      },
+      "simulate_s": {
+        "median": 10.065858727321029,
+        "minimum": 10.031135577708483,
+        "maximum": 10.0800558347255
+      },
+      "density_s": {
+        "median": 9.946069009,
+        "minimum": 9.915171286,
+        "maximum": 9.963825264
+      },
+      "simulate_samples_s": [
+        10.031135577708483,
+        10.0800558347255,
+        10.065858727321029
+      ],
+      "density_samples_s": [
+        9.915171286,
+        9.963825264,
+        9.946069009
+      ],
+      "peak_flux_kw_m2": 1369.8926994548144,
+      "integrated_incident_flux_kw": 609943.5009656063,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "6b4d46a2b762157feb4a482bcf48c40a493368ab4345adfda8233d3e1899208f",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    }
+  ]
+}

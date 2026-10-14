@@ -1,0 +1,335 @@
+{
+  "platform": "Linux-6.8.0-117-generic-x86_64-with-glibc2.39",
+  "cpu": "Intel(R) Xeon(R) w5-3423",
+  "python": "3.12.3",
+  "parameters": {
+    "solarfield.0.des_sim_detail": 0,
+    "fluxsim.0.flux_model": 0,
+    "fluxsim.0.flux_time_type": 0,
+    "fluxsim.0.flux_solar_az_in": 180.0,
+    "fluxsim.0.flux_solar_el_in": 55.0,
+    "fluxsim.0.flux_dni": 950.0,
+    "fluxsim.0.aim_method": 0,
+    "fluxsim.0.x_res": 25,
+    "fluxsim.0.y_res": 25,
+    "land.0.is_bounds_scaled": 0,
+    "land.0.is_bounds_fixed": 1,
+    "land.0.max_fixed_rad": 5000.0,
+    "land.0.min_fixed_rad": 160.0
+  },
+  "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+  "commits": {
+    ".": "c98fe027e99f7aa83f1335d4d635802b3df2896a",
+    "ssc": "9ce2c8c6424bbc8e91718734404266c8137170ae",
+    "SolarPILOT": "53640fdfd671f06255a6b35db2e139ea0d6d1b24",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 625000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 0.07066215574741364,
+        "minimum": 0.06828268617391586,
+        "maximum": 0.07154359668493271
+      },
+      "density_s": {
+        "median": 0.060682728,
+        "minimum": 0.05865368,
+        "maximum": 0.061719651
+      },
+      "simulate_samples_s": [
+        0.07154359668493271,
+        0.06828268617391586,
+        0.07066215574741364
+      ],
+      "density_samples_s": [
+        0.061719651,
+        0.05865368,
+        0.060682728
+      ],
+      "peak_flux_kw_m2": 426.01170982710215,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "9499e53e217022468c669976ad5d25c6d32d5154f1ba5487b8aa2aa47e6d86ed",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 2500000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 0.25210158340632915,
+        "minimum": 0.2503977995365858,
+        "maximum": 0.2617342583835125
+      },
+      "density_s": {
+        "median": 0.242263271,
+        "minimum": 0.240656875,
+        "maximum": 0.25186162
+      },
+      "simulate_samples_s": [
+        0.25210158340632915,
+        0.2617342583835125,
+        0.2503977995365858
+      ],
+      "density_samples_s": [
+        0.242263271,
+        0.25186162,
+        0.240656875
+      ],
+      "peak_flux_kw_m2": 425.1940279363388,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "a1bfd837d8f2989e9a009d6f6347760f92ed22c791ec2b687b2083b1b52a309b",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 10000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 0.994935967028141,
+        "minimum": 0.982497327029705,
+        "maximum": 1.0046133007854223
+      },
+      "density_s": {
+        "median": 0.984745686,
+        "minimum": 0.972393443,
+        "maximum": 0.993930295
+      },
+      "simulate_samples_s": [
+        0.994935967028141,
+        1.0046133007854223,
+        0.982497327029705
+      ],
+      "density_samples_s": [
+        0.984745686,
+        0.993930295,
+        0.972393443
+      ],
+      "peak_flux_kw_m2": 426.5924080228785,
+      "integrated_incident_flux_kw": 95688.42236276573,
+      "receiver_power_kw": 89947.0,
+      "flux_sha256": "d67f87598ea8ca2220aeb632aeb8686840abe0057399eeac212bf979005ec0e2",
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 3125000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 0.3637703265994787,
+        "minimum": 0.3606796208769083,
+        "maximum": 0.3646772000938654
+      },
+      "density_s": {
+        "median": 0.309105781,
+        "minimum": 0.307173786,
+        "maximum": 0.310115824
+      },
+      "simulate_samples_s": [
+        0.3646772000938654,
+        0.3606796208769083,
+        0.3637703265994787
+      ],
+      "density_samples_s": [
+        0.307173786,
+        0.309105781,
+        0.310115824
+      ],
+      "peak_flux_kw_m2": 1036.0880784982076,
+      "integrated_incident_flux_kw": 380888.43139991345,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "d3beb8dd330ba82a96afbd41670dc925c23cd6575c82adf40037c72f7473f978",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 12500000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 1.2758475150913,
+        "minimum": 1.2638306077569723,
+        "maximum": 1.2816189583390951
+      },
+      "density_s": {
+        "median": 1.21943298,
+        "minimum": 1.209573469,
+        "maximum": 1.225375849
+      },
+      "simulate_samples_s": [
+        1.2816189583390951,
+        1.2638306077569723,
+        1.2758475150913
+      ],
+      "density_samples_s": [
+        1.225375849,
+        1.209573469,
+        1.21943298
+      ],
+      "peak_flux_kw_m2": 1033.785204336356,
+      "integrated_incident_flux_kw": 380888.4313999128,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "411bc08c64bd4a3babafa27cbd31f6ff83463a105ec36deb422a9f8a29786c35",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 50000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 5.008101774379611,
+        "minimum": 4.982689432799816,
+        "maximum": 5.010304231196642
+      },
+      "density_s": {
+        "median": 4.953707468,
+        "minimum": 4.928684273,
+        "maximum": 4.956663236
+      },
+      "simulate_samples_s": [
+        5.008101774379611,
+        5.010304231196642,
+        4.982689432799816
+      ],
+      "density_samples_s": [
+        4.953707468,
+        4.956663236,
+        4.928684273
+      ],
+      "peak_flux_kw_m2": 1036.1322835767824,
+      "integrated_incident_flux_kw": 380888.43139991397,
+      "receiver_power_kw": 358035.0,
+      "flux_sha256": "308d37b141ebc7723073b06514dbfa32a2f860f9a38bed96781f5529674ebb20",
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "cells": 625,
+      "candidate_interactions": 6250000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 0.7255506440997124,
+        "minimum": 0.7253205478191376,
+        "maximum": 0.7281703315675259
+      },
+      "density_s": {
+        "median": 0.6118491,
+        "minimum": 0.611390587,
+        "maximum": 0.612836029
+      },
+      "simulate_samples_s": [
+        0.7253205478191376,
+        0.7281703315675259,
+        0.7255506440997124
+      ],
+      "density_samples_s": [
+        0.612836029,
+        0.6118491,
+        0.611390587
+      ],
+      "peak_flux_kw_m2": 1369.8423138766227,
+      "integrated_incident_flux_kw": 609943.5009656108,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "bd8946a7434709fad082bd6d57796e368316c74f3c6244f05bac7f378fa9da79",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "cells": 2500,
+      "candidate_interactions": 25000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 2.5554999224841595,
+        "minimum": 2.5532858707010746,
+        "maximum": 2.559743396937847
+      },
+      "density_s": {
+        "median": 2.437927094,
+        "minimum": 2.436583642,
+        "maximum": 2.438339393
+      },
+      "simulate_samples_s": [
+        2.5532858707010746,
+        2.5554999224841595,
+        2.559743396937847
+      ],
+      "density_samples_s": [
+        2.436583642,
+        2.437927094,
+        2.438339393
+      ],
+      "peak_flux_kw_m2": 1367.1457595828476,
+      "integrated_incident_flux_kw": 609943.5009656098,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "c087ce99f5a9dd989c361a13f0044986fe45f930a24af2a8651aa892f780f068",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "cells": 10000,
+      "candidate_interactions": 100000000,
+      "mode": "legacy",
+      "repeats": 3,
+      "simulate_s": {
+        "median": 10.089777322486043,
+        "minimum": 10.089752176776528,
+        "maximum": 10.11809135042131
+      },
+      "density_s": {
+        "median": 9.976434966,
+        "minimum": 9.972452831,
+        "maximum": 10.003486047
+      },
+      "simulate_samples_s": [
+        10.089752176776528,
+        10.11809135042131,
+        10.089777322486043
+      ],
+      "density_samples_s": [
+        9.976434966,
+        10.003486047,
+        9.972452831
+      ],
+      "peak_flux_kw_m2": 1369.8926994548144,
+      "integrated_incident_flux_kw": 609943.5009656063,
+      "receiver_power_kw": 573347.0,
+      "flux_sha256": "6b4d46a2b762157feb4a482bcf48c40a493368ab4345adfda8233d3e1899208f",
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "differential": []
+    }
+  ]
+}
