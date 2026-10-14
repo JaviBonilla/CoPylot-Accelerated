@@ -24,3 +24,6 @@ __pycache__/
 *.dll
 *.dylib
 *.profraw
+
+# Private/local research cases
+local-cases/
