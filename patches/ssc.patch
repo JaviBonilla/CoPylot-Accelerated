@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 1/6] build: use valid preprocessor constant for legacy
+Subject: [PATCH 1/7] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4..ba9c55de 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 2/6] perf: add optional inclusive and exclusive core profiling
+Subject: [PATCH 2/7] perf: add optional inclusive and exclusive core profiling
  scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55de..43c348b5 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 3/6] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 3/7] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d..6e9d7629 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 4/6] refactor: introduce per-context compute backend and
+Subject: [PATCH 4/7] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 00000000..6e214b4b
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 5/6] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 5/7] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 00000000..cd8f06b8
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 6/6] fix: remove sanitizer detected overflow and uninitialized
+Subject: [PATCH 6/7] fix: remove sanitizer detected overflow and uninitialized
  optical tree state
 
 ---
@@ -686,6 +686,259 @@ index d789ab14..fccce34c 100644
  }
  
  bool Toolbox::pointInPolygon( const vector< sp_point > &poly, const sp_point &pt) {
+-- 
+2.43.0
+
+
+From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 11:50:02 +0200
+Subject: [PATCH 7/7] refactor: extract flat flux contribution with preserved
+ legacy oracle
+
+---
+ solarpilot/Flux.cpp              | 120 ++++++++++++++++++++++++++++++-
+ solarpilot/Flux.h                |   4 ++
+ solarpilot/FluxDensityNumerics.h |  75 +++++++++++++++++++
+ 3 files changed, 198 insertions(+), 1 deletion(-)
+ create mode 100644 solarpilot/FluxDensityNumerics.h
+
+diff --git a/solarpilot/Flux.cpp b/solarpilot/Flux.cpp
+index 580123e4..f4889a86 100644
+--- a/solarpilot/Flux.cpp
++++ b/solarpilot/Flux.cpp
+@@ -32,6 +32,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+ #include "Flux.h"
++#include "FluxDensityNumerics.h"
++#include <cstdlib>
++#include <cstring>
++#include <iomanip>
++#include <limits>
+ #include "math.h"
+ #include "Toolbox.h"
+ #include "Heliostat.h"
+@@ -2136,9 +2141,122 @@ void Flux::hermiteIntegral(double G[5], double F[5], double X[2], double A[2], d
+ #endif
+ }
+ 
+-void Flux::fluxDensity(simulation_info *siminfo, FluxSurface &flux_surface, Hvector &helios, double tht, bool show_progress)
++void Flux::fluxDensity(simulation_info* siminfo, FluxSurface& surface, Hvector& helios, double tht, bool progress)
+ {
+     SP_PROFILE_SCOPE(Density);
++    // The fixed numerical core represents precisely Setup's seven-term packing.
++    if (_n_terms != 7) {
++        fluxDensityLegacy(siminfo, surface, helios, tht, progress);
++        return;
++    }
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++    const char* mode = std::getenv("SOLARPILOT_FLUX_PATH");
++    if (mode && std::strcmp(mode, "legacy") == 0) {
++        fluxDensityLegacy(siminfo, surface, helios, tht, progress);
++        return;
++    }
++    if (mode && std::strcmp(mode, "verify") == 0) {
++        FluxGrid& grid = *surface.getFluxMap();
++        std::vector<double> initial, reference;
++        for (int x = 0; x < surface.getFluxNX(); ++x)
++            for (int y = 0; y < surface.getFluxNY(); ++y) initial.push_back(grid.at(x).at(y).flux);
++        fluxDensityLegacy(siminfo, surface, helios, tht, progress);
++        size_t index = 0;
++        for (int x = 0; x < surface.getFluxNX(); ++x)
++            for (int y = 0; y < surface.getFluxNY(); ++y) {
++                reference.push_back(grid.at(x).at(y).flux);
++                grid.at(x).at(y).flux = initial.at(index++);
++            }
++        const unsigned long long evaluated = fluxDensityFlat(siminfo, surface, helios, tht, false);
++        double max_abs = 0., max_rel = 0.;
++        int ax = 0, ay = 0, rx = 0, ry = 0;
++        bool bitwise = true;
++        index = 0;
++        for (int x = 0; x < surface.getFluxNX(); ++x)
++            for (int y = 0; y < surface.getFluxNY(); ++y) {
++                const double expected = reference.at(index++), actual = grid.at(x).at(y).flux;
++                const double absolute = std::abs(actual-expected);
++                const double relative = expected == 0. ? (absolute == 0. ? 0. : std::numeric_limits<double>::infinity()) : absolute/std::abs(expected);
++                if (!std::isfinite(expected) || !std::isfinite(actual) || absolute > 1.e-10 + 1.e-9*std::abs(expected))
++                    throw spexception("Legacy and flat flux density differ beyond numerical tolerance.");
++                if (absolute > max_abs) { max_abs = absolute; ax = x; ay = y; }
++                if (relative > max_rel) { max_rel = relative; rx = x; ry = y; }
++                bitwise = bitwise && std::memcmp(&expected, &actual, sizeof(double)) == 0;
++            }
++        const char* path = std::getenv("SOLARPILOT_FLUX_COMPARE_FILE");
++        if (path && *path) {
++            std::ofstream out(path, std::ios::app);
++            out << std::setprecision(17) << reference.size() << ',' << max_abs << ',' << max_rel << ','
++                << ax << ',' << ay << ',' << rx << ',' << ry << ',' << bitwise << ',' << evaluated << '\n';
++        }
++        return;
++    }
++#endif
++    fluxDensityFlat(siminfo, surface, helios, tht, progress);
++}
++
++unsigned long long Flux::fluxDensityFlat(simulation_info* siminfo, FluxSurface& surface, Hvector& helios, double tht, bool progress)
++{
++    const int nx = surface.getFluxNX(), ny = surface.getFluxNY();
++    FluxGrid& grid = *surface.getFluxMap();
++    var_receiver* variables = surface.getParent()->getVarMap();
++    const sp_point& offset = *surface.getSurfaceOffset();
++    const sp_point receiver_offset(variables->rec_offset_x_global.Val(), variables->rec_offset_y_global.Val(), variables->rec_offset_z_global.Val());
++    const bool aperture = variables->rec_type.mapval() == var_receiver::REC_TYPE::FALLING_PARTICLE
++        || variables->rec_type.mapval() == var_receiver::REC_TYPE::CAVITY;
++    const flux_density::Parameters parameters = {tht, pi};
++    std::vector<flux_density::CellData> cells;
++    std::vector<double> accumulator;
++    cells.reserve(size_t(nx)*ny); accumulator.reserve(size_t(nx)*ny);
++    for (int x = 0; x < nx; ++x)
++        for (int y = 0; y < ny; ++y) {
++            const FluxPoint& point = grid.at(x).at(y);
++            const flux_density::CellData cell = {
++                {point.location.x + offset.x + receiver_offset.x,
++                 point.location.y + offset.y + receiver_offset.y,
++                 point.location.z + offset.z + receiver_offset.z + tht},
++                {point.normal.i, point.normal.j, point.normal.k}};
++            cells.push_back(cell); accumulator.push_back(point.flux);
++        }
++    const int count = static_cast<int>(helios.size()), update_every = max(count/20, 1);
++    if (progress) siminfo->setTotalSimulationCount(count);
++    unsigned long long evaluated = 0;
++    for (int i = 0; i < count; ++i) {
++        if (progress && i % update_every == 0) siminfo->setCurrentSimulation(i+1);
++        Heliostat* source = helios.at(i);
++        if (!source->IsEnabled()) continue;
++        flux_density::HeliostatData h;
++        source->getImageSize(h.sigma_x, h.sigma_y);
++        const sp_point& aim = *source->getAimPoint();
++        sp_point* location = source->getLocation();
++        Vect direction(location->x-receiver_offset.x, location->y-receiver_offset.y, location->z-receiver_offset.z-tht);
++        Toolbox::unitvect(direction);
++        h.direction[0] = direction.i; h.direction[1] = direction.j; h.direction[2] = direction.k;
++        h.aim[0] = aim.x; h.aim[1] = aim.y; h.aim[2] = aim.z;
++        h.normalization = source->getArea()*source->getEfficiencyTotal()/(tht*tht);
++        for (int term = 0; term < 16; ++term) h.coefficients[term] = source->getHermiteCoefObject()->at(term);
++        for (size_t cell = 0; cell < cells.size(); ++cell) {
++            const double cosine = flux_density::visibility_cosine(h, cells[cell]);
++            if (cosine < 0. || cosine > 1.) continue;
++            if (aperture) {
++                sp_point global(cells[cell].position[0], cells[cell].position[1], cells[cell].position[2]);
++                if (!checkApertureSnout(global, location, source->getAimPoint(), variables)) continue;
++            }
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++            ++evaluated;
++#endif
++            accumulator[cell] += flux_density::evaluate_contribution(h, cells[cell], parameters);
++        }
++    }
++    size_t cell = 0;
++    for (int x = 0; x < nx; ++x)
++        for (int y = 0; y < ny; ++y) grid.at(x).at(y).flux = accumulator.at(cell++);
++    if (progress) { siminfo->Reset(); siminfo->setCurrentSimulation(0); }
++    return evaluated;
++}
++
++void Flux::fluxDensityLegacy(simulation_info *siminfo, FluxSurface &flux_surface, Hvector &helios, double tht, bool show_progress)
++{
+ 	/* 
+ 	Take a set of points defining the flux plane within the flux_surface object, a solar field geometry, 
+ 	and calculate the flux intensity at each point. Fills and returns these values into the FluxSurface
+diff --git a/solarpilot/Flux.h b/solarpilot/Flux.h
+index 94df9e6a..7edd8633 100644
+--- a/solarpilot/Flux.h
++++ b/solarpilot/Flux.h
+@@ -96,6 +96,10 @@ class Flux
+ 	double _ag[16];
+ 	double _xg[16];
+ 
++ // Internal CPU paths; the original implementation remains the numerical oracle.
++ void fluxDensityLegacy(simulation_info*, FluxSurface&, Hvector&, double, bool);
++ unsigned long long fluxDensityFlat(simulation_info*, FluxSurface&, Hvector&, double, bool);
++
+  public:
+ 
+ 
+diff --git a/solarpilot/FluxDensityNumerics.h b/solarpilot/FluxDensityNumerics.h
+new file mode 100644
+index 00000000..394c5a6c
+--- /dev/null
++++ b/solarpilot/FluxDensityNumerics.h
+@@ -0,0 +1,75 @@
++#ifndef SOLARPILOT_FLUX_DENSITY_NUMERICS_H
++#define SOLARPILOT_FLUX_DENSITY_NUMERICS_H
++
++#include <cmath>
++#include <type_traits>
++
++// CPU-only numerical core. Packing, visibility apertures and ownership stay in the adapter.
++namespace flux_density {
++struct HeliostatData {
++    double direction[3];
++    double aim[3];
++    double sigma_x, sigma_y, normalization;
++    double coefficients[16];
++};
++struct CellData { double position[3]; double normal[3]; };
++struct Parameters { double tower_height, pi; };
++static_assert(std::is_trivial<HeliostatData>::value, "Heliostat data must be trivial");
++static_assert(std::is_standard_layout<CellData>::value, "Cell data must have standard layout");
++
++inline double visibility_cosine(const HeliostatData& h, const CellData& c) {
++    return c.normal[0]*h.direction[0] + c.normal[1]*h.direction[1] + c.normal[2]*h.direction[2];
++}
++
++inline double hermite_series(const double (&coefficients)[16], double x, double y) {
++    double hx[9], hy[9];
++    hx[0] = hy[0] = 1.;
++    hx[1] = hy[1] = 0.;
++    double factor = -2.;
++    for (int i = 1; i < 8; ++i) {
++        ++factor;
++        hx[i+1] = x*hx[i] - factor*hx[i-1];
++        hy[i+1] = y*hy[i] - factor*hy[i-1];
++    }
++    int packed = 0;
++    double flux = 0.;
++    for (int i = 1; i < 8; ++i) {
++        for (int j = (i-1)%2+1; j <= 8-i; j += 2) {
++            flux += coefficients[packed]*hx[i+1]*hy[j+1];
++            ++packed;
++        }
++    }
++    if (flux < 0.) flux = 0.;
++    return flux;
++}
++
++inline double evaluate_contribution(const HeliostatData& h, const CellData& c, const Parameters& p) {
++    const double cosine = visibility_cosine(h, c);
++    if (cosine < 0. || cosine > 1.) return 0.;
++    // Preserve plane_intersect's sequential dot sums for valid nonzero directions.
++    // A zero direction is invalid geometry (the oracle leaves its point uninitialized).
++    double denominator = 0., numerator = 0.;
++    for (int i = 0; i < 3; ++i) denominator += h.direction[i]*h.direction[i];
++    for (int i = 0; i < 3; ++i) numerator += (h.aim[i]-c.position[i])*h.direction[i];
++    double projected[3] = {0., 0., 0.};
++    if (denominator != 0.) {
++        const double distance = numerator / denominator;
++        for (int i = 0; i < 3; ++i) projected[i] = c.position[i] + distance*h.direction[i];
++    }
++    for (int i = 0; i < 3; ++i) projected[i] -= h.aim[i];
++    const double azimuth = std::atan2(h.direction[0], h.direction[1]);
++    const double zenith = std::acos(h.direction[2]);
++    double ct = std::cos(p.pi-azimuth), st = std::sin(p.pi-azimuth);
++    const double x = ct*projected[0] + st*projected[1] + 0.*projected[2];
++    const double y = -st*projected[0] + ct*projected[1] + 0.*projected[2];
++    const double z = 0.*projected[0] + 0.*projected[1] + 1.*projected[2];
++    ct = std::cos(zenith); st = std::sin(zenith);
++    const double rotated_x = 1.*x + 0.*y + 0.*z;
++    const double rotated_y = 0.*x + ct*y + st*z;
++    const double xn = -rotated_x / p.tower_height / h.sigma_x;
++    const double yn = rotated_y / p.tower_height / h.sigma_y;
++    const double hfe = hermite_series(h.coefficients, xn, yn) * std::exp(-0.5*(xn*xn + yn*yn));
++    return cosine * hfe * h.normalization;
++}
++}
++#endif
 -- 
 2.43.0
 

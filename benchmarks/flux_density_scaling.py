@@ -68,6 +68,7 @@ def run(size, resolution, repeats, mode):
         area = np.pi * cp.data_get_number(r, 'receiver.0.rec_diameter') * cp.data_get_number(r, 'receiver.0.rec_height')
         return dict(heliostats=actual, grid=resolution, cells=flux.size,
                     candidate_interactions=actual * flux.size, mode=mode, repeats=repeats,
+                    parameters={**PARAMETERS, "fluxsim.0.x_res": resolution, "fluxsim.0.y_res": resolution},
                     simulate_s=distribution(samples), density_s=distribution(flux_samples),
                     simulate_samples_s=samples, density_samples_s=flux_samples,
                     peak_flux_kw_m2=float(flux.max()), integrated_incident_flux_kw=float(flux.sum() * area / flux.size),
