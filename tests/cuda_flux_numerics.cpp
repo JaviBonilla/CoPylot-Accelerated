@@ -32,7 +32,9 @@ struct Errors {
 };
 int main(int argc, char** argv) {
     try {
-        require(solarpilot::cuda_device_count()>0,"A CUDA device is required for CUDA numerical tests");
+        const int devices = solarpilot::cuda_device_count();
+        if (devices == 0) { std::cout << "SKIP: no CUDA device available\n"; return 77; }
+        require(devices > 0, solarpilot::cuda_probe_error());
         auto context=solarpilot::make_gpu_context(0);
         const flux_density::Parameters parameters={90.,4.*std::atan(1.)};
         std::vector<flux_density::HeliostatData> h;
