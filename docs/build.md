@@ -69,3 +69,25 @@ COPILOT_LIB_DIR="$PWD/build/asan/lib" LD_PRELOAD="$(g++ -print-file-name=libasan
 Native test avoids Python/NumPy lifetime allocations in leak reports. LeakSanitizer needs permission to inspect process threads; this desktop sandbox required running the native check outside the sandbox. No system sysctl changes were made. Native ASan/UBSan/LSan and Python ASan/UBSan smoke pass after two localized legacy corrections: factorial_d computes in double rather than overflowing int at 13!, and optical tree nodes initialize their pointers/terminal flag. The full Release baselines remain equivalent; no tolerances were loosened.
 
 `BUILD_DIR=... scripts/test_cpu.sh` runs build + native CTest + Python smoke + the full Python suite. GCC/Clang sanitizer builds are CPU-only. CPU and profile OFF/ON both work without CUDA installed.
+
+## Phase 2A flat flux CPU validation
+
+The production CPU path uses the fixed numerical helper with an internal legacy fallback for unavailable coefficient packing. The original body remains a private oracle. Diagnostic selection is compiled out by default and does not change the public Python/C API:
+
+```bash
+BUILD_DIR="$PWD/build/flux-profile" scripts/test_cpu.sh \
+  -DSOLARPILOT_ENABLE_CORE_PROFILE=ON -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON \
+  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
+COPILOT_LIB_DIR="$PWD/build/flux-profile/lib" .venv/bin/python benchmarks/flux_density_scaling.py \
+  --mode legacy --output artifacts/flux-legacy.json
+COPILOT_LIB_DIR="$PWD/build/flux-profile/lib" .venv/bin/python benchmarks/flux_density_scaling.py \
+  --mode flat --output artifacts/flux-flat.json
+COPILOT_LIB_DIR="$PWD/build/flux-profile/lib" .venv/bin/python benchmarks/flux_density_scaling.py \
+  --mode verify --output artifacts/flux-verify.json
+```
+
+Omit the launcher flags on machines without ccache. No CUDA launcher is added. `ccache --zero-stats` and `ccache --show-stats` delimit the native development run. Timing commands must run serially, after all builds/tests finish on that host. Three measured repetitions follow one excluded warm simulation. `verify` executes both routes on the same prepared heliostats/surface, restores initial raw flux between routes, asserts each raw cell at atol=1e-10 + rtol=1e-9×abs(reference), and leaves the flat result for normal post-processing. Its timing includes both paths and comparison and must not be reported as flat performance.
+
+Internal environment variables: `SOLARPILOT_FLUX_PATH=legacy|flat|verify` and optional `SOLARPILOT_FLUX_COMPARE_FILE`. Differential CSV columns are cells, max_abs, max_rel, abs_x, abs_y, rel_x, rel_y, bitwise, evaluated_pairs; coordinates are original grid[x][y], zero-based, with first (0,0) retained if all errors are zero. Profiling measures adapter packing/scattering too. Controls and counters require the diagnostic option and are intended for single-thread test runs. Missing comparison output makes the verification benchmark fail rather than accepting an uninstrumented build.
+
+CTest includes `flux_density_numerics` (24 direct Toolbox + legacy Hermite versus pure-helper cases), alongside the existing native smoke. `test_flux_density.py` runs the internal comparison on a 20×30 map when diagnostics are enabled, otherwise reports an explicit skip. The remote nine-case evidence also checks exported map hashes, peaks, integrated incident power and absorbed receiver power between selected legacy/flat runs. The unchanged baselines remain the independent full-output regression reference.
