@@ -10,6 +10,8 @@ def main():
     assert r, 'Context creation failed'
     try:
         configure(cp, r, 'small')
+        assert cp.data_set_number(r, 'solarfield.0.des_sim_detail', 1)
+        assert cp.data_set_number(r, 'land.0.max_fixed_rad', 850.)
         assert cp.generate_layout(r, nthreads=1), 'Layout generation failed'
         count = len(cp.get_layout_info(r, restype='dictionary')['id'])
         assert count > 0, 'Empty field'

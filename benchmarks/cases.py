@@ -26,7 +26,9 @@ PARAMETERS = {
     'fluxsim.0.x_res': 25,
     'fluxsim.0.y_res': 25,
     'land.0.is_bounds_scaled': 0,
+    'land.0.is_bounds_fixed': 1,
     'land.0.max_fixed_rad': 5000.,
+    'land.0.min_fixed_rad': 160.,
 }
 
 
@@ -120,10 +122,16 @@ def run_case(size, repeats=3, measure_generation=True):
         configure(cp, r, size)
         timings = {}
         if measure_generation:
+            # Filter generated field at a single design point. Assigned benchmark
+            # fields use DO_NOT_FILTER to keep exactly the prescribed count.
+            assert cp.data_set_number(r, 'solarfield.0.des_sim_detail', 1)
+            assert cp.data_set_number(r, 'land.0.max_fixed_rad', 200. + 35. * math.sqrt(SIZES[size] / math.pi))
             ok, timings['generate_layout_s'] = timed(cp.generate_layout, r, nthreads=1)
             if not ok:
                 raise AssertionError('generate_layout failed')
             timings['generated_heliostats'] = len(cp.get_layout_info(r, restype='dictionary')['id'])
+            assert cp.data_set_number(r, 'solarfield.0.des_sim_detail', 0)
+            assert cp.data_set_number(r, 'land.0.max_fixed_rad', 5000.)
         positions = layout(SIZES[size])
         ok, timings['assign_layout_s'] = timed(cp.assign_layout, r, positions, nthreads=1)
         if not ok:
