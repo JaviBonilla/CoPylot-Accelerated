@@ -1,31 +1,33 @@
-# CoPylot-GPU: preparación Fase 0/1
+# CoPylot-GPU: Phase 0/1 preparation
 
-Workspace headless para acelerar el núcleo C++ de CoPylot con CUDA manteniendo la API Python y la referencia CPU. La simulación Hermite CPU, los tres benchmarks y las regresiones funcionan. El backend óptico CUDA todavía no está implementado. El probe/toolchain opcional está preparado; su compilación y ejecución reales requieren validación en un entorno NVIDIA con nvcc.
+Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and CPU reference. Hermite CPU simulation, three benchmark sizes and regressions work. The optical CUDA backend is not implemented. The optional toolchain/device probe is ready for validation on an NVIDIA host.
 
 ```bash
-# Desde una copia de este workspace, reconstruir los repositorios y parches fijados:
+# Reconstruct the pinned repositories and local commit series:
 python3 scripts/bootstrap.py
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 scripts/build_cpu.sh
 scripts/test_cpu.sh
-.venv/bin/python benchmarks/run_cpu.py --repeats 5
+.venv/bin/python benchmarks/run_cpu.py --repeats 10
 scripts/profile_cpu.sh
 ```
 
-La biblioteca está en `build/cpu/lib/solarpilot.so`. El build usa SSC solarpilot-develop y SolTrace legacy; no compila SolarPILOT GUI, wxWidgets, LK ni WEX. Las ramas locales son `feature/copilot-gpu`; commits y parches exactos: [repos.lock.json](repos.lock.json).
+Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop and legacy SolTrace; it does not build the SolarPILOT GUI, wxWidgets, LK or WEX. Exact source and patched commit SHAs are in [repos.lock.json](repos.lock.json).
 
-Documentación:
+Documentation:
 
-* [Informe y estado verificado](docs/report.md).
-* [Decisión de repositorios/ramas](docs/dependencies.md), [build y pruebas](docs/build.md).
-* [Perfil CPU medido](docs/cpu-profile.md), [datos brutos](benchmarks/results).
-* [Backend y versiones propuestas](docs/backend.md), [modelo de datos GPU](docs/gpu-data-model.md).
-* [Roadmap y próximo kernel](docs/roadmap.md), [análisis SolTrace/OptiX](docs/soltrace.md).
-* [Plan y matriz de validación](docs/plan.md).
+* [Phase 0/1 report](docs/report.md).
+* [Repository/branch decision](docs/dependencies.md), [build and tests](docs/build.md).
+* [Measured CPU profile](docs/cpu-profile.md), [raw results](benchmarks/results).
+* [Backend and proposed input versions](docs/backend.md), [GPU data model](docs/gpu-data-model.md).
+* [Roadmap](docs/roadmap.md), [SolTrace/OptiX analysis](docs/soltrace.md).
+* [Validation plan](docs/plan.md).
 
-La serie de parches conserva los commits pequeños de los tres repositorios; `bootstrap.py` recrea sus mismos SHAs y se niega a sobrescribir checkouts que no coincidan. Por el `.git` reservado y de sólo lectura del entorno desktop, los commits del workspace usan `.workspace-git`; aquí se consultan con `scripts/workspace_git.sh log --oneline`. Los repositorios internos usan Git normalmente. No se ha publicado ninguna rama ni PR.
+Local workspace authority: integration branch `main`, with the original 14 Phase 0/1 commits preserved. The root `.git` file points to `.workspace-git`, exposing the existing history to ordinary Git without recreating it. In the desktop sandbox, `scripts/workspace_git.sh` also works around the protected `.git` path. The three inner working trees retain independent Git repositories on `feature/copilot-gpu` and are ignored by the integration repository, not registered as submodules/gitlinks. No branches have been pushed.
 
-Casos: 1000, 5000 y 10000 heliostatos asignados de forma determinista; mapa 25×25, un thread, doble precisión, Hermite, DNI 950, azimut 180°, elevación 55°. Los JSON de regresión almacenan todas las celdas y resultados por heliostato; `rtol=1e-9`, `atol=1e-10`. Captura original anterior al dispatch y profiling; los tests nunca regeneran los baselines.
+The tracked mailbox patches preserve the inner repositories' small commits. `bootstrap.py` reproduces identical patched SHAs and refuses to overwrite nonmatching checkouts. Generated environments/builds are ignored; deliberate benchmark results are versioned. Remote validation uses a dedicated reproduction of a committed local integration snapshot; local remains authoritative.
 
-La primera prioridad GPU recomendada por las medidas es `Flux::fluxDensity()` y su reducción, tras extraer y validar una función numérica CPU. `imagePlaneIntercept()` sigue en el roadmap; no se ha portado ningún algoritmo a CUDA.
+Cases: exactly 1000/5000/10000 deterministically assigned heliostats, 25×25 flux map, one simulation thread, double precision, Hermite, DNI 950 W/m², azimuth 180°, elevation 55°. Regression JSON contains every flux cell and heliostat result column; `rtol=1e-9`, `atol=1e-10`. Original results were captured before dispatch/profiling; tests never regenerate them.
+
+The measured first GPU candidate is `Flux::fluxDensity()` plus its reduction, after a pure CPU extraction and equivalence checks. That numerical Phase 2 work is deferred until the remote validation report has been reviewed. No optical CUDA algorithm has been ported.
