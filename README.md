@@ -1,6 +1,6 @@
-# CoPylot-GPU: Phase 2A numerical preparation
+# CoPylot-GPU: Phase 2B hybrid CUDA flux density
 
-Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and CPU reference. Hermite CPU simulation, three benchmark sizes and regressions work. The optical CUDA backend is not implemented. The optional toolchain/device probe has been validated on the remote RTX 6000 Ada host; optical CUDA remains unimplemented.
+Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and original CPU reference. Legacy and flat CPU remain available; the first hybrid CUDA backend evaluates double-precision Hermite flux density for one cylindrical receiver with simple aiming. Optical preparation and normalization remain CPU operations.
 
 ```bash
 # Reconstruct the pinned repositories and local commit series:
@@ -17,6 +17,7 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 2B report](docs/phase2b-report.md), [implemented CUDA contract](docs/cuda-flux-density.md).
 * [Phase 2A report](docs/phase2a-report.md), [flux density analysis](docs/flux-density-analysis.md), [scaling evidence](docs/flux-density-scaling.md), [CUDA design](docs/flux-density-cuda-design.md).
 * [Remote CPU/CUDA validation report](docs/remote-validation.md), [remote environment](docs/remote-gpu-environment.md).
 * [Phase 0/1 report](docs/report.md).
@@ -32,4 +33,4 @@ The tracked mailbox patches preserve the inner repositories' small commits. `boo
 
 Cases: exactly 1000/5000/10000 deterministically assigned heliostats, 25×25 flux map, one simulation thread, double precision, Hermite, DNI 950 W/m², azimuth 180°, elevation 55°. Regression JSON contains every flux cell and heliostat result column; `rtol=1e-9`, `atol=1e-10`. Original results were captured before dispatch/profiling; tests never regenerate them.
 
-Phase 2A extracts `Flux::fluxDensity()` into a pure double-precision CPU contribution helper while preserving the original oracle. Native CPU scaling and same-prepared-state comparisons cover 1k/5k/10k heliostats × 25/50/100 grids. CUDA data/decomposition design is documented; the first optical kernel (Phase 2B) awaits review. No optical CUDA algorithm has been ported.
+Phase 2A extracted the pure contribution and validated bitwise legacy/flat equality. Phase 2B adds a real one-block-per-cell double CUDA kernel, reusable RAII buffers and strict contribution/map comparisons. Nine 1k/5k/10k × 25/50/100 cases pass. GPU performance comparisons will use flat CPU and require controlled measurements; no GPU speedup is claimed. Phase 2C tuning awaits review.
