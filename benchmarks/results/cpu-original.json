@@ -1,0 +1,145 @@
+{
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "cpu": "12th Gen Intel(R) Core(TM) i5-1240P",
+  "threads": 1,
+  "repos": {
+    "SolarPILOT": "c74618a70fd8e85708957b1ee57b157ba75a5045",
+    "ssc": "7e93b482d8547847a799b7d060c0daedad7a2c14",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "cases": {
+    "small": {
+      "heliostats": 1000,
+      "metrics": {
+        "receiver_power_kw": 89947.0,
+        "optical_efficiency_pct": 69.77,
+        "cosine_efficiency_pct": 81.83,
+        "intercept_efficiency_pct": 100.0,
+        "attenuation_efficiency_pct": 94.69,
+        "blocking_efficiency_pct": 99.77,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 426.01170982710215,
+        "integrated_incident_flux_kw": 95688.42236276573
+      },
+      "generate_layout_s": 0.09147103299983428,
+      "generated_heliostats": 1421,
+      "assign_layout_s": 0.05054032199950598,
+      "samples": [
+        {
+          "simulate_s": 0.06619205500010139,
+          "get_fluxmap_s": 8.191399956558598e-05,
+          "detail_results_s": 0.0020398219994604005
+        },
+        {
+          "simulate_s": 0.06543263999992632,
+          "get_fluxmap_s": 7.617699975526193e-05,
+          "detail_results_s": 0.002077287000247452
+        },
+        {
+          "simulate_s": 0.06781177500033664,
+          "get_fluxmap_s": 5.493099979503313e-05,
+          "detail_results_s": 0.0018869770001401776
+        },
+        {
+          "simulate_s": 0.06941405100042175,
+          "get_fluxmap_s": 5.616300040856004e-05,
+          "detail_results_s": 0.0018956950007122941
+        },
+        {
+          "simulate_s": 0.06795075399986672,
+          "get_fluxmap_s": 7.828899924788857e-05,
+          "detail_results_s": 0.001901802999782376
+        }
+      ]
+    },
+    "medium": {
+      "heliostats": 5000,
+      "metrics": {
+        "receiver_power_kw": 358035.0,
+        "optical_efficiency_pct": 55.54,
+        "cosine_efficiency_pct": 76.19,
+        "intercept_efficiency_pct": 97.43,
+        "attenuation_efficiency_pct": 90.93,
+        "blocking_efficiency_pct": 91.17,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 1036.0880784982076,
+        "integrated_incident_flux_kw": 380888.43139991345
+      },
+      "generate_layout_s": 0.17179933599982178,
+      "generated_heliostats": 6291,
+      "assign_layout_s": 0.12214410900014627,
+      "samples": [
+        {
+          "simulate_s": 0.3672412570003871,
+          "get_fluxmap_s": 7.35220000933623e-05,
+          "detail_results_s": 0.010785968000163848
+        },
+        {
+          "simulate_s": 0.34637110800031223,
+          "get_fluxmap_s": 8.985600015876116e-05,
+          "detail_results_s": 0.010369382000135374
+        },
+        {
+          "simulate_s": 0.32630446499933896,
+          "get_fluxmap_s": 5.7672000366437715e-05,
+          "detail_results_s": 0.00947983399964869
+        },
+        {
+          "simulate_s": 0.3247660419992826,
+          "get_fluxmap_s": 5.654899996443419e-05,
+          "detail_results_s": 0.009803556999941065
+        },
+        {
+          "simulate_s": 0.3288214389995119,
+          "get_fluxmap_s": 7.076499969116412e-05,
+          "detail_results_s": 0.009175903000141261
+        }
+      ]
+    },
+    "large": {
+      "heliostats": 10000,
+      "metrics": {
+        "receiver_power_kw": 573347.0,
+        "optical_efficiency_pct": 44.47,
+        "cosine_efficiency_pct": 74.31,
+        "intercept_efficiency_pct": 89.85,
+        "attenuation_efficiency_pct": 88.33,
+        "blocking_efficiency_pct": 83.55,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 1369.8423138766227,
+        "integrated_incident_flux_kw": 609943.5009656108
+      },
+      "generate_layout_s": 0.2275896510000166,
+      "generated_heliostats": 13704,
+      "assign_layout_s": 0.2037727470005848,
+      "samples": [
+        {
+          "simulate_s": 0.669905055999152,
+          "get_fluxmap_s": 7.012799960648408e-05,
+          "detail_results_s": 0.020450355999855674
+        },
+        {
+          "simulate_s": 0.6722748020001745,
+          "get_fluxmap_s": 8.217499998863786e-05,
+          "detail_results_s": 0.02160102900052152
+        },
+        {
+          "simulate_s": 0.6670499989995733,
+          "get_fluxmap_s": 5.8677999732026365e-05,
+          "detail_results_s": 0.020218483000462584
+        },
+        {
+          "simulate_s": 0.6699020480000399,
+          "get_fluxmap_s": 5.868900007044431e-05,
+          "detail_results_s": 0.020536991999506427
+        },
+        {
+          "simulate_s": 0.6744486670004335,
+          "get_fluxmap_s": 6.398999994416954e-05,
+          "detail_results_s": 0.019914333000087936
+        }
+      ]
+    }
+  }
+}

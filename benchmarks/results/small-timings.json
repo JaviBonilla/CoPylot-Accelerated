@@ -1,0 +1,57 @@
+{
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "cpu": "12th Gen Intel(R) Core(TM) i5-1240P",
+  "threads": 1,
+  "repos": {
+    "SolarPILOT": "c74618a70fd8e85708957b1ee57b157ba75a5045",
+    "ssc": "d9e1f0397ba7d44c95ba68cf610f3e1504fc125c",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "cases": {
+    "small": {
+      "heliostats": 1000,
+      "metrics": {
+        "receiver_power_kw": 89947.0,
+        "optical_efficiency_pct": 69.77,
+        "cosine_efficiency_pct": 81.83,
+        "intercept_efficiency_pct": 100.0,
+        "attenuation_efficiency_pct": 94.69,
+        "blocking_efficiency_pct": 99.77,
+        "shading_efficiency_pct": 100.0,
+        "peak_receiver_flux_kw_m2": 426.01170982710215,
+        "integrated_incident_flux_kw": 95688.42236276573
+      },
+      "generate_layout_s": 0.08671063799920375,
+      "generated_heliostats": 1421,
+      "assign_layout_s": 0.053749005000099714,
+      "samples": [
+        {
+          "simulate_s": 0.06810349300030794,
+          "get_fluxmap_s": 9.489700005360646e-05,
+          "detail_results_s": 0.002151673000298615
+        },
+        {
+          "simulate_s": 0.07938539499991748,
+          "get_fluxmap_s": 0.00011014699975930853,
+          "detail_results_s": 0.002181079000365571
+        },
+        {
+          "simulate_s": 0.06892301599964412,
+          "get_fluxmap_s": 6.020899945724523e-05,
+          "detail_results_s": 0.00197515900072176
+        },
+        {
+          "simulate_s": 0.06891040500067902,
+          "get_fluxmap_s": 9.852299990598112e-05,
+          "detail_results_s": 0.001983148000363144
+        },
+        {
+          "simulate_s": 0.07227583300027618,
+          "get_fluxmap_s": 6.51279997327947e-05,
+          "detail_results_s": 0.0019134940002913936
+        }
+      ]
+    }
+  }
+}

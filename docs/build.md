@@ -39,3 +39,33 @@ COPILOT_LIB_DIR="$PWD/build/profile/lib" .venv/bin/python -m unittest discover -
 ```
 
 CSV rows contain phase, function, call count, inclusive seconds, exclusive seconds. Phases distinguish layout preparation from simulate. Nested scopes preserve inclusive/exclusive accounting on one thread; benchmark threads are explicitly one. These selected scopes do not claim a full call graph. Set `SOLARPILOT_PROFILE_FILE` only when collecting profiles. Timers disappear entirely when the option is OFF.
+
+## Recreate source dependencies and local commits
+
+```bash
+python3 scripts/bootstrap.py
+```
+
+This reads upstream pins and patched SHAs from repos.lock.json, clones on `feature/copilot-gpu`, then applies the tracked mailbox patch series. It refuses to overwrite existing nonmatching/modified checkouts. The committer metadata and original author dates recreate identical local commit SHAs. The exact clone → patch → clean configure/build → smoke/regression workflow was independently exercised under `/tmp/copilot-repro`. Updating tracked patch series during development uses `scripts/export_patches.py`; baseline capture remains a separate deliberate action.
+
+## CUDA probe (requires a separate NVIDIA/CUDA environment)
+
+```bash
+BUILD_DIR="$PWD/build/cuda" scripts/test_cpu.sh -DSOLARPILOT_ENABLE_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=75
+COPILOT_LIB_DIR="$PWD/build/cuda/lib" .venv/bin/python -c 'import sys; sys.path.insert(0,"benchmarks"); from cases import api; cp=api(); print(cp.cuda_available(), cp.cuda_device_count()); r=cp.data_create(); cp.set_cuda_device(r,0); cp.data_free(r)'
+```
+
+Default architecture is 75; explicitly select your deployment architecture(s). CUDA language/Toolkit are detected only with ON. The probe allocates a single integer, runs a kernel writing 42, synchronizes/copies/checks/frees it and restores the prior device, with explicit error checking and RAII cleanup. This is setup verification, not part of an optical hot loop. No CUDA compiler, driver or device is available on the development host, so the .cu compilation/runtime remains unverified. ON without nvcc has been checked to fail clearly. No CUDA optical acceleration is claimed.
+
+## CPU sanitizers
+
+```bash
+BUILD_DIR="$PWD/build/asan" scripts/build_cpu.sh -DCMAKE_BUILD_TYPE=Debug -DSOLARPILOT_ENABLE_SANITIZERS=ON
+cmake --build build/asan --target copilot_native_smoke
+ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 build/asan/copilot_native_smoke
+COPILOT_LIB_DIR="$PWD/build/asan/lib" LD_PRELOAD="$(g++ -print-file-name=libasan.so)" ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1 .venv/bin/python benchmarks/smoke_test.py
+```
+
+Native test avoids Python/NumPy lifetime allocations in leak reports. LeakSanitizer needs permission to inspect process threads; this desktop sandbox required running the native check outside the sandbox. No system sysctl changes were made. Native ASan/UBSan/LSan and Python ASan/UBSan smoke pass after two localized legacy corrections: factorial_d computes in double rather than overflowing int at 13!, and optical tree nodes initialize their pointers/terminal flag. The full Release baselines remain equivalent; no tolerances were loosened.
+
+`BUILD_DIR=... scripts/test_cpu.sh` runs build + native CTest + Python smoke + the full Python suite. GCC/Clang sanitizer builds are CPU-only. CPU and profile OFF/ON both work without CUDA installed.

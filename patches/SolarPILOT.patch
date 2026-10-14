@@ -1,0 +1,267 @@
+From d0496c46480e42b83fcfaa03b97f1f49c5f7e64a Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:13:23 +0200
+Subject: [PATCH 1/2] feat: expose compute backend and CUDA probe through
+ CoPylot API
+
+---
+ deploy/api/copylot.py | 61 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+diff --git a/deploy/api/copylot.py b/deploy/api/copylot.py
+index c51f275..7c61195 100644
+--- a/deploy/api/copylot.py
++++ b/deploy/api/copylot.py
+@@ -716,6 +716,67 @@ class CoPylot:
+                 df.set_index(header[0])
+                 return df
+ 
++    def _cuda_probe_error(self):
++        self.pdll.sp_cuda_last_error.restype = c_char_p
++        self.pdll.sp_cuda_last_error.argtypes = []
++        error = self.pdll.sp_cuda_last_error().decode()
++        if error:
++            raise RuntimeError(error)
++
++    def cuda_available(self) -> bool:
++        """Whether this build can see a CUDA device; runtime errors are explicit."""
++        self.pdll.sp_cuda_available.restype = c_bool
++        self.pdll.sp_cuda_available.argtypes = []
++        available = bool(self.pdll.sp_cuda_available())
++        self._cuda_probe_error()
++        return available
++
++    def cuda_device_count(self) -> int:
++        """Zero for CPU-only/no devices; raises on driver/runtime failure."""
++        self.pdll.sp_cuda_device_count.restype = c_int
++        self.pdll.sp_cuda_device_count.argtypes = []
++        count = self.pdll.sp_cuda_device_count()
++        self._cuda_probe_error()
++        if count < 0:
++            raise RuntimeError("CUDA device enumeration failed")
++        return count
++
++    def get_last_backend_error(self, p_data: int) -> str:
++        self.pdll.sp_get_last_backend_error.restype = c_char_p
++        self.pdll.sp_get_last_backend_error.argtypes = [c_void_p]
++        return self.pdll.sp_get_last_backend_error(c_void_p(p_data)).decode()
++
++    def set_compute_backend(self, p_data: int, backend: str) -> bool:
++        """Select CPU. CUDA raises until the numerical backend is implemented."""
++        backends = {"cpu": 0, "cuda": 1}
++        if not isinstance(backend, str) or backend.lower() not in backends:
++            raise ValueError("Compute backend must be 'cpu' or 'cuda'")
++        self.pdll.sp_set_compute_backend.restype = c_bool
++        self.pdll.sp_set_compute_backend.argtypes = [c_void_p, c_int]
++        ok = self.pdll.sp_set_compute_backend(c_void_p(p_data), backends[backend.lower()])
++        if not ok:
++            raise RuntimeError(self.get_last_backend_error(p_data))
++        return True
++
++    def get_compute_backend(self, p_data: int) -> str:
++        self.pdll.sp_get_compute_backend.restype = c_int
++        self.pdll.sp_get_compute_backend.argtypes = [c_void_p]
++        selected = self.pdll.sp_get_compute_backend(c_void_p(p_data))
++        if selected not in (0, 1):
++            raise RuntimeError("Invalid or null CoPylot context")
++        return {0: "cpu", 1: "cuda"}[selected]
++
++    def set_cuda_device(self, p_data: int, device: int) -> bool:
++        """Validate device/toolchain with a trivial kernel; no optical GPU work."""
++        if not isinstance(device, int) or isinstance(device, bool) or device < 0:
++            raise ValueError("CUDA device must be a nonnegative integer")
++        self.pdll.sp_set_cuda_device.restype = c_bool
++        self.pdll.sp_set_cuda_device.argtypes = [c_void_p, c_int]
++        ok = self.pdll.sp_set_cuda_device(c_void_p(p_data), device)
++        if not ok:
++            raise RuntimeError(self.get_last_backend_error(p_data))
++        return True
++
+     #SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads = 1, bool update_aimpoints = true)
+     def simulate(self, p_data: int, nthreads: int = 1, update_aimpoints: bool = True) -> bool:
+         """Calculate heliostat field performance
+-- 
+2.43.0
+
+
+From 53640fdfd671f06255a6b35db2e139ea0d6d1b24 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:19:42 +0200
+Subject: [PATCH 2/2] fix: release C API result arrays after Python conversion
+
+---
+ deploy/api/copylot.py | 141 ++++++++++++++++++++++++------------------
+ 1 file changed, 81 insertions(+), 60 deletions(-)
+
+diff --git a/deploy/api/copylot.py b/deploy/api/copylot.py
+index 7c61195..e098c4b 100644
+--- a/deploy/api/copylot.py
++++ b/deploy/api/copylot.py
+@@ -689,32 +689,43 @@ class CoPylot:
+         # Get data
+         self.pdll.sp_get_layout_info.restype = POINTER(c_number)
+         parr = self.pdll.sp_get_layout_info( c_void_p(p_data), byref(nrows), byref(ncols),  c_bool(get_corners), c_bool(get_optical_details))
+-        # Get header
+-        self.pdll.sp_get_layout_header.restype = c_char_p
+-        header = self.pdll.sp_get_layout_header( c_void_p(p_data), c_bool(get_corners), c_bool(get_optical_details)).decode()
+-        header = header.split(',')
+-        if restype.lower().startswith("mat"):
+-            # output matrix
+-            mat = []
+-            for r in range(nrows.value):
+-                row = []
+-                for c in range(ncols.value):
+-                    row.append( float(parr[ncols.value * r + c]))
+-                mat.append(row)
+-            return mat, header
+-        elif restype.lower().startswith("dic") or restype.lower().startswith("dat"):
+-            # output dictionary
+-            ret = {}
+-            for c,key in enumerate(header):
+-                ret[key] = []
++        if not parr:
++            raise RuntimeError("get_layout_info returned a null result array")
++        try:
++            # Get header
++            self.pdll.sp_get_layout_header.restype = c_char_p
++            header = self.pdll.sp_get_layout_header( c_void_p(p_data), c_bool(get_corners), c_bool(get_optical_details)).decode()
++            header = header.split(',')
++            if restype.lower().startswith("mat"):
++                # output matrix
++                mat = []
+                 for r in range(nrows.value):
+-                    ret[key].append( float(parr[ncols.value * r + c]))
+-            if restype.lower().startswith("dic"):
+-                return ret
+-            else:
+-                df = pd.DataFrame(ret)
+-                df.set_index(header[0])
+-                return df
++                    row = []
++                    for c in range(ncols.value):
++                        row.append( float(parr[ncols.value * r + c]))
++                    mat.append(row)
++                return mat, header
++            elif restype.lower().startswith("dic") or restype.lower().startswith("dat"):
++                # output dictionary
++                ret = {}
++                for c,key in enumerate(header):
++                    ret[key] = []
++                    for r in range(nrows.value):
++                        ret[key].append( float(parr[ncols.value * r + c]))
++                if restype.lower().startswith("dic"):
++                    return ret
++                else:
++                    df = pd.DataFrame(ret)
++                    df.set_index(header[0])
++                    return df
++        finally:
++            self._free_result_array(parr)
++
++    def _free_result_array(self, result):
++        # Arrays exported with new[] are owned by the Python caller.
++        self.pdll._sp_free_var.restype = None
++        self.pdll._sp_free_var.argtypes = [POINTER(c_number)]
++        self.pdll._sp_free_var(result)
+ 
+     def _cuda_probe_error(self):
+         self.pdll.sp_cuda_last_error.restype = c_char_p
+@@ -880,35 +891,40 @@ class CoPylot:
+         # Get data
+         self.pdll.sp_detail_results.restype = POINTER(c_number)
+         res_arr = self.pdll.sp_detail_results( c_void_p(p_data), byref(nrows), byref(ncols), pointer(arr), c_int(nselhel), c_bool(get_corners))
++        if not res_arr:
++            raise RuntimeError("detail_results returned a null result array")
+         try:
+-            # Get header
+-            self.pdll.sp_detail_results_header.restype = c_char_p
+-            header = self.pdll.sp_detail_results_header( c_void_p(p_data), c_bool(get_corners)).decode()
+-            header = header.split(',')
+-            if restype.lower().startswith("mat"):
+-                # output matrix
+-                mat = []
+-                for r in range(nrows.value):
+-                    row = []
+-                    for c in range(ncols.value):
+-                        row.append( float(res_arr[ncols.value * r + c]))
+-                    mat.append(row)
+-                return mat, header
+-            elif restype.lower().startswith("dic") or restype.lower().startswith("dat"):
+-                # output dictionary
+-                ret = {}
+-                for c,key in enumerate(header):
+-                    ret[key] = []
++            try:
++                # Get header
++                self.pdll.sp_detail_results_header.restype = c_char_p
++                header = self.pdll.sp_detail_results_header( c_void_p(p_data), c_bool(get_corners)).decode()
++                header = header.split(',')
++                if restype.lower().startswith("mat"):
++                    # output matrix
++                    mat = []
+                     for r in range(nrows.value):
+-                        ret[key].append( float(res_arr[ncols.value * r + c]))
+-                if restype.lower().startswith("dic"):
+-                    return ret
+-                else:
+-                    df = pd.DataFrame(ret)
+-                    df.set_index(header[0])
+-                    return df
+-        except:
+-            print("detail_results API called failed to return correct information.")
++                        row = []
++                        for c in range(ncols.value):
++                            row.append( float(res_arr[ncols.value * r + c]))
++                        mat.append(row)
++                    return mat, header
++                elif restype.lower().startswith("dic") or restype.lower().startswith("dat"):
++                    # output dictionary
++                    ret = {}
++                    for c,key in enumerate(header):
++                        ret[key] = []
++                        for r in range(nrows.value):
++                            ret[key].append( float(res_arr[ncols.value * r + c]))
++                    if restype.lower().startswith("dic"):
++                        return ret
++                    else:
++                        df = pd.DataFrame(ret)
++                        df.set_index(header[0])
++                        return df
++            except:
++                print("detail_results API called failed to return correct information.")
++        finally:
++            self._free_result_array(res_arr)
+ 
+     #SPEXPORT sp_number_t* sp_get_fluxmap(sp_data_t p_data, int* nrows, int* ncols, int rec_id = 0, int flux_surf = 0)
+     def get_fluxmap(self, p_data: int, rec_id: int = 0, flux_surface: int = 0) -> list:
+@@ -933,14 +949,19 @@ class CoPylot:
+         ncols = c_int()
+         self.pdll.sp_get_fluxmap.restype = POINTER(c_number)
+         res = self.pdll.sp_get_fluxmap( c_void_p(p_data), byref(nrows), byref(ncols), c_int(rec_id), c_int(flux_surface))
+-        # output matrix
+-        mat = []
+-        for r in range(nrows.value):
+-            row = []
+-            for c in range(ncols.value):
+-                row.append( float(res[ncols.value * r + c]))
+-            mat.append(row)
+-        return mat
++        if not res:
++            raise RuntimeError("get_fluxmap returned a null result array")
++        try:
++            # output matrix
++            mat = []
++            for r in range(nrows.value):
++                row = []
++                for c in range(ncols.value):
++                    row.append( float(res[ncols.value * r + c]))
++                mat.append(row)
++            return mat
++        finally:
++            self._free_result_array(res)
+     
+     #SPEXPORT void sp_clear_land(sp_data_t p_data, const char* type = NULL)
+     def clear_land(self, p_data: int, clear_type: str = None) -> None:
+-- 
+2.43.0
+

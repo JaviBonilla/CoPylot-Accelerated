@@ -1,0 +1,24 @@
+From 699263f12b2de1c6f12e211e3e8906a80054cc1b Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 08:59:00 +0200
+Subject: [PATCH] build: include limits explicitly for GCC legacy coretrace
+
+---
+ coretrace/treemesh.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/coretrace/treemesh.cpp b/coretrace/treemesh.cpp
+index f4c38a0..0628a06 100644
+--- a/coretrace/treemesh.cpp
++++ b/coretrace/treemesh.cpp
+@@ -49,6 +49,7 @@
+ 
+ 
+ #include "treemesh.h"
++#include <limits>
+ #include <math.h>
+ #include <algorithm>
+ 
+-- 
+2.43.0
+

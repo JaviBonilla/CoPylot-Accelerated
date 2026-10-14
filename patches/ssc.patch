@@ -1,0 +1,691 @@
+From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:02:07 +0200
+Subject: [PATCH 1/6] build: use valid preprocessor constant for legacy
+ intercept flag
+
+---
+ solarpilot/interop.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/solarpilot/interop.cpp b/solarpilot/interop.cpp
+index e6dae1b4..ba9c55de 100644
+--- a/solarpilot/interop.cpp
++++ b/solarpilot/interop.cpp
+@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ using namespace std;
+ 
+ // Used to get intercept efficiency for each heliostat (For central receviers, requires a lot of rays to be traced)
+-#define HELIO_INTERCEPT false;  
++#define HELIO_INTERCEPT 0
+ 
+ //-------------------  arraystring ----------------
+ 
+-- 
+2.43.0
+
+
+From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:09:09 +0200
+Subject: [PATCH 2/6] perf: add optional inclusive and exclusive core profiling
+ scopes
+
+---
+ solarpilot/CoPilot_API.cpp |  5 +++++
+ solarpilot/CoreProfile.cpp | 44 ++++++++++++++++++++++++++++++++++++++
+ solarpilot/CoreProfile.h   | 42 ++++++++++++++++++++++++++++++++++++
+ solarpilot/Flux.cpp        |  3 +++
+ solarpilot/SolarField.cpp  |  7 ++++++
+ solarpilot/interop.cpp     |  2 ++
+ 6 files changed, 103 insertions(+)
+ create mode 100644 solarpilot/CoreProfile.cpp
+ create mode 100644 solarpilot/CoreProfile.h
+
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index c9ac052b..c3d30294 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -1,3 +1,4 @@
++#include "CoreProfile.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -1053,6 +1054,8 @@ SPEXPORT bool sp_update_geometry(sp_data_t p_data)
+ 
+ SPEXPORT bool sp_generate_layout(sp_data_t p_data, int nthreads = 0) //, bool save_detail = true)
+ {
++    SP_PROFILE_SESSION("generate_layout");
++    SP_PROFILE_SCOPE(API);
+     /*
+     Create a solar field layout. Options include 'nthreads':integer (default All),'save_detail':boolean (default True)",
+     run layout without specified positions SolarPILOT generates layout positions ([table:options])
+@@ -1291,6 +1294,8 @@ SPEXPORT const char* sp_get_layout_header(sp_data_t p_data, bool get_corners = f
+ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads = 1, bool update_aimpoints = true) //bool save_detail = true,
+ //SPEXPORT void sp_simulate(sp_data_t p_data)
+ {
++    SP_PROFILE_SESSION("simulate");
++    SP_PROFILE_SCOPE(API);
+     /*
+     Calculate heliostat field performance. Options include 'nthreads':integer (default All),
+     'save_detail':boolean (default True), 'update_aimpoints':boolean (default True)
+diff --git a/solarpilot/CoreProfile.cpp b/solarpilot/CoreProfile.cpp
+new file mode 100644
+index 00000000..0f3447d4
+--- /dev/null
++++ b/solarpilot/CoreProfile.cpp
+@@ -0,0 +1,44 @@
++#include "CoreProfile.h"
++#ifdef SOLARPILOT_ENABLE_CORE_PROFILE
++#include <cstdlib>
++#include <fstream>
++#include <iomanip>
++#include <mutex>
++namespace sp_profile {
++thread_local State* active = nullptr;
++thread_local Scope* parent = nullptr;
++static std::mutex output_mutex;
++static const char* names[] = {"API", "PerformanceSimulationPrep", "calcHeliostatShadows",
++ "HermiteFluxSimulation", "AnalyticalFluxSimulation", "CalcDimensionalFluxProfiles",
++ "Flux::fluxDensity", "Flux::imagePlaneIntercept", "UpdateNeighborList", "SolarField::Simulate"};
++Session::Session(const char* phase) : previous_(active), phase_(phase) { active = &state_; }
++Session::~Session() {
++    active = previous_;
++    const char* file = std::getenv("SOLARPILOT_PROFILE_FILE");
++    if (!file || !*file) return;
++    std::lock_guard<std::mutex> lock(output_mutex);
++    std::ofstream out(file, std::ios::app);
++    out << std::setprecision(17);
++    for (int i = 0; i < Count; ++i) {
++        const Entry& e = state_.entries[i];
++        out << phase_ << ',' << names[i] << ',' << e.calls << ',' << e.inclusive << ',' << e.exclusive << '\n';
++    }
++}
++Scope::Scope(Id id) : state_(active), parent_(nullptr), id_(id) {
++    if (!state_) return;
++    parent_ = parent;
++    parent = this;
++    start_ = Clock::now();
++}
++Scope::~Scope() {
++    if (!state_) return;
++    const double elapsed = std::chrono::duration<double>(Clock::now() - start_).count();
++    Entry& e = state_->entries[id_];
++    ++e.calls;
++    e.inclusive += elapsed;
++    e.exclusive += elapsed - children_;
++    if (parent_) parent_->children_ += elapsed;
++    parent = parent_;
++}
++}
++#endif
+diff --git a/solarpilot/CoreProfile.h b/solarpilot/CoreProfile.h
+new file mode 100644
+index 00000000..cd9f8e8f
+--- /dev/null
++++ b/solarpilot/CoreProfile.h
+@@ -0,0 +1,42 @@
++#ifndef SOLARPILOT_CORE_PROFILE_H
++#define SOLARPILOT_CORE_PROFILE_H
++// Compile-time opt-in. OFF expands to nothing, including inside hot paths.
++#ifdef SOLARPILOT_ENABLE_CORE_PROFILE
++#include <array>
++#include <chrono>
++#include <cstdint>
++namespace sp_profile {
++enum Id { API, Prep, Shadows, Hermite, Analytical, Dimensional, Density, Intercept,
++          NeighborList, Simulation, Count };
++struct Entry { std::uint64_t calls = 0; double inclusive = 0.; double exclusive = 0.; };
++struct State { std::array<Entry, Count> entries; };
++class Scope;
++extern thread_local State* active;
++extern thread_local Scope* parent;
++class Session {
++    State state_;
++    State* previous_;
++    const char* phase_;
++public:
++    explicit Session(const char* phase);
++    ~Session();
++};
++class Scope {
++    using Clock = std::chrono::steady_clock;
++    State* state_;
++    Scope* parent_;
++    Clock::time_point start_;
++    double children_ = 0.;
++    Id id_;
++public:
++    explicit Scope(Id id);
++    ~Scope();
++};
++}
++#define SP_PROFILE_SCOPE(id) sp_profile::Scope sp_scope_##id(sp_profile::id)
++#define SP_PROFILE_SESSION(phase) sp_profile::Session sp_session(phase)
++#else
++#define SP_PROFILE_SCOPE(id)
++#define SP_PROFILE_SESSION(phase)
++#endif
++#endif
+diff --git a/solarpilot/Flux.cpp b/solarpilot/Flux.cpp
+index 429d762a..580123e4 100644
+--- a/solarpilot/Flux.cpp
++++ b/solarpilot/Flux.cpp
+@@ -1,3 +1,4 @@
++#include "CoreProfile.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -703,6 +704,7 @@ void Flux::hermiteMirrorCoefs(Heliostat &H, double tht) {
+ }
+ 
+ double Flux::imagePlaneIntercept(var_map &V, Heliostat &H, Receiver *Rec, Vect *Sun) {
++    SP_PROFILE_SCOPE(Intercept);
+ 	/* 
+ 	###############################################################################################
+ 	-------WHEN TO CALL------
+@@ -2136,6 +2138,7 @@ void Flux::hermiteIntegral(double G[5], double F[5], double X[2], double A[2], d
+ 
+ void Flux::fluxDensity(simulation_info *siminfo, FluxSurface &flux_surface, Hvector &helios, double tht, bool show_progress)
+ {
++    SP_PROFILE_SCOPE(Density);
+ 	/* 
+ 	Take a set of points defining the flux plane within the flux_surface object, a solar field geometry, 
+ 	and calculate the flux intensity at each point. Fills and returns these values into the FluxSurface
+diff --git a/solarpilot/SolarField.cpp b/solarpilot/SolarField.cpp
+index 940601b7..1c374a9d 100644
+--- a/solarpilot/SolarField.cpp
++++ b/solarpilot/SolarField.cpp
+@@ -1,3 +1,4 @@
++#include "CoreProfile.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -643,6 +644,7 @@ double SolarField::calcAverageAttenuation()
+ }
+ 
+ bool SolarField::UpdateNeighborList(double lims[4], double zen){
++    SP_PROFILE_SCOPE(NeighborList);
+ 	/* 
+ 	Update the neighbors associated with each heliostat based on the shadow extent. Determine this range
+ 	based on the current sun position
+@@ -3291,6 +3293,7 @@ bool SolarField::SimulateTime(int /*hour*/, int day_of_month, int month, sim_par
+ 
+ void SolarField::Simulate(double azimuth, double zenith, sim_params &P)
+ {
++    SP_PROFILE_SCOPE(Simulation);
+ 	/*
+     azimuth [rad]
+     zenith [rad]
+@@ -3693,6 +3696,7 @@ void SolarField::updateAllTrackVectors(Vect &Sun){
+ }
+ 
+ void SolarField::calcHeliostatShadows(Vect &Sun){
++    SP_PROFILE_SCOPE(Shadows);
+ 
+ 	//Calculate the heliostat shadows
+ 	sp_point P;	//sp_point on a plane representing the ground
+@@ -4212,6 +4216,7 @@ double SolarField::getReceiverPipingHeatLoss()
+ 
+ void SolarField::HermiteFluxSimulation(Hvector &helios, bool keep_existing_profile)
+ {
++    SP_PROFILE_SCOPE(Hermite);
+ 	if (!keep_existing_profile) {
+ 		AnalyticalFluxSimulation(helios);
+ 	}
+@@ -4221,6 +4226,7 @@ void SolarField::HermiteFluxSimulation(Hvector &helios, bool keep_existing_profi
+ 
+ void SolarField::AnalyticalFluxSimulation(Hvector &helios)
+ {
++    SP_PROFILE_SCOPE(Analytical);
+ 	//Simulate each receiver flux profile (non-dimensional)
+ 	int nrec = (int)_receivers.size();
+ 	for(int n=0; n<nrec; n++){
+@@ -4267,6 +4273,7 @@ void SolarField::AnalyticalFluxSimulation(Hvector &helios)
+ 
+ void SolarField::CalcDimensionalFluxProfiles(Hvector &helios)
+ {
++    SP_PROFILE_SCOPE(Dimensional);
+     /*
+     Take the existing non-dimensional flux profiles in the Receivers::getFluxSurfaces()
+     and alter the values to indicate total dimensional power on the receiver surfaces
+diff --git a/solarpilot/interop.cpp b/solarpilot/interop.cpp
+index ba9c55de..43c348b5 100644
+--- a/solarpilot/interop.cpp
++++ b/solarpilot/interop.cpp
+@@ -1,3 +1,4 @@
++#include "CoreProfile.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -570,6 +571,7 @@ bool interop::ticker_increment(int lengths[], int indices[], bool changed[], int
+ //Simulation methods
+ 
+ bool interop::PerformanceSimulationPrep(SolarField &SF, Hvector &helios){
++    SP_PROFILE_SCOPE(Prep);
+ 	/* 
+ 	Call this method when setting up a performance simulation (i.e. a flux simulation).
+ 
+-- 
+2.43.0
+
+
+From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:13:23 +0200
+Subject: [PATCH 3/6] perf: measure the actual shading and blocking neighbor
+ loop
+
+---
+ solarpilot/CoreProfile.cpp | 3 ++-
+ solarpilot/CoreProfile.h   | 2 +-
+ solarpilot/SolarField.cpp  | 3 +++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/solarpilot/CoreProfile.cpp b/solarpilot/CoreProfile.cpp
+index 0f3447d4..c270943a 100644
+--- a/solarpilot/CoreProfile.cpp
++++ b/solarpilot/CoreProfile.cpp
+@@ -10,7 +10,8 @@ thread_local Scope* parent = nullptr;
+ static std::mutex output_mutex;
+ static const char* names[] = {"API", "PerformanceSimulationPrep", "calcHeliostatShadows",
+  "HermiteFluxSimulation", "AnalyticalFluxSimulation", "CalcDimensionalFluxProfiles",
+- "Flux::fluxDensity", "Flux::imagePlaneIntercept", "UpdateNeighborList", "SolarField::Simulate"};
++ "Flux::fluxDensity", "Flux::imagePlaneIntercept", "UpdateNeighborList", "SolarField::Simulate",
++ "ShadingBlockingNeighbors"};
+ Session::Session(const char* phase) : previous_(active), phase_(phase) { active = &state_; }
+ Session::~Session() {
+     active = previous_;
+diff --git a/solarpilot/CoreProfile.h b/solarpilot/CoreProfile.h
+index cd9f8e8f..71b0b0f5 100644
+--- a/solarpilot/CoreProfile.h
++++ b/solarpilot/CoreProfile.h
+@@ -7,7 +7,7 @@
+ #include <cstdint>
+ namespace sp_profile {
+ enum Id { API, Prep, Shadows, Hermite, Analytical, Dimensional, Density, Intercept,
+-          NeighborList, Simulation, Count };
++          NeighborList, Simulation, ShadingBlocking, Count };
+ struct Entry { std::uint64_t calls = 0; double inclusive = 0.; double exclusive = 0.; };
+ struct State { std::array<Entry, Count> entries; };
+ class Scope;
+diff --git a/solarpilot/SolarField.cpp b/solarpilot/SolarField.cpp
+index 1c374a9d..6e9d7629 100644
+--- a/solarpilot/SolarField.cpp
++++ b/solarpilot/SolarField.cpp
+@@ -3433,6 +3433,8 @@ void SolarField::SimulateHeliostatEfficiency(Vect &Sun, Heliostat *helios, sim_p
+     double interaction_limit = V->sf.interaction_limit.val;
+ 	Hvector *neibs = helios->getNeighborList();
+ 	int nn = (int)neibs->size();
++	{
++    SP_PROFILE_SCOPE(ShadingBlocking);
+ 	for(int j=0; j<nn; j++){
+ 		if(helios == neibs->at(j) ) continue;	//Don't calculate blocking or shading for the same heliostat
+ 		
+@@ -3440,6 +3442,7 @@ void SolarField::SimulateHeliostatEfficiency(Vect &Sun, Heliostat *helios, sim_p
+ 		
+         block_tot += -calcShadowBlock(helios, neibs->at(j), 1, Sun, interaction_limit);
+ 	}
++	}
+ 		
+ 	if(shad_tot < 0.) shad_tot = 0.;
+ 	if(shad_tot > 1.) shad_tot = 1.;
+-- 
+2.43.0
+
+
+From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:13:23 +0200
+Subject: [PATCH 4/6] refactor: introduce per-context compute backend and
+ preserve CPU dispatch
+
+---
+ solarpilot/CMakeLists.txt     |  1 +
+ solarpilot/CoPilot_API.cpp    | 76 ++++++++++++++++++++++++++++++++++-
+ solarpilot/CoPilot_API.h      |  9 +++++
+ solarpilot/ComputeBackend.cpp | 11 +++++
+ solarpilot/ComputeBackend.h   | 25 ++++++++++++
+ 5 files changed, 121 insertions(+), 1 deletion(-)
+ create mode 100644 solarpilot/ComputeBackend.cpp
+ create mode 100644 solarpilot/ComputeBackend.h
+
+diff --git a/solarpilot/CMakeLists.txt b/solarpilot/CMakeLists.txt
+index b97951e6..1ae2bbf8 100644
+--- a/solarpilot/CMakeLists.txt
++++ b/solarpilot/CMakeLists.txt
+@@ -121,6 +121,7 @@ else()
+ endif()
+ 	
+ if(BUILD_COPILOT_API)
++	target_sources(solarpilot PRIVATE ComputeBackend.cpp)
+ 	target_link_libraries(solarpilot lpsolve nlopt shared coretrace)
+ 	if (MSVC)		
+ 		set(COPILOT_DLL $<TARGET_FILE_DIR:solarpilot>/$<TARGET_FILE_BASE_NAME:solarpilot>.dll)
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index c3d30294..043e1b8d 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -1,4 +1,5 @@
+ #include "CoreProfile.h"
++#include "ComputeBackend.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -45,6 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ struct CopilotObject
+ {
++    solarpilot::ComputeBackendState compute;
+     SolarField solarfield;
+     var_map variables;
+     sim_results results;
+@@ -1291,7 +1293,7 @@ SPEXPORT const char* sp_get_layout_header(sp_data_t p_data, bool get_corners = f
+     return mc->__str_data.c_str();
+ }
+ 
+-SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads = 1, bool update_aimpoints = true) //bool save_detail = true,
++static bool simulate_cpu(sp_data_t p_data, int nthreads = 1, bool update_aimpoints = true) //bool save_detail = true,
+ //SPEXPORT void sp_simulate(sp_data_t p_data)
+ {
+     SP_PROFILE_SESSION("simulate");
+@@ -1367,6 +1369,78 @@ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads = 1, bool update_aimpoi
+     return simok;
+ }
+ 
++SPEXPORT bool sp_cuda_available()
++{
++    return solarpilot::cuda_device_count() > 0;
++}
++
++SPEXPORT int sp_cuda_device_count()
++{
++    return solarpilot::cuda_device_count();
++}
++
++SPEXPORT const char* sp_cuda_last_error()
++{
++    return solarpilot::cuda_probe_error();
++}
++
++SPEXPORT const char* sp_get_last_backend_error(sp_data_t p_data)
++{
++    if (!p_data) return "Null CoPylot context";
++    return static_cast<CopilotObject*>(p_data)->compute.error.c_str();
++}
++
++SPEXPORT bool sp_set_compute_backend(sp_data_t p_data, int backend)
++{
++    if (!p_data) return false;
++    auto& state = static_cast<CopilotObject*>(p_data)->compute;
++    state.error.clear();
++    if (backend == static_cast<int>(solarpilot::ComputeBackend::CPU)) {
++        state.selected = solarpilot::ComputeBackend::CPU;
++        return true;
++    }
++    state.error = backend == static_cast<int>(solarpilot::ComputeBackend::CUDA)
++        ? "CUDA backend not implemented yet" : "Invalid compute backend";
++    return false; // Preserve the previous backend on rejection.
++}
++
++SPEXPORT int sp_get_compute_backend(sp_data_t p_data)
++{
++    if (!p_data) return -1;
++    return static_cast<int>(static_cast<CopilotObject*>(p_data)->compute.selected);
++}
++
++SPEXPORT bool sp_set_cuda_device(sp_data_t p_data, int device)
++{
++    if (!p_data) return false;
++    auto& state = static_cast<CopilotObject*>(p_data)->compute;
++    state.error.clear();
++    if (device < 0) {
++        state.error = "CUDA device index must be nonnegative";
++        return false;
++    }
++    if (!solarpilot::cuda_probe_device(device, state.error)) return false;
++    if (device != state.cuda_device) state.gpu.reset();
++    state.cuda_device = device;
++    return true;
++}
++
++SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads, bool update_aimpoints)
++{
++    if (!p_data) return false;
++    auto& state = static_cast<CopilotObject*>(p_data)->compute;
++    state.error.clear();
++    switch (state.selected) {
++    case solarpilot::ComputeBackend::CPU:
++        return simulate_cpu(p_data, nthreads, update_aimpoints);
++    case solarpilot::ComputeBackend::CUDA:
++        state.error = "CUDA backend not implemented yet";
++        return false;
++    }
++    state.error = "Invalid compute backend";
++    return false;
++}
++
+ SPEXPORT const char *sp_summary_results(sp_data_t p_data)
+ {
+     /*
+diff --git a/solarpilot/CoPilot_API.h b/solarpilot/CoPilot_API.h
+index 71dcece2..219a62d1 100644
+--- a/solarpilot/CoPilot_API.h
++++ b/solarpilot/CoPilot_API.h
+@@ -56,6 +56,15 @@ extern "C" {
+     /** The numeric type used in the SolarPILOT API. */ 
+     typedef double sp_number_t;
+ 
++    // Additive Phase 1 API. CPU=0, CUDA=1. Failed setters preserve state.
++    SPEXPORT bool sp_cuda_available();
++    SPEXPORT int sp_cuda_device_count(); // -1 indicates runtime/driver error
++    SPEXPORT const char* sp_cuda_last_error(); // thread-local, valid until next probe
++    SPEXPORT bool sp_set_compute_backend(sp_data_t p_data, int backend);
++    SPEXPORT int sp_get_compute_backend(sp_data_t p_data);
++    SPEXPORT bool sp_set_cuda_device(sp_data_t p_data, int device);
++    SPEXPORT const char* sp_get_last_backend_error(sp_data_t p_data);
++
+     SPEXPORT const char* sp_version(sp_data_t p_data);
+ 
+     SPEXPORT void sp_set_callback(sp_data_t p_data, int (*)(sp_number_t, const char*));
+diff --git a/solarpilot/ComputeBackend.cpp b/solarpilot/ComputeBackend.cpp
+new file mode 100644
+index 00000000..48420f09
+--- /dev/null
++++ b/solarpilot/ComputeBackend.cpp
+@@ -0,0 +1,11 @@
++#include "ComputeBackend.h"
++#ifndef SOLARPILOT_ENABLE_CUDA
++namespace solarpilot {
++int cuda_device_count() { return 0; }
++const char* cuda_probe_error() { return ""; }
++bool cuda_probe_device(int, std::string& error) {
++    error = "CUDA support not enabled at build time";
++    return false;
++}
++}
++#endif
+diff --git a/solarpilot/ComputeBackend.h b/solarpilot/ComputeBackend.h
+new file mode 100644
+index 00000000..6e214b4b
+--- /dev/null
++++ b/solarpilot/ComputeBackend.h
+@@ -0,0 +1,25 @@
++#ifndef SOLARPILOT_COMPUTE_BACKEND_H
++#define SOLARPILOT_COMPUTE_BACKEND_H
++#include <memory>
++#include <string>
++
++namespace solarpilot {
++enum class ComputeBackend { CPU = 0, CUDA = 1 };
++// Ownership boundary only. Future concrete CUDA context owns persistent buffers
++// and streams; no allocations or uploads are introduced in the CPU path.
++class GpuContext {
++public:
++    virtual ~GpuContext() = default;
++};
++struct ComputeBackendState {
++    ComputeBackend selected = ComputeBackend::CPU;
++    int cuda_device = 0;
++    std::unique_ptr<GpuContext> gpu;
++    std::string error;
++};
++// Implemented by CPU stubs or CUDA probe depending on build configuration.
++int cuda_device_count();
++const char* cuda_probe_error();
++bool cuda_probe_device(int device, std::string& error);
++}
++#endif
+-- 
+2.43.0
+
+
+From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:15:45 +0200
+Subject: [PATCH 5/6] build: add RAII CUDA device probe and trivial
+ verification kernel
+
+---
+ solarpilot/CudaProbe.cu | 81 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 solarpilot/CudaProbe.cu
+
+diff --git a/solarpilot/CudaProbe.cu b/solarpilot/CudaProbe.cu
+new file mode 100644
+index 00000000..cd8f06b8
+--- /dev/null
++++ b/solarpilot/CudaProbe.cu
+@@ -0,0 +1,81 @@
++// Toolchain/device verification only; no optical algorithm is implemented here.
++#include "ComputeBackend.h"
++#include <cuda_runtime.h>
++
++namespace solarpilot {
++namespace {
++thread_local std::string probe_error;
++__global__ void probe_kernel(int* result) { *result = 42; }
++
++bool checked(cudaError_t status, const char* operation, std::string& error) {
++    if (status == cudaSuccess) return true;
++    if (!error.empty()) error += "; ";
++    error += std::string(operation) + ": " + cudaGetErrorString(status);
++    return false;
++}
++class ProbeResources {
++    int previous_;
++    bool changed_ = false;
++    int* value_ = nullptr;
++public:
++    explicit ProbeResources(int previous) : previous_(previous) {}
++    ProbeResources(const ProbeResources&) = delete;
++    ProbeResources& operator=(const ProbeResources&) = delete;
++    ~ProbeResources() {
++        // Best effort only for exceptional unwinding; normal paths call close()
++        // explicitly and return every CUDA cleanup error to the caller.
++        if (value_) cudaFree(value_);
++        if (changed_) cudaSetDevice(previous_);
++    }
++    void changed() { changed_ = true; }
++    int** address() { return &value_; }
++    int* value() const { return value_; }
++    bool close(std::string& error) {
++        bool ok = true;
++        if (value_) {
++            ok = checked(cudaFree(value_), "cudaFree(probe)", error) && ok;
++            value_ = nullptr;
++        }
++        if (changed_) {
++            ok = checked(cudaSetDevice(previous_), "cudaSetDevice(restore)", error) && ok;
++            changed_ = false;
++        }
++        return ok;
++    }
++};
++}
++
++int cuda_device_count() {
++    probe_error.clear();
++    int count = 0;
++    const cudaError_t status = cudaGetDeviceCount(&count);
++    if (status == cudaErrorNoDevice) return 0;
++    if (!checked(status, "cudaGetDeviceCount", probe_error)) return -1;
++    return count;
++}
++const char* cuda_probe_error() { return probe_error.c_str(); }
++
++bool cuda_probe_device(int device, std::string& error) {
++    error.clear();
++    const int count = cuda_device_count();
++    if (count < 0) { error = probe_error; return false; }
++    if (count == 0) { error = "No CUDA devices available"; return false; }
++    if (device < 0 || device >= count) { error = "CUDA device index out of range"; return false; }
++    int previous = 0;
++    if (!checked(cudaGetDevice(&previous), "cudaGetDevice", error)) return false;
++    ProbeResources resources(previous);
++    if (!checked(cudaSetDevice(device), "cudaSetDevice", error)) return false;
++    resources.changed();
++    auto finish = [&](bool ok) { return resources.close(error) && ok; };
++    if (!checked(cudaMalloc(reinterpret_cast<void**>(resources.address()), sizeof(int)),
++                 "cudaMalloc(probe)", error)) return finish(false);
++    probe_kernel<<<1, 1>>>(resources.value());
++    if (!checked(cudaGetLastError(), "probe kernel launch", error)) return finish(false);
++    if (!checked(cudaDeviceSynchronize(), "probe kernel execution", error)) return finish(false);
++    int value = 0;
++    if (!checked(cudaMemcpy(&value, resources.value(), sizeof(int), cudaMemcpyDeviceToHost),
++                 "cudaMemcpy(probe)", error)) return finish(false);
++    if (value != 42) { error = "CUDA probe returned an invalid result"; return finish(false); }
++    return finish(true);
++}
++}
+-- 
+2.43.0
+
+
+From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 09:19:42 +0200
+Subject: [PATCH 6/6] fix: remove sanitizer detected overflow and uninitialized
+ optical tree state
+
+---
+ solarpilot/OpticalMesh.h | 4 ++--
+ solarpilot/Toolbox.cpp   | 6 ++++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/solarpilot/OpticalMesh.h b/solarpilot/OpticalMesh.h
+index 1933836b..81b19087 100644
+--- a/solarpilot/OpticalMesh.h
++++ b/solarpilot/OpticalMesh.h
+@@ -109,9 +109,9 @@ public:
+ 
+ class tree_node
+ {
+-	tree_node *m0, *m1;
++	tree_node *m0 = nullptr, *m1 = nullptr;
+ 	std::vector<void*> data;
+-	bool terminal;
++	bool terminal = false;
+ 	
+ protected:
+ 	tree_node *m_proc(std::string &key, int index);
+diff --git a/solarpilot/Toolbox.cpp b/solarpilot/Toolbox.cpp
+index d789ab14..fccce34c 100644
+--- a/solarpilot/Toolbox.cpp
++++ b/solarpilot/Toolbox.cpp
+@@ -735,8 +735,10 @@ int Toolbox::factorial(int x) {
+ }
+ 
+ double Toolbox::factorial_d(int x) {
+-	//returns the same as factorial, but with a doub value
+-	return double(factorial(x));
++	// Compute in double: the Hermite table initializes 13!, beyond int range.
++	double value = 1.;
++	for (int i = 2; i <= x; ++i) value *= i;
++	return value;
+ }
+ 
+ bool Toolbox::pointInPolygon( const vector< sp_point > &poly, const sp_point &pt) {
+-- 
+2.43.0
+

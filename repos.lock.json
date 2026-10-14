@@ -1,5 +1,32 @@
 {
-  "SolarPILOT": {"url": "https://github.com/NatLabRockies/SolarPILOT.git", "ref": "develop", "sha": "c74618a70fd8e85708957b1ee57b157ba75a5045"},
-  "ssc": {"url": "https://github.com/mjwagner2/ssc.git", "ref": "solarpilot-develop", "sha": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec"},
-  "SolTrace": {"url": "https://github.com/NLR-SolTrace/SolTrace.git", "ref": "v3.4.0", "sha": "79b2ca3dfec496506d24ae56055c0d7e240ba368"}
+  "SolarPILOT": {
+    "url": "https://github.com/NatLabRockies/SolarPILOT.git",
+    "ref": "develop",
+    "sha": "c74618a70fd8e85708957b1ee57b157ba75a5045",
+    "patched_sha": "53640fdfd671f06255a6b35db2e139ea0d6d1b24",
+    "patch_committer": {
+      "name": "Javier Bonilla",
+      "email": "javier.bonilla@psa.es"
+    }
+  },
+  "ssc": {
+    "url": "https://github.com/mjwagner2/ssc.git",
+    "ref": "solarpilot-develop",
+    "sha": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec",
+    "patched_sha": "9ce2c8c6424bbc8e91718734404266c8137170ae",
+    "patch_committer": {
+      "name": "Javier Bonilla",
+      "email": "javier.bonilla@psa.es"
+    }
+  },
+  "SolTrace": {
+    "url": "https://github.com/NLR-SolTrace/SolTrace.git",
+    "ref": "v3.4.0",
+    "sha": "79b2ca3dfec496506d24ae56055c0d7e240ba368",
+    "patched_sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+    "patch_committer": {
+      "name": "Javier Bonilla",
+      "email": "javier.bonilla@psa.es"
+    }
+  }
 }
