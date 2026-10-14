@@ -7,15 +7,20 @@ from cases import api, configure, layout, collect
 
 
 class Backend(unittest.TestCase):
-    def test_cpu_dispatch_and_rejected_cuda(self):
+    def test_cpu_dispatch_and_cuda_selection(self):
         cp = api()
         r = cp.data_create()
         self.assertTrue(r)
         try:
             self.assertEqual(cp.get_compute_backend(r), 'cpu')
             self.assertTrue(cp.set_compute_backend(r, 'CPU'))
-            with self.assertRaisesRegex(RuntimeError, 'CUDA backend not implemented yet'):
-                cp.set_compute_backend(r, 'cuda')
+            if cp.cuda_available():
+                self.assertTrue(cp.set_compute_backend(r, 'cuda'))
+                self.assertEqual(cp.get_compute_backend(r), 'cuda')
+                self.assertTrue(cp.set_compute_backend(r, 'cpu'))
+            else:
+                with self.assertRaisesRegex(RuntimeError, 'not enabled|No CUDA devices'):
+                    cp.set_compute_backend(r, 'cuda')
             self.assertEqual(cp.get_compute_backend(r), 'cpu')
             with self.assertRaises(ValueError):
                 cp.set_compute_backend(r, 'other')

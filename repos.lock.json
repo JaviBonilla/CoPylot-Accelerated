@@ -3,7 +3,7 @@
     "url": "https://github.com/NatLabRockies/SolarPILOT.git",
     "ref": "develop",
     "sha": "c74618a70fd8e85708957b1ee57b157ba75a5045",
-    "patched_sha": "53640fdfd671f06255a6b35db2e139ea0d6d1b24",
+    "patched_sha": "5209ccaf5ed4449f39c2405f166db161adb8c6ae",
     "patch_committer": {
       "name": "Javier Bonilla",
       "email": "javier.bonilla@psa.es"
@@ -13,7 +13,7 @@
     "url": "https://github.com/mjwagner2/ssc.git",
     "ref": "solarpilot-develop",
     "sha": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec",
-    "patched_sha": "c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d",
+    "patched_sha": "a553d244d8bc9ed68a81d7c62467cc20ee97855e",
     "patch_committer": {
       "name": "Javier Bonilla",
       "email": "javier.bonilla@psa.es"

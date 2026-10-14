@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 1/8] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/10] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,8 +28,8 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 2/8] perf: add optional inclusive and exclusive core profiling
- scopes
+Subject: [PATCH 02/10] perf: add optional inclusive and exclusive core
+ profiling scopes
 
 ---
  solarpilot/CoPilot_API.cpp |  5 +++++
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 3/8] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/10] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 4/8] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/10] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 5/8] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/10] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,8 +645,8 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 6/8] fix: remove sanitizer detected overflow and uninitialized
- optical tree state
+Subject: [PATCH 06/10] fix: remove sanitizer detected overflow and
+ uninitialized optical tree state
 
 ---
  solarpilot/OpticalMesh.h | 4 ++--
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 7/8] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/10] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 8/8] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/10] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1013,6 +1013,725 @@ index 394c5a6ce..d2cad8f0e 100644
  #ifndef SOLARPILOT_FLUX_DENSITY_NUMERICS_H
  #define SOLARPILOT_FLUX_DENSITY_NUMERICS_H
  
+-- 
+2.43.0
+
+
+From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 12:55:49 +0200
+Subject: [PATCH 09/10] cuda: add reusable flux buffers and shared double
+ reduction kernel
+
+---
+ solarpilot/ComputeBackend.cpp    |   4 +
+ solarpilot/ComputeBackend.h      |  36 +++++-
+ solarpilot/FluxDensityKernels.cu | 199 +++++++++++++++++++++++++++++++
+ solarpilot/FluxDensityNumerics.h |  15 ++-
+ 4 files changed, 248 insertions(+), 6 deletions(-)
+ create mode 100644 solarpilot/FluxDensityKernels.cu
+
+diff --git a/solarpilot/ComputeBackend.cpp b/solarpilot/ComputeBackend.cpp
+index 48420f095..09fb66b5a 100644
+--- a/solarpilot/ComputeBackend.cpp
++++ b/solarpilot/ComputeBackend.cpp
+@@ -1,6 +1,10 @@
+ #include "ComputeBackend.h"
++#include <stdexcept>
+ #ifndef SOLARPILOT_ENABLE_CUDA
+ namespace solarpilot {
++std::unique_ptr<GpuContext> make_gpu_context(int) {
++    throw std::runtime_error("CUDA support not enabled at build time");
++}
+ int cuda_device_count() { return 0; }
+ const char* cuda_probe_error() { return ""; }
+ bool cuda_probe_device(int, std::string& error) {
+diff --git a/solarpilot/ComputeBackend.h b/solarpilot/ComputeBackend.h
+index 6e214b4b6..5aefe38c2 100644
+--- a/solarpilot/ComputeBackend.h
++++ b/solarpilot/ComputeBackend.h
+@@ -2,15 +2,47 @@
+ #define SOLARPILOT_COMPUTE_BACKEND_H
+ #include <memory>
+ #include <string>
++#include <cstddef>
++#include <chrono>
++#include "FluxDensityNumerics.h"
+ 
+ namespace solarpilot {
+ enum class ComputeBackend { CPU = 0, CUDA = 1 };
+-// Ownership boundary only. Future concrete CUDA context owns persistent buffers
+-// and streams; no allocations or uploads are introduced in the CPU path.
++// CPU-safe interface; concrete CUDA resources are owned by the .cu implementation.
++struct FluxGpuStatistics {
++    std::size_t heliostats = 0, cells = 0;
++    std::size_t heliostat_capacity = 0, cell_capacity = 0, output_capacity = 0;
++    std::size_t allocations = 0;
++    bool timed = false;
++    double soa_preparation_s = 0., preparation_s = 0., hybrid_s = 0.;
++    double h2d_heliostat_ms = 0., h2d_cell_ms = 0., kernel_ms = 0., d2h_ms = 0.;
++    double cpu_postprocessing_s = 0., simulate_s = 0.;
++};
+ class GpuContext {
+ public:
++    FluxGpuStatistics statistics;
+     virtual ~GpuContext() = default;
++    virtual void evaluate_flux(const flux_density::HeliostatData*, std::size_t,
++                              const flux_density::CellData*, std::size_t,
++                              const flux_density::Parameters&, double*, int block_size = 256,
++                              bool timing = false) = 0;
++    // Internal numerical-test operation: pair i evaluates h[i] against cell[i].
++    virtual void evaluate_pairs(const flux_density::HeliostatData*, const flux_density::CellData*,
++                               std::size_t, const flux_density::Parameters&, double*) = 0;
++    virtual void close() = 0; // Checked release before normal context/device teardown.
++};
++class FluxPostprocessingTimer {
++    GpuContext* context_;
++    std::chrono::steady_clock::time_point begin_;
++public:
++    explicit FluxPostprocessingTimer(GpuContext* context) : context_(context && context->statistics.timed ? context : nullptr) {
++        if (context_) begin_ = std::chrono::steady_clock::now();
++    }
++    ~FluxPostprocessingTimer() {
++        if (context_) context_->statistics.cpu_postprocessing_s += std::chrono::duration<double>(std::chrono::steady_clock::now()-begin_).count();
++    }
+ };
++std::unique_ptr<GpuContext> make_gpu_context(int device);
+ struct ComputeBackendState {
+     ComputeBackend selected = ComputeBackend::CPU;
+     int cuda_device = 0;
+diff --git a/solarpilot/FluxDensityKernels.cu b/solarpilot/FluxDensityKernels.cu
+new file mode 100644
+index 000000000..58e8a866c
+--- /dev/null
++++ b/solarpilot/FluxDensityKernels.cu
+@@ -0,0 +1,199 @@
++// BSD-3-Clause; shared numerical formulation is in FluxDensityNumerics.h.
++#include "ComputeBackend.h"
++#include <cuda_runtime.h>
++#include <chrono>
++#include <limits>
++#include <stdexcept>
++#include <vector>
++
++namespace solarpilot {
++namespace {
++void check(cudaError_t status, const char* operation) {
++    if (status != cudaSuccess) throw std::runtime_error(std::string(operation)+": "+cudaGetErrorString(status));
++}
++class DeviceGuard {
++    int previous_ = 0;
++    bool changed_ = false;
++public:
++    explicit DeviceGuard(int device) {
++        check(cudaGetDevice(&previous_), "cudaGetDevice(flux)");
++        if (device != previous_) {
++            check(cudaSetDevice(device), "cudaSetDevice(flux)");
++            changed_ = true;
++        }
++    }
++    void restore() {
++        if (changed_) { check(cudaSetDevice(previous_), "cudaSetDevice(flux restore)"); changed_ = false; }
++    }
++    ~DeviceGuard() { if (changed_) cudaSetDevice(previous_); }
++};
++// Every allocation retains its device, including exceptional destructor cleanup.
++template<class T> class Buffer {
++    int device_;
++    T* data_ = nullptr;
++    std::size_t capacity_ = 0;
++public:
++    explicit Buffer(int device) : device_(device) {}
++    Buffer(const Buffer&) = delete;
++    Buffer& operator=(const Buffer&) = delete;
++    ~Buffer() { try { DeviceGuard guard(device_); release(); } catch (...) {} }
++    T* data() const { return data_; }
++    std::size_t capacity() const { return capacity_; }
++    bool reserve(std::size_t count) {
++        if (count <= capacity_) return false;
++        if (count > std::numeric_limits<std::size_t>::max()/sizeof(T))
++            throw std::runtime_error("CUDA flux buffer size overflow");
++        T* replacement = nullptr;
++        check(cudaMalloc(reinterpret_cast<void**>(&replacement), count*sizeof(T)), "cudaMalloc(flux)");
++        // Replacement is guarded even if freeing the old allocation fails.
++        try { release(); } catch (const std::exception& error) {
++            const cudaError_t cleanup = cudaFree(replacement);
++            if (cleanup != cudaSuccess) throw std::runtime_error(std::string(error.what())+"; replacement cleanup: "+cudaGetErrorString(cleanup));
++            throw;
++        }
++        data_ = replacement; capacity_ = count;
++        return true;
++    }
++    void release() {
++        if (data_) { check(cudaFree(data_), "cudaFree(flux)"); data_ = nullptr; capacity_ = 0; }
++    }
++};
++class Event {
++    int device_;
++    cudaEvent_t event_ = nullptr;
++public:
++    explicit Event(int device) : device_(device) {}
++    Event(const Event&) = delete;
++    Event& operator=(const Event&) = delete;
++    ~Event() { try { DeviceGuard guard(device_); release(); } catch (...) {} }
++    void ensure() { if (!event_) check(cudaEventCreate(&event_), "cudaEventCreate(flux)"); }
++    void record() { ensure(); check(cudaEventRecord(event_, 0), "cudaEventRecord(flux)"); }
++    double elapsed_from(const Event& start) {
++        check(cudaEventSynchronize(event_), "cudaEventSynchronize(flux)");
++        float milliseconds = 0.; // CUDA event API uses float; optical arithmetic remains double.
++        check(cudaEventElapsedTime(&milliseconds, start.event_, event_), "cudaEventElapsedTime(flux)");
++        return milliseconds;
++    }
++    void release() {
++        if (event_) { check(cudaEventDestroy(event_), "cudaEventDestroy(flux)"); event_ = nullptr; }
++    }
++};
++
++// SoA[field][h], stride = current active H, independent of allocated capacity.
++__device__ flux_density::HeliostatData load_heliostat(const double* data, std::size_t stride, std::size_t h) {
++    flux_density::HeliostatData value;
++    for (int k = 0; k < 3; ++k) { value.direction[k] = data[k*stride+h]; value.aim[k] = data[(k+3)*stride+h]; }
++    value.sigma_x = data[6*stride+h]; value.sigma_y = data[7*stride+h]; value.normalization = data[8*stride+h];
++    for (int k = 0; k < 16; ++k) value.coefficients[k] = data[(9+k)*stride+h];
++    return value;
++}
++__global__ void flux_density_kernel(const double* heliostats, std::size_t count,
++                                    const flux_density::CellData* cells,
++                                    flux_density::Parameters parameters, double* output) {
++    const std::size_t cell = blockIdx.x;
++    const flux_density::CellData point = cells[cell];
++    double partial = 0.;
++    for (std::size_t h = threadIdx.x; h < count; h += blockDim.x)
++        partial += flux_density::evaluate_contribution(load_heliostat(heliostats, count, h), point, parameters);
++    extern __shared__ double sums[];
++    sums[threadIdx.x] = partial;
++    __syncthreads();
++    // Fixed power-of-two tree. All lanes participate, including H < blockDim.
++    for (unsigned offset = blockDim.x/2; offset > 0; offset /= 2) {
++        if (threadIdx.x < offset) sums[threadIdx.x] += sums[threadIdx.x+offset];
++        __syncthreads();
++    }
++    if (threadIdx.x == 0) output[cell] = sums[0];
++}
++__global__ void contribution_kernel(const double* heliostats, const flux_density::CellData* cells,
++                                    std::size_t count, flux_density::Parameters parameters, double* output) {
++    const std::size_t pair = std::size_t(blockIdx.x)*blockDim.x+threadIdx.x;
++    if (pair < count) output[pair] = flux_density::evaluate_contribution(load_heliostat(heliostats, count, pair), cells[pair], parameters);
++}
++
++class FluxGpuContext final : public GpuContext {
++    int device_;
++    Buffer<double> heliostats_, output_;
++    Buffer<flux_density::CellData> cells_;
++    Event start_, end_;
++    std::vector<double> packed_;
++    std::size_t allocations_ = 0;
++    void prepare(const flux_density::HeliostatData* h, std::size_t count,
++                 const flux_density::CellData* cells, std::size_t cell_count, bool timing) {
++        if ((count && !h) || !cells || !cell_count) throw std::runtime_error("Invalid CUDA flux input arrays");
++        if (count > std::numeric_limits<std::size_t>::max()/25) throw std::runtime_error("CUDA heliostat size overflow");
++        const auto begin = std::chrono::steady_clock::now();
++        packed_.resize(25*count);
++        for (std::size_t i = 0; i < count; ++i) {
++            for (int k = 0; k < 3; ++k) { packed_[k*count+i] = h[i].direction[k]; packed_[(k+3)*count+i] = h[i].aim[k]; }
++            packed_[6*count+i] = h[i].sigma_x; packed_[7*count+i] = h[i].sigma_y; packed_[8*count+i] = h[i].normalization;
++            for (int k = 0; k < 16; ++k) packed_[(9+k)*count+i] = h[i].coefficients[k];
++        }
++        statistics = FluxGpuStatistics();
++        statistics.timed = timing;
++        if (timing) statistics.soa_preparation_s = std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count();
++        allocations_ += heliostats_.reserve(25*count);
++        allocations_ += cells_.reserve(cell_count);
++        allocations_ += output_.reserve(cell_count);
++        statistics.heliostats = count; statistics.cells = cell_count;
++        statistics.heliostat_capacity = heliostats_.capacity()/25;
++        statistics.cell_capacity = cells_.capacity(); statistics.output_capacity = output_.capacity();
++        statistics.allocations = allocations_;
++        if (timing) start_.record();
++        if (count) check(cudaMemcpy(heliostats_.data(), packed_.data(), 200*count, cudaMemcpyHostToDevice), "cudaMemcpy(flux heliostats H2D)");
++        if (timing) { end_.record(); statistics.h2d_heliostat_ms = end_.elapsed_from(start_); start_.record(); }
++        check(cudaMemcpy(cells_.data(), cells, sizeof(flux_density::CellData)*cell_count, cudaMemcpyHostToDevice), "cudaMemcpy(flux cells H2D)");
++        if (timing) { end_.record(); statistics.h2d_cell_ms = end_.elapsed_from(start_); }
++    }
++    void download(double* output, std::size_t count, bool timing) {
++        check(cudaGetLastError(), "flux kernel launch");
++        if (timing) { end_.record(); statistics.kernel_ms = end_.elapsed_from(start_); }
++        else check(cudaDeviceSynchronize(), "flux kernel execution");
++        if (timing) start_.record();
++        check(cudaMemcpy(output, output_.data(), sizeof(double)*count, cudaMemcpyDeviceToHost), "cudaMemcpy(flux D2H)");
++        if (timing) { end_.record(); statistics.d2h_ms = end_.elapsed_from(start_); }
++    }
++public:
++    explicit FluxGpuContext(int device) : device_(device), heliostats_(device), output_(device), cells_(device), start_(device), end_(device) {
++        const int count = cuda_device_count();
++        if (count < 0) throw std::runtime_error(cuda_probe_error());
++        if (device < 0 || device >= count) throw std::runtime_error("CUDA device index out of range");
++    }
++    ~FluxGpuContext() override { try { close(); } catch (...) {} }
++    void evaluate_flux(const flux_density::HeliostatData* h, std::size_t count,
++                       const flux_density::CellData* cells, std::size_t cell_count,
++                       const flux_density::Parameters& parameters, double* output, int block, bool timing) override {
++        if (block != 64 && block != 128 && block != 256 && block != 512)
++            throw std::runtime_error("CUDA flux block size must be 64, 128, 256 or 512");
++        if (!output || cell_count > unsigned(std::numeric_limits<int>::max())) throw std::runtime_error("Invalid CUDA flux output dimensions");
++        DeviceGuard device(device_);
++        prepare(h, count, cells, cell_count, timing);
++        if (timing) start_.record();
++        flux_density_kernel<<<static_cast<unsigned>(cell_count), block, block*sizeof(double)>>>(heliostats_.data(), count, cells_.data(), parameters, output_.data());
++        download(output, cell_count, timing);
++        device.restore();
++    }
++    void evaluate_pairs(const flux_density::HeliostatData* h, const flux_density::CellData* cells,
++                        std::size_t count, const flux_density::Parameters& parameters, double* output) override {
++        if (!output || count > std::size_t(std::numeric_limits<int>::max())) throw std::runtime_error("Invalid CUDA contribution dimensions");
++        DeviceGuard device(device_);
++        prepare(h, count, cells, count, false);
++        contribution_kernel<<<static_cast<unsigned>((count+255)/256), 256>>>(heliostats_.data(), cells_.data(), count, parameters, output_.data());
++        download(output, count, false);
++        device.restore();
++    }
++    void close() override {
++        DeviceGuard device(device_);
++        // Attempt all releases; report the first failure on normal teardown.
++        std::string error;
++        auto release = [&](auto& resource) { try { resource.release(); } catch (const std::exception& e) { if (error.empty()) error = e.what(); } };
++        release(heliostats_); release(cells_); release(output_); release(start_); release(end_);
++        device.restore();
++        if (!error.empty()) throw std::runtime_error(error);
++    }
++};
++}
++std::unique_ptr<GpuContext> make_gpu_context(int device) {
++    return std::unique_ptr<GpuContext>(new FluxGpuContext(device));
++}
++}
+diff --git a/solarpilot/FluxDensityNumerics.h b/solarpilot/FluxDensityNumerics.h
+index d2cad8f0e..e1bfc6d72 100644
+--- a/solarpilot/FluxDensityNumerics.h
++++ b/solarpilot/FluxDensityNumerics.h
+@@ -35,7 +35,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <cmath>
+ #include <type_traits>
+ 
+-// CPU-only numerical core. Packing, visibility apertures and ownership stay in the adapter.
++// Shared arithmetic; CPU builds need no CUDA headers or toolkit.
++#if defined(__CUDACC__)
++#define SP_FLUX_HD __host__ __device__
++#else
++#define SP_FLUX_HD
++#endif
++// Packing, visibility apertures and ownership stay in the adapter.
+ namespace flux_density {
+ struct HeliostatData {
+     double direction[3];
+@@ -48,11 +54,11 @@ struct Parameters { double tower_height, pi; };
+ static_assert(std::is_trivial<HeliostatData>::value, "Heliostat data must be trivial");
+ static_assert(std::is_standard_layout<CellData>::value, "Cell data must have standard layout");
+ 
+-inline double visibility_cosine(const HeliostatData& h, const CellData& c) {
++SP_FLUX_HD inline double visibility_cosine(const HeliostatData& h, const CellData& c) {
+     return c.normal[0]*h.direction[0] + c.normal[1]*h.direction[1] + c.normal[2]*h.direction[2];
+ }
+ 
+-inline double hermite_series(const double (&coefficients)[16], double x, double y) {
++SP_FLUX_HD inline double hermite_series(const double (&coefficients)[16], double x, double y) {
+     double hx[9], hy[9];
+     hx[0] = hy[0] = 1.;
+     hx[1] = hy[1] = 0.;
+@@ -74,7 +80,7 @@ inline double hermite_series(const double (&coefficients)[16], double x, double
+     return flux;
+ }
+ 
+-inline double evaluate_contribution(const HeliostatData& h, const CellData& c, const Parameters& p) {
++SP_FLUX_HD inline double evaluate_contribution(const HeliostatData& h, const CellData& c, const Parameters& p) {
+     const double cosine = visibility_cosine(h, c);
+     if (cosine < 0. || cosine > 1.) return 0.;
+     // Preserve plane_intersect's sequential dot sums for valid nonzero directions.
+@@ -103,4 +109,5 @@ inline double evaluate_contribution(const HeliostatData& h, const CellData& c, c
+     return cosine * hfe * h.normalization;
+ }
+ }
++#undef SP_FLUX_HD
+ #endif
+-- 
+2.43.0
+
+
+From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Wed, 14 Oct 2026 12:55:49 +0200
+Subject: [PATCH 10/10] cuda: integrate hybrid cylindrical Hermite flux density
+ with explicit errors
+
+---
+ solarpilot/CMakeLists.txt      |   1 +
+ solarpilot/CoPilot_API.cpp     |  73 ++++++++++++---
+ solarpilot/Flux.cpp            |   1 +
+ solarpilot/Flux.h              |   6 ++
+ solarpilot/FluxDensityCuda.cpp | 157 +++++++++++++++++++++++++++++++++
+ solarpilot/SolarField.cpp      |   5 +-
+ 6 files changed, 230 insertions(+), 13 deletions(-)
+ create mode 100644 solarpilot/FluxDensityCuda.cpp
+
+diff --git a/solarpilot/CMakeLists.txt b/solarpilot/CMakeLists.txt
+index 1ae2bbf8e..7d2a6a904 100644
+--- a/solarpilot/CMakeLists.txt
++++ b/solarpilot/CMakeLists.txt
+@@ -30,6 +30,7 @@ set(SOLARPILOT_SRC
+ 	exceptions.hpp
+ 	Financial.cpp              Financial.h
+ 	Flux.cpp                   Flux.h
++	FluxDensityCuda.cpp         FluxDensityNumerics.h
+ 	fluxsim.cpp                fluxsim.h
+ 	heliodata.cpp              heliodata.h
+ 	Heliostat.cpp              Heliostat.h
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index 043e1b8d2..4c11d6a46 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -1,5 +1,9 @@
+ #include "CoreProfile.h"
+ #include "ComputeBackend.h"
++#include "Flux.h"
++#include <chrono>
++#include <iomanip>
++#include <cstdlib>
+ /*
+ BSD 3-Clause License
+ 
+@@ -118,6 +122,8 @@ SPEXPORT bool sp_data_free(sp_data_t p_data)
+ 
+     if (mc)
+     {
++        try { if (mc->compute.gpu) mc->compute.gpu->close(); }
++        catch (const std::exception& error) { mc->compute.error = error.what(); return false; }
+         delete mc;
+         return true;
+     }
+@@ -1399,9 +1405,16 @@ SPEXPORT bool sp_set_compute_backend(sp_data_t p_data, int backend)
+         state.selected = solarpilot::ComputeBackend::CPU;
+         return true;
+     }
+-    state.error = backend == static_cast<int>(solarpilot::ComputeBackend::CUDA)
+-        ? "CUDA backend not implemented yet" : "Invalid compute backend";
+-    return false; // Preserve the previous backend on rejection.
++    if (backend != static_cast<int>(solarpilot::ComputeBackend::CUDA)) {
++        state.error = "Invalid compute backend";
++        return false;
++    }
++    if (!solarpilot::cuda_probe_device(state.cuda_device, state.error)) return false;
++    try {
++        if (!state.gpu) state.gpu = solarpilot::make_gpu_context(state.cuda_device);
++        state.selected = solarpilot::ComputeBackend::CUDA;
++        return true;
++    } catch (const std::exception& error) { state.error = error.what(); return false; }
+ }
+ 
+ SPEXPORT int sp_get_compute_backend(sp_data_t p_data)
+@@ -1420,7 +1433,10 @@ SPEXPORT bool sp_set_cuda_device(sp_data_t p_data, int device)
+         return false;
+     }
+     if (!solarpilot::cuda_probe_device(device, state.error)) return false;
+-    if (device != state.cuda_device) state.gpu.reset();
++    if (device != state.cuda_device) {
++        try { if (state.gpu) state.gpu->close(); state.gpu.reset(); }
++        catch (const std::exception& error) { state.error = error.what(); return false; }
++    }
+     state.cuda_device = device;
+     return true;
+ }
+@@ -1428,17 +1444,50 @@ SPEXPORT bool sp_set_cuda_device(sp_data_t p_data, int device)
+ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads, bool update_aimpoints)
+ {
+     if (!p_data) return false;
+-    auto& state = static_cast<CopilotObject*>(p_data)->compute;
++    CopilotObject& object = *static_cast<CopilotObject*>(p_data);
++    auto& state = object.compute;
+     state.error.clear();
+-    switch (state.selected) {
+-    case solarpilot::ComputeBackend::CPU:
+-        return simulate_cpu(p_data, nthreads, update_aimpoints);
+-    case solarpilot::ComputeBackend::CUDA:
+-        state.error = "CUDA backend not implemented yet";
++    if (state.selected == solarpilot::ComputeBackend::CPU) {
++        try { return simulate_cpu(p_data, nthreads, update_aimpoints); }
++        catch (const std::exception& error) { state.error = error.what(); return false; }
++    }
++    if (state.selected != solarpilot::ComputeBackend::CUDA) { state.error = "Invalid compute backend"; return false; }
++    var_map& variables = object.variables;
++    if (variables.flux.flux_model.mapval() != var_fluxsim::FLUX_MODEL::HERMITE_ANALYTICAL
++        || variables.recs.size() != 1
++        || variables.recs.front().rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++        || !variables.recs.front().is_enabled.val
++        || variables.flux.aim_method.mapval() != var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
++        || variables.flux.flux_time_type.mapval() != var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
++        || nthreads != 1 || !update_aimpoints) {
++        state.error = "CUDA Hermite flux density currently supports only a single enabled cylindrical receiver, simple aiming, specified sun position and one CPU preparation thread.";
+         return false;
+     }
+-    state.error = "Invalid compute backend";
+-    return false;
++    try {
++        if (!state.gpu) state.gpu = solarpilot::make_gpu_context(state.cuda_device);
++        Flux* flux = object.solarfield.getFluxObject();
++        struct ScopedContext {
++            Flux* flux;
++            ScopedContext(Flux* f, solarpilot::GpuContext* gpu) : flux(f) { flux->setGpuContext(gpu); }
++            ~ScopedContext() { flux->setGpuContext(nullptr); }
++        } selected(flux, state.gpu.get());
++        const char* path = std::getenv("SOLARPILOT_CUDA_TIMING_FILE");
++        const bool timed = path && *path;
++        const auto begin = std::chrono::steady_clock::now();
++        const bool ok = simulate_cpu(p_data, 1, true); // Existing CPU preparation and post-processing; density dispatches CUDA.
++        if (!ok) { state.error = "CPU preparation failed before completing CUDA Hermite simulation."; return false; }
++        if (timed) {
++            auto& stats = state.gpu->statistics;
++            stats.simulate_s = std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count();
++            std::ofstream out(path, std::ios::app);
++            if (!out) throw std::runtime_error("Unable to write CUDA flux timing file.");
++            out << std::setprecision(17) << stats.heliostats << ',' << stats.cells << ',' << stats.preparation_s << ','
++                << stats.h2d_heliostat_ms << ',' << stats.h2d_cell_ms << ',' << stats.kernel_ms << ',' << stats.d2h_ms << ','
++                << stats.cpu_postprocessing_s << ',' << stats.hybrid_s << ',' << stats.simulate_s << '\n';
++            if (!out) throw std::runtime_error("Unable to finish CUDA flux timing file.");
++        }
++        return true;
++    } catch (const std::exception& error) { state.error = error.what(); return false; }
+ }
+ 
+ SPEXPORT const char *sp_summary_results(sp_data_t p_data)
+diff --git a/solarpilot/Flux.cpp b/solarpilot/Flux.cpp
+index dbcae1994..9eb6cc33e 100644
+--- a/solarpilot/Flux.cpp
++++ b/solarpilot/Flux.cpp
+@@ -2144,6 +2144,7 @@ void Flux::hermiteIntegral(double G[5], double F[5], double X[2], double A[2], d
+ void Flux::fluxDensity(simulation_info* siminfo, FluxSurface& surface, Hvector& helios, double tht, bool progress)
+ {
+     SP_PROFILE_SCOPE(Density);
++    if (_gpu_context) { fluxDensityCuda(siminfo, surface, helios, tht, progress); return; }
+     // The fixed numerical core represents precisely Setup's seven-term packing.
+     // Intercept may return before producing coefficients for invisible heliostats.
+     bool packed = _n_terms == 7;
+diff --git a/solarpilot/Flux.h b/solarpilot/Flux.h
+index 7edd8633f..a9e747ac8 100644
+--- a/solarpilot/Flux.h
++++ b/solarpilot/Flux.h
+@@ -47,6 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ and heliostat shape using the MOMENT subroutine, line 8244
+ 
+ */
++namespace solarpilot { class GpuContext; }
+ class FluxSurface;
+ class Heliostat;
+ class Receiver;
+@@ -96,12 +97,17 @@ class Flux
+ 	double _ag[16];
+ 	double _xg[16];
+ 
++ solarpilot::GpuContext* _gpu_context = nullptr; // Non-owning, scoped to sp_simulate.
++ void fluxDensityCuda(simulation_info*, FluxSurface&, Hvector&, double, bool);
++
+  // Internal CPU paths; the original implementation remains the numerical oracle.
+  void fluxDensityLegacy(simulation_info*, FluxSurface&, Hvector&, double, bool);
+  unsigned long long fluxDensityFlat(simulation_info*, FluxSurface&, Hvector&, double, bool);
+ 
+  public:
+ 
++ void setGpuContext(solarpilot::GpuContext* context) { _gpu_context = context; }
++ solarpilot::GpuContext* getGpuContext() { return _gpu_context; }
+ 
+ 	 Flux();
+ 	~Flux();
+diff --git a/solarpilot/FluxDensityCuda.cpp b/solarpilot/FluxDensityCuda.cpp
+new file mode 100644
+index 000000000..a6e4ff414
+--- /dev/null
++++ b/solarpilot/FluxDensityCuda.cpp
+@@ -0,0 +1,157 @@
++// BSD-3-Clause; packs the existing host optics, never host object representations.
++#include "Flux.h"
++#include "ComputeBackend.h"
++#include "Heliostat.h"
++#include "Receiver.h"
++#include <chrono>
++#include <algorithm>
++#include <cmath>
++#include <cstdlib>
++#include <cstring>
++#include <fstream>
++#include <iomanip>
++#include <limits>
++
++namespace {
++struct ErrorSummary {
++    double absolute = 0., relative = 0., squared = 0.;
++    std::size_t abs_index = 0, rel_index = 0, count = 0;
++    bool passed = true;
++    void add(double expected, double actual, std::size_t index) {
++        const double difference = std::abs(actual-expected);
++        const double rel = expected == 0. ? (difference == 0. ? 0. : std::numeric_limits<double>::infinity()) : difference/std::abs(expected);
++        if (difference > absolute) { absolute = difference; abs_index = index; }
++        if (rel > relative) { relative = rel; rel_index = index; }
++        squared += difference*difference; ++count;
++        passed = passed && std::isfinite(expected) && std::isfinite(actual)
++            && difference <= 1.e-10 + 1.e-9*std::abs(expected);
++    }
++    double rms() const { return count ? std::sqrt(squared/count) : 0.; }
++};
++}
++
++void Flux::fluxDensityCuda(simulation_info* siminfo, FluxSurface& surface, Hvector& helios, double tht, bool progress) {
++    using Clock = std::chrono::steady_clock;
++    const char* timing_path = std::getenv("SOLARPILOT_CUDA_TIMING_FILE");
++    const bool timing = timing_path && *timing_path;
++    const auto begin = timing ? Clock::now() : Clock::time_point();
++    const int nx = surface.getFluxNX(), ny = surface.getFluxNY();
++    var_receiver* variables = surface.getParent()->getVarMap();
++    if (_n_terms != 7 || variables->rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++        || nx <= 0 || ny <= 0 || !std::isfinite(tht) || tht <= 0.)
++        throw spexception("CUDA flux density requires valid cylindrical geometry and seven-term Hermite optics.");
++    FluxGrid& grid = *surface.getFluxMap();
++    const sp_point& offset = *surface.getSurfaceOffset();
++    const sp_point receiver(variables->rec_offset_x_global.Val(), variables->rec_offset_y_global.Val(), variables->rec_offset_z_global.Val());
++    const flux_density::Parameters parameters = {tht, pi};
++    std::vector<flux_density::CellData> cells;
++    std::vector<double> initial, output;
++    cells.reserve(std::size_t(nx)*ny); initial.reserve(std::size_t(nx)*ny);
++    for (int x = 0; x < nx; ++x) for (int y = 0; y < ny; ++y) {
++        const FluxPoint& point = grid.at(x).at(y);
++        const flux_density::CellData cell = {
++            {point.location.x+offset.x+receiver.x, point.location.y+offset.y+receiver.y, point.location.z+offset.z+receiver.z+tht},
++            {point.normal.i, point.normal.j, point.normal.k}};
++        for (int k = 0; k < 3; ++k) if (!std::isfinite(cell.position[k]) || !std::isfinite(cell.normal[k]))
++            throw spexception("CUDA flux density received nonfinite receiver cells.");
++        cells.push_back(cell); initial.push_back(point.flux);
++    }
++    std::vector<flux_density::HeliostatData> packed;
++    packed.reserve(helios.size());
++    for (Heliostat* source : helios) {
++        if (!source->IsEnabled()) continue;
++        matrix_t<double>* coefficients = source->getHermiteCoefObject();
++        if (coefficients->nrows()*coefficients->ncols() != 16)
++            throw spexception("CUDA flux density requires 16 prepared Hermite coefficients per enabled heliostat.");
++        flux_density::HeliostatData h;
++        source->getImageSize(h.sigma_x, h.sigma_y);
++        const sp_point& aim = *source->getAimPoint();
++        const sp_point& location = *source->getLocation();
++        Vect direction(location.x-receiver.x, location.y-receiver.y, location.z-receiver.z-tht);
++        Toolbox::unitvect(direction);
++        h.direction[0] = direction.i; h.direction[1] = direction.j; h.direction[2] = direction.k;
++        h.aim[0] = aim.x; h.aim[1] = aim.y; h.aim[2] = aim.z;
++        h.normalization = source->getArea()*source->getEfficiencyTotal()/(tht*tht);
++        for (int k = 0; k < 16; ++k) h.coefficients[k] = coefficients->at(k);
++        bool valid = std::isfinite(h.normalization) && std::isfinite(h.sigma_x) && std::isfinite(h.sigma_y)
++            && h.sigma_x > 0. && h.sigma_y > 0. && (direction.i != 0. || direction.j != 0. || direction.k != 0.);
++        for (int k = 0; k < 3; ++k) valid = valid && std::isfinite(h.direction[k]) && std::isfinite(h.aim[k]);
++        for (double coefficient : h.coefficients) valid = valid && std::isfinite(coefficient);
++        if (!valid) throw spexception("CUDA flux density received invalid prepared heliostat optics.");
++        packed.push_back(h);
++    }
++    output.resize(cells.size());
++    const double preparation = timing ? std::chrono::duration<double>(Clock::now()-begin).count() : 0.;
++    int block = 256;
++    bool verify = false;
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++    const char* block_text = std::getenv("SOLARPILOT_CUDA_BLOCK_SIZE");
++    if (block_text) {
++        char* end = nullptr;
++        const long value = std::strtol(block_text, &end, 10);
++        if (!end || *end || (value != 64 && value != 128 && value != 256 && value != 512))
++            throw spexception("CUDA flux block size must be 64, 128, 256 or 512");
++        block = static_cast<int>(value);
++    }
++    const char* mode = std::getenv("SOLARPILOT_FLUX_PATH");
++    verify = mode && std::strcmp(mode, "verify_cuda") == 0;
++#endif
++    if (verify && timing) throw spexception("CUDA timing requires execution without verify_cuda diagnostics.");
++    std::vector<double> reference;
++    if (verify) {
++        fluxDensityFlat(siminfo, surface, helios, tht, false);
++        std::size_t i = 0;
++        for (int x = 0; x < nx; ++x) for (int y = 0; y < ny; ++y) {
++            reference.push_back(grid.at(x).at(y).flux);
++            grid.at(x).at(y).flux = initial[i++];
++        }
++    }
++    _gpu_context->evaluate_flux(packed.data(), packed.size(), cells.data(), cells.size(), parameters, output.data(), block, timing);
++    _gpu_context->statistics.preparation_s = preparation + _gpu_context->statistics.soa_preparation_s;
++    std::size_t i = 0;
++    for (int x = 0; x < nx; ++x) for (int y = 0; y < ny; ++y) {
++        if (!std::isfinite(output[i])) throw spexception("CUDA flux density produced nonfinite output.");
++        grid.at(x).at(y).flux = initial[i]+output[i];
++        ++i;
++    }
++    if (timing) _gpu_context->statistics.hybrid_s = std::chrono::duration<double>(Clock::now()-begin).count();
++    if (progress) { siminfo->Reset(); siminfo->setCurrentSimulation(0); }
++    if (!verify) return;
++
++    // Diagnose per-pair arithmetic and sum-order error at the same raw peak cell.
++    // Bounded 256-pair tiles reuse buffers; no H*C contribution array exists.
++    const solarpilot::FluxGpuStatistics statistics = _gpu_context->statistics;
++    ErrorSummary maps, contributions;
++    std::size_t peak = 0;
++    for (std::size_t c = 0; c < cells.size(); ++c) {
++        maps.add(reference[c], initial[c]+output[c], c);
++        if (output[c] > output[peak]) peak = c;
++    }
++    double device_terms_sequential = 0.;
++    for (std::size_t first = 0; first < packed.size(); first += 256) {
++        const std::size_t count = std::min(std::size_t(256), packed.size()-first);
++        std::vector<flux_density::CellData> points(count, cells[peak]);
++        std::vector<double> values(count);
++        _gpu_context->evaluate_pairs(packed.data()+first, points.data(), count, parameters, values.data());
++        for (std::size_t h = 0; h < count; ++h) {
++            contributions.add(flux_density::evaluate_contribution(packed[first+h], points[h], parameters), values[h], first+h);
++            device_terms_sequential += values[h];
++        }
++    }
++    ErrorSummary reduction;
++    reduction.add(device_terms_sequential, output[peak], peak);
++    _gpu_context->statistics = statistics;
++    const char* path = std::getenv("SOLARPILOT_CUDA_COMPARE_FILE");
++    if (path && *path) {
++        std::ofstream out(path, std::ios::app);
++        if (!out) throw spexception("Unable to write CUDA flux comparison file.");
++        out << std::setprecision(17) << packed.size() << ',' << nx << ',' << ny << ',' << block << ','
++            << maps.absolute << ',' << maps.relative << ',' << maps.rms() << ',' << maps.abs_index/ny << ',' << maps.abs_index%ny << ','
++            << maps.rel_index/ny << ',' << maps.rel_index%ny << ',' << contributions.absolute << ',' << contributions.relative << ','
++            << contributions.rms() << ',' << contributions.abs_index << ',' << reduction.absolute << ',' << reduction.relative << ',' << peak/ny << ',' << peak%ny << ','
++            << statistics.allocations << ',' << statistics.heliostat_capacity << ',' << statistics.cell_capacity << ',' << statistics.output_capacity << '\n';
++        if (!out) throw spexception("Unable to finish CUDA flux comparison file.");
++    }
++    if (!maps.passed || !contributions.passed || !reduction.passed)
++        throw spexception("CUDA flux contribution or reduction differs beyond rtol=1e-9, atol=1e-10; inspect the comparison report.");
++}
+diff --git a/solarpilot/SolarField.cpp b/solarpilot/SolarField.cpp
+index 6e9d76295..9e72693d0 100644
+--- a/solarpilot/SolarField.cpp
++++ b/solarpilot/SolarField.cpp
+@@ -1,4 +1,5 @@
+ #include "CoreProfile.h"
++#include "ComputeBackend.h"
+ /*
+ BSD 3-Clause License
+ 
+@@ -4269,7 +4270,8 @@ void SolarField::AnalyticalFluxSimulation(Hvector &helios)
+ 		{
+ 			surfaces->at(0).ClearFluxGridResetMaxFlux();
+ 			_flux->fluxDensity(&_sim_info, surfaces->at(0), helios, _var_map->sf.tht.val, true);
+-			surfaces->at(0).Normalize();
++            { solarpilot::FluxPostprocessingTimer timer(_flux->getGpuContext());
++              surfaces->at(0).Normalize(); }
+ 		}
+ 	}
+ }
+@@ -4277,6 +4279,7 @@ void SolarField::AnalyticalFluxSimulation(Hvector &helios)
+ void SolarField::CalcDimensionalFluxProfiles(Hvector &helios)
+ {
+     SP_PROFILE_SCOPE(Dimensional);
++    solarpilot::FluxPostprocessingTimer gpu_timer(_flux->getGpuContext());
+     /*
+     Take the existing non-dimensional flux profiles in the Receivers::getFluxSurfaces()
+     and alter the values to indicate total dimensional power on the receiver surfaces
 -- 
 2.43.0
 
