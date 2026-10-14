@@ -1,4 +1,4 @@
-# CoPylot-GPU: Phase 0/1 preparation
+# CoPylot-GPU: Phase 2A numerical preparation
 
 Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and CPU reference. Hermite CPU simulation, three benchmark sizes and regressions work. The optical CUDA backend is not implemented. The optional toolchain/device probe has been validated on the remote RTX 6000 Ada host; optical CUDA remains unimplemented.
 
@@ -17,6 +17,7 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 2A report](docs/phase2a-report.md), [flux density analysis](docs/flux-density-analysis.md), [scaling evidence](docs/flux-density-scaling.md), [CUDA design](docs/flux-density-cuda-design.md).
 * [Remote CPU/CUDA validation report](docs/remote-validation.md), [remote environment](docs/remote-gpu-environment.md).
 * [Phase 0/1 report](docs/report.md).
 * [Repository/branch decision](docs/dependencies.md), [build and tests](docs/build.md).
@@ -31,4 +32,4 @@ The tracked mailbox patches preserve the inner repositories' small commits. `boo
 
 Cases: exactly 1000/5000/10000 deterministically assigned heliostats, 25×25 flux map, one simulation thread, double precision, Hermite, DNI 950 W/m², azimuth 180°, elevation 55°. Regression JSON contains every flux cell and heliostat result column; `rtol=1e-9`, `atol=1e-10`. Original results were captured before dispatch/profiling; tests never regenerate them.
 
-The measured first GPU candidate is `Flux::fluxDensity()` plus its reduction, after a pure CPU extraction and equivalence checks. That numerical Phase 2 work is deferred until the remote validation report has been reviewed. No optical CUDA algorithm has been ported.
+Phase 2A extracts `Flux::fluxDensity()` into a pure double-precision CPU contribution helper while preserving the original oracle. Native CPU scaling and same-prepared-state comparisons cover 1k/5k/10k heliostats × 25/50/100 grids. CUDA data/decomposition design is documented; the first optical kernel (Phase 2B) awaits review. No optical CUDA algorithm has been ported.
