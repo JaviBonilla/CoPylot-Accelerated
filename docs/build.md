@@ -55,7 +55,7 @@ BUILD_DIR="$PWD/build/cuda" scripts/test_cpu.sh -DSOLARPILOT_ENABLE_CUDA=ON -DCM
 COPILOT_LIB_DIR="$PWD/build/cuda/lib" .venv/bin/python -c 'import sys; sys.path.insert(0,"benchmarks"); from cases import api; cp=api(); print(cp.cuda_available(), cp.cuda_device_count()); r=cp.data_create(); cp.set_cuda_device(r,0); cp.data_free(r)'
 ```
 
-Default architecture is 75; explicitly select your deployment architecture(s). CUDA language/Toolkit are detected only with ON. The probe allocates a single integer, runs a kernel writing 42, synchronizes/copies/checks/frees it and restores the prior device, with explicit error checking and RAII cleanup. This is setup verification, not part of an optical hot loop. No CUDA compiler, driver or device is available on the development host, so the .cu compilation/runtime remains unverified. ON without nvcc has been checked to fail clearly. No CUDA optical acceleration is claimed.
+Default architecture is 75; explicitly select your deployment architecture(s). CUDA language/Toolkit are detected only with ON. The probe allocates a single integer, runs a kernel writing 42, synchronizes/copies/checks/frees it and restores the prior device, with explicit error checking and RAII cleanup. This is setup verification, not part of an optical hot loop. No CUDA compiler, driver or device is available on the local development host. The existing .cu compilation/runtime has now been verified remotely with CUDA 13.0 and sm_89; see [remote-validation.md](remote-validation.md). ON without nvcc has been checked to fail clearly. No CUDA optical acceleration is claimed.
 
 ## CPU sanitizers
 

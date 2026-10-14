@@ -1,6 +1,6 @@
 # CoPylot-GPU: Phase 0/1 preparation
 
-Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and CPU reference. Hermite CPU simulation, three benchmark sizes and regressions work. The optical CUDA backend is not implemented. The optional toolchain/device probe is ready for validation on an NVIDIA host.
+Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and CPU reference. Hermite CPU simulation, three benchmark sizes and regressions work. The optical CUDA backend is not implemented. The optional toolchain/device probe has been validated on the remote RTX 6000 Ada host; optical CUDA remains unimplemented.
 
 ```bash
 # Reconstruct the pinned repositories and local commit series:
@@ -17,6 +17,7 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Remote CPU/CUDA validation report](docs/remote-validation.md), [remote environment](docs/remote-gpu-environment.md).
 * [Phase 0/1 report](docs/report.md).
 * [Repository/branch decision](docs/dependencies.md), [build and tests](docs/build.md).
 * [Measured CPU profile](docs/cpu-profile.md), [raw results](benchmarks/results).

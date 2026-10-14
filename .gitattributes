@@ -1,0 +1,2 @@
+# Preserve compiler diagnostics verbatim, including their trailing spaces.
+benchmarks/results/**/*.log whitespace=-blank-at-eol

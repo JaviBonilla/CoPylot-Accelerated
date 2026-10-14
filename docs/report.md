@@ -1,6 +1,6 @@
 # Phase 0/1 report — CoPylot-GPU
 
-Date: 2026-10-14. This report records the completed local preparation phase. The headless CPU baseline is built and validated. Optical CUDA simulation is not implemented; remote toolchain/device validation is a separate continuation task.
+Date: 2026-10-14. This report records the completed local preparation phase. The headless CPU baseline is built and validated. Optical CUDA simulation is not implemented; remote toolchain/device validation is recorded separately in [remote-validation.md](remote-validation.md).
 
 ## 1. Repositories and branch choice
 
