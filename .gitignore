@@ -1,0 +1,12 @@
+/.workspace-git/
+/.agents/
+/.aws/
+/.codex/
+/SolarPILOT/
+/ssc/
+/SolTrace/
+/.venv/
+/build*/
+/artifacts/
+__pycache__/
+*.pyc
