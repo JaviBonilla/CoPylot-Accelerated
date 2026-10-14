@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(copilot_headless LANGUAGES C CXX)
 option(BUILD_COPILOT_API "Build the headless CoPylot shared library" ON)
+option(SOLARPILOT_ENABLE_CORE_PROFILE "Instrument selected core scopes" OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 11)
 find_package(Threads REQUIRED)
@@ -16,7 +17,7 @@ if(UNIX)
   if(NOT EXISTS "${nlopt_config_dir}/config.h")
     execute_process(COMMAND "${CMAKE_COMMAND}" -E env
       "CC=${CMAKE_C_COMPILER}" "CXX=${CMAKE_CXX_COMPILER}"
-      "${CMAKE_CURRENT_SOURCE_DIR}/ssc/nlopt/configure" --enable-shared=no
+      "${CMAKE_CURRENT_SOURCE_DIR}/ssc/nlopt/configure"
       WORKING_DIRECTORY "${nlopt_config_dir}"
       RESULT_VARIABLE nlopt_config_status
       OUTPUT_FILE "${nlopt_config_dir}/configure.log"
@@ -32,6 +33,10 @@ set_property(TARGET shared PROPERTY SOURCES
   "${CMAKE_CURRENT_SOURCE_DIR}/ssc/shared/lib_weatherfile.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/ssc/shared/lib_util.cpp")
 if(BUILD_COPILOT_API)
+  if(SOLARPILOT_ENABLE_CORE_PROFILE)
+    target_sources(solarpilot PRIVATE ssc/solarpilot/CoreProfile.cpp)
+    target_compile_definitions(solarpilot PRIVATE SOLARPILOT_ENABLE_CORE_PROFILE)
+  endif()
   target_link_libraries(solarpilot Threads::Threads)
   if(UNIX AND NOT APPLE)
     target_link_options(solarpilot PRIVATE -Wl,--no-undefined)

@@ -30,3 +30,12 @@ Build-only compatibility fixes: SolTrace's treemesh.cpp explicitly includes `<li
 The generator requires an enabled land bounds mode. Disabling scaled bounds without enabling fixed bounds leaves zero extents and can throw from radialStaggerPositions. The fixtures explicitly select fixed radii; no generator algorithm was changed. Smoke generates a bounded single-design-point field; benchmarks separately generate/filter fields and assign deterministic 1000/5000/10000-position layouts with filtering disabled. Timings label these distinct operations.
 
 Baseline capture is deliberate: `tests/capture_baseline.py`. Do not regenerate baselines to make a regression pass. Baselines were captured before backend dispatch/profiling. The upstream summary rounds numbers, so strict comparison also checks full precision flux values and every per-heliostat column. Integrated flux is incident flux, before receiver absorptance; compare to absorbed power only with the absorptance factor.
+
+Optional instrumentation is compile-time disabled by default:
+
+```bash
+scripts/profile_cpu.sh
+COPILOT_LIB_DIR="$PWD/build/profile/lib" .venv/bin/python -m unittest discover -s tests -v
+```
+
+CSV rows contain phase, function, call count, inclusive seconds, exclusive seconds. Phases distinguish layout preparation from simulate. Nested scopes preserve inclusive/exclusive accounting on one thread; benchmark threads are explicitly one. These selected scopes do not claim a full call graph. Set `SOLARPILOT_PROFILE_FILE` only when collecting profiles. Timers disappear entirely when the option is OFF.
