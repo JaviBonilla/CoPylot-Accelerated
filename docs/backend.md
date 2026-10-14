@@ -1,23 +1,12 @@
-# Minimal CPU/CUDA boundary
+# CPU/CUDA boundary
 
-Implemented: additive C symbols and Python wrappers. `CopilotObject` owns `ComputeBackendState`: selected backend (CPU by default), requested device, `unique_ptr<GpuContext>`, per-context error string. `GpuContext` is only an ownership boundary with a virtual destructor; no buffers are allocated and no transfer/invalidation system is active yet.
+Implemented public selection remains CPU/CUDA with the existing C/Python signatures. CPU defaults to flat; the original legacy implementation is retained through internal benchmark controls. CUDA now performs real Hermite flux-density evaluation, with CPU optical preparation and post-processing. See [the Phase 2B backend contract](cuda-flux-density.md).
 
-`sp_simulate` performs one switch outside numerical loops. CPU calls `simulate_cpu`, whose original body is preserved. CUDA has no optical implementation: selecting it returns false in C and raises `RuntimeError("CUDA backend not implemented yet")` in Python; the previous selection remains active. No silent execution fallback after a requested CUDA operation fails. The existing CPU remains available by explicit selection and as the default.
+CopilotObject owns selected backend, requested device, unique_ptr<GpuContext> and error string. GpuContext now owns reusable heliostat/cell/output buffers and optional events with RAII. Selecting CUDA validates the device/probe and creates a context lazily without optical allocation; buffers grow on first evaluation and remain reusable across simulations and explicit CPU runs. Switching device closes the prior context; data_free performs checked teardown. Failed initialization/unsupported simulation never silently selects CPU.
 
-New C exports:
+Supported CUDA simulations are Hermite analytical, one enabled cylindrical receiver, simple aiming with updates, specified sun position and one CPU preparation thread. C simulate returns false on capability/runtime errors; Python callers retrieve get_last_backend_error. Backend/device setters retain their existing RuntimeError behavior. CPU-only selection reports CUDA support not enabled; hidden devices report No CUDA devices. Availability queries indicate runtime devices, not capability of every physical configuration.
 
-* `sp_cuda_available()` and `sp_cuda_device_count()` are context-independent. CPU-only builds return false/0. CUDA enumeration errors return -1 and expose a thread-local message through `sp_cuda_last_error()`; Python raises it. A visible device does not establish optical CUDA support.
-* `sp_set_compute_backend(context, 0/1)`, `sp_get_compute_backend(context)`; getters return -1 for null context. Future CUDA support will make enum 1 selectable only when initialization succeeds.
-* `sp_set_cuda_device(context, index)` checks range and executes the trivial CUDA probe when compiled with CUDA. The probe restores the calling thread's prior device. Successful selection records the requested device and releases any future GPU context if it changes; failed selection preserves it.
-* `sp_get_last_backend_error(context)` reports selection errors. New functions handle null contexts. Existing general C ABI functions retain upstream preconditions.
-
-Python retains old constructor/method signatures, adding `cuda_available`, `cuda_device_count`, `set_compute_backend`, `get_compute_backend`, `set_cuda_device`, `get_last_backend_error`. The extensions require the extended library only when called. Result-array ownership for the three exercised exports (layout, fluxmap, details) is corrected using try/finally and the existing `_sp_free_var`; successful results have unchanged types and values.
-
-## Future persistent context
-
-Create the CUDA context lazily on first GPU simulation after choosing device. Concrete GpuContext owns device buffers/stream/events with RAII, tracks capacities, grows only on layout-size changes, and reuses all allocations across simulate/evaluate_batch calls. Never copy SolarField or Heliostat objects to VRAM. Clear it on data_free or device replacement. Keep CPU state canonical and synchronize only modified numeric inputs; an explicit CPU run remains the regression oracle.
-
-Add `ensure_capacity`, `upload_changed_inputs`, `simulate`, `download_requested_outputs` to the concrete implementation once kernels exist. Keep dispatch outside heliostat loops; do not use a virtual call per heliostat. Batch evaluation needs a dimensions/stride contract plus reductions and constraints on device, returning a small objective vector rather than details/fluxmaps to Python. Batch APIs are deliberately not exposed until those semantics are implemented.
+The density hook is a non-owning pointer scoped to one sp_simulate call and reset by RAII. The owned context persists independently. All numerical device inputs are flat double arrays; no host objects/pointer graphs are copied. Host state remains canonical. Comprehensive mutation epochs, static-cell upload skipping, time-series and batch operations are future work; current independent buffers/transfers preserve that extension path.
 
 ## Proposed versions (not active in this iteration)
 

@@ -40,3 +40,12 @@ Layout/DoManagedLayout, annual simulations and efficiency maps. Replace deep CPU
 ## Phase 9
 
 Investigate current SolTrace NativeRunner/EmbreeRunner/OptixRunner/OptixCSP, repair/validate bridge separately and build the receiver/canting geometry test matrix. Compare ray tracing statistically with pinned legacy. Use upstream OptiX work, not a new CUDA ray tracer. Do not equate Hermite CUDA support with SolTrace OptiX support.
+
+
+## Scientific evaluation roadmap
+
+High-throughput Hermite will compare original legacy CPU, flat single-thread CPU, flat parallel CPU and CUDA, separating original→flat improvement from flat→CUDA acceleration. Flat CPU is the primary GPU performance baseline. Planned regimes include single operating points, H×C scaling, parameter studies/optimization, daily/monthly/yearly time series and annual simulation, with a representative central receiver and possible CESA-I case study. None of parallel CPU, time-series, annual or batching is implemented in Phase 2B.
+
+High-fidelity work will separately compare SolTrace CPU, appropriate CPU parallel implementations and a modern GPU/OptiX path at selected detailed operating points. The current Hermite CUDA backend makes no SolTrace acceleration claim. Future public-repository preparation will address reproducible installation, examples, CI, packaging, license review and public benchmarks as its own phase.
+
+Phase 2B implements only the first block/cell double kernel and correctness boundary. After review, Phase 2C can measure 64/128/256/512 block sizes, layout/register pressure and controlled transfer/kernel/end-to-end behavior. Keep static geometry residency and candidate/time dimensions possible; do not expand optical scope merely to improve a benchmark.

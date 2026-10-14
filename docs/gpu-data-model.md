@@ -1,6 +1,6 @@
 # GPU data model derived from the current Hermite core
 
-Design only. No Heliostat, Receiver, matrix_t, std::vector, unordered_map or host pointer is copied to the device. Device allocations/streams will belong to the per-CoPylot GpuContext; host views use stable integer IDs and explicit lengths/strides. All numerical columns are double precision initially.
+Phase 2B implements the flux-density subset using 25-field heliostat SoA, six-double cell AoS and double output, owned by a persistent per-CoPylot GpuContext. No host objects/container internals or pointer graph is uploaded. Buffer capacities are reused; input values are refreshed per call. See [the implemented CUDA contract](cuda-flux-density.md). Broader tables below remain design proposals for later phases.
 
 ## Measured first candidate: fluxDensity
 
@@ -52,7 +52,7 @@ For evaluate_batch, distinguish static N-heliostat arrays from candidate-depende
 
 ## Flux density data model
 
-Phase 2A implemented host PODs in `ssc/solarpilot/FluxDensityNumerics.h`. Ownership is by the CPU adapter/caller, not by Heliostat or Receiver pointers inside the numerical function. Records are immutable during evaluation. The CPU adapter currently packs **one** heliostat record on the stack and owns vectors of cells and accumulators for one surface; it does not allocate a full packed field. The future device estimate assumes packing all enabled records in their original order. No device buffers exist.
+The following section records the Phase 2A extraction contract. Phase 2B adds the device buffers described above. Phase 2A implemented host PODs in `ssc/solarpilot/FluxDensityNumerics.h`. Ownership is by the CPU adapter/caller, not by Heliostat or Receiver pointers inside the numerical function. Records are immutable during evaluation. The CPU adapter currently packs **one** heliostat record on the stack and owns vectors of cells and accumulators for one surface; it does not allocate a full packed field. The future device estimate assumes packing all enabled records in their original order. No device buffers exist.
 
 | Field | Exact source / units | C++ type and extent | Scope | Changes with sun / aim / layout / receiver | Residency and invalidation |
 |---|---|---|---|---|---|
