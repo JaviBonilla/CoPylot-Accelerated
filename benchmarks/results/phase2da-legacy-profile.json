@@ -1,0 +1,3740 @@
+{
+  "phase": "2D-A",
+  "repositories": {
+    ".": "4c7d3bbc8c8579a622d3a5aa1a31afe226f64ce4",
+    "ssc": "a400a6c5b939cfac29582eefec0184603dd71237",
+    "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "cpu": "Intel(R) Xeon(R) w5-3423",
+  "platform": "Linux",
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "build_type": "Release",
+  "flags": "-O3 -DNDEBUG; no fast-math",
+  "threads": 1,
+  "cpu_affinity": [
+    0
+  ],
+  "warmups": 2,
+  "repetitions": 7,
+  "rtol": 1e-09,
+  "atol": 1e-10,
+  "snapshot_values_per_heliostat": 215,
+  "snapshot_families": {
+    "sun": [
+      0,
+      49
+    ],
+    "errors": [
+      49,
+      98
+    ],
+    "mirror": [
+      98,
+      147
+    ],
+    "flux_moments": [
+      147,
+      196
+    ],
+    "coefficients": [
+      196,
+      212
+    ],
+    "sigmas": [
+      212,
+      214
+    ],
+    "intercept": [
+      214,
+      215
+    ]
+  },
+  "stage": "baseline",
+  "binary_sha256": "44af095fb8f653225e425b6fceee23a6b24c6c1d5d0877fb000e83797b38a7fc",
+  "library_sha256": "34594d1bee9fac9dc32483ab9170f3d08f13416c6793a43f1fc8ca4967fd06ec",
+  "direct": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "warmups": 2,
+      "repetitions": 7,
+      "facets_x": 2,
+      "facets_y": 8,
+      "faceted": 1,
+      "cant_method": -1,
+      "samples_s": [
+        0.006553888,
+        0.006501224,
+        0.006268547,
+        0.00626228,
+        0.00632345,
+        0.006499233,
+        0.00637167
+      ],
+      "median_s": 0.00637167,
+      "min_s": 0.00626228,
+      "max_s": 0.006553888,
+      "path": "legacy"
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "warmups": 2,
+      "repetitions": 7,
+      "facets_x": 2,
+      "facets_y": 8,
+      "faceted": 1,
+      "cant_method": -1,
+      "samples_s": [
+        0.032873957,
+        0.03275859,
+        0.032170669,
+        0.032629168,
+        0.034116232,
+        0.032505445,
+        0.032415666
+      ],
+      "median_s": 0.032629168,
+      "min_s": 0.032170669,
+      "max_s": 0.034116232,
+      "path": "legacy"
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "warmups": 2,
+      "repetitions": 7,
+      "facets_x": 2,
+      "facets_y": 8,
+      "faceted": 1,
+      "cant_method": -1,
+      "samples_s": [
+        0.066498594,
+        0.066243924,
+        0.067153104,
+        0.070478363,
+        0.06630046,
+        0.067345256,
+        0.068047138
+      ],
+      "median_s": 0.067153104,
+      "min_s": 0.066243924,
+      "max_s": 0.070478363,
+      "path": "legacy"
+    }
+  ],
+  "profiles": [
+    {
+      "heliostats": 1000,
+      "path": "legacy",
+      "scopes": {
+        "API": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "PerformanceSimulationPrep": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "calcHeliostatShadows": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "HermiteFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "AnalyticalFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "CalcDimensionalFluxProfiles": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::fluxDensity": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::imagePlaneIntercept": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.006663433999999993,
+              "exclusive_s": 0.00018363500000000024
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.006658094000000012,
+              "exclusive_s": 0.00018370800000000034
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0066524290000000005,
+              "exclusive_s": 0.00018362900000000026
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.009087788000000001,
+              "exclusive_s": 0.00025201199999999997
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.007070644999999995,
+              "exclusive_s": 0.00019419100000000024
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.006637764999999991,
+              "exclusive_s": 0.00018381600000000052
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0066522370000000036,
+              "exclusive_s": 0.00018367700000000036
+            }
+          ],
+          "median_inclusive_s": 0.006658094000000012,
+          "median_exclusive_s": 0.00018370800000000034
+        },
+        "UpdateNeighborList": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "SolarField::Simulate": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "ShadingBlockingNeighbors": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.visibility": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00011815200000000017,
+              "exclusive_s": 0.00011815200000000017
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0001181130000000002,
+              "exclusive_s": 0.0001181130000000002
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00011803900000000013,
+              "exclusive_s": 0.00011803900000000013
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00016467399999999956,
+              "exclusive_s": 0.00016467399999999956
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0001245110000000001,
+              "exclusive_s": 0.0001245110000000001
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00011743899999999996,
+              "exclusive_s": 0.00011743899999999996
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00011793100000000006,
+              "exclusive_s": 0.00011793100000000006
+            }
+          ],
+          "median_inclusive_s": 0.0001181130000000002,
+          "median_exclusive_s": 0.0001181130000000002
+        },
+        "Intercept.sun": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0001461239999999998,
+              "exclusive_s": 0.0001461239999999998
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00014629399999999988,
+              "exclusive_s": 0.00014629399999999988
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0001434879999999997,
+              "exclusive_s": 0.0001434879999999997
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00019611700000000056,
+              "exclusive_s": 0.00019611700000000056
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00015707299999999973,
+              "exclusive_s": 0.00015707299999999973
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00014495499999999994,
+              "exclusive_s": 0.00014495499999999994
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00014429699999999948,
+              "exclusive_s": 0.00014429699999999948
+            }
+          ],
+          "median_inclusive_s": 0.0001461239999999998,
+          "median_exclusive_s": 0.0001461239999999998
+        },
+        "Intercept.errors": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0004954990000000004,
+              "exclusive_s": 0.0004954990000000004
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0004998069999999998,
+              "exclusive_s": 0.0004998069999999998
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0004929959999999999,
+              "exclusive_s": 0.0004929959999999999
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0006858670000000015,
+              "exclusive_s": 0.0006858670000000015
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0005344569999999998,
+              "exclusive_s": 0.0005344569999999998
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00048807999999999984,
+              "exclusive_s": 0.00048807999999999984
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0005041059999999993,
+              "exclusive_s": 0.0005041059999999993
+            }
+          ],
+          "median_inclusive_s": 0.0004998069999999998,
+          "median_exclusive_s": 0.0004998069999999998
+        },
+        "Intercept.mirror": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0007146620000000005,
+              "exclusive_s": 0.0007146620000000005
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.000713962,
+              "exclusive_s": 0.000713962
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0007126440000000006,
+              "exclusive_s": 0.0007126440000000006
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0009638209999999997,
+              "exclusive_s": 0.0009638209999999997
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0007607540000000013,
+              "exclusive_s": 0.0007607540000000013
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0007159929999999993,
+              "exclusive_s": 0.0007159929999999993
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0007135120000000014,
+              "exclusive_s": 0.0007135120000000014
+            }
+          ],
+          "median_inclusive_s": 0.0007146620000000005,
+          "median_exclusive_s": 0.0007146620000000005
+        },
+        "Intercept.facets": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0015042980000000003,
+              "exclusive_s": 0.0015042980000000003
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.001508767,
+              "exclusive_s": 0.001508767
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0015044680000000014,
+              "exclusive_s": 0.0015044680000000014
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.002038081000000001,
+              "exclusive_s": 0.002038081000000001
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0015925459999999998,
+              "exclusive_s": 0.0015925459999999998
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.001500137000000003,
+              "exclusive_s": 0.001500137000000003
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0014989450000000015,
+              "exclusive_s": 0.0014989450000000015
+            }
+          ],
+          "median_inclusive_s": 0.0015044680000000014,
+          "median_exclusive_s": 0.0015044680000000014
+        },
+        "Intercept.convolution": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0004306859999999991,
+              "exclusive_s": 0.0004306859999999991
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00042870500000000025,
+              "exclusive_s": 0.00042870500000000025
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00043325799999999957,
+              "exclusive_s": 0.00043325799999999957
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0005882760000000002,
+              "exclusive_s": 0.0005882760000000002
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00044930700000000084,
+              "exclusive_s": 0.00044930700000000084
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00042902100000000013,
+              "exclusive_s": 0.00042902100000000013
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.000424952,
+              "exclusive_s": 0.000424952
+            }
+          ],
+          "median_inclusive_s": 0.0004306859999999991,
+          "median_exclusive_s": 0.0004306859999999991
+        },
+        "Intercept.finalize": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.003070378000000001,
+              "exclusive_s": 0.00014015199999999986
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0030587379999999944,
+              "exclusive_s": 0.00013977800000000012
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0030639069999999977,
+              "exclusive_s": 0.00013936000000000008
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.004198940000000001,
+              "exclusive_s": 0.00019664700000000007
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0032578060000000037,
+              "exclusive_s": 0.00015389400000000042
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.003058323999999998,
+              "exclusive_s": 0.00013994700000000002
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.003064816999999998,
+              "exclusive_s": 0.00014215599999999992
+            }
+          ],
+          "median_inclusive_s": 0.003064816999999998,
+          "median_exclusive_s": 0.00014015199999999986
+        },
+        "Intercept.coefficients": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.002930225999999997,
+              "exclusive_s": 0.00034530899999999954
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.00291896,
+              "exclusive_s": 0.0003486260000000005
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0029245470000000017,
+              "exclusive_s": 0.00034355599999999964
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.004002293000000002,
+              "exclusive_s": 0.0004789710000000003
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0031039119999999977,
+              "exclusive_s": 0.00036905599999999966
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.002918376999999995,
+              "exclusive_s": 0.00034076700000000007
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.002922660999999999,
+              "exclusive_s": 0.00034692399999999976
+            }
+          ],
+          "median_inclusive_s": 0.0029245470000000017,
+          "median_exclusive_s": 0.00034692399999999976
+        },
+        "Intercept.aperture": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0025849170000000034,
+              "exclusive_s": 9.237700000000008e-05
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0025703340000000022,
+              "exclusive_s": 8.969900000000025e-05
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.002580990999999996,
+              "exclusive_s": 9.003300000000013e-05
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.003523322,
+              "exclusive_s": 0.00012242000000000034
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0027348560000000034,
+              "exclusive_s": 9.462500000000024e-05
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0025776100000000006,
+              "exclusive_s": 9.008600000000033e-05
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0025757369999999955,
+              "exclusive_s": 8.981500000000028e-05
+            }
+          ],
+          "median_inclusive_s": 0.002580990999999996,
+          "median_exclusive_s": 9.008600000000033e-05
+        },
+        "Intercept.quadrature": {
+          "samples": [
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0024925399999999993,
+              "exclusive_s": 0.0024925399999999993
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0024806349999999962,
+              "exclusive_s": 0.0024806349999999962
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0024909580000000023,
+              "exclusive_s": 0.0024909580000000023
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0034009019999999973,
+              "exclusive_s": 0.0034009019999999973
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0026402309999999994,
+              "exclusive_s": 0.0026402309999999994
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0024875239999999988,
+              "exclusive_s": 0.0024875239999999988
+            },
+            {
+              "calls": 1000,
+              "inclusive_s": 0.0024859219999999994,
+              "exclusive_s": 0.0024859219999999994
+            }
+          ],
+          "median_inclusive_s": 0.0024909580000000023,
+          "median_exclusive_s": 0.0024909580000000023
+        },
+        "Intercept.prepare": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.core": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.writeback": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "path": "legacy",
+      "scopes": {
+        "API": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "PerformanceSimulationPrep": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "calcHeliostatShadows": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "HermiteFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "AnalyticalFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "CalcDimensionalFluxProfiles": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::fluxDensity": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::imagePlaneIntercept": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.03545299600000015,
+              "exclusive_s": 0.000979714000000008
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.033992222,
+              "exclusive_s": 0.0009291449999999935
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.03382867999999994,
+              "exclusive_s": 0.0009411800000000052
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.03377137900000005,
+              "exclusive_s": 0.000939077000000006
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.033721385999999916,
+              "exclusive_s": 0.0009419820000000045
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.03382261799999998,
+              "exclusive_s": 0.0009405910000000056
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.03373200300000005,
+              "exclusive_s": 0.0009364190000000039
+            }
+          ],
+          "median_inclusive_s": 0.03382261799999998,
+          "median_exclusive_s": 0.0009405910000000056
+        },
+        "UpdateNeighborList": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "SolarField::Simulate": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "ShadingBlockingNeighbors": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.visibility": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0005976420000000013,
+              "exclusive_s": 0.0005976420000000013
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.000571404000000001,
+              "exclusive_s": 0.000571404000000001
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.000573689000000001,
+              "exclusive_s": 0.000573689000000001
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0005687800000000027,
+              "exclusive_s": 0.0005687800000000027
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0005705390000000023,
+              "exclusive_s": 0.0005705390000000023
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0005691890000000014,
+              "exclusive_s": 0.0005691890000000014
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0005700420000000047,
+              "exclusive_s": 0.0005700420000000047
+            }
+          ],
+          "median_inclusive_s": 0.0005705390000000023,
+          "median_exclusive_s": 0.0005705390000000023
+        },
+        "Intercept.sun": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0007310890000000023,
+              "exclusive_s": 0.0007310890000000023
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0007067760000000066,
+              "exclusive_s": 0.0007067760000000066
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0007114290000000053,
+              "exclusive_s": 0.0007114290000000053
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0006978290000000104,
+              "exclusive_s": 0.0006978290000000104
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0006997900000000103,
+              "exclusive_s": 0.0006997900000000103
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0007155600000000085,
+              "exclusive_s": 0.0007155600000000085
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.000701122000000011,
+              "exclusive_s": 0.000701122000000011
+            }
+          ],
+          "median_inclusive_s": 0.0007067760000000066,
+          "median_exclusive_s": 0.0007067760000000066
+        },
+        "Intercept.errors": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.002551496999999998,
+              "exclusive_s": 0.002551496999999998
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0024420580000000095,
+              "exclusive_s": 0.0024420580000000095
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0024400980000000077,
+              "exclusive_s": 0.0024400980000000077
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.002425821000000004,
+              "exclusive_s": 0.002425821000000004
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0024123220000000045,
+              "exclusive_s": 0.0024123220000000045
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0024623870000000055,
+              "exclusive_s": 0.0024623870000000055
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0024279540000000095,
+              "exclusive_s": 0.0024279540000000095
+            }
+          ],
+          "median_inclusive_s": 0.0024400980000000077,
+          "median_exclusive_s": 0.0024400980000000077
+        },
+        "Intercept.mirror": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.003931276999999993,
+              "exclusive_s": 0.003931276999999993
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.003775838999999999,
+              "exclusive_s": 0.003775838999999999
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0037646639999999935,
+              "exclusive_s": 0.0037646639999999935
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.003763069999999997,
+              "exclusive_s": 0.003763069999999997
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.003763397999999998,
+              "exclusive_s": 0.003763397999999998
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0037565059999999997,
+              "exclusive_s": 0.0037565059999999997
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0037452350000000034,
+              "exclusive_s": 0.0037452350000000034
+            }
+          ],
+          "median_inclusive_s": 0.003763397999999998,
+          "median_exclusive_s": 0.003763397999999998
+        },
+        "Intercept.facets": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.008400315000000014,
+              "exclusive_s": 0.008400315000000014
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.008050722999999994,
+              "exclusive_s": 0.008050722999999994
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.007991282000000014,
+              "exclusive_s": 0.007991282000000014
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.007964657,
+              "exclusive_s": 0.007964657
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.00794035,
+              "exclusive_s": 0.00794035
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.007959028000000007,
+              "exclusive_s": 0.007959028000000007
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.007939001999999994,
+              "exclusive_s": 0.007939001999999994
+            }
+          ],
+          "median_inclusive_s": 0.007964657,
+          "median_exclusive_s": 0.007964657
+        },
+        "Intercept.convolution": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0022487779999999925,
+              "exclusive_s": 0.0022487779999999925
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.002156629999999993,
+              "exclusive_s": 0.002156629999999993
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0021391360000000002,
+              "exclusive_s": 0.0021391360000000002
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0021387149999999963,
+              "exclusive_s": 0.0021387149999999963
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0021473889999999926,
+              "exclusive_s": 0.0021473889999999926
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.002153434000000003,
+              "exclusive_s": 0.002153434000000003
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.0021389900000000016,
+              "exclusive_s": 0.0021389900000000016
+            }
+          ],
+          "median_inclusive_s": 0.0021473889999999926,
+          "median_exclusive_s": 0.0021473889999999926
+        },
+        "Intercept.finalize": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.016012683999999947,
+              "exclusive_s": 0.0007490940000000085
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015359646999999938,
+              "exclusive_s": 0.0006981970000000021
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015267201999999966,
+              "exclusive_s": 0.0006924950000000029
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015273429999999904,
+              "exclusive_s": 0.0006948670000000003
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015245615999999991,
+              "exclusive_s": 0.000693847000000007
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015265922999999943,
+              "exclusive_s": 0.0006988720000000023
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015273238999999989,
+              "exclusive_s": 0.000696329000000001
+            }
+          ],
+          "median_inclusive_s": 0.015273238999999989,
+          "median_exclusive_s": 0.000696329000000001
+        },
+        "Intercept.coefficients": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.015263590000000027,
+              "exclusive_s": 0.0017922729999999985
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014661450000000052,
+              "exclusive_s": 0.0017288179999999926
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014574707000000036,
+              "exclusive_s": 0.0017217539999999812
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014578563000000063,
+              "exclusive_s": 0.0017294799999999877
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014551769000000029,
+              "exclusive_s": 0.001702054999999985
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014567051000000086,
+              "exclusive_s": 0.0017202409999999895
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.014576910000000016,
+              "exclusive_s": 0.0017159799999999815
+            }
+          ],
+          "median_inclusive_s": 0.014576910000000016,
+          "median_exclusive_s": 0.0017217539999999812
+        },
+        "Intercept.aperture": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.013471316999999995,
+              "exclusive_s": 0.0004607009999999968
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012932631999999954,
+              "exclusive_s": 0.000444520999999995
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.01285295299999992,
+              "exclusive_s": 0.0004387829999999949
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012849082999999964,
+              "exclusive_s": 0.00043948999999999274
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012849713999999932,
+              "exclusive_s": 0.00044088799999999405
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.01284680999999994,
+              "exclusive_s": 0.0004390449999999934
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012860929999999935,
+              "exclusive_s": 0.00044104799999999397
+            }
+          ],
+          "median_inclusive_s": 0.01285295299999992,
+          "median_exclusive_s": 0.00044088799999999405
+        },
+        "Intercept.quadrature": {
+          "samples": [
+            {
+              "calls": 5000,
+              "inclusive_s": 0.013010615999999935,
+              "exclusive_s": 0.013010615999999935
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012488110999999953,
+              "exclusive_s": 0.012488110999999953
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012414169999999948,
+              "exclusive_s": 0.012414169999999948
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012409592999999993,
+              "exclusive_s": 0.012409592999999993
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012408825999999944,
+              "exclusive_s": 0.012408825999999944
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012407764999999965,
+              "exclusive_s": 0.012407764999999965
+            },
+            {
+              "calls": 5000,
+              "inclusive_s": 0.012419882000000004,
+              "exclusive_s": 0.012419882000000004
+            }
+          ],
+          "median_inclusive_s": 0.012414169999999948,
+          "median_exclusive_s": 0.012414169999999948
+        },
+        "Intercept.prepare": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.core": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.writeback": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "path": "legacy",
+      "scopes": {
+        "API": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "PerformanceSimulationPrep": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "calcHeliostatShadows": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "HermiteFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "AnalyticalFluxSimulation": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "CalcDimensionalFluxProfiles": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::fluxDensity": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Flux::imagePlaneIntercept": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.06997463800000017,
+              "exclusive_s": 0.0018384269999999778
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.07118836199999992,
+              "exclusive_s": 0.0018792889999999776
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.07294686,
+              "exclusive_s": 0.0019261859999999786
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.07033466599999989,
+              "exclusive_s": 0.0018571479999999784
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.06968841899999986,
+              "exclusive_s": 0.001839989999999977
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.06973559699999998,
+              "exclusive_s": 0.0018370609999999775
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.06967439699999978,
+              "exclusive_s": 0.0018483659999999759
+            }
+          ],
+          "median_inclusive_s": 0.06997463800000017,
+          "median_exclusive_s": 0.0018483659999999759
+        },
+        "UpdateNeighborList": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "SolarField::Simulate": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "ShadingBlockingNeighbors": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.visibility": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011340439999999992,
+              "exclusive_s": 0.0011340439999999992
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011490279999999912,
+              "exclusive_s": 0.0011490279999999912
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011845189999999941,
+              "exclusive_s": 0.0011845189999999941
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011374509999999946,
+              "exclusive_s": 0.0011374509999999946
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011287069999999966,
+              "exclusive_s": 0.0011287069999999966
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0011356969999999963,
+              "exclusive_s": 0.0011356969999999963
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.001127325999999998,
+              "exclusive_s": 0.001127325999999998
+            }
+          ],
+          "median_inclusive_s": 0.0011356969999999963,
+          "median_exclusive_s": 0.0011356969999999963
+        },
+        "Intercept.sun": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0014293900000000043,
+              "exclusive_s": 0.0014293900000000043
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0014417620000000129,
+              "exclusive_s": 0.0014417620000000129
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0014751389999999975,
+              "exclusive_s": 0.0014751389999999975
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0014196300000000012,
+              "exclusive_s": 0.0014196300000000012
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0013984500000000064,
+              "exclusive_s": 0.0013984500000000064
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.001423871000000002,
+              "exclusive_s": 0.001423871000000002
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0014125060000000004,
+              "exclusive_s": 0.0014125060000000004
+            }
+          ],
+          "median_inclusive_s": 0.001423871000000002,
+          "median_exclusive_s": 0.001423871000000002
+        },
+        "Intercept.errors": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004857017000000013,
+              "exclusive_s": 0.004857017000000013
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004927581999999992,
+              "exclusive_s": 0.004927581999999992
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.005045144000000015,
+              "exclusive_s": 0.005045144000000015
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004855431999999987,
+              "exclusive_s": 0.004855431999999987
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004795471000000059,
+              "exclusive_s": 0.004795471000000059
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0048245360000000416,
+              "exclusive_s": 0.0048245360000000416
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004824647000000034,
+              "exclusive_s": 0.004824647000000034
+            }
+          ],
+          "median_inclusive_s": 0.004855431999999987,
+          "median_exclusive_s": 0.004855431999999987
+        },
+        "Intercept.mirror": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.008766819999999991,
+              "exclusive_s": 0.008766819999999991
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.008861124000000027,
+              "exclusive_s": 0.008861124000000027
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.009060932000000098,
+              "exclusive_s": 0.009060932000000098
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.008785088000000019,
+              "exclusive_s": 0.008785088000000019
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.008705857999999983,
+              "exclusive_s": 0.008705857999999983
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.008708213000000013,
+              "exclusive_s": 0.008708213000000013
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.00869539300000001,
+              "exclusive_s": 0.00869539300000001
+            }
+          ],
+          "median_inclusive_s": 0.008766819999999991,
+          "median_exclusive_s": 0.008766819999999991
+        },
+        "Intercept.facets": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.017012518000000067,
+              "exclusive_s": 0.017012518000000067
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.017294808,
+              "exclusive_s": 0.017294808
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.01769839100000003,
+              "exclusive_s": 0.01769839100000003
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.01706322900000001,
+              "exclusive_s": 0.01706322900000001
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.016950102999999963,
+              "exclusive_s": 0.016950102999999963
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.016964352999999967,
+              "exclusive_s": 0.016964352999999967
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.016917345999999948,
+              "exclusive_s": 0.016917345999999948
+            }
+          ],
+          "median_inclusive_s": 0.017012518000000067,
+          "median_exclusive_s": 0.017012518000000067
+        },
+        "Intercept.convolution": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.0042879359999999965,
+              "exclusive_s": 0.0042879359999999965
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004376449000000006,
+              "exclusive_s": 0.004376449000000006
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004490490999999994,
+              "exclusive_s": 0.004490490999999994
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.00433946499999999,
+              "exclusive_s": 0.00433946499999999
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.00429494799999999,
+              "exclusive_s": 0.00429494799999999
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004268872999999982,
+              "exclusive_s": 0.004268872999999982
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.004289640999999997,
+              "exclusive_s": 0.004289640999999997
+            }
+          ],
+          "median_inclusive_s": 0.00429494799999999,
+          "median_exclusive_s": 0.00429494799999999
+        },
+        "Intercept.finalize": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.030648486000000003,
+              "exclusive_s": 0.0014239700000000357
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.031258319999999985,
+              "exclusive_s": 0.001471582000000028
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.03206605800000001,
+              "exclusive_s": 0.0014760060000000297
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.030877223000000113,
+              "exclusive_s": 0.001452893000000036
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.03057489200000021,
+              "exclusive_s": 0.0013937340000000223
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.030572993000000076,
+              "exclusive_s": 0.0014092200000000244
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.030559171999999905,
+              "exclusive_s": 0.0013886760000000283
+            }
+          ],
+          "median_inclusive_s": 0.030648486000000003,
+          "median_exclusive_s": 0.0014239700000000357
+        },
+        "Intercept.coefficients": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.029224516000000113,
+              "exclusive_s": 0.0034488030000000064
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02978673800000007,
+              "exclusive_s": 0.003513827000000016
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.030590052000000135,
+              "exclusive_s": 0.0036120550000000224
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.029424330000000165,
+              "exclusive_s": 0.0034706310000000365
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.029181158000000318,
+              "exclusive_s": 0.0034442470000000123
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02916377300000012,
+              "exclusive_s": 0.0034434740000000045
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.029170496000000063,
+              "exclusive_s": 0.00344695200000002
+            }
+          ],
+          "median_inclusive_s": 0.029224516000000113,
+          "median_exclusive_s": 0.0034488030000000064
+        },
+        "Intercept.aperture": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02577571300000003,
+              "exclusive_s": 0.0008721159999999737
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.026272910999999913,
+              "exclusive_s": 0.0009012749999999751
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.026977997000000108,
+              "exclusive_s": 0.0009151999999999704
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02595369900000002,
+              "exclusive_s": 0.0008757139999999636
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02573691099999997,
+              "exclusive_s": 0.0008684669999999719
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02572029900000006,
+              "exclusive_s": 0.0008638269999999625
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.025723543999999942,
+              "exclusive_s": 0.0008692699999999716
+            }
+          ],
+          "median_inclusive_s": 0.02577571300000003,
+          "median_exclusive_s": 0.0008721159999999737
+        },
+        "Intercept.quadrature": {
+          "samples": [
+            {
+              "calls": 10000,
+              "inclusive_s": 0.024903596999999847,
+              "exclusive_s": 0.024903596999999847
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.025371635999999764,
+              "exclusive_s": 0.025371635999999764
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02606279699999981,
+              "exclusive_s": 0.02606279699999981
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02507798499999985,
+              "exclusive_s": 0.02507798499999985
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.024868443999999757,
+              "exclusive_s": 0.024868443999999757
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.02485647199999969,
+              "exclusive_s": 0.02485647199999969
+            },
+            {
+              "calls": 10000,
+              "inclusive_s": 0.024854273999999767,
+              "exclusive_s": 0.024854273999999767
+            }
+          ],
+          "median_inclusive_s": 0.024903596999999847,
+          "median_exclusive_s": 0.024903596999999847
+        },
+        "Intercept.prepare": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.core": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        },
+        "Intercept.writeback": {
+          "samples": [
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            },
+            {
+              "calls": 0,
+              "inclusive_s": 0.0,
+              "exclusive_s": 0.0
+            }
+          ],
+          "median_inclusive_s": 0.0,
+          "median_exclusive_s": 0.0
+        }
+      }
+    }
+  ],
+  "grid_snapshots": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "hashes": {
+        "sun": "0304841e9d1f48cd314b696f135039ba62a63d8f3dc1fe18852d499a1e9ed6b5",
+        "errors": "88747506b47c565ab6fe2909c94ea751301ad79b58bc4edc495ee6e53aa0b0ce",
+        "mirror": "526fe3b76fe2700566841658f41d533c0a3e1d933180378e408a200781b965af",
+        "flux_moments": "f46ed19fff4bed0a740f58d1e674b8dacd325bbf2f43666877468ad01252e5b1",
+        "coefficients": "4665354fbc6ecc73c08ecc6435ccb418693c45ae2b47f545ba7b917458e7e6ca",
+        "sigmas": "28a8dc3c40fc003293e027357ecb226906966e5ae8cf6ccd1064ed9fae0742d9",
+        "intercept": "e4b9ff57c38b2e6562ce0955ab8f4b0543f46c9d1eed8cfe44e74d0c4a309864"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "hashes": {
+        "sun": "0304841e9d1f48cd314b696f135039ba62a63d8f3dc1fe18852d499a1e9ed6b5",
+        "errors": "88747506b47c565ab6fe2909c94ea751301ad79b58bc4edc495ee6e53aa0b0ce",
+        "mirror": "526fe3b76fe2700566841658f41d533c0a3e1d933180378e408a200781b965af",
+        "flux_moments": "f46ed19fff4bed0a740f58d1e674b8dacd325bbf2f43666877468ad01252e5b1",
+        "coefficients": "4665354fbc6ecc73c08ecc6435ccb418693c45ae2b47f545ba7b917458e7e6ca",
+        "sigmas": "28a8dc3c40fc003293e027357ecb226906966e5ae8cf6ccd1064ed9fae0742d9",
+        "intercept": "e4b9ff57c38b2e6562ce0955ab8f4b0543f46c9d1eed8cfe44e74d0c4a309864"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "hashes": {
+        "sun": "0304841e9d1f48cd314b696f135039ba62a63d8f3dc1fe18852d499a1e9ed6b5",
+        "errors": "88747506b47c565ab6fe2909c94ea751301ad79b58bc4edc495ee6e53aa0b0ce",
+        "mirror": "526fe3b76fe2700566841658f41d533c0a3e1d933180378e408a200781b965af",
+        "flux_moments": "f46ed19fff4bed0a740f58d1e674b8dacd325bbf2f43666877468ad01252e5b1",
+        "coefficients": "4665354fbc6ecc73c08ecc6435ccb418693c45ae2b47f545ba7b917458e7e6ca",
+        "sigmas": "28a8dc3c40fc003293e027357ecb226906966e5ae8cf6ccd1064ed9fae0742d9",
+        "intercept": "e4b9ff57c38b2e6562ce0955ab8f4b0543f46c9d1eed8cfe44e74d0c4a309864"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "hashes": {
+        "sun": "8b7de6db9c819d70a7208c93732b2c20340e7e54250878a0ed512601a60633f9",
+        "errors": "7ad715d7e9ddd8b61a6f338a900b660111a2fcee3e1e9fcb56d75c6d9f02b8e0",
+        "mirror": "38880d0c39a2b58e75d72bba0644a701ce9f508941240ec69e436748f74f21e6",
+        "flux_moments": "353050a97d8568a243c295ab6958a5ed45693d0e58b5565dc3a0d52116e00c45",
+        "coefficients": "8e61bed2ad6f6601c6fb76c945ccf6f284f1ed42253baa48c847dd555c2261f7",
+        "sigmas": "d06f1cb99d46e86587b92e6518d594813eb994e23a795840849996b661801cb1",
+        "intercept": "b45f0dab31ce880936a273e71176f91491e6c27171357a0f5bcd96ca713d84a2"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "hashes": {
+        "sun": "8b7de6db9c819d70a7208c93732b2c20340e7e54250878a0ed512601a60633f9",
+        "errors": "7ad715d7e9ddd8b61a6f338a900b660111a2fcee3e1e9fcb56d75c6d9f02b8e0",
+        "mirror": "38880d0c39a2b58e75d72bba0644a701ce9f508941240ec69e436748f74f21e6",
+        "flux_moments": "353050a97d8568a243c295ab6958a5ed45693d0e58b5565dc3a0d52116e00c45",
+        "coefficients": "8e61bed2ad6f6601c6fb76c945ccf6f284f1ed42253baa48c847dd555c2261f7",
+        "sigmas": "d06f1cb99d46e86587b92e6518d594813eb994e23a795840849996b661801cb1",
+        "intercept": "b45f0dab31ce880936a273e71176f91491e6c27171357a0f5bcd96ca713d84a2"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "hashes": {
+        "sun": "8b7de6db9c819d70a7208c93732b2c20340e7e54250878a0ed512601a60633f9",
+        "errors": "7ad715d7e9ddd8b61a6f338a900b660111a2fcee3e1e9fcb56d75c6d9f02b8e0",
+        "mirror": "38880d0c39a2b58e75d72bba0644a701ce9f508941240ec69e436748f74f21e6",
+        "flux_moments": "353050a97d8568a243c295ab6958a5ed45693d0e58b5565dc3a0d52116e00c45",
+        "coefficients": "8e61bed2ad6f6601c6fb76c945ccf6f284f1ed42253baa48c847dd555c2261f7",
+        "sigmas": "d06f1cb99d46e86587b92e6518d594813eb994e23a795840849996b661801cb1",
+        "intercept": "b45f0dab31ce880936a273e71176f91491e6c27171357a0f5bcd96ca713d84a2"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "hashes": {
+        "sun": "0da26427758c8d823932f11350ee9bd316c8e00231eaabfb8fdadd2f29b1da15",
+        "errors": "49a8fb287be24453c86e95cf0142e8d968ab922c266ee518f847d69b1d3ae222",
+        "mirror": "c53c4218a7a59aba04e6db28594351accad380bd67f0802eb25ff3a0f02c1702",
+        "flux_moments": "66a7b4df8234dfd628c4fd2583e3b99d86f89780184d19bd2f40fa0ca14dd517",
+        "coefficients": "27a7410fb582e4e5f6a28513b6c23258690fd7a01a02368d536b6132506ad297",
+        "sigmas": "74d0ecebe64519057d6a0c38c671111096df588b738f4f4e5789f228c2f6471d",
+        "intercept": "c503f618ca383e6fae55cbf506b8a8dbe4e71fdb732209e7916b3457ed6f51f9"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "hashes": {
+        "sun": "0da26427758c8d823932f11350ee9bd316c8e00231eaabfb8fdadd2f29b1da15",
+        "errors": "49a8fb287be24453c86e95cf0142e8d968ab922c266ee518f847d69b1d3ae222",
+        "mirror": "c53c4218a7a59aba04e6db28594351accad380bd67f0802eb25ff3a0f02c1702",
+        "flux_moments": "66a7b4df8234dfd628c4fd2583e3b99d86f89780184d19bd2f40fa0ca14dd517",
+        "coefficients": "27a7410fb582e4e5f6a28513b6c23258690fd7a01a02368d536b6132506ad297",
+        "sigmas": "74d0ecebe64519057d6a0c38c671111096df588b738f4f4e5789f228c2f6471d",
+        "intercept": "c503f618ca383e6fae55cbf506b8a8dbe4e71fdb732209e7916b3457ed6f51f9"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "hashes": {
+        "sun": "0da26427758c8d823932f11350ee9bd316c8e00231eaabfb8fdadd2f29b1da15",
+        "errors": "49a8fb287be24453c86e95cf0142e8d968ab922c266ee518f847d69b1d3ae222",
+        "mirror": "c53c4218a7a59aba04e6db28594351accad380bd67f0802eb25ff3a0f02c1702",
+        "flux_moments": "66a7b4df8234dfd628c4fd2583e3b99d86f89780184d19bd2f40fa0ca14dd517",
+        "coefficients": "27a7410fb582e4e5f6a28513b6c23258690fd7a01a02368d536b6132506ad297",
+        "sigmas": "74d0ecebe64519057d6a0c38c671111096df588b738f4f4e5789f228c2f6471d",
+        "intercept": "c503f618ca383e6fae55cbf506b8a8dbe4e71fdb732209e7916b3457ed6f51f9"
+      },
+      "vs_grid25": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    }
+  ]
+}
