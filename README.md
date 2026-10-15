@@ -17,6 +17,8 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 3C CESA-I grid convergence and CPU/GPU characterization](docs/phase3c-report.md), [study design](docs/phase3c-design.md), [approved aggregate results](benchmarks/results/phase3c-cesa1-grid-convergence-summary.json), [timing CSV](benchmarks/results/phase3c-cesa1-grid-performance.csv).
+
 * [Phase 3B physical compatibility and flat receivers](docs/phase3b-report.md), [restoration design](docs/phase3b-design.md), [public-safe validation](benchmarks/results/phase3b-validation.json).
 
 * [Phase 3A scientific reference and convergence](docs/phase3a-report.md), [public commercial case](docs/commercial-reference-case.md), [physical receiver grids](docs/receiver-grid-convergence.md), [future SolTrace study](docs/soltrace-convergence-plan.md).
@@ -59,6 +61,17 @@ reference resolution and bitwise-validated flat rectangular Hermite CPU/CUDA
 support. Public synthetic and private compatibility gates preserve saved geometry,
 Keep existing aims and normal Hour/Day semantics. Weather-aware preparation can
 refresh site metadata, which is distinguished from restoring the saved state.
-The native private grid is a compatibility check only; Phase 3C has not started.
+The Phase 3B native private grid is a compatibility check only; Phase 3C below studies spatial resolution.
 Historical performance figures above describe their frozen phase snapshots;
 Phase 3B introduces no new performance claim or CUDA tuning.
+
+
+Phase 3C reuses the conservative grid framework for the restored CESA-I flat
+receiver, with a fixed reference-EPW site and four normal Hour/Day states.
+The conditional 1% CONTROL recommendation is 217x256; the numerical reference is
+867x1024. The extra reference refinement rejects the earlier 109x128 candidate.
+At the selected grid, same-server Flat CPU 1T takes about 1.29 s versus 15.4 ms
+CUDA (about 84x). Every timing sample, first call and controlled-window telemetry
+is retained. No independent ENERGY/ANNUAL resolution follows from normalized
+power invariance. Nested core, patches and pins are unchanged. Phase 4 has not
+started; no new CUDA tuning or multicore/annual work is included.
