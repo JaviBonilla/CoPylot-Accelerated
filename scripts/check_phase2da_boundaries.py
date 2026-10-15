@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Verify protected Phase 2C bytes and the preserved optical oracle."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import re
 import subprocess
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--allow-image-plane-cuda',action='store_true',help='Allow the explicitly authorized subsequent Phase 2D-B kernel')
+args=parser.parse_args()
 ROOT=Path(__file__).resolve().parents[1]
 state=json.loads((ROOT/'benchmarks/results/phase2da-initial-state.json').read_text())
 for name,expected in state['protected_sha256'].items():
@@ -20,5 +24,6 @@ def oracle(text,name):
 a,b=oracle(old,'imagePlaneIntercept'),oracle(new,'imagePlaneInterceptLegacy')
 assert a==b,'Legacy intercept or its Hermite callees changed beyond profiling/whitespace'
 assert subprocess.check_output(['git','check-ignore','local-cases/example/example-private-project.spt'],cwd=ROOT,text=True).strip()
-assert not list((ROOT/'ssc/solarpilot').glob('*ImagePlane*.cu'))
-print(json.dumps({'phase2c_protected_files':len(state['protected_sha256']),'oracle_token_sha256':hashlib.sha256(a.encode()).hexdigest(),'oracle_preserved':True,'private_case_ignored':True,'image_plane_cuda_absent':True}))
+image_cuda_present=bool(list((ROOT/'ssc/solarpilot').glob('*ImagePlane*.cu')))
+assert args.allow_image_plane_cuda or not image_cuda_present
+print(json.dumps({'phase2c_protected_files':len(state['protected_sha256']),'oracle_token_sha256':hashlib.sha256(a.encode()).hexdigest(),'oracle_preserved':True,'private_case_ignored':True,'image_plane_cuda_absent':not image_cuda_present}))

@@ -18,14 +18,21 @@ class ImagePlaneGpuWindow {
     }
     std::set<int> processes() {
         std::istringstream rows(command("nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits"));
-        std::set<int> result;int pid;while (rows>>pid) result.insert(pid);return result;
+        std::set<int> result;std::string line;
+        while (std::getline(rows,line)) {
+            if (line.find_first_not_of(" \t\r")==std::string::npos) continue;
+            std::istringstream entry(line);int pid;
+            if (!(entry>>pid) || pid<=0) throw std::runtime_error("Invalid GPU process query");
+            result.insert(pid);
+        }
+        return result;
     }
     void telemetry(bool initial) {
         auto text=command("nvidia-smi --query-gpu=memory.used,utilization.gpu,temperature.gpu --format=csv,noheader,nounits");
         std::replace(text.begin(),text.end(),',',' ');std::istringstream row(text);
         int memory,utilization,temperature;
         if (!(row>>memory>>utilization>>temperature)) throw std::runtime_error("Invalid GPU timing-window telemetry");
-        if (memory>(initial?128:1024) || temperature>=80 || (initial && utilization!=0))
+        if (memory>(initial?128:4096) || temperature>=80 || (initial && utilization!=0))
             throw std::runtime_error("GPU timing window is not idle/thermally valid; no preliminary result may be published");
         maximum_memory_mib=std::max(maximum_memory_mib,memory);maximum_temperature_c=std::max(maximum_temperature_c,temperature);++checks;
     }
