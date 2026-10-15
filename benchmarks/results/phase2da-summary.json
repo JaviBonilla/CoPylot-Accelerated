@@ -1,0 +1,251 @@
+{
+  "phase": "2D-A",
+  "status": "CPU extraction and characterization complete; Phase 2D-B not started",
+  "performance_source_repositories": {
+    ".": "ce8f05d3aead806e10efb1bfafbd36d24477b9e5",
+    "ssc": "bb247d4f8e8f6ab78a5177c7cf035c1b44be3092",
+    "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "cpu": "Intel(R) Xeon(R) w5-3423",
+  "threads": 1,
+  "affinity": [
+    0
+  ],
+  "warmups": 2,
+  "repetitions": 7,
+  "rtol": 1e-09,
+  "atol": 1e-10,
+  "library_sha256": "f7df4a6b041bb5ad99453963164f687764673e3f7db0aab58865e4474d6e018f",
+  "final_formatting_commit_library_identical": true,
+  "direct_fixtures": {
+    "fixtures": 60,
+    "values_per_fixture": 215,
+    "bitwise": true,
+    "max_abs": 0,
+    "max_rel": 0,
+    "rms": 0,
+    "input_bytes": 1640,
+    "output_bytes": 1728,
+    "tables_bytes": 3256,
+    "facet_capacity": 64
+  },
+  "memory": {
+    "1000": {
+      "input_bytes": 1640000,
+      "output_bytes": 1728000,
+      "all_records_plus_tables_bytes": 3371256
+    },
+    "5000": {
+      "input_bytes": 8200000,
+      "output_bytes": 8640000,
+      "all_records_plus_tables_bytes": 16843256
+    },
+    "10000": {
+      "input_bytes": 16400000,
+      "output_bytes": 17280000,
+      "all_records_plus_tables_bytes": 33683256
+    },
+    "input_bytes_per_heliostat": 1640,
+    "output_bytes_per_heliostat": 1728,
+    "tables_bytes": 3256,
+    "host_evaluate_stack_bytes": 8128,
+    "facet_capacity": 64,
+    "core_dynamic_allocations": 0,
+    "runtime_note": "The current CPU adapter streams one input/output on the stack; field-sized record totals are future storage estimates, not allocated buffers."
+  },
+  "direct_cpu": [
+    {
+      "heliostats": 1000,
+      "pre_extraction_legacy_median_ms": 6.37167,
+      "same_binary_legacy_median_ms": 6.339006,
+      "flat_median_ms": 6.197949,
+      "speedup": 1.0227586577430696
+    },
+    {
+      "heliostats": 5000,
+      "pre_extraction_legacy_median_ms": 32.629168,
+      "same_binary_legacy_median_ms": 32.083143,
+      "flat_median_ms": 31.984730000000003,
+      "speedup": 1.0030768744960485
+    },
+    {
+      "heliostats": 10000,
+      "pre_extraction_legacy_median_ms": 67.153104,
+      "same_binary_legacy_median_ms": 66.560177,
+      "flat_median_ms": 64.57847899999999,
+      "speedup": 1.0306866626573847
+    }
+  ],
+  "intermediate": {
+    "configurations": 9,
+    "heliostat_evaluations": 48000,
+    "values_compared": 10320000,
+    "bitwise_against_pre_extraction": true,
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "rms_max": 0.0
+  },
+  "downstream_cpu": {
+    "configurations": 9,
+    "all_maps_and_details_bitwise": true
+  },
+  "cuda_density": {
+    "configurations": 9,
+    "block_size": 256,
+    "gpu_timings_collected": false,
+    "worst_dimensional_map_max_abs": 1.1141310096718371e-11,
+    "repeat_maps_bitwise": true
+  },
+  "end_to_end_cpu": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "paths": {
+        "legacy_intercept_flat_density": {
+          "samples_s": [
+            0.0327525082975626,
+            0.03308638744056225,
+            0.03317068889737129,
+            0.03274512104690075,
+            0.0327428113669157,
+            0.03344706445932388,
+            0.03272777423262596
+          ],
+          "median_s": 0.0327525082975626,
+          "min_s": 0.03272777423262596,
+          "max_s": 0.03344706445932388
+        },
+        "flat_intercept_flat_density": {
+          "samples_s": [
+            0.032664770260453224,
+            0.03314668498933315,
+            0.03402130864560604,
+            0.03454042039811611,
+            0.034987038001418114,
+            0.03303469158709049,
+            0.03261116333305836
+          ],
+          "median_s": 0.03314668498933315,
+          "min_s": 0.03261116333305836,
+          "max_s": 0.034987038001418114
+        }
+      },
+      "speedup": 0.9881081112063724
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "paths": {
+        "legacy_intercept_flat_density": {
+          "samples_s": [
+            0.16834428906440735,
+            0.16904696263372898,
+            0.17305932939052582,
+            0.16868190839886665,
+            0.16751119680702686,
+            0.17450942285358906,
+            0.16889690421521664
+          ],
+          "median_s": 0.16889690421521664,
+          "min_s": 0.16751119680702686,
+          "max_s": 0.17450942285358906
+        },
+        "flat_intercept_flat_density": {
+          "samples_s": [
+            0.16716372966766357,
+            0.16710119880735874,
+            0.17198607325553894,
+            0.17335154488682747,
+            0.1679029855877161,
+            0.1724853292107582,
+            0.1677822805941105
+          ],
+          "median_s": 0.1679029855877161,
+          "min_s": 0.16710119880735874,
+          "max_s": 0.17335154488682747
+        }
+      },
+      "speedup": 1.0059196006790558
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "paths": {
+        "legacy_intercept_flat_density": {
+          "samples_s": [
+            0.3482915572822094,
+            0.344306156039238,
+            0.34809812530875206,
+            0.34743122570216656,
+            0.3438468836247921,
+            0.34789653681218624,
+            0.3475005552172661
+          ],
+          "median_s": 0.3475005552172661,
+          "min_s": 0.3438468836247921,
+          "max_s": 0.3482915572822094
+        },
+        "flat_intercept_flat_density": {
+          "samples_s": [
+            0.34315220452845097,
+            0.34177798219025135,
+            0.3396865800023079,
+            0.3473068904131651,
+            0.3432908598333597,
+            0.3406208548694849,
+            0.3462164718657732
+          ],
+          "median_s": 0.34315220452845097,
+          "min_s": 0.3396865800023079,
+          "max_s": 0.3473068904131651
+        }
+      },
+      "speedup": 1.012671784215376
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "paths": {
+        "legacy_intercept_flat_density": {
+          "samples_s": [
+            3.8318850211799145,
+            3.8328244984149933,
+            3.8319272994995117,
+            3.8313014786690474,
+            3.8404311276972294,
+            3.8371030930429697,
+            3.8322138730436563
+          ],
+          "median_s": 3.8322138730436563,
+          "min_s": 3.8313014786690474,
+          "max_s": 3.8404311276972294
+        },
+        "flat_intercept_flat_density": {
+          "samples_s": [
+            3.841354303061962,
+            3.844941781833768,
+            3.8310494143515825,
+            3.839887250214815,
+            3.842850400134921,
+            3.8402468618005514,
+            3.854976477101445
+          ],
+          "median_s": 3.841354303061962,
+          "min_s": 3.8310494143515825,
+          "max_s": 3.854976477101445
+        }
+      },
+      "speedup": 0.9976205188854826
+    }
+  ],
+  "profile_note": "Detailed scope measurements include additional clock overhead; primary direct samples have detailed scopes disabled.",
+  "limitations": [
+    "Seven repetitions are descriptive; small CPU timing differences are not an established global speedup.",
+    "CUDA timing-semantics functional test skipped after automatic review rejected timing enablement; correctness-only CUDA regression passed.",
+    "No allocator sampling percentage; allocation overhead is included in mathematical stage timings.",
+    "Validated single cylinder/simple aim/specified sun/one CPU thread; other paths retain legacy.",
+    "Host stack/vectorization evidence does not establish CUDA register use or GPU speed."
+  ]
+}

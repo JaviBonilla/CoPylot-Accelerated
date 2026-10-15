@@ -1,0 +1,182 @@
+{
+  "source": "pre-extraction legacy baseline, grid 25x25",
+  "cases": [
+    {
+      "heliostats": 1000,
+      "scopes": [
+        {
+          "phase": "generate_layout",
+          "calls": 576,
+          "inclusive_s": 0.0041640250000000035,
+          "exclusive_s": 0.00010724399999999983
+        },
+        {
+          "phase": "simulate",
+          "calls": 1000,
+          "inclusive_s": 0.006940303,
+          "exclusive_s": 0.0001889179999999998
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.006663433999999993,
+          "exclusive_s": 0.00018363500000000024
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.006658094000000012,
+          "exclusive_s": 0.00018370800000000034
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.0066524290000000005,
+          "exclusive_s": 0.00018362900000000026
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.009087788000000001,
+          "exclusive_s": 0.00025201199999999997
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.007070644999999995,
+          "exclusive_s": 0.00019419100000000024
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.006637764999999991,
+          "exclusive_s": 0.00018381600000000052
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 1000,
+          "inclusive_s": 0.0066522370000000036,
+          "exclusive_s": 0.00018367700000000036
+        }
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "scopes": [
+        {
+          "phase": "generate_layout",
+          "calls": 2576,
+          "inclusive_s": 0.019349641000000063,
+          "exclusive_s": 0.00048279800000000113
+        },
+        {
+          "phase": "simulate",
+          "calls": 5000,
+          "inclusive_s": 0.03513624300000001,
+          "exclusive_s": 0.0009330139999999903
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.03545299600000015,
+          "exclusive_s": 0.000979714000000008
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.033992222,
+          "exclusive_s": 0.0009291449999999935
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.03382867999999994,
+          "exclusive_s": 0.0009411800000000052
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.03377137900000005,
+          "exclusive_s": 0.000939077000000006
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.033721385999999916,
+          "exclusive_s": 0.0009419820000000045
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.03382261799999998,
+          "exclusive_s": 0.0009405910000000056
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 5000,
+          "inclusive_s": 0.03373200300000005,
+          "exclusive_s": 0.0009364190000000039
+        }
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "scopes": [
+        {
+          "phase": "generate_layout",
+          "calls": 4628,
+          "inclusive_s": 0.03531868499999999,
+          "exclusive_s": 0.0008683869999999939
+        },
+        {
+          "phase": "simulate",
+          "calls": 10000,
+          "inclusive_s": 0.07194426300000024,
+          "exclusive_s": 0.0018609549999999558
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.06997463800000017,
+          "exclusive_s": 0.0018384269999999778
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.07118836199999992,
+          "exclusive_s": 0.0018792889999999776
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.07294686,
+          "exclusive_s": 0.0019261859999999786
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.07033466599999989,
+          "exclusive_s": 0.0018571479999999784
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.06968841899999986,
+          "exclusive_s": 0.001839989999999977
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.06973559699999998,
+          "exclusive_s": 0.0018370609999999775
+        },
+        {
+          "phase": "direct_intercept",
+          "calls": 10000,
+          "inclusive_s": 0.06967439699999978,
+          "exclusive_s": 0.0018483659999999759
+        }
+      ]
+    }
+  ]
+}

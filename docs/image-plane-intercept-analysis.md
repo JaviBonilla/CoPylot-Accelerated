@@ -138,3 +138,84 @@ Large local moment/facet arrays, pow/exp/trig and cant/covariance/clipping branc
 are likely more consequential than launch configuration. Input/output bytes,
 local stack and final timings must be measured before deciding a CUDA mapping.
 No device structures, kernels, buffers or block sizes are introduced in 2D-A.
+
+## Measured findings and implemented boundary
+
+The pre-extraction `phase2da-call-counts.json` records **1000, 5000 and 10000**
+intercept calls in the corresponding public `simulate` sessions. Layout preparation
+has separate counts (576, 2576, 4628 in these assigned-field setups); those calls
+must not be mislabeled as performance simulate calls. Seven direct repetitions
+also each contain exactly H calls. Complete 215-double snapshots at all three map
+resolutions are bitwise identical, for every heliostat in all three field sizes.
+The radial scalar historically returned by `getRadialPos` is the **3D norm of H's
+location**, not strictly the horizontal radius when z is nonzero; the adapter
+keeps that getter and convention. Two different ranges are kept: the cylinder
+surface estimate used for sun/error projection and H's actual slant used in canting.
+Likewise tower height and receiver optical height remain distinct normalizations.
+
+Pre-extraction 10k detailed-profile exclusive medians are: quadrature 24.904 ms
+(35.6% of intercept inclusive time), facets 17.013 ms (24.3%), mirror projection
+8.767 ms (12.5%), error moments 4.855 ms (6.9%), convolution 4.295 ms (6.1%),
+coefficient work 3.449 ms (4.9%), sun moments 1.424 ms (2.0%), visibility 1.136 ms
+(1.6%) and aperture setup 0.872 ms (1.2%). These are measured stage boundaries,
+not an allocator or libm sampling profile. Allocation/copy cost remains included
+in the corresponding stages; there is no defensible separate allocator percentage.
+The detailed total is 69.975 ms versus a 67.153 ms median with detailed scopes off.
+Clock overhead and temporal variation prevent interpreting the difference as an
+exact cost correction.
+
+`image_plane::Input`, `Output` and `Tables` are trivial, standard fixed storage.
+`Matrix<R,C>` only supplies inline row-major indexing, with no constructor,
+allocator, vtable or runtime resizing. ErrorTable has the actual 7x7x4 shape.
+
+| Structure | Bytes | Contents |
+|---|---:|---|
+| Input | 1640 | receiver/height/range scalars, three vectors, six errors, focal/cant/aim data, 49 normalized mirror moments, 64 x/y panel centers, facet metadata and visibility |
+| Output | 1728 | four 7x7 matrices, 16 Hermite coefficients, two sigmas, returned intercept and updated flag |
+| Tables | 3256 | three 7x7 tables, two 14-value factorial tables, 7x7x4 error coefficients, 4 CDF coefficients, 16 quadrature weights and abscissas |
+
+Tables are copied at `initHermiteCoefs`; lazy initialization also covers copied
+Flux objects. The cache lives in each Flux, not in a process-global singleton.
+Initialization and evaluation are serial. Input is gathered per call; outputs are
+written to the existing H matrices. Same-size H matrices reuse their allocations;
+first-call resizing may allocate in **writeback**, never in `evaluate`.
+
+Supported Flat canting is no-cant, on-axis at slant, and on-axis at user radius;
+up to 64 facets with matching positive dimensions. Any unsupported receiver,
+model/aim/time path, order, canting or capacity goes to the unchanged private
+legacy implementation. These guards preserve compatibility; they are not new
+scientific validations. `evaluate` assumes a supported, physically valid input.
+The field still owns disabled/acceptance behavior. Invisible input returns zero
+with `updated=false`, so writeback preserves historical H state. The inside-radius
+postcondition still returns zero after calculating optical state.
+
+The actual legacy body **and all three Hermite callees** compare equal to the
+initial version after removing only profiling macros and whitespace; the
+normalized token hash is recorded in `phase2da-boundaries.json`. Arithmetic,
+constants, branch thresholds and sum ordering were not edited. The Flat source
+omits unsupported receiver/off-axis branches, replaces dynamic storage and table
+lookups with explicit fixed data, and removes unused counting/center containers.
+No physical bug fix is included.
+
+## Final compiler and future portability evidence
+
+GCC 13.3 `-O3 -DNDEBUG`, without fast-math or architecture-specific intrinsics,
+vectorizes two loops using 16-byte vectors: the innermost coefficient sum and the
+spill accumulation. SLP also handles part of the recurrence. Most nested loops
+are not vectorized because of control flow, recurrences, accesses or reductions.
+The separate analysis object imports only libm functions and stack protection;
+there are no allocator or SolarPILOT object-method references. Its statically
+reported host `evaluate` frame is **8128 bytes**; the two facet power arrays alone
+reserve 7168 bytes at the 64-facet capacity. This is host stack evidence, not a CUDA
+register/local-memory estimate. Full remarks are under `phase2da-validation/`.
+
+For future GPU analysis, the work item is one independent heliostat. Tables,
+receiver scalars and template-normalized mirror/panel geometry are candidates for
+shared read-only storage; solar/tracking/aim/range values vary per evaluation.
+Errors/canting/focus vary on optical configuration changes. Receiver geometry and
+layout change their corresponding input subsets; DNI does not enter this core.
+Writing H outputs is independent; **no cross-heliostat reduction is required**.
+Facet loops, covariance threshold, aperture clipping and exp cutoff can diverge;
+pow/exp/trig remain substantial. One thread per H is conceptually feasible but
+large private arrays can spill heavily. Other mappings or a tighter facet workspace
+must be measured later. No mapping, block size, device storage or GPU code is chosen.
