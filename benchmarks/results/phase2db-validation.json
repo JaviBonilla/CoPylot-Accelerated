@@ -1,0 +1,249 @@
+{
+  "phase": "2D-B",
+  "tested_source_commits": {
+    ".": "d7888da2aa393bf83f217bee547aeb3950890f95",
+    "ssc": "012b1a2ce195f5060867828773a2a339edf67b96",
+    "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "note": "Later root commits package evidence and documentation; they do not change the tested numerical implementation.",
+  "tests": {
+    "cpu-production-tests": {
+      "native_pass": 3,
+      "python_total": 26,
+      "python_pass": 18,
+      "python_expected_skips": 8,
+      "log": "phase2db-validation/cpu-production-tests.log"
+    },
+    "final-cuda-tests": {
+      "native_pass": 5,
+      "python_total": 26,
+      "python_pass": 25,
+      "python_expected_skips": 1,
+      "log": "phase2db-validation/final-cuda-tests.log"
+    },
+    "reconstruction-final-tests": {
+      "native_pass": 3,
+      "python_total": 26,
+      "python_pass": 18,
+      "python_expected_skips": 8,
+      "log": "phase2db-validation/reconstruction-final-tests.log"
+    },
+    "native-tests": {
+      "native_pass": 3,
+      "python_total": 26,
+      "python_pass": 19,
+      "python_expected_skips": 7,
+      "log": "phase2db-validation/native-tests.log"
+    },
+    "asan-native": {
+      "native_pass": 3,
+      "python_total": 0,
+      "python_pass": 0,
+      "python_expected_skips": 0,
+      "log": "phase2db-validation/asan-native.log"
+    },
+    "asan-python": {
+      "native_pass": 0,
+      "python_total": 26,
+      "python_pass": 19,
+      "python_expected_skips": 7,
+      "log": "phase2db-validation/asan-python.log"
+    },
+    "density-event-test": {
+      "native_pass": 0,
+      "python_total": 1,
+      "python_pass": 1,
+      "python_expected_skips": 0,
+      "log": "phase2db-validation/density-event-test.log"
+    }
+  },
+  "sanitizers": {
+    "native": "Debug ASan + UBSan + LeakSanitizer, detect_leaks=1; run outside ptrace",
+    "python": "ASan + UBSan, halt on errors, preloaded runtimes; CPython leak detection disabled",
+    "cuda_memory_checker": "Compute Sanitizer absent; no installation"
+  },
+  "coverage": {
+    "shared_fixtures": 60,
+    "values_per_heliostat": 215,
+    "full_sizes": [
+      1000,
+      5000,
+      10000
+    ],
+    "downstream_cases": 9,
+    "historical_density_cases": 9,
+    "native_edges": [
+      0,
+      1,
+      127,
+      128,
+      129,
+      259,
+      1000,
+      5000,
+      10000,
+      1,
+      0
+    ],
+    "valid_execution_after_invalid_device": true,
+    "disabled_heliostat_and_unsupported_facet_recovery": true,
+    "gpu_repeated_output_bitwise": true,
+    "gpu_repeated_maps_bitwise": true,
+    "allocation_reuse": true,
+    "cpu_only_no_cuda_runtime_dependency": true,
+    "legacy_flat_full_cpu_values": 10320000,
+    "legacy_flat_full_cpu_bitwise": true
+  },
+  "boundaries": {
+    "phase2c_protected_files": 13,
+    "oracle_token_sha256": "3b82234992790e91fb214612635e603d35a91222a17440fc718e202cd2dac044",
+    "oracle_preserved": true,
+    "private_case_ignored": true,
+    "image_plane_cuda_absent": false
+  },
+  "initial_protected_files_checked": 47,
+  "all_initial_protected_hashes_unchanged": true,
+  "reconstruction": {
+    "method": "Fresh local object-store clones at original bases plus complete mailbox replay, deterministic committer dates and identity; exact SHAs; bootstrap and CPU build/tests",
+    "repositories": {
+      "SolarPILOT": {
+        "original_base": "c74618a70fd8e85708957b1ee57b157ba75a5045",
+        "reproduced_sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "clean": true
+      },
+      "ssc": {
+        "original_base": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec",
+        "reproduced_sha": "012b1a2ce195f5060867828773a2a339edf67b96",
+        "clean": true
+      },
+      "SolTrace": {
+        "original_base": "79b2ca3dfec496506d24ae56055c0d7e240ba368",
+        "reproduced_sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "clean": true
+      }
+    }
+  },
+  "remote_source_state_at_validation": {
+    "phase2db-native": {
+      ".": {
+        "sha": "d7888da2aa393bf83f217bee547aeb3950890f95",
+        "branch": "main",
+        "status": "",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "012b1a2ce195f5060867828773a2a339edf67b96",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      }
+    },
+    "phase2db-cuda": {
+      ".": {
+        "sha": "d7888da2aa393bf83f217bee547aeb3950890f95",
+        "branch": "main",
+        "status": "",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "012b1a2ce195f5060867828773a2a339edf67b96",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      }
+    },
+    "phase2b-native": {
+      ".": {
+        "sha": "459a178274fcd50f74b8cd9f760c12fb037fb8b6",
+        "branch": "main",
+        "status": "",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      }
+    },
+    "phase2b-cuda": {
+      ".": {
+        "sha": "459a178274fcd50f74b8cd9f760c12fb037fb8b6",
+        "branch": "main",
+        "status": "",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "status": "",
+        "clean": true
+      }
+    }
+  },
+  "limits": [
+    "GPU verification is limited to RTX 6000 Ada sm_89, CUDA 13.0 and the tested build.",
+    "No GPU memory sanitizer was available.",
+    "No final performance or end-to-end speedup claim."
+  ],
+  "scope_preserved": [
+    "No block-size sweep",
+    "No density tuning",
+    "No shading/blocking algorithm changes",
+    "No private-case simulation",
+    "No CPU multithreading",
+    "No annual/time-series batching",
+    "No SolTrace/OptiX changes",
+    "No push",
+    "Phase 2D-C not started"
+  ]
+}
