@@ -37,8 +37,13 @@ def read(cp,r,area):
     return {'flux':flux,'metrics':np.array([flux.max(),flux.sum()*area/flux.size,power]),'aims':aims,'sun':sun}
 
 
-def check(cp,r,directory,area):
+def check(cp,r,directory,area,private_raw=None):
     records={};receipt=directory/'optics.jsonl';handoff=directory/'handoff.csv'
+    geometry_before=np.asarray(cp.get_layout_info(r,get_optical_details=True,restype='matrix')[0])
+    rows=[row.split(',') for row in cp.data_get_string(r,'solarfield.0.layout_data').replace(';','\n').splitlines() if row.strip()]
+    expected_aims=None
+    if rows and all(len(row) in (12,14) and all(value!='NULL' for value in row[-3:]) for row in rows):
+        expected_aims=np.asarray([[float(value) for value in row[-3:]] for row in rows])
     for name,backend,intercept,density in [('legacy','cpu','legacy','legacy'),('flat','cpu','verify','verify'),
                 ('cuda_full','cuda','verify_cuda','flat'),('cuda_resident','cuda','cuda','flat'),
                 ('cuda_repeat','cuda','cuda','flat')]:
@@ -51,13 +56,27 @@ def check(cp,r,directory,area):
                 'SOLARPILOT_IMAGE_TIMING_FILE':'','SOLARPILOT_PROFILE_FILE':''}):
             if not cp.simulate(r,nthreads=1): raise RuntimeError('Simulation correctness gate failed: '+name)
             records[name]=read(cp,r,area)
+            geometry=np.asarray(cp.get_layout_info(r,get_optical_details=True,restype='matrix')[0])
+            np.testing.assert_array_equal(geometry[:,1:5],geometry_before[:,1:5])
+            np.testing.assert_array_equal(geometry[:,6:],geometry_before[:,6:])
+            if expected_aims is not None: np.testing.assert_array_equal(records[name]['aims'],expected_aims)
     reference=records['legacy'];out={}
     for name,record in records.items():
         np.testing.assert_array_equal(record['aims'],reference['aims'])
         np.testing.assert_array_equal(record['sun'],reference['sun'])
         out[name]={'map_errors':errors(reference['flux'],record['flux']),
                    'peak_integrated_summary_errors':errors(reference['metrics'],record['metrics']),
-                   'aims_equal':True,'resolved_sun_equal':True}
+                   'aims_equal':True,'resolved_sun_equal':True,'geometry_preserved':True,
+                   'serialized_aims_checked':expected_aims is not None}
+    for name,record in records.items():
+        if isinstance(out.get(name),dict):
+            for index,key in enumerate(('peak','integrated_incident_power','summary_absorbed_power')):
+                out[name][key+'_errors']=errors(reference['metrics'][index:index+1],record['metrics'][index:index+1])
+    if 'cuda_full' in records:
+        out['flat_cuda']={'map_errors':errors(records['flat']['flux'],records['cuda_full']['flux']),
+                         'metrics_errors':errors(records['flat']['metrics'],records['cuda_full']['metrics'])}
+    if private_raw is not None:
+        np.savez_compressed(private_raw,**{name+'_'+key:value for name,record in records.items() for key,value in record.items()})
     if 'cuda_repeat' in records:
         np.testing.assert_array_equal(records['cuda_repeat']['flux'],records['cuda_resident']['flux'])
         out['deterministic']=True
@@ -74,7 +93,9 @@ def check(cp,r,directory,area):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--project',type=Path)
-    p.add_argument('--commercial',action='store_true');args=p.parse_args()
+    p.add_argument('--commercial',action='store_true')
+    p.add_argument('--restoration-mode',choices=['serialized','generated','updated'],default='serialized')
+    args=p.parse_args()
     if args.project:
         try: args.output.resolve().relative_to(ROOT/'local-cases')
         except ValueError: p.error('Private integration receipts must stay under the ignored local-cases area')
@@ -85,7 +106,15 @@ def main():
     try:
         if args.project:
             if not cp.load_spt(r,args.project): raise RuntimeError('Private project load failed')
-            if not cp.restore_loaded_layout(r): raise RuntimeError('Private serialized restoration failed')
+            site_keys=['ambient.0.'+k for k in ('latitude','longitude','elevation','time_zone')]
+            site_before=[cp.data_get_number(r,k) for k in site_keys]
+            if args.restoration_mode=='generated':
+                if not cp.generate_layout(r,nthreads=1): raise RuntimeError('Private weather-aware generation failed')
+            else:
+                if not cp.restore_loaded_layout(r): raise RuntimeError('Private serialized restoration failed')
+                if args.restoration_mode=='updated' and not cp.update_geometry(r): raise RuntimeError('Private weather-aware update failed')
+            result['weather_site_unchanged']=[cp.data_get_number(r,k) for k in site_keys]==site_before
+            result['restoration_mode']=args.restoration_mode
             area=cp.data_get_number(r,'receiver.0.rec_width')*cp.data_get_number(r,'receiver.0.rec_height')
             states=[None] # Preserve the project's actual single-state Hour/Day inputs.
         elif args.commercial:
@@ -102,7 +131,8 @@ def main():
         with tempfile.TemporaryDirectory(dir=args.output.parent) as td:
             for hour in states:
                 if hour is not None: assert cp.data_set_number(r,'fluxsim.0.flux_hour',hour)
-                result['states'].append(check(cp,r,Path(td),area))
+                result['states'].append(check(cp,r,Path(td),area,
+                    args.output.with_suffix('.npz') if args.project else None))
         result['status']='passed'
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
         print('Compatibility receipt: passed')

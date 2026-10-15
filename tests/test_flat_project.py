@@ -157,6 +157,26 @@ class FlatProject(unittest.TestCase):
                 for axis,index in zip('xyz',range(11,14)):
                     np.testing.assert_array_equal(details[axis+'_aimpoint'],np.asarray(rows)[:,index])
 
+    def test_cuda_disabled_flat_and_unsupported_recovery(self):
+        cp=self.cp
+        if not cp.cuda_available(): self.skipTest('CUDA build/device required')
+        source=self.context();rows=configure_flat(cp,source,count=65,hour_day=True)
+        rows[0][1]=0
+        self.assertTrue(cp.data_set_string(source,'solarfield.0.layout_data',
+                        ';'.join(','.join(map(str,row)) for row in rows)+';'))
+        name=self.base/'disabled.spt';self.assertTrue(cp.save_spt(source,name))
+        self.assertTrue(cp.load_spt(source,name));self.assertTrue(cp.restore_loaded_layout(source))
+        with patch.dict(os.environ,{'SOLARPILOT_INTERCEPT_PATH':'verify'}):
+            self.assertTrue(cp.simulate(source,nthreads=1),cp.get_last_backend_error(source))
+        expected=np.asarray(cp.get_fluxmap(source))
+        self.assertTrue(cp.set_compute_backend(source,'cuda'))
+        self.assertTrue(cp.data_set_number(source,'receiver.0.is_snout',1))
+        self.assertFalse(cp.simulate(source,nthreads=1));self.assertIn('supports only',cp.get_last_backend_error(source))
+        self.assertTrue(cp.data_set_number(source,'receiver.0.is_snout',0))
+        with patch.dict(os.environ,{'SOLARPILOT_INTERCEPT_PATH':'verify_cuda'}):
+            self.assertTrue(cp.simulate(source,nthreads=1),cp.get_last_backend_error(source))
+        np.testing.assert_allclose(cp.get_fluxmap(source),expected,rtol=1e-9,atol=1e-10)
+
     def test_portable_weather_resolution(self):
         cp=self.cp
         for stored in ('nested/public.csv','/obsolete/public.csv'):
