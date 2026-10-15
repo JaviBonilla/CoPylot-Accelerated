@@ -84,6 +84,7 @@ int main(int argc,char** argv) {
         const auto& stats=context->image_plane->statistics;
         std::cout<<std::setprecision(17)<<"{\"heliostats\":"<<count<<",\"grid\":[25,25],\"warmups\":"<<warmups<<",\"repetitions\":"<<repetitions
             <<",\"warmups_excluded\":"<<warmups<<",\"first_use_hybrid_s\":"<<first_use.total_s
+            <<",\"block_size\":"<<stats.block_size
             <<",\"gpu_timings_collected\":"<<(timing?"true":"false")<<",\"stage\":\"Image-plane direct measurement\",\"errors\":";
         comparison.json(std::cout);
         std::cout<<",\"deterministic\":true,\"allocation_reuse\":true,\"allocations\":"<<stats.allocations

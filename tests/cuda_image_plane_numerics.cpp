@@ -66,7 +66,7 @@ int main(int argc,char** argv) {
         out<<",\"edge_errors\":";edges.json(out);
         out<<",\"deterministic\":"<<(deterministic?"true":"false")<<",\"allocation_reuse\":true,\"input_capacity\":"<<stats.input_capacity
            <<",\"output_capacity\":"<<stats.output_capacity<<",\"allocations\":"<<stats.allocations
-           <<",\"block_size\":128,\"host_device_layout_equal\":true,\"layout\":[";
+           <<",\"block_size\":"<<stats.block_size<<",\"host_device_layout_equal\":true,\"layout\":[";
         for (std::size_t i=0;i<layout.size();++i) out<<(i?",":"")<<layout[i];
         out<<"],\"resources\":{\"registers_per_thread\":"<<resources.registers<<",\"local_bytes_per_thread\":"<<resources.local_bytes
            <<",\"static_shared_bytes\":"<<resources.static_shared_bytes<<",\"dynamic_shared_bytes\":0,\"constant_bytes\":"<<resources.constant_bytes

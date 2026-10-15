@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/18] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/19] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/18] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/19] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/18] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/19] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/18] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/19] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/18] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/19] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/18] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/19] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/18] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/19] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/18] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/19] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/18] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/19] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/18] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/19] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/18] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/19] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/18] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/19] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/18] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/19] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/18] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/19] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/18] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/19] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3302,7 +3302,7 @@ index 53953d37a..3ece02fda 100644
 From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:22:32 +0200
-Subject: [PATCH 16/18] cuda: port the validated flat image-plane formulation
+Subject: [PATCH 16/19] cuda: port the validated flat image-plane formulation
  with independent device buffers
 
 ---
@@ -4734,7 +4734,7 @@ index 000000000..8e112617b
 From 71f2c7b4acf647831ffb8ba9039c9aa078b8c05c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:34:28 +0200
-Subject: [PATCH 17/18] cuda: integrate batched image-plane evaluation and
+Subject: [PATCH 17/19] cuda: integrate batched image-plane evaluation and
  checked context ownership
 
 ---
@@ -5058,7 +5058,7 @@ index 9e72693d0..a9f70da0d 100644
 From 012b1a2ce195f5060867828773a2a339edf67b96 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 14:58:55 +0200
-Subject: [PATCH 18/18] cuda: reject invalid image-plane devices before
+Subject: [PATCH 18/19] cuda: reject invalid image-plane devices before
  constructing resources
 
 ---
@@ -5094,6 +5094,122 @@ index 3a9162505..5434e98a1 100644
      return std::unique_ptr<ImagePlaneGpuContext>(new ImagePlaneContext(device));
  }
  }
+-- 
+2.43.0
+
+
+From 5554361cf948681330faabe686696931697116d8 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 15:39:29 +0200
+Subject: [PATCH 19/19] perf: expose bounded image-plane launch diagnostics
+ without changing arithmetic
+
+---
+ solarpilot/ImagePlaneInterceptCuda.cpp   |  2 +-
+ solarpilot/ImagePlaneInterceptCuda.h     |  2 ++
+ solarpilot/ImagePlaneInterceptKernels.cu | 23 ++++++++++++++++++++---
+ 3 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/solarpilot/ImagePlaneInterceptCuda.cpp b/solarpilot/ImagePlaneInterceptCuda.cpp
+index 95db80ba9..c4b1df789 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.cpp
++++ b/solarpilot/ImagePlaneInterceptCuda.cpp
+@@ -45,7 +45,7 @@ void Flux::imagePlaneInterceptCudaBatch(var_map& variables,Hvector& heliostats,V
+         if (comparison_file && *comparison_file) {
+             std::ofstream out(comparison_file,std::ios::app);
+             if (!out) throw std::runtime_error("Cannot write CUDA image-plane comparison");
+-            out<<"{\"heliostats\":"<<heliostats.size()<<",\"block_size\":128,\"allocations\":"<<executor.statistics.allocations
++            out<<"{\"heliostats\":"<<heliostats.size()<<",\"block_size\":"<<executor.statistics.block_size<<",\"allocations\":"<<executor.statistics.allocations
+                <<",\"input_capacity\":"<<executor.statistics.input_capacity<<",\"output_capacity\":"<<executor.statistics.output_capacity
+                <<",\"errors\":";comparison.json(out);out<<"}\n";
+             if (!out) throw std::runtime_error("Cannot finish CUDA image-plane comparison");
+diff --git a/solarpilot/ImagePlaneInterceptCuda.h b/solarpilot/ImagePlaneInterceptCuda.h
+index 1547cb033..1f577b47b 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.h
++++ b/solarpilot/ImagePlaneInterceptCuda.h
+@@ -16,6 +16,7 @@ inline ImagePlaneLayout image_plane_host_layout() {
+         offsetof(image_plane::Output,updated),sizeof(std::int32_t),sizeof(std::uint8_t)}};
+ }
+ struct ImagePlaneGpuStatistics {
++    int block_size=image_plane_block_size;
+     std::size_t heliostats=0,input_capacity=0,output_capacity=0,table_capacity=0,allocations=0;
+     std::size_t input_h2d_bytes=0,tables_h2d_bytes=0,output_d2h_bytes=0;
+     bool timed=false;
+@@ -23,6 +24,7 @@ struct ImagePlaneGpuStatistics {
+     double input_h2d_ms=0.,tables_h2d_ms=0.,kernel_ms=0.,d2h_ms=0.;
+ };
+ struct ImagePlaneGpuResources {
++    int block_size=image_plane_block_size;
+     int registers=0,max_threads=0,active_blocks_per_sm=0,sm_count=0,warp_size=0,max_threads_per_sm=0;
+     int compute_major=0,compute_minor=0,runtime_version=0,driver_version=0;
+     std::size_t local_bytes=0,static_shared_bytes=0,constant_bytes=0;
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+index 5434e98a1..b2bc23fb6 100644
+--- a/solarpilot/ImagePlaneInterceptKernels.cu
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -5,12 +5,25 @@
+ #include <cuda_runtime.h>
+ #include <climits>
+ #include <cmath>
++#include <cstdlib>
+ #include <limits>
+ #include <stdexcept>
+ #include <string>
+ 
+ namespace solarpilot {
+ namespace {
++int selected_block_size() {
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++    const char* text=std::getenv("SOLARPILOT_IMAGE_BLOCK_SIZE");
++    if (text && *text) {
++        char* end=nullptr;const long block=std::strtol(text,&end,10);
++        if (!end || *end || (block!=64 && block!=128 && block!=256 && block!=512))
++            throw std::runtime_error("CUDA image-plane block size must be 64, 128, 256 or 512");
++        return static_cast<int>(block);
++    }
++#endif
++    return image_plane_block_size;
++}
+ void check(cudaError_t status,const char* operation) {
+     if (status!=cudaSuccess) throw std::runtime_error(std::string(operation)+": "+cudaGetErrorString(status));
+ }
+@@ -118,6 +131,7 @@ class ImagePlaneContext final:public ImagePlaneGpuContext {
+     std::size_t allocations_=0;
+     void snapshot(std::size_t count,bool timed) {
+         statistics=ImagePlaneGpuStatistics();
++        statistics.block_size=selected_block_size();
+         statistics.heliostats=count;statistics.timed=timed;statistics.allocations=allocations_;
+         statistics.input_capacity=inputs_.capacity();statistics.output_capacity=outputs_.capacity();statistics.table_capacity=tables_.capacity();
+     }
+@@ -140,7 +154,8 @@ public:
+         if (timing) { end_.record();statistics.input_h2d_ms=end_.elapsed_from(start_);start_.record(); }
+         check(cudaMemcpy(tables_.data(),&tables,sizeof(tables),cudaMemcpyHostToDevice),"cudaMemcpy(image-plane tables H2D)");
+         if (timing) { end_.record();statistics.tables_h2d_ms=end_.elapsed_from(start_);start_.record(); }
+-        image_plane_kernel<<<static_cast<unsigned>((count+image_plane_block_size-1)/image_plane_block_size),image_plane_block_size>>>(inputs_.data(),count,tables_.data(),outputs_.data());
++        const int block=statistics.block_size;
++        image_plane_kernel<<<static_cast<unsigned>((count+block-1)/block),block>>>(inputs_.data(),count,tables_.data(),outputs_.data());
+         check(cudaGetLastError(),"image-plane kernel launch");
+         if (timing) { end_.record();statistics.kernel_ms=end_.elapsed_from(start_);start_.record(); }
+         // Blocking default-stream D2H also reports asynchronous execution errors.
+@@ -154,14 +169,16 @@ public:
+         check(cudaFuncGetAttributes(&attributes,image_plane_kernel),"cudaFuncGetAttributes(image-plane)");
+         check(cudaGetDeviceProperties(&properties,device_),"cudaGetDeviceProperties(image-plane)");
+         ImagePlaneGpuResources out;
++        out.block_size=selected_block_size();
+         out.registers=attributes.numRegs;out.local_bytes=attributes.localSizeBytes;out.static_shared_bytes=attributes.sharedSizeBytes;
+         out.constant_bytes=attributes.constSizeBytes;out.max_threads=attributes.maxThreadsPerBlock;
+         out.sm_count=properties.multiProcessorCount;out.warp_size=properties.warpSize;out.max_threads_per_sm=properties.maxThreadsPerMultiProcessor;
+         out.compute_major=properties.major;out.compute_minor=properties.minor;
+         check(cudaRuntimeGetVersion(&out.runtime_version),"cudaRuntimeGetVersion(image-plane)");
+         check(cudaDriverGetVersion(&out.driver_version),"cudaDriverGetVersion(image-plane)");
+-        check(cudaOccupancyMaxActiveBlocksPerMultiprocessor(&out.active_blocks_per_sm,image_plane_kernel,image_plane_block_size,0),"cudaOccupancyMaxActiveBlocksPerMultiprocessor(image-plane)");
+-        out.theoretical_occupancy=double(out.active_blocks_per_sm*image_plane_block_size)/out.max_threads_per_sm;
++        if (out.block_size<=out.max_threads)
++            check(cudaOccupancyMaxActiveBlocksPerMultiprocessor(&out.active_blocks_per_sm,image_plane_kernel,out.block_size,0),"cudaOccupancyMaxActiveBlocksPerMultiprocessor(image-plane)");
++        out.theoretical_occupancy=double(out.active_blocks_per_sm*out.block_size)/out.max_threads_per_sm;
+         guard.restore();return out;
+     }
+     ImagePlaneLayout device_layout() override {
 -- 
 2.43.0
 

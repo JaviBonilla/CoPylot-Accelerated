@@ -125,10 +125,68 @@ def full_case(cp,size,grid,modes,directory,window):
     return result
 
 
+def sweep(args,result,cpus):
+    result['resources']=[];feasible=[]
+    for block in [64,128,256,512]:
+        wait_idle();env={**os.environ,'SOLARPILOT_IMAGE_BLOCK_SIZE':str(block)}
+        row=json.loads(subprocess.check_output([str(args.resource_binary.resolve())],env=env,text=True))
+        result['resources'].append(row)
+        if not row['launch_feasible']:continue
+        feasible.append(block)
+        for h in [1000,5000,10000]:
+            wait_idle()
+            row=json.loads(subprocess.check_output([str(args.direct_binary.resolve()),str(h),'10','timing','3'],
+                env={**env,'SOLARPILOT_INTERCEPT_PATH':'flat'},text=True))
+            assert row['errors']['global']['passed'] and row['block_size']==block
+            row['cuda_statistics']={k:distribution([s[k]/1000 if k.endswith('_ms') else s[k] for s in row['cuda_samples']]) for k in row['cuda_samples'][0]}
+            result['direct'].append(row)
+    wait_idle();cp=api();window=PipelineWindow(cpus[-1]);result['runtime_probe_s']=window.initialize(cp)
+    try:
+        with tempfile.TemporaryDirectory() as temp:
+            directory=Path(temp)
+            for size in SIZES:
+                for grid in [25,50,100]:
+                    context=context_for(cp,size,grid)
+                    try:
+                        env={'SOLARPILOT_INTERCEPT_PATH':'flat','SOLARPILOT_FLUX_PATH':'flat','SOLARPILOT_CUDA_BLOCK_SIZE':'256',
+                            'SOLARPILOT_IMAGE_PIPELINE':'v1','SOLARPILOT_IMAGE_COMPARE_FILE':''}
+                        with patch.dict(os.environ,env):
+                            call(cp,context,directory,False,False,False);reference=collect(cp,context)
+                            cp.set_compute_backend(context,'cuda');os.environ['SOLARPILOT_INTERCEPT_PATH']='cuda'
+                            runs={b:{'plain':[],'instrumented':[]} for b in feasible};observed={}
+                            for instrumented in [False,True]:
+                                for b in feasible:
+                                    os.environ['SOLARPILOT_IMAGE_BLOCK_SIZE']=str(b)
+                                    for _ in range(3):call(cp,context,directory,True,True,instrumented)
+                                for repeat in range(10):
+                                    order=feasible[repeat%len(feasible):]+feasible[:repeat%len(feasible)]
+                                    for b in order:
+                                        os.environ['SOLARPILOT_IMAGE_BLOCK_SIZE']=str(b)
+                                        sample=call(cp,context,directory,True,True,instrumented)
+                                        runs[b]['instrumented' if instrumented else 'plain'].append(sample)
+                                        if repeat in [0,9]:
+                                            actual=collect(cp,context)
+                                            if b in observed:assert np.array_equal(observed[b][0].view(np.uint64),actual[0].view(np.uint64))
+                                            observed[b]=actual
+                                    window.validate()
+                        row={'heliostats':SIZES[size],'grid':[grid,grid],'blocks':[]}
+                        for b in feasible:
+                            r=runs[b]
+                            row['blocks'].append({'block_size':b,'warmups_excluded_per_group':3,'repetitions':10,
+                                'plain_samples_s':r['plain'],'plain_statistics':distribution(r['plain']),
+                                'instrumented_samples':r['instrumented'],'instrumented_statistics':stats(r['instrumented']),
+                                'correctness':correctness(reference,observed[b]),'repeated_map_bitwise':True})
+                        result['cases'].append(row);print('sweep',size,grid,'PASS',flush=True)
+                    finally:assert cp.data_free(context)
+        window.close();result.update(status='valid',gpu_telemetry=window.samples)
+    finally:window.stop.set()
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['v1','final'],required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--stage',choices=['v1','sweep','final'],required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--direct-binary',type=Path,default=Path('build/cuda/image_plane_cuda_benchmark'))
+    p.add_argument('--resource-binary',type=Path,default=Path('build/cuda/cuda_image_plane_resources'))
     p.add_argument('--skip-direct',action='store_true');args=p.parse_args()
     if args.output.exists():raise RuntimeError('Refusing to overwrite benchmark evidence')
     cpus=sorted(os.sched_getaffinity(0));assert len(cpus)>1;os.sched_setaffinity(0,{cpus[0]})
@@ -136,10 +194,13 @@ def main():
         if k.startswith('SOLARPILOT_'):os.environ.pop(k)
     result={'status':'running_unvalidated','stage':args.stage,'metadata':metadata(cpus[0],cpus[-1]),'direct':[],'cases':[]}
     result['metadata'].update(phase='2D-C',image_kernel_sha256=hashlib.sha256((ROOT/'ssc/solarpilot/ImagePlaneInterceptKernels.cu').read_bytes()).hexdigest(),
-        baseline_label='CUDA imagePlane v1 / Phase 2D-B baseline' if args.stage=='v1' else 'Phase 2D-C selected final pipeline',
+        baseline_label={'v1':'CUDA imagePlane v1 / Phase 2D-B baseline','sweep':'Bounded image-plane block experiment','final':'Phase 2D-C selected final pipeline'}[args.stage],
         monitoring='Stable idle preflight; exact owned GPU process; <=4096 MiB after context creation; <80 C and no thermal slowdown; no concurrent server jobs.')
     window=None
     try:
+        if args.stage=='sweep':
+            sweep(args,result,cpus)
+            args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n');return
         if not args.skip_direct:
             for h in [1000,5000,10000]:
                 wait_idle()
