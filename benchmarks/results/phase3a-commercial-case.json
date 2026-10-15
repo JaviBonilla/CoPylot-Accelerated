@@ -1,0 +1,110 @@
+{
+  "heliostats": 8790,
+  "heliostat_structure_area_m2": 148.83999999999997,
+  "physical_mirror_area_m2": 1269054.4919999996,
+  "effective_aperture_area_m2": 1256363.9470799998,
+  "layout_bounds_m": {
+    "x": [
+      -1569.56,
+      1558.23
+    ],
+    "y": [
+      -1201.84,
+      1816.87
+    ]
+  },
+  "radius_range_m": [
+    145.0926843159227,
+    1816.874403533717
+  ],
+  "nearest_separation_within_adjacent_25m_buckets_m": 17.222531271854326,
+  "geometry": {
+    "solarfield.0.tht": 193.458,
+    "receiver.0.rec_diameter": 17.65,
+    "receiver.0.rec_height": 21.6029,
+    "solarfield.0.dni_des": 950.0
+  },
+  "layout_sha256": "c0aa94334f63ba21bf4671288da3da08f18f53eb755d18706da3cc0461aa33fd",
+  "coordinate_convention": "[template_id,x_east_m,y_north_m,z_pivot_m]; original row order retained",
+  "case_id": "ssc-mspt-8790-optical-reference",
+  "flux_shape": [
+    6,
+    14
+  ],
+  "finite_positive": true,
+  "peak_kw_m2": 1728.0008876628935,
+  "manifest_sha256": "d390385b5aba176e728bae7c76ea7904194c64f391c480c6b9e3aaeafb74b20b",
+  "metadata": {
+    "utc": "2026-10-15T16:47:39.489344+00:00",
+    "machine": "canonical-gpu-server",
+    "commits": {
+      ".": "b32ccd79a98b82386fe97ddd646f5020199bced5",
+      "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+      "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "branches": {
+      ".": "main",
+      "ssc": "feature/copilot-gpu",
+      "SolarPILOT": "feature/copilot-gpu",
+      "SolTrace": "feature/copilot-gpu"
+    },
+    "cpu_model": "Intel(R) Xeon(R) w5-3423",
+    "cpu_affinity": [
+      0
+    ],
+    "monitor_cpu": 23,
+    "cpu_governor": "powersave",
+    "cpu_threads": 1,
+    "precision": "double",
+    "fma": true,
+    "fast_math": false,
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cmake": "cmake version 3.30.5",
+    "build_settings": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CUDA_ARCHITECTURES": "89",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS": "",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+      "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+    },
+    "kernel_source_sha256": "e7256bf587eb0587588cdea3969e5bc8661366367417e3bd4b1201956789719a",
+    "library_sha256": "0484808fda73a358c8d1409375b3367098a42f430f7fc0ce6d611fc4d10e3260",
+    "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+    "parameters": {
+      "solarfield.0.des_sim_detail": 0,
+      "fluxsim.0.flux_model": 0,
+      "fluxsim.0.flux_time_type": 0,
+      "fluxsim.0.flux_solar_az_in": 180.0,
+      "fluxsim.0.flux_solar_el_in": 55.0,
+      "fluxsim.0.flux_dni": 950.0,
+      "fluxsim.0.aim_method": 0,
+      "fluxsim.0.x_res": 25,
+      "fluxsim.0.y_res": 25,
+      "land.0.is_bounds_scaled": 0,
+      "land.0.is_bounds_fixed": 1,
+      "land.0.max_fixed_rad": 5000.0,
+      "land.0.min_fixed_rad": 160.0
+    },
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "ncu_available": false,
+    "first_call_definition": "First simulate on a fresh CoPylot/GpuContext. Backend probe and process runtime initialization recorded separately; not a cold CUDA process.",
+    "monitoring": "Stable idle preflight; exact owned process; <=4096 MiB after context; <80 C, no thermal slowdown; no concurrent server build/test.",
+    "simulate_wall_definition": "perf_counter around public simulate including its profiling/timing CSV writes; all extraction/parsing/telemetry outside this interval",
+    "phase": "3A",
+    "image_block_size": 64,
+    "density_block_size": 256,
+    "unchanged_phase2dc_library": true,
+    "cpu_repetitions": 3,
+    "cuda_repetitions": 10,
+    "analysis_root_sha": "d9a5e3cd38f90d6f1ae8ab0c4c774a784278494d",
+    "capture_sha256": "28013e2f61219624e645237f65579b7417497a627ee6fea6a813e45a7b171f83"
+  },
+  "case_kind": "public_reference_case",
+  "exact_real_plant_reproduction": false
+}

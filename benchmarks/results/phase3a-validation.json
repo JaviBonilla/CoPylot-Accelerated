@@ -1,0 +1,50 @@
+{
+  "phase": "3A",
+  "no_core_changes": true,
+  "cpu_source_root": "d9a5e3cd38f90d6f1ae8ab0c4c774a784278494d",
+  "cuda_source_root": "920e911",
+  "analysis_source_root": "d9a5e3cd38f90d6f1ae8ab0c4c774a784278494d",
+  "utility_tests": {
+    "passed": 13,
+    "failed": 0
+  },
+  "native": {
+    "cpu_passed": 3,
+    "cuda_passed": 6,
+    "reconstructed_cpu_passed": 3
+  },
+  "python": {
+    "methods_per_suite": 45,
+    "cpu_production": {
+      "passed": 35,
+      "expected_skips": 10
+    },
+    "cpu_diagnostic": {
+      "passed": 36,
+      "expected_skips": 9
+    },
+    "cuda_diagnostic": {
+      "passed": 44,
+      "expected_skips": 1
+    },
+    "reconstructed_cpu_diagnostic": {
+      "passed": 36,
+      "expected_skips": 9
+    }
+  },
+  "strict_map_checks": {
+    "state_grid_combinations": 28,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "all_passed": true
+  },
+  "legacy_flat_bitwise_anchors": 8,
+  "cpu_and_cuda_repeated_maps_bitwise": true,
+  "public_capture_analysis_replay_passed": true,
+  "original_upstream_asset_hashes_verified": true,
+  "all_nested_mailboxes_replayed_to_exact_pins": true,
+  "private_input_unchanged_internal_integrity_check": true,
+  "private_input_parameters_extracted": false,
+  "private_data_published": false,
+  "sanitizers": "No new sanitizer run: no nested/core source changes; prior Phase 2D-C evidence remains unchanged."
+}
