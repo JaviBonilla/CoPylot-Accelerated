@@ -1,0 +1,125 @@
+{
+  "phase": "2D-A",
+  "validated_source_repositories": {
+    ".": {
+      "sha": "f3c504bd13f4c0ae6de813f0fa75928b6a4961ac",
+      "branch": "main"
+    },
+    "ssc": {
+      "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+      "branch": "feature/copilot-gpu"
+    },
+    "SolarPILOT": {
+      "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "branch": "feature/copilot-gpu"
+    },
+    "SolTrace": {
+      "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+      "branch": "feature/copilot-gpu"
+    }
+  },
+  "fresh_reconstruction": {
+    ".": {
+      "sha": "f3c504bd13f4c0ae6de813f0fa75928b6a4961ac",
+      "branch": "main"
+    },
+    "ssc": {
+      "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+      "branch": "codex/phase2da-reconstruction"
+    },
+    "SolarPILOT": {
+      "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "branch": "codex/phase2da-reconstruction"
+    },
+    "SolTrace": {
+      "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+      "branch": "codex/phase2da-reconstruction"
+    }
+  },
+  "remote_clean_audit_before_validation_log_commit": {
+    "phase2b-native": {
+      ".": {
+        "sha": "f3c504bd13f4c0ae6de813f0fa75928b6a4961ac",
+        "branch": "main",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      }
+    },
+    "phase2b-cuda": {
+      ".": {
+        "sha": "f3c504bd13f4c0ae6de813f0fa75928b6a4961ac",
+        "branch": "main",
+        "clean": true
+      },
+      "ssc": {
+        "sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      },
+      "SolarPILOT": {
+        "sha": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      },
+      "SolTrace": {
+        "sha": "699263f12b2de1c6f12e211e3e8906a80054cc1b",
+        "branch": "feature/copilot-gpu",
+        "clean": true
+      }
+    }
+  },
+  "test_results": {
+    "cpu_production": {
+      "ctest_pass": 3,
+      "python_pass": 18,
+      "python_skip": 5
+    },
+    "cpu_native_diagnostics": {
+      "ctest_pass": 3,
+      "python_pass": 19,
+      "python_skip": 4
+    },
+    "cuda": {
+      "ctest_pass": 4,
+      "python_pass": 22,
+      "python_skip": 1
+    },
+    "asan_ubsan_lsan_native": {
+      "ctest_pass": 3,
+      "leak_detection": true
+    },
+    "asan_ubsan_python": {
+      "pass": 19,
+      "skip": 4,
+      "leak_detection": false
+    },
+    "fresh_cpu_reconstruction": {
+      "ctest_pass": 3,
+      "python_pass": 18,
+      "python_skip": 5
+    }
+  },
+  "timing_test_limitation": "Automatic approval review rejected enabling the CUDA timing test; correctness-only CUDA tests passed with the timing test explicitly skipped.",
+  "all_tracked_phase2c_results_unchanged": true,
+  "private_case_digest_matches_original": true,
+  "canonical_library_rebuild_sha256": "f7df4a6b041bb5ad99453963164f687764673e3f7db0aab58865e4474d6e018f",
+  "cpu_governor_verified": "powersave",
+  "no_host_settings_changed": true,
+  "no_packages_installed": true,
+  "no_push": true,
+  "phase2db_started": false
+}

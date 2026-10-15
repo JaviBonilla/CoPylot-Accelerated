@@ -221,7 +221,9 @@ semantics untested in this phase. No GPU speedup claim depends on that omission.
 An initial sanitizer run inside the sandbox failed because LeakSanitizer cannot
 operate under ptrace; the subsequent run outside that tracing boundary passed.
 Inherited source warnings remain (macro redefinitions, conversions and misleading
-indentation); the new core/adapter introduce no compiler warning. Initial mailbox
+indentation); the pure core compiles without warnings. The adapter repeats the inherited
+`SP_USE_SOLTRACE`/`SP_USE_THREADS` header macro-redefinition warnings; no new
+warning category is introduced. Initial mailbox
 trailing-whitespace warnings in the extracted source were fixed in a dedicated
 formatting commit with an identical resulting library. No mathematical fixes or
 silently relaxed tolerances are included.
