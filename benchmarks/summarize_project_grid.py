@@ -122,7 +122,7 @@ def main():
     fields+=['cpu_model','gpu_model','cpu_threads','precision','fma','fast_math','build_type','cuda_arch','library_sha256']
     fields+=conv+['backend_max_abs_kw_m2','backend_max_rel_nonzero','backend_rms_kw_m2','root_sha','ssc_sha','solarpilot_sha','soltrace_sha']
     with (args.output_dir/'phase3c-cesa1-grid-performance.csv').open('w',newline='') as f:
-        writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader()
+        writer=csv.DictWriter(f,fieldnames=fields,lineterminator='\n');writer.writeheader()
         for r in result['rows']:
             g=r['grid'];item={'case_id':r['case_id'],'state_id':r['operating_point'],'level':r['level'],'role':r['role'],
                 'nx':g['nx'],'ny':g['ny'],'cells':g['cells'],'dx_m':g['cell_width_m'],'dy_m':g['cell_height_m'],
