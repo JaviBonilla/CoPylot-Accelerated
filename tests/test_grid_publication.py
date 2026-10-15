@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
-from summarize_project_grid import safe_point,safe_errors,safe_comparison
+from summarize_project_grid import safe_point,safe_errors,safe_comparison,safe_metadata
 
 class GridPublication(unittest.TestCase):
     def test_private_location_date_and_paths_are_not_operating_point_metadata(self):
@@ -24,5 +24,11 @@ class GridPublication(unittest.TestCase):
         out=safe_comparison({'global':{'count':215,'passed':True,'worst_h_abs':7},
                              'families':{'sun':{'count':49,'rms':1e-15,'worst_h_rel':3}}})
         self.assertEqual(out,{'global':{'count':215,'passed':True},'families':{'sun':{'count':49,'rms':1e-15}}})
+
+    def test_private_weather_hash_and_unknown_metadata_are_removed(self):
+        out=safe_metadata({'cpu_model':'Public CPU','library_sha256':'code digest','commits':{'.':'revision'},
+                           'weather_sha256':'private input digest','parameters':{'latitude':12},
+                           'input_file':'/private/input.spt'})
+        self.assertEqual(out,{'cpu_model':'Public CPU','library_sha256':'code digest','commits':{'.':'revision'}})
 
 if __name__=='__main__':unittest.main()

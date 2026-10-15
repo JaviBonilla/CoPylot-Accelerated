@@ -4,7 +4,6 @@ import argparse
 import csv
 import json
 from pathlib import Path
-import numpy as np
 
 ERROR_KEYS={'count','max_abs','max_rel','max_rel_nonzero','rms','zero_reference_nonzero','nonfinite','bitwise','passed',
             'max_abs_kw_m2','rms_kw_m2','integrated_power_difference_kw','peak_difference_kw_m2','summary_power_difference_kw'}
@@ -17,6 +16,12 @@ def safe_point(point):
             'epw_contribution':'site metadata; punctual DNI retained from saved project',
             'time_mode':'Hour/Day','aiming_mode':'Keep existing'}
 
+
+METADATA_KEYS={'utc','machine','commits','branches','cpu_model','cpu_affinity','monitor_cpu','cpu_governor','cpu_threads',
+ 'precision','fma','fast_math','nvcc','compiler','cmake','build_settings','kernel_source_sha256','library_sha256',
+ 'rtol','atol','ncu_available','first_call_definition','monitoring','simulate_wall_definition'}
+
+def safe_metadata(data):return {k:v for k,v in data.items() if k in METADATA_KEYS}
 
 def safe_errors(data):return {key:value for key,value in data.items() if key in ERROR_KEYS}
 
@@ -34,7 +39,7 @@ def summarize(plan,correct,performances,profile):
             if p['metadata'][key]!=metadata[key]:raise ValueError('Measurement segments changed build or hardware configuration')
         for name in ('ssc','SolarPILOT','SolTrace'):
             if p['metadata']['commits'][name]!=metadata['commits'][name]:raise ValueError('Numerical core changed between measurements')
-        segments.append({'segment':segment,'metadata':p['metadata'],'runtime_probe_s':p['runtime_probe_s'],'gpu_telemetry':p['gpu_telemetry']})
+        segments.append({'segment':segment,'metadata':safe_metadata(p['metadata']),'runtime_probe_s':p['runtime_probe_s'],'gpu_telemetry':p['gpu_telemetry']})
         for row in p['rows']:
             key=(row['operating_point'],row['level'])
             if key in timings:raise ValueError('Duplicated timing evidence')
@@ -59,6 +64,17 @@ def summarize(plan,correct,performances,profile):
            'Uniformity tolerance is absolute CV change and centroid tolerance is displacement over receiver diagonal',
            'Same profile-enabled binary for both backends; profile files/events disabled in formal samples',
            'CPU baseline is one thread; no best-multicore performance claim']}
+    candidate_rows=[r for r in correct['rows'] if r['level']==correct['primary_candidate']]
+    candidate_worst={metric:max(r['convergence'][metric] for r in candidate_rows) for metric in plan['study']['control_metrics']}
+    reference_step={metric:max(r['convergence'][metric] for r in correct['reference_refinement_check']) for metric in plan['study']['control_metrics']}
+    previous=next(b['minimum_tested_level'] for b in correct['previous_reference_recommendations'] if b['tolerance']==plan['primary_control_tolerance'])
+    result['reference_validation']={'previous_reference_minimum_level':previous,'final_reference_minimum_level':correct['primary_candidate'],
+        'minimum_changed_with_last_refinement':previous!=correct['primary_candidate'],
+        'candidate_worst_metrics':candidate_worst,'last_reference_step_worst_metrics':reference_step,
+        'candidate_plus_observed_step_within_primary_band':all(candidate_worst[m]+reference_step[m]<plan['primary_control_tolerance'] for m in candidate_worst),
+        'interpretation':'Finite-reference sensitivity check, not a certified error bound or proof of the continuum solution; recommendation is conditional on tested states and references'}
+    result['centroid_coordinates']={'centroid_surface_s_m':'receiver local x from left edge',
+                                    'centroid_z_from_bottom_m':'receiver local y from lower edge (legacy generic metric key)'}
     for source in correct['native_rows']+correct['rows']:
         key=(source['operating_point'],source['level']);segment,timing=timings.pop(key)
         row={k:source[k] for k in ('case_id','operating_point','level','grid','metrics','convergence','deterministic','physical_state_frozen')}
@@ -73,6 +89,8 @@ def summarize(plan,correct,performances,profile):
         if profile['status']!='passed' or profile['level']!=result['primary_candidate_level']:raise ValueError('Profile does not match selected grid')
         result['profile']={'case_id':plan['case_id'],'operating_point':plan['operating_points'][0]['id'],
             'grid':profile['grid'],'level':profile['level'],'profiles':profile['profiles'],
+            'build_metadata':safe_metadata(performances[-1]['metadata']),
+            'gpu_model':performances[-1]['gpu_telemetry'][0]['name'],
             'interpretation':'Instrumented diagnostic observation after separate event warmups; inclusive scopes overlap and are not additive; excluded from formal timings'}
     return result
 
@@ -87,6 +105,8 @@ def main():
     save(args.output_dir/'phase3c-cesa1-grid-convergence-summary.json',result)
     correctness={'phase':'3C','case_id':result['case_id'],'rtol':1e-9,'atol':1e-10,'status':'passed',
         'core_revisions':result['measurement_segments'][0]['metadata']['commits'],
+        'build_metadata':result['measurement_segments'][0]['metadata'],
+        'gpu_model':result['measurement_segments'][0]['gpu_telemetry'][0]['name'],
         'rows':[{k:r[k] for k in ('operating_point','level','grid','backend_errors','legacy_anchor_bitwise','deterministic')}
                 |({'all215':r['all215']} if 'all215' in r else {}) for r in result['rows']]}
     save(args.output_dir/'phase3c-cesa1-backend-correctness.json',correctness)
@@ -97,6 +117,9 @@ def main():
         fields += [backend+'_'+key+'_s' for key in ('median','minimum','maximum','mean','stdev')]+[backend+'_cv']
     conv=['peak_rel','map_l1_normalized','map_l2_normalized','map_linf_normalized','map_linf_kw_m2',
           'map_rms_kw_m2','centroid_distance_over_diagonal','uniformity_cv_abs','integrated_incident_power_rel']
+    fields+=['peak_cell_average_proxy_kw_m2','mean_kw_m2','uniformity_cv','integrated_incident_power_kw',
+             'centroid_surface_s_m','centroid_z_from_bottom_m']
+    fields+=['cpu_model','gpu_model','cpu_threads','precision','fma','fast_math','build_type','cuda_arch','library_sha256']
     fields+=conv+['backend_max_abs_kw_m2','backend_max_rel_nonzero','backend_rms_kw_m2','root_sha','ssc_sha','solarpilot_sha','soltrace_sha']
     with (args.output_dir/'phase3c-cesa1-grid-performance.csv').open('w',newline='') as f:
         writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader()
@@ -112,7 +135,13 @@ def main():
                 item.update({backend+'_'+key+'_s':stats[key] for key in ('median','minimum','maximum','mean','stdev')})
                 item[backend+'_cv']=stats['coefficient_of_variation']
             for key in ('max_abs_kw_m2','max_rel_nonzero','rms_kw_m2'):item['backend_'+key]=r['backend_errors'][key]
-            commits=result['measurement_segments'][r['measurement_segment']]['metadata']['commits']
+            item.update({k:r['metrics'][k] for k in ('peak_cell_average_proxy_kw_m2','mean_kw_m2','uniformity_cv',
+                         'integrated_incident_power_kw','centroid_surface_s_m','centroid_z_from_bottom_m')})
+            segment=result['measurement_segments'][r['measurement_segment']];meta=segment['metadata']
+            item.update({k:meta[k] for k in ('cpu_model','cpu_threads','precision','fma','fast_math','library_sha256')})
+            item.update(gpu_model=segment['gpu_telemetry'][0]['name'],build_type=meta['build_settings']['CMAKE_BUILD_TYPE'],
+                        cuda_arch=meta['build_settings']['CMAKE_CUDA_ARCHITECTURES'])
+            commits=meta['commits']
             for key,repo in [('root','.'),('ssc','ssc'),('solarpilot','SolarPILOT'),('soltrace','SolTrace')]:item[key+'_sha']=commits[repo]
             writer.writerow(item)
     print('Approved aggregate study, correctness, timing CSV and profile published.')
