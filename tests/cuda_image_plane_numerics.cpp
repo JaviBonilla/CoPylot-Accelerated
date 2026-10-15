@@ -51,6 +51,11 @@ int main(int argc,char** argv) {
         rejected=false;
         try { auto bad=solarpilot::make_image_plane_gpu_context(devices); } catch (const std::exception&) { rejected=true; }
         require(rejected,"Invalid CUDA image-plane device accepted");
+        image_plane::Output expected_recovery;
+        image_plane::evaluate(representative,tables,expected_recovery);
+        context->evaluate(&representative,1,tables,&output);
+        image_plane::Comparison recovery;recovery.add(expected_recovery,output,0);
+        require(recovery.global.passed,"Valid CUDA image-plane context did not recover after rejected inputs/device");
         const auto resources=context->resources();
         const auto stats=context->statistics;
         std::ofstream file;
