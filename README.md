@@ -1,6 +1,6 @@
 # CoPylot-GPU: hybrid CUDA Hermite optics
 
-Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and original CPU reference. Legacy and Flat CPU remain available. The CUDA backend evaluates the double-precision image-plane intercept and flux density for the validated single cylindrical receiver, simple aiming and specified-sun path. Object preparation, complete optical writeback, normalization and post-processing remain on CPU.
+Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and original CPU reference. Legacy and Flat CPU remain available. The CUDA backend evaluates the double-precision image-plane intercept and flux density for the validated single cylindrical or rectangular flat receiver, simple or Keep existing aiming, and specified-sun or Hour/Day path. Object preparation, complete optical writeback, normalization and post-processing remain on CPU.
 
 ```bash
 # Reconstruct the pinned repositories and local commit series:
@@ -16,6 +16,8 @@ scripts/profile_cpu.sh
 Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop and legacy SolTrace; it does not build the SolarPILOT GUI, wxWidgets, LK or WEX. Exact source and patched commit SHAs are in [repos.lock.json](repos.lock.json).
 
 Documentation:
+
+* [Phase 3B physical compatibility and flat receivers](docs/phase3b-report.md), [restoration design](docs/phase3b-design.md), [public-safe validation](benchmarks/results/phase3b-validation.json).
 
 * [Phase 3A scientific reference and convergence](docs/phase3a-report.md), [public commercial case](docs/commercial-reference-case.md), [physical receiver grids](docs/receiver-grid-convergence.md), [future SolTrace study](docs/soltrace-convergence-plan.md).
 
@@ -50,3 +52,13 @@ convergence across operating points; the Phase 2 square grids remain scaling
 fixtures. See the report for conditional recommendations and the normalized-map
 energy limitation. No CUDA tuning, experimental compatibility or annual API is
 introduced.
+
+
+Phase 3B adds explicit serialized-project geometry restoration, portable weather
+reference resolution and bitwise-validated flat rectangular Hermite CPU/CUDA
+support. Public synthetic and private compatibility gates preserve saved geometry,
+Keep existing aims and normal Hour/Day semantics. Weather-aware preparation can
+refresh site metadata, which is distinguished from restoring the saved state.
+The native private grid is a compatibility check only; Phase 3C has not started.
+Historical performance figures above describe their frozen phase snapshots;
+Phase 3B introduces no new performance claim or CUDA tuning.
