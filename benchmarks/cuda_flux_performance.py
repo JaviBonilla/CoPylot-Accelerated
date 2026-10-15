@@ -168,7 +168,11 @@ def simulate_once(cp, context, cuda, directory):
     wall = time.perf_counter()-start
     rows = list(csv.reader(profile.read_text().splitlines()))
     prof = {r[1]:dict(calls=int(r[2]), inclusive_s=float(r[3]), exclusive_s=float(r[4])) for r in rows if r[0]=='simulate'}
-    assert len(prof)==11 and prof['Flux::fluxDensity']['calls']==1
+    # Phase 2D-A adds opt-in optical subscopes; preserve the original required set.
+    required = {'API','PerformanceSimulationPrep','calcHeliostatShadows','HermiteFluxSimulation',
+                'AnalyticalFluxSimulation','CalcDimensionalFluxProfiles','Flux::fluxDensity',
+                'Flux::imagePlaneIntercept','UpdateNeighborList','SolarField::Simulate','ShadingBlockingNeighbors'}
+    assert required.issubset(prof) and prof['Flux::fluxDensity']['calls']==1
     result = dict(simulate_wall_s=wall, density_profile_s=prof['Flux::fluxDensity']['inclusive_s'],
                   optical_preparation_s=prof['PerformanceSimulationPrep']['inclusive_s'], profile=prof)
     if cuda:

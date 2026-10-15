@@ -2,8 +2,11 @@
 from pathlib import Path
 import sys
 import unittest
+import os
+import tempfile
+from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'benchmarks'))
-from cuda_flux_performance import distribution, check_gpu, public_snapshot, GPU_FIELDS
+from cuda_flux_performance import distribution, check_gpu, public_snapshot, GPU_FIELDS, simulate_once
 
 
 class PerformanceHarness(unittest.TestCase):
@@ -33,3 +36,21 @@ class PerformanceHarness(unittest.TestCase):
             check_gpu({**own, '_pids':[42,43]}, allowed_pids={42})
         self.assertNotIn('_pids', public_snapshot(own))
         self.assertEqual(public_snapshot(own)['compute_process_count'], 1)
+
+    def test_profile_accepts_additive_optical_scopes(self):
+        names = ['API','PerformanceSimulationPrep','calcHeliostatShadows','HermiteFluxSimulation',
+                 'AnalyticalFluxSimulation','CalcDimensionalFluxProfiles','Flux::fluxDensity',
+                 'Flux::imagePlaneIntercept','UpdateNeighborList','SolarField::Simulate','ShadingBlockingNeighbors']
+        class FakeApi:
+            def simulate(self, context, nthreads):
+                Path(os.environ['SOLARPILOT_PROFILE_FILE']).write_text(
+                    ''.join('simulate,'+name+',1,0.1,0.05\n' for name in names))
+                return True
+            def get_last_backend_error(self, context): return ''
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ):
+            for extra in [False,True]:
+                if extra: names.append('Intercept.core')
+                result=simulate_once(FakeApi(),None,False,Path(directory))
+                self.assertEqual(result['density_profile_s'],0.1)
+            names.remove('Flux::imagePlaneIntercept')
+            with self.assertRaises(AssertionError): simulate_once(FakeApi(),None,False,Path(directory))
