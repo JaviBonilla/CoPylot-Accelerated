@@ -5,8 +5,10 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import time
 from image_plane import statistics_s
 from cuda_flux_correctness import metadata
+from cuda_flux_performance import gpu_snapshot,check_gpu
 
 
 def main():
@@ -27,10 +29,28 @@ def main():
         'image_plane_block_size':128,'cpu_affinity':[args.cpu],'warmups':2,'repetitions':5,
         'gpu_timings_collected':args.timing,'timing_guard':'Native idle check before context creation, exact owned process set and thermal/memory checks outside each sample',
         'fma_enabled':True,'fast_math':False,'image_plane_source_options':['--fmad=true','--ptxas-options=-v']})
-    result={'metadata':info,'cases':[]}
+    result={'metadata':info,'status':'running','cases':[]}
     for count in [1000,5000,10000]:
         command=[str(args.binary.resolve()),str(count),'5','timing' if args.timing else 'correctness']
-        completed=subprocess.run(command,env=env,text=True,capture_output=True,check=True)
+        if args.timing:
+            # Previous child teardown can precede the utilization counter's return to zero.
+            deadline=time.monotonic()+30.
+            while True:
+                quiet=gpu_snapshot()
+                try:
+                    check_gpu(quiet,initial=True)
+                    if float(quiet['temperature.gpu'])>=80.: raise RuntimeError('GPU above preliminary temperature limit')
+                    break
+                except RuntimeError:
+                    if time.monotonic()>=deadline: raise RuntimeError('No idle window before the next preliminary case')
+                    time.sleep(0.5)
+        completed=subprocess.run(command,env=env,text=True,capture_output=True)
+        if completed.returncode:
+            result['status']='aborted'
+            result['failed_heliostat_count']=count
+            result['failure']=completed.stderr.strip()
+            args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+            raise RuntimeError('Preliminary child failed: '+completed.stderr.strip())
         row=json.loads(completed.stdout)
         assert row['errors']['global']['passed'] and row['errors']['global']['count']==215*count
         assert row['deterministic'] and row['allocation_reuse']
@@ -40,6 +60,7 @@ def main():
             row['cuda_summary']={key:statistics_s([sample[key]/1000 if key.endswith('_ms') else sample[key] for sample in row['cuda_samples']])
                 for key in row['cuda_samples'][0]}
         result['cases'].append(row)
+        if len(result['cases'])==3: result['status']='complete'
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
         print(count,'PASS; preliminary timing' if args.timing else 'PASS; correctness only',flush=True)
 if __name__=='__main__': main()
