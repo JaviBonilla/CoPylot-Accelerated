@@ -42,7 +42,7 @@ def check(cp,r,directory,area,private_raw=None):
     geometry_before=np.asarray(cp.get_layout_info(r,get_optical_details=True,restype='matrix')[0])
     rows=[row.split(',') for row in cp.data_get_string(r,'solarfield.0.layout_data').replace(';','\n').splitlines() if row.strip()]
     expected_aims=None
-    if rows and all(len(row) in (12,14) and all(value!='NULL' for value in row[-3:]) for row in rows):
+    if int(cp.data_get_number(r,'fluxsim.0.aim_method'))==4 and rows and all(len(row) in (12,14) and all(value!='NULL' for value in row[-3:]) for row in rows):
         expected_aims=np.asarray([[float(value) for value in row[-3:]] for row in rows])
     for name,backend,intercept,density in [('legacy','cpu','legacy','legacy'),('flat','cpu','verify','verify'),
                 ('cuda_full','cuda','verify_cuda','flat'),('cuda_resident','cuda','cuda','flat'),
