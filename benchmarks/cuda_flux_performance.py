@@ -374,6 +374,8 @@ def allocation_growth(cp,directory):
 
 
 def main():
+    # Historical density-only experiments retain their explicit CPU optical reference.
+    os.environ['SOLARPILOT_INTERCEPT_PATH']='flat'
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--stage',choices=('baseline','sweep','plain','final'),required=True)
     parser.add_argument('--output',type=Path,required=True)

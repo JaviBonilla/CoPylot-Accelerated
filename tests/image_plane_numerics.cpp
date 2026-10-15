@@ -1,4 +1,5 @@
 #include "image_plane_fixtures.h"
+#include "ImagePlaneInterceptComparison.h"
 #include "Ambient.h"
 #include <cmath>
 #include <cstring>
@@ -45,6 +46,15 @@ int main() {
             ImagePlaneTestAccess::capture(h,output.intercept,actual);
             require(std::memcmp(expected,actual,sizeof(expected))==0,"Back-facing legacy/flat changed old state");
         });
+        // Exercise near-zero tolerance and the family/global argmax bookkeeping.
+        image_plane::Output expected={},actual={};
+        expected.hermite[15]=10000.;actual=expected;actual.hermite[15]+=5.e-6;actual.sun[48]=1.e-11;
+        image_plane::Comparison metrics;metrics.add(expected,actual,9);
+        require(metrics.global.passed && metrics.global.count==215,"Comparison tolerance/count regression");
+        require(metrics.global.abs_h==9 && metrics.global.abs_index==211,"Comparison global argmax regression");
+        require(metrics.families[0].zero_reference_nonzero==1 && metrics.families[0].passed,"Zero-reference metric regression");
+        actual.sigma[1]=1.e-3;metrics.add(expected,actual,10);
+        require(!metrics.global.passed,"Comparison hid an out-of-tolerance value");
         std::cout << "{\"fixtures\":" << fixtures << ",\"values_per_fixture\":215,\"bitwise\":true,\"max_abs\":0,\"max_rel\":0,\"rms\":0,\"input_bytes\":"
           << sizeof(image_plane::Input) << ",\"output_bytes\":" << sizeof(image_plane::Output)
           << ",\"tables_bytes\":" << sizeof(image_plane::Tables) << ",\"facet_capacity\":64}\n";

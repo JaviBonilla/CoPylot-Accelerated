@@ -122,6 +122,8 @@ def run(size, grid):
 
 
 def main():
+    # Historical density-only experiments retain their explicit CPU optical reference.
+    os.environ['SOLARPILOT_INTERCEPT_PATH']='flat'
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--native-results',type=Path)

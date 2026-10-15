@@ -55,7 +55,7 @@ set_property(TARGET shared PROPERTY SOURCES
 if(BUILD_COPILOT_API)
   if(SOLARPILOT_ENABLE_CUDA)
     target_sources(solarpilot PRIVATE ssc/solarpilot/CudaProbe.cu ssc/solarpilot/FluxDensityKernels.cu ssc/solarpilot/ImagePlaneInterceptKernels.cu)
-    set_source_files_properties(ssc/solarpilot/ImagePlaneInterceptKernels.cu PROPERTIES
+    set_source_files_properties(ssc/solarpilot/ImagePlaneInterceptKernels.cu TARGET_DIRECTORY solarpilot PROPERTIES
       COMPILE_OPTIONS "--ptxas-options=-v;--fmad=true")
     target_compile_definitions(solarpilot PRIVATE SOLARPILOT_ENABLE_CUDA)
     target_link_libraries(solarpilot CUDA::cudart)
@@ -88,6 +88,13 @@ if(BUILD_COPILOT_API)
         COPILOT_WEATHER="${CMAKE_CURRENT_SOURCE_DIR}/SolarPILOT/deploy/climate_files/USA\ CA\ Daggett\ \(TMY2\).csv")
     endif()
     if(SOLARPILOT_ENABLE_CUDA)
+      if(SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS)
+        add_executable(image_plane_cuda_benchmark tests/image_plane_cuda_benchmark.cpp)
+        target_include_directories(image_plane_cuda_benchmark PRIVATE ssc/solarpilot)
+        target_link_libraries(image_plane_cuda_benchmark PRIVATE solarpilot)
+        target_compile_definitions(image_plane_cuda_benchmark PRIVATE
+          COPILOT_WEATHER="${CMAKE_CURRENT_SOURCE_DIR}/SolarPILOT/deploy/climate_files/USA\ CA\ Daggett\ \(TMY2\).csv")
+      endif()
       add_executable(cuda_image_plane_numerics tests/cuda_image_plane_numerics.cpp)
       target_include_directories(cuda_image_plane_numerics PRIVATE ssc/solarpilot)
       target_link_libraries(cuda_image_plane_numerics PRIVATE solarpilot)
