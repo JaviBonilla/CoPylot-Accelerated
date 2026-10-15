@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import numpy as np
 from cases import ROOT, api
+from receiver_grid import physical_grid
 
 MANIFEST=ROOT/'cases/commercial-reference/case_manifest.json'
 
@@ -74,7 +75,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--save-spt',type=Path);args=parser.parse_args();m=load_manifest();cp=api();r=cp.data_create()
     try:
-        info=configure(cp,r,m,14,6,m['operating_points'][0])
+        grid=physical_grid({'type':'cylindrical','diameter_m':m['parameters']['receiver.0.rec_diameter']['value'],
+                            'height_m':m['parameters']['receiver.0.rec_height']['value']},m['study']['initial_target_cell_sizes_m'][1])
+        info=configure(cp,r,m,grid['nx'],grid['ny'],m['operating_points'][0])
         if not cp.simulate(r,nthreads=1):raise RuntimeError(cp.get_last_backend_error(r))
         flux=np.asarray(cp.get_fluxmap(r));assert np.isfinite(flux).all() and flux.max()>0
         info.update(case_id=m['case_id'],flux_shape=list(flux.shape),finite_positive=True,peak_kw_m2=float(flux.max()),

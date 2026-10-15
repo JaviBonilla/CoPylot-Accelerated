@@ -1,8 +1,10 @@
 # Future Hermite–SolTrace convergence experiment (design only)
 
-Phase 3A does not execute, modify, rebuild or update SolTrace. Its pinned source
+Phase 3A does not run ray-tracing simulations, modify or update SolTrace. Its pinned source
 remains 699263f12b2de1c6f12e211e3e8906a80054cc1b. This document is an experiment
-plan, not a claim of validated bridge compatibility or stochastic results.
+plan, not a claim of validated bridge compatibility or stochastic results. The
+standard fresh CPU reconstruction links the unchanged pinned coretrace dependency;
+that build is not a SolTrace experiment.
 
 ## Existing interfaces inspected
 
