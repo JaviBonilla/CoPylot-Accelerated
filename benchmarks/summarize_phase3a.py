@@ -17,6 +17,7 @@ from receiver_grid_convergence import analyze
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--input',type=Path,required=True)
     parser.add_argument('--case',type=Path,required=True);parser.add_argument('--output',type=Path,default=Path('benchmarks/results'))
+    parser.add_argument('--maps-root',type=Path,help='Directory of retained NPZ maps when replaying the public capture')
     args=parser.parse_args();raw=json.loads(args.input.read_text());m=load_manifest()
     assert raw['status']=='valid' and raw['gpu_performance_collected']
     assert raw['manifest_sha256']==hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
@@ -39,7 +40,8 @@ def main():
         assert r['cpu_gpu']['passed'] and r['pipelines']['cuda']['repeated_bitwise']
         assert all(np.isfinite(p['absorbed_receiver_power_kw']) and p['absorbed_receiver_power_kw']>0 for p in r['pipelines'].values())
         assert r['convergence']['remap_relative_integral_error']<1e-12
-        path=args.input.parent/r['map_file'];assert hashlib.sha256(path.read_bytes()).hexdigest()==r['map_sha256']
+        path=args.maps_root/Path(r['map_file']).name if args.maps_root else args.input.parent/r['map_file']
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==r['map_sha256']
         arrays=np.load(path,allow_pickle=False)
         assert all(arrays[k].shape==(r['grid']['ny'],r['grid']['nx']) for k in ['flat','cuda'])
         np.testing.assert_allclose(arrays['cuda'],arrays['flat'],rtol=1e-9,atol=1e-10)

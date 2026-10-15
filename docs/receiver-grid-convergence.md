@@ -103,3 +103,15 @@ thermal slowdown or invalid load window. It never manages external services.
 run reuses the exact Phase 2D-C library and retains all first calls, warmups,
 samples, CPU/GPU errors, map archives, hashes and telemetry. No core optimization,
 new physics support, time-series API or multithreaded CPU baseline is introduced.
+
+To reproduce spatial analysis from the published capture/maps without simulations:
+
+```sh
+.venv/bin/python benchmarks/summarize_phase3a.py --input benchmarks/results/phase3a-grid-convergence-capture.json --case benchmarks/results/phase3a-commercial-case.json --maps-root benchmarks/results/phase3a-grid-maps --output artifacts/phase3a/republication
+```
+
+The immutable capture retains the executed measurement SHA and original relative
+map paths. The map-root option resolves those paths to the public archive. Derived
+results separately record the analysis SHA and capture hash. An identical grid
+uses the identity transform exactly, avoiding roundoff-only reference self-errors;
+this comparison utility change does not alter any measured map or timing.
