@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/14] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/15] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/14] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/15] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/14] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/15] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/14] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/15] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/14] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/15] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/14] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/15] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/14] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/15] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/14] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/15] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/14] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/15] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/14] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/15] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/14] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/15] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/14] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/15] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/14] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/15] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/14] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/15] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2958,6 +2958,343 @@ index 000000000..8442e0495
 +#endif
 +    return imagePlaneInterceptFlat(v,h,rec,sun);
 +}
+-- 
+2.43.0
+
+
+From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 11:43:49 +0200
+Subject: [PATCH 15/15] style: remove trailing whitespace from the extracted
+ image-plane core
+
+---
+ solarpilot/ImagePlaneIntercept.cpp | 134 ++++++++++++++---------------
+ 1 file changed, 67 insertions(+), 67 deletions(-)
+
+diff --git a/solarpilot/ImagePlaneIntercept.cpp b/solarpilot/ImagePlaneIntercept.cpp
+index 53953d37a..3ece02fda 100644
+--- a/solarpilot/ImagePlaneIntercept.cpp
++++ b/solarpilot/ImagePlaneIntercept.cpp
+@@ -57,7 +57,7 @@ void integral(const Tables& tables, double G[5],double F[5],double X[2],double A
+ 		xmax = X[1],
+ 		xmin = X[0],
+ 		xdiff = (xmax - xmin)/2.;
+-	double 
++	double
+ 		ss = 2.50663,
+ 		dsmall = 1.23456789e-10;
+ 	double
+@@ -102,13 +102,13 @@ void integral(const Tables& tables, double G[5],double F[5],double X[2],double A
+ 		ipak = 0;
+ 		for(i=1; i<terms+1; i++){
+ 			int im1 = i-1;
+-			jmin = im1%2+1; 
+-			jmax = terms - im1; 
++			jmin = im1%2+1;
++			jmax = terms - im1;
+ 			for(j=jmin; j<jmax+1; j+=2){
+ 				ipak++;
+ 				hspill.at(ipak-1) += tables.ag[n-1]*h.at(0,i+1)*(h.at(1,j) - h.at(2,j));
+ 			}
+-		}	
++		}
+ 	}
+ 
+ }
+@@ -127,18 +127,18 @@ SP_PROFILE_SCOPE(IPAperture);
+ 		F[4] = -1.;
+ 		G[1] = 0.;
+ 		F[1] = 0.;
+-		G[2] = cos_t_zen;		
++		G[2] = cos_t_zen;
+ 		F[2] = G[2];
+-		X[1] = w2;	
+-		X[0] = -X[1];		
+-		TA[0] = in.aim_x/tht;		
+-		TA[1] = in.aim_y * sin_t_zen / tht;		
++		X[1] = w2;
++		X[0] = -X[1];
++		TA[0] = in.aim_x/tht;
++		TA[1] = in.aim_y * sin_t_zen / tht;
+         double siglim = 4.*sqrt(sig_x*sig_x + sig_y*sig_y);
+         if( siglim < w2 )
+         {
+             double xprime = (TA[0] < 0. ? -1. : 1.) * fmin(std::abs(TA[0]), w2 - siglim);
+             X[0] = - siglim;
+-            X[1] =   siglim; 
++            X[1] =   siglim;
+             TA[0] += -xprime;
+         }
+         G[0] = X[0] * cos_t_zen - h2 * sin_t_zen;
+@@ -149,11 +149,11 @@ SP_PROFILE_SCOPE(IPAperture);
+ double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
+     SP_PROFILE_SCOPE(IPCoefficients);
+ 	auto* mu_F = &out.flux;
+-	double 
+-		eta_spill,		
+-		sig_x2 = sqrt(mu_F->at(2,0)),	
+-		sig_y2 = sqrt(mu_F->at(0,2)),	
+-		SigXY[] = {sig_x2, sig_y2};			
++	double
++		eta_spill,
++		sig_x2 = sqrt(mu_F->at(2,0)),
++		sig_y2 = sqrt(mu_F->at(0,2)),
++		SigXY[] = {sig_x2, sig_y2};
+ 	out.sigma[0] = sig_x2; out.sigma[1] = sig_y2;
+ 	Matrix<1,16> h_spill = {};
+     Matrix<1,7> axi = {}, ayi = {};
+@@ -173,7 +173,7 @@ double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
+ 	for(i=1; i<terms+1; i++){
+ 		jmin = JMN(i-1);
+ 		jmax = JMX(i-1);
+-		kmin = jmin;	
++		kmin = jmin;
+         double save2 = save1 / tables.fact_d.at(i-1);
+ 		for(j=jmin; j<jmax+1; j+=2){
+ 			lmin = JMN(j-1);
+@@ -186,7 +186,7 @@ double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
+ 			}
+ 			temp_res = temp_res / tables.fact_d.at(j-1) * save2;
+ 			eta_spill += h_spill.at(ipak-1)*temp_res;
+-			hcoef->at(ipak-1) = temp_res;	
++			hcoef->at(ipak-1) = temp_res;
+ 		}
+ 	}
+ 	return eta_spill;
+@@ -202,7 +202,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 	int i, j, jmax, jmin;
+ 	double slant, tht;
+     const double h_rad = in.radial_position;
+-	tht = in.tower_height; 
++	tht = in.tower_height;
+ 	auto* mu_S = &out.sun;
+ 	double rec_width = in.diameter;
+     double rec_opt_ht = in.optical_height;
+@@ -215,39 +215,39 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 		jmax = JMX(i-1);
+ 		jmin = 2-i+2*(i/2);
+ 		for(j=jmin; j<jmax+1; j+=2) {
+-			mu_S->at(i-1,j-1) = srange[i+j-2] * tables.sun.at(i-1,j-1); 
++			mu_S->at(i-1,j-1) = srange[i+j-2] * tables.sun.at(i-1,j-1);
+ 		}
+ 	}
+ 	SP_PROFILE_NEXT(IPSun, IPErrors);
+-	Vector 
+-		n_hat, 
+-		t_hat, 
+-		z_hat, 
+-		s_hat;	
++	Vector
++		n_hat,
++		t_hat,
++		z_hat,
++		s_hat;
+ 	z_hat = {0.,0.,1.};
+-	n_hat = in.tracking;		
+-	t_hat = in.tower;		
+-	s_hat = in.sun;		
+-    double cos_s_zen = s_hat.k; 
+-	double sin_s_zen = sqrt(1.-s_hat.k*s_hat.k); 
++	n_hat = in.tracking;
++	t_hat = in.tower;
++	s_hat = in.sun;
++    double cos_s_zen = s_hat.k;
++	double sin_s_zen = sqrt(1.-s_hat.k*s_hat.k);
+     sin_s_zen = sin_s_zen == 0. ? 1.e-6 : sin_s_zen;
+-	double cos_s_az = s_hat.j/sin_s_zen; 
+-	double sin_s_az = s_hat.i/sin_s_zen; 
+-    double theta_n_zen= acos(n_hat.k);	
+-	double cos_n_zen = n_hat.k;				
+-	double sin_n_zen = sin(theta_n_zen);				
++	double cos_s_az = s_hat.j/sin_s_zen;
++	double sin_s_az = s_hat.i/sin_s_zen;
++    double theta_n_zen= acos(n_hat.k);
++	double cos_n_zen = n_hat.k;
++	double sin_n_zen = sin(theta_n_zen);
+     sin_n_zen = sin_n_zen == 0. ? 1.e-6 : sin_n_zen;
+-	double theta_n_az = atan2(n_hat.i,n_hat.j);			
++	double theta_n_az = atan2(n_hat.i,n_hat.j);
+ 	double sin_n_az = sin(theta_n_az);
+ 	double cos_n_az = cos(theta_n_az);
+-	double theta_t_zen = acos(dot(t_hat, z_hat)); 
+-	double cos_t_zen = dot(t_hat, z_hat); 
++	double theta_t_zen = acos(dot(t_hat, z_hat));
++	double cos_t_zen = dot(t_hat, z_hat);
+ 	double sin_t_zen = sin(theta_t_zen);
+     sin_t_zen = sin_t_zen == 0. ? 1.e-6 : sin_t_zen;
+-	double theta_t_az = atan2(t_hat.i,t_hat.j); 
++	double theta_t_az = atan2(t_hat.i,t_hat.j);
+ 	double sin_t_az = sin(theta_t_az);
+ 	double cos_t_az = cos(theta_t_az);
+-	double              
++	double
+ 		eta_cosine = 0.7071067811865*sqrt(1.+cos_s_zen*cos_t_zen+sin_s_zen*sin_t_zen*(cos_t_az*cos_s_az + sin_t_az*sin_s_az));
+ 	double err_angular[2], err_surface[2], err_reflected[2];
+     err_angular[0] = in.angular[0];
+@@ -257,11 +257,11 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+     err_reflected[0] = in.reflected[0];
+     err_reflected[1] = in.reflected[1];
+ 	double A11, A12, A21, A22, B11, B12, B21, B22;
+-	int cant_method = in.cant_method; 
+-	double term1 = err_angular[0] * sin_n_zen; 
++	int cant_method = in.cant_method;
++	double term1 = err_angular[0] * sin_n_zen;
+     term1 *= term1;
+     term1 += err_surface[0]*err_surface[0];
+-	double term2 = err_angular[1]*err_angular[1] + err_surface[1] * err_surface[1];  
++	double term2 = err_angular[1]*err_angular[1] + err_surface[1] * err_surface[1];
+     switch (cant_method)
+     {
+     case 0:
+@@ -284,14 +284,14 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 	delta_1 = err_reflected[0]*err_reflected[0] + term1 * B11 * B11 + term2 * B12 * B12;
+ 	delta_2 = err_reflected[1]*err_reflected[1] + term1 * B21 * B21 + term2 * B22 * B22;
+ 	delta_a = term1 * B11 * B21 + term2 * B22 * B12;
+-	sigma_x = srange.at(1) * sqrt(delta_1);	
+-	sigma_y = srange.at(1) * sqrt(delta_2);	
++	sigma_x = srange.at(1) * sqrt(delta_1);
++	sigma_y = srange.at(1) * sqrt(delta_2);
+ 	double rho, rho_tmp, rs2, rs, rho_sq;
+ 	auto* mu_G = &out.errors;
+ 	if(delta_a*delta_a < 1.e-20 ) {
+ 		double fact1, fact2;
+ 		Matrix<7,7> factarr = {};
+-		fact1 = 1.;	
++		fact1 = 1.;
+ 		for(i=1; i<terms+1; i+=2) {
+ 			if(i>1) {fact1 = tables.fact_odds[i-2]; }
+ 			fact2 = 1.;
+@@ -300,7 +300,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 				factarr.at(i-1,j-1) = fact1 * fact2;
+ 			}
+ 		}
+-		for(i=1; i<terms+1; i++) {	
++		for(i=1; i<terms+1; i++) {
+ 			term2 = double(i - 2*(i/2));
+ 			term1 = pow(sigma_x, i-1);
+ 			jmax = JMX(i-1);
+@@ -312,20 +312,20 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 	}
+ 	else {
+ 		rho_tmp = delta_a / sqrt(delta_1 * delta_2) + 1.e-10;
+-		rho_sq = rho_tmp*rho_tmp;	
++		rho_sq = rho_tmp*rho_tmp;
+ 		rho = (1. - rho_sq)/2.;
+ 		for(i=1; i<terms+1; i++) {
+-			jmax = JMX(i-1); 
+-			jmin = JMN(i-1);	
++			jmax = JMX(i-1);
++			jmin = JMN(i-1);
+ 			for(j=jmin; j<jmax+1; j+=2) {
+-				rs2 = rho_sq;	
++				rs2 = rho_sq;
+ 				rs = 1./rho;
+-				term1 = 0.;		
+-				int k_ct = (i-1)/2 + 1; 
++				term1 = 0.;
++				int k_ct = (i-1)/2 + 1;
+ 				for(int k=1; k<k_ct+1; k++){
+ 					rs = rs*rho;
+ 					rs2 = rs2/rho_sq;
+-					term1 += tables.errors.at(i-1,j-1,k-1) * rs * rs2;		
++					term1 += tables.errors.at(i-1,j-1,k-1) * rs * rs2;
+ 				}
+ 				mu_G->at(i-1,j-1) = pow(sigma_x * rho_tmp, i-1) * pow(sigma_y, j-1) * term1 ;
+ 			}
+@@ -336,21 +336,21 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+     const Matrix<7,7>* errm_M;
+ 	auto* mu_M = &out.mirror;
+ 	errm_M = &in.mirror_normalized;
+-	double 
+-		xfocal  =-tht/in.focal_x,		
+-		yfocal = -tht/in.focal_y,		
++	double
++		xfocal  =-tht/in.focal_x,
++		yfocal = -tht/in.focal_y,
+ 		E11 = A11+B11*xfocal*srange[1]/2.+1.e-10,
+ 		E12 = A12+B12*yfocal*srange[1]/2.+1.e-10,
+ 		E21 = A21+B21*xfocal*srange[1]/2.+1.e-10,
+ 		E22 = A22+B22*yfocal*srange[1]/2.+1.e-10;
+ 	double step = E21*E21/(E22*E22);
+-	double temp_res, e_ratio, start[2], binoms;	
+-	double S11, S22;	
++	double temp_res, e_ratio, start[2], binoms;
++	double S11, S22;
+ 	int k, l, l_min, ij, ijk, mstep;
+ 	for(i=1; i<terms+1; i++){
+ 		int jmax = JMX(i - 1) + 1;
+ 		int jmin = JMN(i - 1);
+-		for(j=jmin; j<jmax; j+=2){		
++		for(j=jmin; j<jmax; j+=2){
+ 			temp_res = 0.;
+ 			ij = i+j+1;
+ 			if(j>1){mstep=1;} else {mstep=2;}
+@@ -361,7 +361,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 			l_min = IMN(i - 1);
+ 			for(k=1; k<i+1; k+=mstep){
+ 				ijk = ij - k;
+-				binoms = tables.binomials.at(i-1,k-1)*S11; 
++				binoms = tables.binomials.at(i-1,k-1)*S11;
+ 				S11 *= e_ratio;
+ 				S22 = start[l_min - 1];
+ 				for(l=l_min; l<j+1; l+=2){
+@@ -370,7 +370,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 				}
+ 			}
+ 			mu_M->at(i-1,j-1) = temp_res * eta_cosine;
+-			mu_Msave.at(i-1,j-1) = mu_M->at(i-1,j-1);	
++			mu_Msave.at(i-1,j-1) = mu_M->at(i-1,j-1);
+ 		}
+ 	}
+ 	SP_PROFILE_NEXT(IPSun, IPFacets);
+@@ -395,7 +395,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+         case 1:
+ 			gcanta = 0.;
+ 			gcanty = 0.;
+-			gcantx = -.5*tht/in.cant_radius*srange[1];	
++			gcantx = -.5*tht/in.cant_radius*srange[1];
+ 			gcantb = gcantx;
+             break;
+         default: return;
+@@ -404,8 +404,8 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 		double
+ 			ploc_x, ploc_y, xcentij, ycentij;
+ 		double thtinv = 1./tht;
+-		for(i=0; i<ncanty; i++){	
+-			for(j=0; j<ncantx; j++){	
++		for(i=0; i<ncanty; i++){
++			for(j=0; j<ncantx; j++){
+ 				ploc_x = in.panel_x[i*ncantx+j] * thtinv;
+ 				ploc_y = in.panel_y[i*ncantx+j] * thtinv;
+ 				xcentij = (A11 + B11*gcantx + B12*gcanty)*ploc_x + (A12 + B11*gcanta + B12*gcantb)*ploc_y;
+@@ -418,7 +418,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 				}
+ 			}
+ 		}
+-		int m, n, ii, jj, jp1, ip1, im1, iim1, jm1, jjm1;		
++		int m, n, ii, jj, jp1, ip1, im1, iim1, jm1, jjm1;
+ 		for(i=1; i<terms+1; i++){
+ 			jmin = JMN(i-1);
+ 			jmax = JMX(i-1);
+@@ -449,7 +449,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 	auto* mu_F = &out.flux;
+ 	double binom_temp0, binom_temp1, ugs;
+ 	int ipak=0, nmin, nmax, lmin, mk, ki, kp1, km1;
+-	double comb_ord = mu_S->at(0,0) * mu_G->at(0,0) * mu_M->at(0,0);	
++	double comb_ord = mu_S->at(0,0) * mu_G->at(0,0) * mu_M->at(0,0);
+ 	double muS, muM,
+ 		comb_ord_inv = 1./comb_ord;
+ 	for(int m=1; m<terms+1; m++){
+@@ -482,7 +482,7 @@ void evaluate(const Input& in,const Tables& tables,Output& out) {
+ 			mu_F->at(m-1,n-1) = temp_res*comb_ord_inv;
+ 		}
+ 	}
+-	
++
+     SP_PROFILE_NEXT(IPSun, IPFinalize);
+     out.intercept = coefficients_eval(in, tables, out);
+     if (in.radial_position < in.diameter/2.) out.intercept = 0.;
 -- 
 2.43.0
 

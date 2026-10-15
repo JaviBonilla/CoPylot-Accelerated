@@ -13,7 +13,7 @@
     "url": "https://github.com/mjwagner2/ssc.git",
     "ref": "solarpilot-develop",
     "sha": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec",
-    "patched_sha": "bb247d4f8e8f6ab78a5177c7cf035c1b44be3092",
+    "patched_sha": "a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4",
     "patch_committer": {
       "name": "Javier Bonilla",
       "email": "javier.bonilla@psa.es"
