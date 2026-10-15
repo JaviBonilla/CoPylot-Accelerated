@@ -4,10 +4,15 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
-from image_plane_cuda_performance import PipelineWindow
+from image_plane_cuda_performance import PipelineWindow,distribution
 
 
 class ImagePlanePerformance(unittest.TestCase):
+    def test_zero_profile_scope_has_defined_statistics_without_division(self):
+        result=distribution([0.,0.,0.])
+        self.assertEqual(result['median'],0.)
+        self.assertEqual(result['stdev'],0.)
+        self.assertIsNone(result['coefficient_of_variation'])
     def snapshot(self):
         return {'_pids':[42],'memory.used':'1854','utilization.gpu':'80','temperature.gpu':'45',
             'clocks_throttle_reasons.hw_thermal_slowdown':'Not Active',

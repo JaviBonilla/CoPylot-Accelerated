@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import os
+import statistics
 from pathlib import Path
 import subprocess
 import tempfile
@@ -13,8 +14,14 @@ from unittest.mock import patch
 import numpy as np
 from cases import ROOT,SIZES,api
 from cuda_flux_correctness import collect
-from cuda_flux_performance import (Window,gpu_snapshot,public_snapshot,distribution,
+from cuda_flux_performance import (Window,gpu_snapshot,public_snapshot,
     metadata,context_for,simulate_once,correctness)
+
+
+def distribution(values):
+    mean=statistics.mean(values);sd=statistics.stdev(values) if len(values)>1 else 0.
+    return {'median':statistics.median(values),'minimum':min(values),'maximum':max(values),
+        'mean':mean,'stdev':sd,'coefficient_of_variation':sd/mean if mean else None}
 
 
 class PipelineWindow(Window):
