@@ -27,7 +27,7 @@ class CudaFlux(unittest.TestCase):
         if hasattr(self,'context'): self.assertTrue(self.cp.data_free(self.context))
 
     def test_explicit_capability_errors(self):
-        for key,value,original in [('fluxsim.0.flux_model',1,0),('receiver.0.rec_type',2,0),('fluxsim.0.aim_method',1,0),('fluxsim.0.flux_time_type',1,0)]:
+        for key,value,original in [('fluxsim.0.flux_model',1,0),('receiver.0.rec_type',1,0),('fluxsim.0.aim_method',1,0)]:
             with self.subTest(key=key):
                 self.assertTrue(self.cp.data_set_number(self.context,key,value))
                 self.assertFalse(self.cp.simulate(self.context,nthreads=1))
@@ -35,7 +35,7 @@ class CudaFlux(unittest.TestCase):
                 self.assertEqual(self.cp.get_compute_backend(self.context),'cuda')
                 self.assertTrue(self.cp.data_set_number(self.context,key,original))
         self.assertFalse(self.cp.simulate(self.context,nthreads=2))
-        self.assertFalse(self.cp.simulate(self.context,nthreads=1,update_aimpoints=False))
+        self.assertTrue(self.cp.simulate(self.context,nthreads=1,update_aimpoints=False))
         with patch.dict(os.environ, {'SOLARPILOT_CUDA_BLOCK_SIZE':'127'}):
             if self.diagnostics:
                 self.assertFalse(self.cp.simulate(self.context,nthreads=1))

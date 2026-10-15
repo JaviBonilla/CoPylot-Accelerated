@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/21] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/22] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/21] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/22] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/21] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/22] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/21] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/22] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/21] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/22] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/21] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/22] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/21] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/22] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/21] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/22] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/21] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/22] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/21] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/22] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/21] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/22] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/21] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/22] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/21] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/22] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/21] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/22] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/21] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/22] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3302,7 +3302,7 @@ index 53953d37a..3ece02fda 100644
 From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:22:32 +0200
-Subject: [PATCH 16/21] cuda: port the validated flat image-plane formulation
+Subject: [PATCH 16/22] cuda: port the validated flat image-plane formulation
  with independent device buffers
 
 ---
@@ -4734,7 +4734,7 @@ index 000000000..8e112617b
 From 71f2c7b4acf647831ffb8ba9039c9aa078b8c05c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:34:28 +0200
-Subject: [PATCH 17/21] cuda: integrate batched image-plane evaluation and
+Subject: [PATCH 17/22] cuda: integrate batched image-plane evaluation and
  checked context ownership
 
 ---
@@ -5058,7 +5058,7 @@ index 9e72693d0..a9f70da0d 100644
 From 012b1a2ce195f5060867828773a2a339edf67b96 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 14:58:55 +0200
-Subject: [PATCH 18/21] cuda: reject invalid image-plane devices before
+Subject: [PATCH 18/22] cuda: reject invalid image-plane devices before
  constructing resources
 
 ---
@@ -5101,7 +5101,7 @@ index 3a9162505..5434e98a1 100644
 From 5554361cf948681330faabe686696931697116d8 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:39:29 +0200
-Subject: [PATCH 19/21] perf: expose bounded image-plane launch diagnostics
+Subject: [PATCH 19/22] perf: expose bounded image-plane launch diagnostics
  without changing arithmetic
 
 ---
@@ -5217,7 +5217,7 @@ index 5434e98a1..b2bc23fb6 100644
 From 02e47568e72cfc3d369d2d6274808b57b5345df2 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:54:11 +0200
-Subject: [PATCH 20/21] cuda: hand resident image-plane optics to density and
+Subject: [PATCH 20/22] cuda: hand resident image-plane optics to density and
  eagerly complete host state
 
 ---
@@ -5849,7 +5849,7 @@ index b2bc23fb6..30d9e8de0 100644
 From cb3c0371884a2cf69aded43c20dd5081a56cf96d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 16:02:45 +0200
-Subject: [PATCH 21/21] perf: distinguish optical validation from eager object
+Subject: [PATCH 21/22] perf: distinguish optical validation from eager object
  materialization
 
 ---
@@ -5921,6 +5921,628 @@ index 704c43f89..81170365d 100644
  };
  struct ImagePlaneGpuResources {
      int block_size=image_plane_block_size;
+-- 
+2.43.0
+
+
+From cafc3bbd7dec00e1871a3c559cd6c6b90694db17 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 20:55:37 +0200
+Subject: [PATCH 22/22] Restore serialized fields explicitly and extend Hermite
+ optics to flat rectangles
+
+---
+ solarpilot/CoPilot_API.cpp                | 116 +++++++++++++++-
+ solarpilot/CoPilot_API.h                  |   2 +
+ solarpilot/FluxDensityCuda.cpp            |   6 +-
+ solarpilot/ImagePlaneIntercept.h          |   5 +-
+ solarpilot/ImagePlaneInterceptAdapter.cpp |  20 ++-
+ solarpilot/ImagePlaneInterceptCuda.cpp    |   2 +-
+ solarpilot/ImagePlaneInterceptCuda.h      |   6 +-
+ solarpilot/ImagePlaneInterceptKernels.cu  |   8 +-
+ solarpilot/ImagePlaneInterceptNumerics.h  | 154 +++++++++++++++++++++-
+ solarpilot/SolarField.cpp                 |  28 +++-
+ solarpilot/SolarField.h                   |   2 +-
+ 11 files changed, 322 insertions(+), 27 deletions(-)
+
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index 61b7964ad..570203fd9 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -38,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <fstream>
+ #include <cstring>
++#include <cmath>
++#include <cctype>
+ #include "rapidxml.hpp"
+ 
+ #include "CoPilot_API.h"
+@@ -1483,12 +1485,16 @@ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads, bool update_aimpoints)
+     var_map& variables = object.variables;
+     if (variables.flux.flux_model.mapval() != var_fluxsim::FLUX_MODEL::HERMITE_ANALYTICAL
+         || variables.recs.size() != 1
+-        || variables.recs.front().rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++        || (variables.recs.front().rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++            && variables.recs.front().rec_type.mapval() != var_receiver::REC_TYPE::FLAT_PLATE)
++        || variables.recs.front().is_snout.val
+         || !variables.recs.front().is_enabled.val
+-        || variables.flux.aim_method.mapval() != var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
+-        || variables.flux.flux_time_type.mapval() != var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
+-        || nthreads != 1 || !update_aimpoints) {
+-        state.error = "CUDA Hermite flux density currently supports only a single enabled cylindrical receiver, simple aiming, specified sun position and one CPU preparation thread.";
++        || (update_aimpoints && variables.flux.aim_method.mapval() != var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
++            && variables.flux.aim_method.mapval() != var_fluxsim::AIM_METHOD::KEEP_EXISTING)
++        || (variables.flux.flux_time_type.mapval() != var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
++            && variables.flux.flux_time_type.mapval() != var_fluxsim::FLUX_TIME_TYPE::HOURDAY)
++        || nthreads != 1) {
++        state.error = "CUDA Hermite flux density currently supports only a single enabled cylindrical or rectangular flat receiver without a snout, simple or Keep existing aiming, specified sun or Hour/Day and one CPU preparation thread.";
+         return false;
+     }
+     try {
+@@ -1507,7 +1513,7 @@ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads, bool update_aimpoints)
+         const char* path = std::getenv("SOLARPILOT_CUDA_TIMING_FILE");
+         const bool timed = path && *path;
+         const auto begin = std::chrono::steady_clock::now();
+-        const bool ok = simulate_cpu(p_data, 1, true); // Existing CPU preparation/writeback/postprocessing; selected numerical stages run on CUDA.
++        const bool ok = simulate_cpu(p_data, 1, update_aimpoints); // Existing CPU preparation/writeback/postprocessing; selected numerical stages run on CUDA.
+         if (!ok) { state.error = "CPU preparation failed before completing CUDA Hermite simulation."; return false; }
+         if (timed) {
+             auto& stats = state.gpu->statistics;
+@@ -3089,6 +3095,103 @@ SPEXPORT bool sp_save_from_script(sp_data_t p_data, const char* sp_fname)
+     return false;
+ }
+ 
++namespace {
++void resolve_project_weather(var_map& v, const std::string& project) {
++    const std::string stored=v.amb.weather_file.val;
++    if (stored.empty() || ioutil::file_exists(stored.c_str())) return;
++    const bool absolute=project[0]=='/' || project[0]=='\\' || (project.size()>1 && project[1]==':');
++    const std::string full=absolute?project:ioutil::get_cwd()+ioutil::path_separator()+project;
++    const auto end=full.find_last_of("/\\");
++    const std::string directory=full.substr(0,end+1);
++    const bool relative=stored[0]!='/' && stored[0]!='\\' && !(stored.size()>1 && stored[1]==':');
++    if (relative && ioutil::file_exists((directory+stored).c_str())) {
++        v.amb.weather_file.val=directory+stored;
++        return;
++    }
++    const std::string beside=directory+ioutil::name_only(stored);
++    if (ioutil::file_exists(beside.c_str())) v.amb.weather_file.val=beside;
++}
++
++void validate_serialized_layout(var_map& v) {
++    unsigned receivers=0;
++    for (auto& rec:v.recs) if (rec.is_enabled.val) ++receivers;
++    if (receivers!=1) throw std::runtime_error("Serialized restoration requires one enabled receiver.");
++    if (v.sf.layout_data.val.empty()) throw std::runtime_error("Serialized layout is empty.");
++    auto rows=split(v.sf.layout_data.val,";");
++    if (rows.size()<2) rows=split(v.sf.layout_data.val,"\n");
++    unsigned count=0, width=0;
++    for (auto row:rows) {
++        if (row.find_first_not_of(" \r\n\t")==std::string::npos) continue;
++        auto columns=split(row,Toolbox::getDelimiter(row));
++        if (columns.size()!=12 && columns.size()!=14)
++            throw std::runtime_error("Serialized layout requires complete 12- or 14-column rows.");
++        if (width && width!=columns.size()) throw std::runtime_error("Serialized layout mixes row formats.");
++        width=columns.size();
++        const unsigned offset=columns.size()==14?2:0;
++        auto number=[&](unsigned i) {
++            char* end=nullptr;
++            const double value=std::strtod(columns[i].c_str(),&end);
++            while (end && *end && std::isspace(static_cast<unsigned char>(*end))) ++end;
++            if (end==columns[i].c_str() || !end || *end || !std::isfinite(value))
++                throw std::runtime_error("Serialized layout contains an invalid numeric value.");
++            return value;
++        };
++        const double id=number(0);
++        bool found=false;
++        for (auto& h:v.hels) if (h.id.val==id) found=true;
++        if (!found) throw std::runtime_error("Serialized layout references a missing heliostat template.");
++        if (offset) for (unsigned i=1;i<3;++i) {
++            const std::string flag=lower_case(columns[i]);
++            if (flag!="0" && flag!="1" && flag!="false" && flag!="true" && flag!="f" && flag!="t")
++                throw std::runtime_error("Invalid serialized enabled/layout flag.");
++        }
++        for (unsigned i=1+offset;i<4+offset;++i) number(i);
++        for (auto group: {std::pair<unsigned,unsigned>(4+offset,2),{6+offset,3},{9+offset,3}}) {
++            const bool missing=columns[group.first]=="NULL";
++            for (unsigned i=group.first;i<group.first+group.second;++i) {
++                if (missing ? columns[i]!="NULL" : columns[i]=="NULL")
++                    throw std::runtime_error("Serialized layout contains a partial optional geometry group.");
++                if (!missing) {
++                    const double value=number(i);
++                    if (group.first==4+offset && value<=0.)
++                        throw std::runtime_error("Serialized focal lengths must be positive.");
++                }
++            }
++        }
++        ++count;
++    }
++    if (!count) throw std::runtime_error("Serialized layout is empty.");
++}
++}
++
++SPEXPORT bool sp_restore_loaded_layout(sp_data_t p_data) {
++    if (!p_data) return false;
++    auto& mc=*static_cast<CopilotObject*>(p_data);
++    mc.compute.error.clear();
++    if (!mc.spt_layout_pending) {
++        mc.compute.error="Serialized restoration requires a newly loaded SPT project.";
++        return false;
++    }
++    try {
++        validate_serialized_layout(mc.variables);
++        mc.solarfield.Create(mc.variables);
++        SolarField::PrepareFieldLayout(mc.solarfield,nullptr,true,true);
++        if (mc.solarfield.ErrCheck() || mc.solarfield.CheckCancelStatus()
++            || mc.solarfield.getHeliostats()->size()!=mc.solarfield.getLayoutShellObject()->size())
++            throw std::runtime_error("Serialized layout geometry preparation failed.");
++        mc.solarfield.calcHeliostatArea();
++        mc.solarfield.updateAllCalculatedParameters(mc.variables);
++        mc.results.clear();
++        mc.spt_layout_pending=false;
++        return true;
++    } catch (const std::exception& e) {
++        mc.compute.error=std::string("Unable to restore serialized layout: ")+e.what();
++    } catch (...) { mc.compute.error="Unable to restore serialized layout: unknown error."; }
++    mc.solarfield.Clean();
++    mc.results.clear();
++    return false;
++}
++
+ SPEXPORT bool sp_load_from_script(sp_data_t p_data, const char* sp_fname)
+ {
+     /*
+@@ -3122,6 +3225,7 @@ SPEXPORT bool sp_load_from_script(sp_data_t p_data, const char* sp_fname)
+         mc->solarfield.Clean();
+         mc->results.clear();
+         ioutil::parseXMLInputFile(sp_fname, *V, p, o);
++        resolve_project_weather(*V,sp_fname);
+         return true;
+     }
+     catch (const std::exception& error)
+diff --git a/solarpilot/CoPilot_API.h b/solarpilot/CoPilot_API.h
+index 219a62d15..fb3fd342f 100644
+--- a/solarpilot/CoPilot_API.h
++++ b/solarpilot/CoPilot_API.h
+@@ -170,6 +170,8 @@ extern "C" {
+ 
+     SPEXPORT bool sp_save_from_script(sp_data_t p_data, const char* sp_fname);
+ 
++    SPEXPORT bool sp_restore_loaded_layout(sp_data_t p_data);
++
+     SPEXPORT bool sp_load_from_script(sp_data_t p_data, const char* sp_fname);
+ 
+     SPEXPORT bool sp_dump_varmap(sp_data_t p_data, const char* sp_fname);
+diff --git a/solarpilot/FluxDensityCuda.cpp b/solarpilot/FluxDensityCuda.cpp
+index e30cba6cd..db9d4f71c 100644
+--- a/solarpilot/FluxDensityCuda.cpp
++++ b/solarpilot/FluxDensityCuda.cpp
+@@ -37,9 +37,11 @@ void Flux::fluxDensityCuda(simulation_info* siminfo, FluxSurface& surface, Hvect
+     const auto begin = timing ? Clock::now() : Clock::time_point();
+     const int nx = surface.getFluxNX(), ny = surface.getFluxNY();
+     var_receiver* variables = surface.getParent()->getVarMap();
+-    if (_n_terms != 7 || variables->rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++    if (_n_terms != 7 || (variables->rec_type.mapval() != var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++            && variables->rec_type.mapval() != var_receiver::REC_TYPE::FLAT_PLATE)
++        || variables->is_snout.val
+         || nx <= 0 || ny <= 0 || !std::isfinite(tht) || tht <= 0.)
+-        throw spexception("CUDA flux density requires valid cylindrical geometry and seven-term Hermite optics.");
++        throw spexception("CUDA flux density requires valid cylindrical or rectangular flat geometry and seven-term Hermite optics.");
+     FluxGrid& grid = *surface.getFluxMap();
+     const sp_point& offset = *surface.getSurfaceOffset();
+     const sp_point receiver(variables->rec_offset_x_global.Val(), variables->rec_offset_y_global.Val(), variables->rec_offset_z_global.Val());
+diff --git a/solarpilot/ImagePlaneIntercept.h b/solarpilot/ImagePlaneIntercept.h
+index ad0d09293..ce724b315 100644
+--- a/solarpilot/ImagePlaneIntercept.h
++++ b/solarpilot/ImagePlaneIntercept.h
+@@ -46,7 +46,8 @@ struct Input {
+     double panel_x[max_facets], panel_y[max_facets];
+     std::int32_t cant_method, facets_x, facets_y;
+     std::uint8_t faceted, visible;
+-    std::uint8_t reserved[2]; // Explicit ABI padding; never numerical input.
++    std::uint8_t flat_rect, reserved;
++    double heliostat_azimuth, receiver_azimuth, receiver_elevation; // Radians; Legacy projection inputs.
+ };
+ struct Output {
+     Matrix<7,7> sun, errors, mirror, flux;
+@@ -58,7 +59,7 @@ struct Output {
+ static_assert(std::is_trivial<Input>::value && std::is_standard_layout<Input>::value,"Image input must be POD");
+ static_assert(std::is_trivial<Output>::value && std::is_trivial<Tables>::value,"Image outputs and tables must be trivial");
+ static_assert(sizeof(double)==8 && sizeof(std::int32_t)==4 && sizeof(std::uint8_t)==1,"Fixed-width device fields required");
+-static_assert(sizeof(Input)==1640 && alignof(Input)==8,"Input ABI must match the validated flat model");
++static_assert(sizeof(Input)==1664 && alignof(Input)==8,"Input ABI must match the validated flat model");
+ static_assert(sizeof(Output)==1728 && alignof(Output)==8,"Output ABI must match the validated flat model");
+ static_assert(sizeof(Tables)==3256 && alignof(Tables)==8,"Tables ABI must match the validated flat model");
+ static_assert(offsetof(Input,mirror_normalized)==208 && offsetof(Input,panel_x)==600
+diff --git a/solarpilot/ImagePlaneInterceptAdapter.cpp b/solarpilot/ImagePlaneInterceptAdapter.cpp
+index 75072038d..ffbaf086a 100644
+--- a/solarpilot/ImagePlaneInterceptAdapter.cpp
++++ b/solarpilot/ImagePlaneInterceptAdapter.cpp
+@@ -33,15 +33,21 @@ void Flux::refreshImagePlaneTables() {
+ 
+ bool Flux::prepareImagePlane(var_map& v, Heliostat& h, Receiver* rec, Vect* sun,
+                              image_plane::Input& in) {
++    in={};
+     auto* hv=h.getVarMap();
+     auto* rv=rec->getVarMap();
+     const int cant=hv->cant_method.mapval();
++    const bool cylindrical=rv->rec_type.mapval()==var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++        && rec->getGeometryType()==Receiver::REC_GEOM_TYPE::CYLINDRICAL_CLOSED;
++    const bool flat=rv->rec_type.mapval()==var_receiver::REC_TYPE::FLAT_PLATE
++        && rec->getGeometryType()==Receiver::REC_GEOM_TYPE::PLANE_RECT && !rv->is_snout.val;
+     if (_n_terms!=7 || v.recs.size()!=1 || !rv->is_enabled.val
+-        || rv->rec_type.mapval()!=var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
+-        || rec->getGeometryType()!=Receiver::REC_GEOM_TYPE::CYLINDRICAL_CLOSED
++        || (!cylindrical && !flat)
+         || v.flux.flux_model.mapval()!=var_fluxsim::FLUX_MODEL::HERMITE_ANALYTICAL
+-        || v.flux.aim_method.mapval()!=var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
+-        || v.flux.flux_time_type.mapval()!=var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
++        || (v.flux.aim_method.mapval()!=var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
++            && v.flux.aim_method.mapval()!=var_fluxsim::AIM_METHOD::KEEP_EXISTING)
++        || (v.flux.flux_time_type.mapval()!=var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
++            && v.flux.flux_time_type.mapval()!=var_fluxsim::FLUX_TIME_TYPE::HOURDAY)
+         || (cant!=0 && cant!=-1 && cant!=1)) return false;
+     const int nx=hv->n_cant_x.val, ny=hv->n_cant_y.val;
+     if (hv->is_faceted.val && (nx<=0 || ny<=0 || nx>image_plane::max_facets
+@@ -59,6 +65,12 @@ bool Flux::prepareImagePlane(var_map& v, Heliostat& h, Receiver* rec, Vect* sun,
+     in.optical_height=rv->optical_height.Val();
+     in.diameter=Receiver::getReceiverWidth(*rv);
+     in.receiver_height=rv->rec_height.val;
++    in.flat_rect=flat;
++    if (flat) {
++        in.heliostat_azimuth=atan2(h.getLocation()->x,h.getLocation()->y);
++        in.receiver_azimuth=rv->rec_azimuth.val*D2R+PI;
++        in.receiver_elevation=PI/2.-rv->rec_elevation.val*D2R;
++    }
+     auto track=h.getTrackVector(); auto tower=h.getTowerVector();
+     in.tracking={track->i,track->j,track->k}; in.tower={tower->i,tower->j,tower->k};
+     in.sun={sun->i,sun->j,sun->k};
+diff --git a/solarpilot/ImagePlaneInterceptCuda.cpp b/solarpilot/ImagePlaneInterceptCuda.cpp
+index 3a50b85c0..e9b39dbca 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.cpp
++++ b/solarpilot/ImagePlaneInterceptCuda.cpp
+@@ -43,7 +43,7 @@ void Flux::imagePlaneInterceptCudaBatch(var_map& variables,Hvector& heliostats,V
+     for (std::size_t h=0;h<heliostats.size();++h) {
+         _image_inputs[h]={};
+         if (!prepareImagePlane(variables,*heliostats[h],heliostats[h]->getWhichReceiver(),sun,_image_inputs[h]))
+-            throw std::runtime_error("CUDA image-plane input outside the validated single-cylinder/simple-aim/specified-sun/on-axis/64-facet scope at heliostat index "+std::to_string(h));
++            throw std::runtime_error("CUDA image-plane input outside the validated single-cylinder-or-flat/simple-or-existing-aim/specified-sun-or-Hour-Day/on-axis/64-facet scope at heliostat index "+std::to_string(h));
+     }
+     }
+     const double preparation=timing?std::chrono::duration<double>(Clock::now()-begin).count():0.;
+diff --git a/solarpilot/ImagePlaneInterceptCuda.h b/solarpilot/ImagePlaneInterceptCuda.h
+index 81170365d..eceb2176c 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.h
++++ b/solarpilot/ImagePlaneInterceptCuda.h
+@@ -6,7 +6,7 @@
+ #include <memory>
+ namespace solarpilot {
+ constexpr int image_plane_block_size = 64; // Bounded 2D-C sweep: small-field benefit, large-field parity.
+-constexpr std::size_t image_plane_layout_fields = 23;
++constexpr std::size_t image_plane_layout_fields = 27;
+ using ImagePlaneLayout = std::array<std::uint64_t,image_plane_layout_fields>;
+ struct ImagePlaneRequiredOutput {
+     double intercept;
+@@ -27,7 +27,9 @@ inline ImagePlaneLayout image_plane_host_layout() {
+         offsetof(image_plane::Output,hermite),offsetof(image_plane::Output,sigma),offsetof(image_plane::Output,intercept),
+         offsetof(image_plane::Output,updated),sizeof(std::int32_t),sizeof(std::uint8_t),
+         sizeof(ImagePlaneRequiredOutput),alignof(ImagePlaneRequiredOutput),offsetof(ImagePlaneRequiredOutput,updated),offsetof(ImagePlaneRequiredOutput,valid),
+-        sizeof(ResidentDensityInput),alignof(ResidentDensityInput),offsetof(ResidentDensityInput,normalization)}};
++        sizeof(ResidentDensityInput),alignof(ResidentDensityInput),offsetof(ResidentDensityInput,normalization),
++        offsetof(image_plane::Input,flat_rect),offsetof(image_plane::Input,heliostat_azimuth),
++        offsetof(image_plane::Input,receiver_azimuth),offsetof(image_plane::Input,receiver_elevation)}};
+ }
+ struct ImagePlaneGpuStatistics {
+     int block_size=image_plane_block_size;
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+index 30d9e8de0..9939072b9 100644
+--- a/solarpilot/ImagePlaneInterceptKernels.cu
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -112,11 +112,13 @@ __global__ void image_plane_layout_kernel(std::uint64_t* result) {
+         offsetof(image_plane::Output,hermite),offsetof(image_plane::Output,sigma),offsetof(image_plane::Output,intercept),
+         offsetof(image_plane::Output,updated),sizeof(std::int32_t),sizeof(std::uint8_t),
+         sizeof(ImagePlaneRequiredOutput),alignof(ImagePlaneRequiredOutput),offsetof(ImagePlaneRequiredOutput,updated),offsetof(ImagePlaneRequiredOutput,valid),
+-        sizeof(ResidentDensityInput),alignof(ResidentDensityInput),offsetof(ResidentDensityInput,normalization)};
++        sizeof(ResidentDensityInput),alignof(ResidentDensityInput),offsetof(ResidentDensityInput,normalization),
++        offsetof(image_plane::Input,flat_rect),offsetof(image_plane::Input,heliostat_azimuth),
++        offsetof(image_plane::Input,receiver_azimuth),offsetof(image_plane::Input,receiver_elevation)};
+     for (int i=0;i<int(image_plane_layout_fields);++i) result[i]=layout[i];
+ }
+ void validate(const image_plane::Input& in) {
+-    if (in.visible>1 || in.faceted>1) throw std::runtime_error("Invalid image-plane visibility/facet flag");
++    if (in.visible>1 || in.faceted>1 || in.flat_rect>1) throw std::runtime_error("Invalid image-plane visibility/facet flag");
+     if (!in.visible) return;
+     if ((in.cant_method!=0 && in.cant_method!=-1 && in.cant_method!=1)
+         || (in.faceted && (in.facets_x<=0 || in.facets_y<=0 || in.facets_x>image_plane::max_facets
+@@ -126,6 +128,8 @@ void validate(const image_plane::Input& in) {
+         in.focal_x,in.focal_y,in.slant_range,in.aim_x,in.aim_y,
+         in.tracking.i,in.tracking.j,in.tracking.k,in.tower.i,in.tower.j,in.tower.k,in.sun.i,in.sun.j,in.sun.k};
+     for (double v:scalars) if (!std::isfinite(v)) throw std::runtime_error("Nonfinite CUDA image-plane input");
++    if (in.flat_rect && (!std::isfinite(in.heliostat_azimuth) || !std::isfinite(in.receiver_azimuth)
++        || !std::isfinite(in.receiver_elevation))) throw std::runtime_error("Invalid CUDA flat aperture projection angles");
+     if (in.tower_height<=0. || in.optical_height<=0. || in.diameter<=0. || in.receiver_height<=0.
+         || in.focal_x==0. || in.focal_y==0. || in.slant_range<=0.
+         || (in.faceted && in.cant_method==1 && (!std::isfinite(in.cant_radius) || in.cant_radius<=0.)))
+diff --git a/solarpilot/ImagePlaneInterceptNumerics.h b/solarpilot/ImagePlaneInterceptNumerics.h
+index 8e112617b..21fb4e92c 100644
+--- a/solarpilot/ImagePlaneInterceptNumerics.h
++++ b/solarpilot/ImagePlaneInterceptNumerics.h
+@@ -122,12 +122,163 @@ SP_IMAGE_HD inline void integral(const Tables& tables, double G[5],double F[5],d
+ 	}
+ 
+ }
++SP_IMAGE_HD inline double maximum(double a,double b) { return a<b?b:a; }
++SP_IMAGE_HD inline void exchange(double& a,double& b) { double t=a;a=b;b=t; }
+ SP_IMAGE_HD inline void aperture(const Input& in,const Tables& tables,double SigXY[2],Matrix<1,16>& hspill) {
+ SP_IMAGE_SCOPE(IPAperture);
+     double G[5], F[5], X[2], A[2], TA[2];
+     double tht = in.optical_height, sig_x = SigXY[0], sig_y = SigXY[1];
+     double theta_t_zen = acos(in.tower.k), cos_t_zen = in.tower.k, sin_t_zen = sin(theta_t_zen);
+     A[0] = 1./sig_x; A[1] = 1./sig_y;
++    if (in.flat_rect) {
++        // Legacy flat rectangular aperture: identical operation order and quadrature.
++        double rxn=in.diameter/tht/2., ryn=in.receiver_height/tht/2.;
++        double hloc_az_i=cos(in.heliostat_azimuth), hloc_az_j=sin(in.heliostat_azimuth);
++        double rec_az_i=cos(in.receiver_azimuth), rec_az_j=sin(in.receiver_azimuth);
++        double rec_zen_k=cos(in.receiver_elevation), rec_zen_j=sin(in.receiver_elevation);
++        double cos_view_az=hloc_az_i*rec_az_i+hloc_az_j*rec_az_j;
++        double sin_view_az=hloc_az_i*rec_az_j-hloc_az_j*rec_az_i;
++        double r11=cos_view_az;
++        double r12=sin_view_az*rec_zen_k;
++        double r21=-cos_t_zen*sin_view_az;
++        double r22=sin_t_zen*rec_zen_j+cos_t_zen*rec_zen_k*cos_view_az;
++			double
++				rxn_temp = rxn,
++				ryn_temp = ryn,
++				U[4], V[4];
++			if(r11 < 0.) rxn_temp = -rxn;
++			if(r12 < 0.) ryn_temp = -ryn;
++		    double sig_x5 = sig_x * 5;
++		    double sig_y5 = sig_y * 5;
++		    double sig_max5 = maximum(sig_y5, sig_x5);
++			U[0] = r11 * rxn_temp + r12 * ryn_temp;
++            U[1] = -r11 * rxn_temp + r12 * ryn_temp;
++			U[2] = -U[0];
++			U[3] = -U[1];
++			V[0] = r21 * rxn_temp + r22 * ryn_temp;
++			V[1] = -r21 * rxn_temp + r22 * ryn_temp;
++			V[2] = -V[0];
++			V[3] = -V[1];
++            double lx03 = U[0]-U[3];
++            double ly03 = V[0]-V[3];
++            double lx23 = U[2]-U[3];
++            double ly23 = V[2]-V[3];
++            double l03 = sqrt( ly03*ly03 + lx03*lx03 );
++            double l23 = sqrt( ly23*ly23 + lx23*lx23 );
++            double dp = (lx03 * lx23 + ly03 * ly23)/(l03 * l23);
++            double sdp = sqrt(1. - dp*dp);
++			double aimy_adj = in.aim_y / tht;
++			double aimx_adj = in.aim_x / tht;
++            if( sdp * l03 > 2.*sig_max5 || sdp * l23 > 2.*sig_max5 ) {
++                double dydx_w = std::abs(lx23)>1e-6 ? ly23/lx23 : 1e6;
++                if(U[3] > U[0]) dydx_w *= -1.;
++                double dydx_w2 = dydx_w * dydx_w;
++                double dydx_h = std::abs(lx03)>1e-6 ? ly03/lx03 : 1e6;
++                if(U[3] > U[2]) dydx_h *= -1;
++                double dydx_h2 = dydx_h * dydx_h;
++                double a = sig_x / sig_y;
++                double a2 = a*a;
++                double a4 = a2*a2;
++                double radw = sqrt( (1. + a4*dydx_w2)/(1. + a2*dydx_w2) );
++                double radh = sqrt( (1. + a4*dydx_h2)/(1. + a2*dydx_h2) );
++                double rx_ip = 2. * radw * sig_y5 * rxn / (sdp * l23);
++                double ry_ip = 2. * radh * sig_y5 * ryn / (sdp * l03);
++                if(ry_ip < ryn || rx_ip < rxn)
++                {
++                    double delta_x_q = aimx_adj;
++                    double signx = aimx_adj < 0 ? -1. : 1.;
++                    double dshiftx = maximum(rxn - rx_ip, 0.);
++                    if( std::abs(delta_x_q) > rxn - rx_ip ) delta_x_q = signx * dshiftx;
++                    double delta_y_q = aimy_adj;
++                    double signy = aimy_adj < 0 ? -1. : 1.;
++                    double dshifty = maximum(ryn - ry_ip, 0.);
++                    if( std::abs(delta_y_q) > ryn - ry_ip ) delta_y_q = signy * dshifty;
++                    aimx_adj += -delta_x_q;
++                    aimy_adj += -delta_y_q;
++                    if( rx_ip < rxn ) rxn = rx_ip;
++                    if( ry_ip < ryn ) ryn = ry_ip;
++                }
++                rxn_temp = rxn;
++				ryn_temp = ryn;
++			    if(r11 < 0.) rxn_temp = -rxn;
++			    if(r12 < 0.) ryn_temp = -ryn;
++                U[0] = r11 * rxn_temp + r12 * ryn_temp;
++                U[1] = -r11 * rxn_temp + r12 * ryn_temp;
++			    U[2] = -U[0];
++			    U[3] = -U[1];
++			    V[0] = r21 * rxn_temp + r22 * ryn_temp;
++			    V[1] = -r21 * rxn_temp + r22 * ryn_temp;
++			    V[2] = -V[0];
++			    V[3] = -V[1];
++            }
++            else {
++                aimy_adj = in.aim_y/tht;
++                aimx_adj = in.aim_x/tht;
++            }
++            TA[0] = aimx_adj*r11 + r12 * aimy_adj;
++            TA[1] = aimx_adj*r21 + r22 * aimy_adj;
++            G[2] = G[3] = G[4] = 0.;
++			F[2] = F[3] = F[4] = 0.;
++            double
++				csmall = 1.e-8;
++			if(! (U[1] +csmall < U[3])){
++				exchange(U[1], U[3]);
++				exchange(V[1], V[3]);
++			}
++			if(! (pow(U[0] - U[3],2) > csmall)){
++                X[0] = U[2];
++				X[1] = U[0];
++				G[0] = (U[1]*V[0] - U[0]*V[1])/(U[1]-U[0]);
++				G[1] = (V[1] - V[0])/(U[1] - U[0]);
++				F[1] = (V[2] - V[3])/(U[2] - U[3]);
++				F[0] = (U[2]*V[3] - U[3]*V[2])/(U[2]-U[3]);
++                if(!( (F[0] + F[1]*U[1]) >= (G[0] + G[1]*U[1]) ) ){
++					exchange(G[0], F[0]);
++					exchange(G[1], F[1]);
++				}
++				integral(tables, G, F, X, A, TA, 1.0, hspill);
++				return;
++			}
++			if(! (pow(U[1] - U[2],2) < csmall)){
++				X[0] = U[2];
++				X[1] = U[1];
++				F[0] = (U[2]*V[3]-U[3]*V[2])/(U[2]-U[3]);
++				F[1] = (V[2]-V[3])/(U[2]-U[3]);
++				G[0] = (U[1]*V[2]-U[2]*V[1])/(U[1]-U[2]);
++				G[1] = (V[1]-V[2])/(U[1]-U[2]);
++				if((F[0] + F[1]*U[1]) < (G[0] + G[1]*U[1]) ){
++					exchange(G[0], F[0]);
++					exchange(G[1], F[1]);
++				}
++				integral(tables, G, F, X, A, TA, 1.0, hspill);
++			}
++			if(! (pow(U[1]-U[3],2) < csmall)){
++				X[0] = U[1];
++				X[1] = U[3];
++				G[0] = (U[1]*V[0]-U[0]*V[1])/(U[1]-U[0]);
++				G[1] = (V[1]-V[0])/(U[1]-U[0]);
++				F[1] = (V[2]-V[3])/(U[2]-U[3]);
++				F[0] = (U[2]*V[3]-U[3]*V[2])/(U[2]-U[3]);
++				if(!( (F[0] + F[1]*U[1]) >= (G[0] + G[1]*U[1]) ) ){
++					exchange(G[0], F[0]);
++					exchange(G[1], F[1]);
++				}
++				integral(tables, G, F, X, A, TA, 1.0, hspill);
++			}
++			X[0] = U[3];
++			X[1] = U[0];
++			F[0] = (U[3]*V[0] - V[3]*U[0])/(U[3]-U[0]);
++			F[2] = (V[3]-V[0])/(U[3]-U[0]);
++			G[0] = (U[1]*V[0]-U[0]*V[1])/(U[1]-U[0]);
++			G[1] = (V[1]-V[0])/(U[1]-U[0]);
++			if(! ( (F[0]+F[1]*U[3]) >= (G[0]+G[1]*U[3]) )){
++				exchange(G[0], F[0]);
++				exchange(G[1], F[1]);
++			}
++			integral(tables, G, F, X, A, TA, 1.0, hspill);
++        return;
++    }
++
+ 		double
+ 			w = in.diameter,
+ 			w2 = w/2./tht,
+@@ -216,7 +367,8 @@ SP_IMAGE_HD inline void evaluate(const Input& in,const Tables& tables,Output& ou
+ 	double rec_width = in.diameter;
+     double rec_opt_ht = in.optical_height;
+     double hmr = h_rad - rec_width*0.5;
+-    slant = sqrt(hmr*hmr + rec_opt_ht*rec_opt_ht)/tht;
++    if (in.flat_rect) slant = sqrt(h_rad*h_rad + rec_opt_ht*rec_opt_ht)/tht;
++    else slant = sqrt(hmr*hmr + rec_opt_ht*rec_opt_ht)/tht;
+ 	Matrix<1,7> srange = {};
+     srange[0] = 1.;
+ 	for(i=1; i<terms; i++) { srange[i] = srange[i-1]*slant; }
+diff --git a/solarpilot/SolarField.cpp b/solarpilot/SolarField.cpp
+index a9f70da0d..3c6c3ae1d 100644
+--- a/solarpilot/SolarField.cpp
++++ b/solarpilot/SolarField.cpp
+@@ -1027,7 +1027,7 @@ bool SolarField::CheckReceiverAcceptance(Receiver* Rec, sp_point *hpos, double t
+ }
+ 
+ 
+-bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool refresh_only){
++bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool refresh_only, bool restore_serialized){
+ 	/*
+ 	This algorithm is used to prepare the solar field object for layout simulations.
+ 	A simulation is performed in this algorithm only if loading specified coordinates
+@@ -1130,7 +1130,7 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+         return false;
+     }
+ 	if(SF.CheckCancelStatus()) return false;	//check for cancelled simulation
+-	if( V->land.is_bounds_array.val )
++	if( !restore_serialized && V->land.is_bounds_array.val )
+     {
+ 		vector<int> dels;
+ 		//Find which points lie outside the bounds
+@@ -1157,7 +1157,7 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+ 
+     //receiver diameter - delete heliostats that fall within the diameter of the receiver
+     //solar field span angles - delete heliostats that are outside of the allowable angular range
+-    {
++    if (!restore_serialized) {
+         double azmin = SF.getVarMap()->sf.accept_min.val*D2R;
+         double azmax = SF.getVarMap()->sf.accept_max.val*D2R;
+ 
+@@ -1205,7 +1205,7 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+             }
+         }
+     }
+-    HelPos = rs_positions;      //reassign heliostat positions to included vector
++    if (!restore_serialized) HelPos = rs_positions; // Restoration preserves every serialized row.
+ 
+     //--------------------
+ 
+@@ -1255,7 +1255,7 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+ 		hpz = HelPos.at(i).z;
+ 		//P.y = sqrt(pow(hpx, 2) + pow(hpy, 2));	//Determine the radial position. Set to y.
+         Heliostat *htemp;
+-        if( layout_method == var_solarfield::LAYOUT_METHOD::USERDEFINED )
++        if( layout_method == var_solarfield::LAYOUT_METHOD::USERDEFINED || restore_serialized )
+         {
+             try
+             {
+@@ -1279,7 +1279,7 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+ 
+ 		//Set up the heliostat
+ 		int layout_method = V->sf.layout_method.mapval();
+-		if(layout_method != var_solarfield::LAYOUT_METHOD::USERDEFINED){	
++		if(layout_method != var_solarfield::LAYOUT_METHOD::USERDEFINED && !restore_serialized){
+ 			//algorithmic layouts (not user defined)
+ 			focus_method = Hv->focus_method.mapval();
+ 		}
+@@ -1384,6 +1384,13 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+ 
+         
+ 
++        // The legacy focus switch uses template values even for serialized focal lengths.
++        // Override only in the explicit restoration operation, after slant initialization.
++        if (restore_serialized && layout->at(i).is_user_focus) {
++            hptr->setFocalLengthX(layout->at(i).focal_x);
++            hptr->setFocalLengthY(layout->at(i).focal_y);
++        }
++
+ 		//Construct the panel(s) on the heliostat
+         hptr->installPanels();
+ 
+@@ -1429,6 +1436,15 @@ bool SolarField::PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool ref
+ 	int des_sim_detail = V->sf.des_sim_detail.mapval();
+ 	unordered_map<int, Heliostat*> *helio_by_id = SF.getHeliostatsByID();
+ 
++    if (restore_serialized) {
++        helio_by_id->clear();
++        for (int i=0; i<Npos; ++i) {
++            heliostats->at(i)=&helio_objects->at(i);
++            (*helio_by_id)[i]=heliostats->at(i);
++        }
++        return false; // Prepared geometry; no design-point simulation or filtering requested.
++    }
++
+ 	if(des_sim_detail == var_solarfield::DES_SIM_DETAIL::DO_NOT_FILTER_HELIOSTATS || refresh_only){		//Do not filter any heliostats
+ 		
+         
+diff --git a/solarpilot/SolarField.h b/solarpilot/SolarField.h
+index 6e87c0d7a..2a969a5c9 100644
+--- a/solarpilot/SolarField.h
++++ b/solarpilot/SolarField.h
+@@ -226,7 +226,7 @@ public:
+ 	bool CheckCancelStatus();
+ 	
+ 	bool FieldLayout();	//Master layout method for DELSOL solar field geometries
+-	static bool PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool refresh_only=false);	//Field layout preparation call for multithreaded apps
++	static bool PrepareFieldLayout(SolarField &SF, WeatherData *wdata, bool refresh_only=false, bool restore_serialized=false);	//Field layout preparation call for multithreaded apps
+ 	static bool DoLayout( SolarField *SF, sim_results *results, WeatherData *wdata, int sim_first=-1, int sim_last=-1);
+ 	void ProcessLayoutResults(sim_results *results, int nsim_total);	//Call after simulation for multithreaded apps
+ 	void ProcessLayoutResultsNoSim();	//Call after layout with no simulations to process
 -- 
 2.43.0
 

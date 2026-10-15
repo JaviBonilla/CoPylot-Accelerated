@@ -1,7 +1,7 @@
 From d0496c46480e42b83fcfaa03b97f1f49c5f7e64a Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 1/4] feat: expose compute backend and CUDA probe through
+Subject: [PATCH 1/5] feat: expose compute backend and CUDA probe through
  CoPylot API
 
 ---
@@ -87,7 +87,7 @@ index c51f275..7c61195 100644
 From 53640fdfd671f06255a6b35db2e139ea0d6d1b24 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 2/4] fix: release C API result arrays after Python conversion
+Subject: [PATCH 2/5] fix: release C API result arrays after Python conversion
 
 ---
  deploy/api/copylot.py | 141 ++++++++++++++++++++++++------------------
@@ -269,7 +269,7 @@ index 7c61195..e098c4b 100644
 From 5209ccaf5ed4449f39c2405f166db161adb8c6ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 3/4] docs: describe supported hybrid CUDA backend selection
+Subject: [PATCH 3/5] docs: describe supported hybrid CUDA backend selection
 
 ---
  deploy/api/copylot.py | 2 +-
@@ -295,7 +295,7 @@ index e098c4b..f3ad47a 100644
 From 0b56acb4e80a5206ec8196d21eac38af5c93e405 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 4/4] feat: expose checked SPT load and save methods
+Subject: [PATCH 4/5] feat: expose checked SPT load and save methods
 
 ---
  deploy/api/copylot.py | 46 ++++++++++++++++++++++++++++++++++++++++++-
@@ -384,6 +384,41 @@ index f3ad47a..afbafa4 100644
 -    pass
 \ No newline at end of file
 +    pass
+-- 
+2.43.0
+
+
+From acc48e522b0a6ea6792ff181987a2c1479935ade Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 20:55:37 +0200
+Subject: [PATCH 5/5] Expose explicit loaded-project geometry restoration
+
+---
+ deploy/api/copylot.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/deploy/api/copylot.py b/deploy/api/copylot.py
+index afbafa4..3e2e0c2 100644
+--- a/deploy/api/copylot.py
++++ b/deploy/api/copylot.py
+@@ -1379,6 +1379,17 @@ class CoPylot:
+         self.pdll.sp_load_from_script.argtypes = [c_void_p, c_char_p]
+         return self.pdll.sp_load_from_script( c_void_p(p_data), c_char_p(sp_fname.encode()))
+ 
++    def restore_loaded_layout(self, p_data: int) -> bool:
++        """Instantiate the newly loaded serialized field without layout generation/weather I/O.
++
++        Preserves serialized positions, template IDs, focal lengths, canting and
++        aimpoints. Requires one enabled receiver and a complete valid saved layout.
++        Failure leaves the loaded project unprepared; see get_last_backend_error().
++        """
++        self.pdll.sp_restore_loaded_layout.restype = c_bool
++        self.pdll.sp_restore_loaded_layout.argtypes = [c_void_p]
++        return self.pdll.sp_restore_loaded_layout(c_void_p(p_data))
++
+     #SPEXPORT bool sp_dump_varmap(sp_data_t p_data, const char* sp_fname)
+     def dump_varmap_tofile(self, p_data: int, fname: str) -> bool:
+         """Dump the variable structure to a text csv file
 -- 
 2.43.0
 
