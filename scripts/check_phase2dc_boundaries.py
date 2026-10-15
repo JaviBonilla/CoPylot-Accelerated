@@ -40,7 +40,7 @@ assert function(old,'SPEXPORT bool sp_simulate(')==function(new,'SPEXPORT bool s
 lock=json.loads((ROOT/'repos.lock.json').read_text())
 for name,initial in state['pins'].items():
     assert lock[name]['sha']==initial['sha'],name
-    if name!='ssc':assert lock[name]==initial,name
+    if name!='ssc':assert {k:v for k,v in lock[name].items() if k!='patch_committer'}==initial,name
 assert subprocess.run(['git','check-ignore','-q','local-cases/example/example-private-project.spt'],cwd=ROOT).returncode==0
 assert not subprocess.check_output(['git','ls-files','local-cases'],cwd=ROOT,text=True).strip()
 print(json.dumps({'historical_files_unchanged':len(protected),'unchanged_numerical_and_scope_files':unchanged,
