@@ -63,3 +63,10 @@ Report Legacy/Flat simulate separately from Flat/CUDA simulate. Flat density /
 CUDA kernel is a kernel-only ratio with unequal host-work boundaries, not an
 end-to-end speedup. The comparable hybrid ratio uses CPU density / CUDA hybrid
 density. No private project or extension of the Phase 2B physics is involved.
+
+A separate `plain` control repeats Legacy/Flat and all four CUDA blocks with
+runtime event timing and profile/timing-file output disabled. Compiled core
+scope probes remain identical across backends. It uses two CPU warmups and the
+same 5/10 CPU repeat schedule; CUDA uses three warmups per block and ten rotating
+rounds. These wall times are the primary end-to-end speedup data. Instrumented
+runs supply stage decomposition; the two datasets are not silently mixed.

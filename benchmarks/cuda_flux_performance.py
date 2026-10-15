@@ -268,6 +268,63 @@ def sweep(cp,size,grid,directory,window):
     finally:cp.data_free(context)
 
 
+def plain_call(cp, context):
+    # Instrumentation is disabled at runtime; compiled scope probes remain the
+    # same for all backends. No event synchronization or per-call CSV writes.
+    os.environ['SOLARPILOT_PROFILE_FILE']=''
+    os.environ['SOLARPILOT_CUDA_TIMING_FILE']=''
+    start=time.perf_counter()
+    assert cp.simulate(context,nthreads=1),cp.get_last_backend_error(context)
+    return time.perf_counter()-start
+
+
+def plain(cp,size,grid,directory,window):
+    result=dict(heliostats=SIZES[size],grid=[grid,grid],backends={},cuda_blocks=[])
+    reference=None
+    for mode in ('legacy','flat'):
+        context=context_for(cp,size,grid)
+        try:
+            os.environ['SOLARPILOT_FLUX_PATH']=mode
+            first=plain_call(cp,context)
+            for _ in range(2):plain_call(cp,context)
+            repeats=5 if SIZES[size]>=5000 and grid>=50 else 10
+            samples=[plain_call(cp,context) for _ in range(repeats)]
+            actual=collect(cp,context)
+            if reference is not None:assert np.array_equal(reference[0],actual[0])
+            reference=actual
+            result['backends'][mode]=dict(first_call_s=first,warmups_excluded=2,repetitions=repeats,
+                                          samples_s=samples,simulate_wall_s=distribution(samples))
+            window.validate()
+        finally:cp.data_free(context)
+    context=context_for(cp,size,grid)
+    try:
+        os.environ['SOLARPILOT_FLUX_PATH']='flat'
+        cp.set_compute_backend(context,'cuda')
+        os.environ['SOLARPILOT_CUDA_BLOCK_SIZE']='256'
+        first=plain_call(cp,context)
+        result['cuda_v1_first_call_s']=first
+        blocks=(64,128,256,512);runs={block:[] for block in blocks};observations={}
+        for block in blocks:
+            os.environ['SOLARPILOT_CUDA_BLOCK_SIZE']=str(block)
+            for _ in range(3):plain_call(cp,context)
+        for repeat in range(10):
+            order=blocks[repeat%4:]+blocks[:repeat%4]
+            for block in order:
+                os.environ['SOLARPILOT_CUDA_BLOCK_SIZE']=str(block)
+                runs[block].append(plain_call(cp,context))
+                if repeat in (0,9):
+                    observed=collect(cp,context)
+                    if block in observations:assert np.array_equal(observations[block][0],observed[0])
+                    observations[block]=observed
+            window.validate()
+        for block in blocks:
+            result['cuda_blocks'].append(dict(block_size=block,warmups_excluded=3,repetitions=10,
+                    samples_s=runs[block],simulate_wall_s=distribution(runs[block]),
+                    correctness=correctness(reference,observations[block]),repeated_cuda_bitwise=True))
+    finally:cp.data_free(context)
+    return result
+
+
 def allocation_growth(cp,directory):
     context=context_for(cp,'small',25);result=[]
     try:
@@ -287,11 +344,12 @@ def allocation_growth(cp,directory):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=('baseline','sweep'),required=True)
+    parser.add_argument('--stage',choices=('baseline','sweep','plain'),required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--sizes',nargs='+',choices=SIZES,default=list(SIZES))
     parser.add_argument('--grids',nargs='+',type=int,default=[25,50,100])
     args=parser.parse_args()
+    if args.output.exists():raise RuntimeError('Refusing to overwrite an existing benchmark result')
     allowed=sorted(os.sched_getaffinity(0));benchmark_cpu,monitor_cpu=allowed[0],allowed[-1]
     if benchmark_cpu==monitor_cpu:raise RuntimeError('Two available CPUs required for independent telemetry monitoring')
     os.sched_setaffinity(0,{benchmark_cpu})
@@ -307,7 +365,8 @@ def main():
             for size in args.sizes:
                 for grid in args.grids:
                     window.validate()
-                    item=baseline(cp,size,grid,directory,window) if args.stage=='baseline' else sweep(cp,size,grid,directory,window)
+                    runner={'baseline':baseline,'sweep':sweep,'plain':plain}[args.stage]
+                    item=runner(cp,size,grid,directory,window)
                     result['cases'].extend(item if isinstance(item,list) else [item])
                     progress.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
                     print(f'{args.stage}: completed {size} {grid}',flush=True)
