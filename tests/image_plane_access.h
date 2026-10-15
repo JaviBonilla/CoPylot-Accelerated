@@ -6,6 +6,7 @@
 #include <algorithm>
 // Friend access stays in native tests; no public SolarPILOT API is added.
 struct ImagePlaneTestAccess {
+    static bool pending(Flux& f) { return f._image_resident_pending; }
     static const std::vector<image_plane::Input>& gpu_inputs(Flux& f) { return f._image_inputs; }
     static const std::vector<image_plane::Output>& gpu_outputs(Flux& f) { return f._image_outputs; }
     static double flat(Flux& f,var_map& v,Heliostat& h,Receiver* r,Vect* s) { return f.imagePlaneInterceptFlat(v,h,r,s); }

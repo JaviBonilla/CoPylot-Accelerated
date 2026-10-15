@@ -23,6 +23,7 @@ int main(int argc,char** argv) {
         const int repetitions=argc>2?std::stoi(argv[2]):5;
         const bool timing=argc>3 && std::string(argv[3])=="timing";
         const int warmups=argc>4?std::stoi(argv[4]):2;
+        const bool resident=argc>5 && std::string(argv[5])=="resident";
         require(count>0 && repetitions>0 && warmups>=0,"Invalid image-plane benchmark size/repeats");
         // Reject timing before creating any device context; correctness needs no idle window.
         ImagePlaneGpuWindow window;if (timing) window.begin();
@@ -51,11 +52,17 @@ int main(int argc,char** argv) {
         auto context=solarpilot::make_gpu_context(0);
         context->image_plane=solarpilot::make_image_plane_gpu_context(0);
         struct Selected {
-            Flux& f;Selected(Flux& flux,solarpilot::GpuContext* c):f(flux) { f.setImagePlaneGpuContext(c); }
-            ~Selected() { f.setImagePlaneGpuContext(nullptr); }
-        } selected(flux,context.get());
+            Flux& f;bool resident;
+            Selected(Flux& flux,solarpilot::GpuContext* c,bool r):f(flux),resident(r) {
+                f.setImagePlaneGpuContext(c);if (resident) f.setGpuContext(c);
+            }
+            ~Selected() { f.setImagePlaneGpuContext(nullptr);if (resident) f.setGpuContext(nullptr); }
+        } selected(flux,context.get(),resident);
         auto cpu=[&]() { for (auto h:*field.getHeliostats()) ImagePlaneTestAccess::flat(flux,*field.getVarMap(),*h,h->getWhichReceiver(),&sun); };
-        auto gpu=[&]() { flux.imagePlaneInterceptCudaBatch(*field.getVarMap(),*field.getHeliostats(),&sun,timing);flux.clearImagePlaneBatch(); };
+        auto gpu=[&]() {
+            flux.imagePlaneInterceptCudaBatch(*field.getVarMap(),*field.getHeliostats(),&sun,timing);
+            if (resident) flux.materializeImagePlane();flux.clearImagePlaneBatch();
+        };
         gpu();const auto first_use=context->image_plane->statistics;
         if (timing) window.check();
         for (int i=0;i<warmups;++i) { cpu();gpu();if (timing) window.check(); }
@@ -85,6 +92,7 @@ int main(int argc,char** argv) {
         std::cout<<std::setprecision(17)<<"{\"heliostats\":"<<count<<",\"grid\":[25,25],\"warmups\":"<<warmups<<",\"repetitions\":"<<repetitions
             <<",\"warmups_excluded\":"<<warmups<<",\"first_use_hybrid_s\":"<<first_use.total_s
             <<",\"block_size\":"<<stats.block_size
+            <<",\"resident_with_eager_materialization\":"<<(resident?"true":"false")
             <<",\"gpu_timings_collected\":"<<(timing?"true":"false")<<",\"stage\":\"Image-plane direct measurement\",\"errors\":";
         comparison.json(std::cout);
         std::cout<<",\"deterministic\":true,\"allocation_reuse\":true,\"allocations\":"<<stats.allocations
@@ -96,7 +104,9 @@ int main(int argc,char** argv) {
         if (timing) for (std::size_t i=0;i<gpu_samples.size();++i) {
             const auto& s=gpu_samples[i];std::cout<<(i?",":"")<<"{\"preparation_s\":"<<s.preparation_s<<",\"input_h2d_ms\":"<<s.input_h2d_ms
                 <<",\"tables_h2d_ms\":"<<s.tables_h2d_ms<<",\"kernel_ms\":"<<s.kernel_ms<<",\"d2h_ms\":"<<s.d2h_ms
-                <<",\"writeback_s\":"<<s.writeback_s<<",\"hybrid_total_s\":"<<s.total_s<<'}';
+                <<",\"writeback_s\":"<<s.writeback_s<<",\"hybrid_total_s\":"<<s.total_s
+                <<",\"host_validation_s\":"<<s.host_validation_s<<",\"validation_kernel_ms\":"<<s.validation_kernel_ms
+                <<",\"materialize_total_s\":"<<s.materialize_total_s<<'}';
         }
         std::cout<<"],\"gpu_window\":{\"checks\":"<<window.checks<<",\"max_memory_mib\":"<<window.maximum_memory_mib
             <<",\"max_temperature_c\":"<<window.maximum_temperature_c<<",\"external_processes\":"<<(timing?"0":"null")<<"}}\n";

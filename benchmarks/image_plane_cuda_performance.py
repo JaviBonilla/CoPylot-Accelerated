@@ -76,11 +76,16 @@ def stats(samples):
 
 def call(cp,context,directory,cuda,image,instrumented):
     image_file=directory/'image.csv';image_file.write_text('')
+    materialize_file=directory/'materialize.csv';materialize_file.write_text('')
+    handoff_file=directory/'handoff.csv';handoff_file.write_text('')
     if not instrumented:
-        with patch.dict(os.environ,{'SOLARPILOT_PROFILE_FILE':'','SOLARPILOT_CUDA_TIMING_FILE':'','SOLARPILOT_IMAGE_TIMING_FILE':''}):
+        with patch.dict(os.environ,{'SOLARPILOT_PROFILE_FILE':'','SOLARPILOT_CUDA_TIMING_FILE':'','SOLARPILOT_IMAGE_TIMING_FILE':'',
+                                   'SOLARPILOT_IMAGE_MATERIALIZE_FILE':'','SOLARPILOT_IMAGE_HANDOFF_FILE':''}):
             start=time.perf_counter();assert cp.simulate(context,nthreads=1),cp.get_last_backend_error(context)
             return time.perf_counter()-start
     with patch.dict(os.environ,{'SOLARPILOT_IMAGE_TIMING_FILE':str(image_file) if image else '',
+                               'SOLARPILOT_IMAGE_MATERIALIZE_FILE':str(materialize_file),
+                               'SOLARPILOT_IMAGE_HANDOFF_FILE':str(handoff_file),
                                'SOLARPILOT_INTERCEPT_PROFILE':'1'}):
         sample=simulate_once(cp,context,cuda,directory)
     if image:
@@ -88,6 +93,24 @@ def call(cp,context,directory,cuda,image,instrumented):
         h,prep,inp,tab,kernel,d2h,writeback,total=map(float,rows[0])
         sample.update(image_preparation_s=prep,image_input_h2d_s=inp/1000,image_tables_h2d_s=tab/1000,
             image_kernel_s=kernel/1000,image_d2h_s=d2h/1000,image_writeback_s=writeback,image_total_s=total)
+        sample.update(image_initial_s=total,image_required_d2h_s=0.,image_complete_d2h_s=d2h/1000,
+            image_materialize_s=0.,image_host_validation_s=None,image_validation_kernel_s=0.)
+        if materialize_file.stat().st_size:
+            rows=list(csv.reader(materialize_file.read_text().splitlines()));assert len(rows)==1
+            values=list(map(float,rows[0]));mh,md2h,mwrite,mtotal,mbytes,host_validation,health,required_bytes,input_bytes,table_bytes=values[:10];assert mh==h
+            sample.update(image_host_validation_s=host_validation,image_validation_kernel_s=health/1000)
+            if len(values)>=12:sample.update(image_finite_output_scan_s=values[10],image_object_writeback_s=values[11])
+            if mbytes:
+                assert mbytes==1728*h and required_bytes==16*h
+                sample.update(image_required_d2h_s=d2h/1000,image_complete_d2h_s=md2h/1000,
+                    image_materialize_s=mtotal,image_d2h_s=(d2h+md2h)/1000,
+                    image_writeback_s=writeback+mwrite,image_total_s=total+mtotal)
+    if cuda and handoff_file.stat().st_size:
+        rows=list(csv.reader(handoff_file.read_text().splitlines()));assert len(rows)==1
+        h,resident,metadata_bytes,cell_bytes,handoff,allocations,hcap,ccap,ocap=map(float,rows[0])
+        sample.update(resident_handoff=bool(resident),handoff_s=handoff/1000,
+            density_heliostat_h2d_bytes=int(metadata_bytes),density_cell_h2d_bytes=int(cell_bytes),
+            density_allocations=int(allocations),density_h_capacity=int(hcap),density_cell_capacity=int(ccap),density_output_capacity=int(ocap))
     return sample
 
 
@@ -100,6 +123,7 @@ def full_case(cp,size,grid,modes,directory,window):
             env={'SOLARPILOT_INTERCEPT_PATH':'legacy' if mode=='legacy' else ('cuda' if image else 'flat'),
                 'SOLARPILOT_FLUX_PATH':'legacy' if mode=='legacy' else 'flat','SOLARPILOT_CUDA_BLOCK_SIZE':'256',
                 'SOLARPILOT_IMAGE_PIPELINE':'v1' if mode=='v1' else 'resident',
+                'SOLARPILOT_IMAGE_BLOCK_SIZE':'128' if mode=='v1' else '64',
                 'SOLARPILOT_IMAGE_COMPARE_FILE':''}
             with patch.dict(os.environ,env):
                 start=time.perf_counter();assert cp.set_compute_backend(context,'cuda' if cuda else 'cpu')
@@ -109,6 +133,7 @@ def full_case(cp,size,grid,modes,directory,window):
                 for _ in range(warmups):call(cp,context,directory,cuda,image,False)
                 plain=[call(cp,context,directory,cuda,image,False) for _ in range(repeats)]
                 samples=[call(cp,context,directory,cuda,image,True) for _ in range(repeats)]
+                if mode=='final':assert all(s.get('resident_handoff') for s in samples)
                 observed=collect(cp,context)
                 if mode in ['legacy','flat']:
                     if reference is not None:assert np.array_equal(reference[0].view(np.uint64),observed[0].view(np.uint64))
@@ -204,8 +229,10 @@ def main():
         if not args.skip_direct:
             for h in [1000,5000,10000]:
                 wait_idle()
-                raw=subprocess.check_output([str(args.direct_binary.resolve()),str(h),'10','timing','3'],text=True,
-                    env={**os.environ,'SOLARPILOT_INTERCEPT_PATH':'flat'})
+                command=[str(args.direct_binary.resolve()),str(h),'10','timing','3']
+                if args.stage=='final':command.append('resident')
+                raw=subprocess.check_output(command,text=True,
+                    env={**os.environ,'SOLARPILOT_INTERCEPT_PATH':'flat','SOLARPILOT_IMAGE_PIPELINE':'resident' if args.stage=='final' else 'v1'})
                 row=json.loads(raw);assert row['errors']['global']['passed']
                 row['cpu_flat_statistics']=distribution(row['cpu_flat_total_samples_s'])
                 row['cuda_statistics']={k:distribution([s[k]/1000 if k.endswith('_ms') else s[k] for s in row['cuda_samples']]) for k in row['cuda_samples'][0]}

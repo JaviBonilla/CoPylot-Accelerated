@@ -33,25 +33,31 @@ def snapshot(cp,r):
     return flux,metrics,detail
 
 
-def run_case(size,grid):
+def run_case(size,grid,include_resident=False,image_block=128):
     cp=api();r=cp.data_create();assert r
     try:
         configure(cp,r,size)
         for axis in ['x_res','y_res']: assert cp.data_set_number(r,'fluxsim.0.'+axis,grid)
         assert cp.assign_layout(r,layout(SIZES[size]),nthreads=1)
-        outputs={};intermediate={};density_diagnostics={}
+        outputs={};intermediate={};density_diagnostics={};handoff={};materialization={}
         with tempfile.TemporaryDirectory() as temp:
-            for name,intercept,density in [('legacy_cpu','legacy','cpu'),('flat_cpu','flat','cpu'),
-                ('flat_cuda','flat','cuda'),('cuda_cpu','verify_cuda','cpu'),('cuda_cuda','verify_cuda','cuda')]:
+            pipelines=[('legacy_cpu','legacy','cpu'),('flat_cpu','flat','cpu'),
+                ('flat_cuda','flat','cuda'),('cuda_cpu','verify_cuda','cpu'),('cuda_cuda','verify_cuda','cuda')]
+            if include_resident:pipelines.append(('cuda_resident','cuda','cuda'))
+            for name,intercept,density in pipelines:
                 assert cp.set_compute_backend(r,density)
                 image_file=Path(temp)/(name+'-image.jsonl');density_file=Path(temp)/(name+'-density.csv')
-                env={'SOLARPILOT_INTERCEPT_PATH':intercept,'SOLARPILOT_FLUX_PATH':'verify_cuda' if density=='cuda' else 'flat',
+                handoff_file=Path(temp)/(name+'-handoff.csv');materialize_file=Path(temp)/(name+'-materialize.csv')
+                env={'SOLARPILOT_INTERCEPT_PATH':intercept,'SOLARPILOT_FLUX_PATH':'verify_cuda' if density=='cuda' and name!='cuda_resident' else 'flat',
+                    'SOLARPILOT_IMAGE_PIPELINE':'resident' if name=='cuda_resident' else 'v1','SOLARPILOT_IMAGE_BLOCK_SIZE':str(image_block),
+                    'SOLARPILOT_IMAGE_HANDOFF_FILE':str(handoff_file) if include_resident else '',
+                    'SOLARPILOT_IMAGE_MATERIALIZE_FILE':str(materialize_file) if include_resident else '',
                     'SOLARPILOT_IMAGE_COMPARE_FILE':str(image_file) if intercept=='verify_cuda' else '',
                     'SOLARPILOT_CUDA_COMPARE_FILE':str(density_file),'SOLARPILOT_CUDA_BLOCK_SIZE':'256'}
                 with patch.dict(os.environ,env):
                     assert cp.simulate(r,nthreads=1),cp.get_last_backend_error(r)
                     outputs[name]=snapshot(cp,r)
-                    if intercept=='verify_cuda':
+                    if intercept in ['verify_cuda','cuda']:
                         assert cp.simulate(r,nthreads=1),cp.get_last_backend_error(r)
                         repeated=snapshot(cp,r)
                         assert np.array_equal(outputs[name][0],repeated[0])
@@ -67,6 +73,16 @@ def run_case(size,grid):
                         for k,v in row.items():
                             if not np.isfinite(v): row[k]=None
                     density_diagnostics[name]=rows
+                if handoff_file.exists():
+                    rows=[list(map(float,row)) for row in csv.reader(handoff_file.read_text().splitlines())]
+                    handoff[name]=rows
+                    if name=='cuda_resident':
+                        assert len(rows)==2 and all(r[1]==1 and r[2]==56*SIZES[size] for r in rows)
+                        assert rows[0][5]==rows[1][5]
+                if materialize_file.exists():
+                    rows=[list(map(float,row)) for row in csv.reader(materialize_file.read_text().splitlines())]
+                    materialization[name]=rows
+                    if name=='cuda_resident':assert len(rows)==2 and all(r[4]==1728*SIZES[size] and r[7]==16*SIZES[size] for r in rows)
             checks={
                 'legacy_vs_flat':compare(outputs['legacy_cpu'],outputs['flat_cpu']),
                 'intercept_only':compare(outputs['flat_cpu'],outputs['cuda_cpu']),
@@ -74,9 +90,14 @@ def run_case(size,grid):
                 'density_with_same_cuda_optics':compare(outputs['cuda_cpu'],outputs['cuda_cuda']),
                 'full_cuda':compare(outputs['flat_cpu'],outputs['cuda_cuda']),
                 'intercept_effect_with_cuda_density':compare(outputs['flat_cuda'],outputs['cuda_cuda'])}
+            if include_resident:
+                checks['resident_full_cuda']=compare(outputs['flat_cpu'],outputs['cuda_resident'])
+                checks['resident_vs_full_output_cuda']=compare(outputs['cuda_cuda'],outputs['cuda_resident'])
+                assert checks['resident_vs_full_output_cuda']['map']['bitwise']
             assert checks['legacy_vs_flat']['map']['bitwise']
         return {'heliostats':SIZES[size],'grid':[grid,grid],'checks':checks,'intermediate':intermediate,
             'density_same_state_diagnostics':density_diagnostics,'repeated_cuda_maps_bitwise':True,
+            'resident_handoff_receipts':handoff,'materialization_receipts':materialization,
             'layout_sha256':hashlib.sha256(json.dumps(layout(SIZES[size])).encode()).hexdigest()}
     finally: assert cp.data_free(r)
 
