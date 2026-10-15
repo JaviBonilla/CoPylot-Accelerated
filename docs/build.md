@@ -55,7 +55,7 @@ BUILD_DIR="$PWD/build/cuda" scripts/test_cpu.sh -DSOLARPILOT_ENABLE_CUDA=ON -DCM
 COPILOT_LIB_DIR="$PWD/build/cuda/lib" .venv/bin/python -c 'import sys; sys.path.insert(0,"benchmarks"); from cases import api; cp=api(); print(cp.cuda_available(), cp.cuda_device_count()); r=cp.data_create(); cp.set_cuda_device(r,0); cp.data_free(r)'
 ```
 
-Default architecture is 75; explicitly select your deployment architecture(s). CUDA language/Toolkit are detected only with ON. The probe allocates a single integer, runs a kernel writing 42, synchronizes/copies/checks/frees it and restores the prior device, with explicit error checking and RAII cleanup. This is setup verification, not part of an optical hot loop. No CUDA compiler, driver or device is available on the local development host. The existing .cu compilation/runtime has now been verified remotely with CUDA 13.0 and sm_89; see [remote-validation.md](remote-validation.md). ON without nvcc has been checked to fail clearly. No CUDA optical acceleration is claimed.
+Default architecture is 75; explicitly select your deployment architecture(s). CUDA language/Toolkit are detected only with ON. The probe allocates a single integer, runs a kernel writing 42, synchronizes/copies/checks/frees it and restores the prior device, with explicit error checking and RAII cleanup. This is setup verification, not part of an optical hot loop. No CUDA compiler, driver or device is available on the local development host. The existing .cu compilation/runtime has now been verified remotely with CUDA 13.0 and sm_89; see [remote-validation.md](remote-validation.md). ON without nvcc has been checked to fail clearly. That probe-only milestone made no optical acceleration claim; the later CUDA numerical stages are documented in their phase reports.
 
 ## CPU sanitizers
 
@@ -99,3 +99,26 @@ See [the hybrid backend contract](cuda-flux-density.md) for supported configurat
 `benchmarks/cuda_flux_correctness.py` writes machine-readable provenance, nine-case raw/dimensional errors, peak/integral/power comparisons, contribution versus reduction diagnostics, transfer sizes and capacity reuse, without GPU performance timings. Its same-state diagnostic requires `SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON`. The default production CPU/CUDA builds do not expose the internal selector/block-size tests.
 
 `tests/test_cuda_flux.py` validates explicit capability errors and a rectangular map. Event timing plumbing is a separate functional test gated by `COPILOT_GPU_TIMING_ALLOWED=1`; set it only after verifying an idle GPU. It is not a block-size/performance campaign. No GPU speedup should be derived from correctness runtimes or a single functional timing sample.
+
+
+## Phase 2D-B image-plane validation
+
+CUDA builds add `cuda_image_plane_numerics` (the shared 60 Phase 2D-A fixtures,
+complete outputs, layout probe, H/block edges, capacity reuse and determinism).
+CPU-only builds still compile without nvcc/CUDA headers or runtime dependencies.
+`image_plane_numerics` retains Legacy/Flat bitwise verification.
+
+```sh
+COPILOT_LIB_DIR="$PWD/build/cuda/lib" .venv/bin/python \
+  benchmarks/image_plane_cuda_correctness.py --output artifacts/phase2db/downstream.json
+.venv/bin/python scripts/check_phase2da_boundaries.py --allow-image-plane-cuda
+```
+
+The explicit boundary-check flag authorizes the subsequent 2D-B kernel while
+retaining all Phase 2D-A oracle and Phase 2C byte checks. The default check still
+enforces the original 2D-A no-image-CUDA condition at its historical revision.
+For optional preliminary timing, first finish every server build/test and verify
+an idle GPU; `image_plane_cuda_baseline.py --timing` also checks before each child,
+and its native executable guards the exact GPU process set around every sample.
+It never starts/stops services, changes clocks or performs a block sweep.
+See `phase2db-report.md` for resource/precision evidence and timing limitations.

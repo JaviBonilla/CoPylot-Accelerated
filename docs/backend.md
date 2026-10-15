@@ -1,12 +1,27 @@
 # CPU/CUDA boundary
 
-Implemented public selection remains CPU/CUDA with the existing C/Python signatures. CPU defaults to flat; the original legacy implementation is retained through internal benchmark controls. CUDA now performs real Hermite flux-density evaluation, with CPU optical preparation and post-processing. See [the Phase 2B backend contract](cuda-flux-density.md).
+Implemented public selection remains CPU/CUDA with the existing C/Python signatures. CPU defaults to flat; the original legacy implementation is retained through internal benchmark controls. CUDA now performs the validated image-plane numerical core followed by the existing flux-density kernel. CPU still prepares objects/inputs, downloads and writes all optical outputs, and performs normalization/post-processing. See [the Phase 2D-B design](image-plane-cuda-design.md); [the Phase 2B density contract](cuda-flux-density.md) remains the historical density-only reference.
 
-CopilotObject owns selected backend, requested device, unique_ptr<GpuContext> and error string. GpuContext now owns reusable heliostat/cell/output buffers and optional events with RAII. Selecting CUDA validates the device/probe and creates a context lazily without optical allocation; buffers grow on first evaluation and remain reusable across simulations and explicit CPU runs. Switching device closes the prior context; data_free performs checked teardown. Failed initialization/unsupported simulation never silently selects CPU.
+CopilotObject owns selected backend, requested device, unique_ptr<GpuContext> and error string. GpuContext owns the unchanged reusable density heliostat/cell/output buffers plus a separate RAII image-plane executor with independent input/output/table capacities. Optional events belong to their respective executor. Selecting CUDA validates the device/probe and creates a context lazily without optical allocation; buffers grow on first evaluation and remain reusable across simulations and explicit CPU runs. Switching device closes the prior context; data_free performs checked teardown. Failed initialization/unsupported simulation never silently selects CPU.
 
-Supported CUDA simulations are Hermite analytical, one enabled cylindrical receiver, simple aiming with updates, specified sun position and one CPU preparation thread. C simulate returns false on capability/runtime errors; Python callers retrieve get_last_backend_error. Backend/device setters retain their existing RuntimeError behavior. CPU-only selection reports CUDA support not enabled; hidden devices report No CUDA devices. Availability queries indicate runtime devices, not capability of every physical configuration.
+Supported CUDA simulations are Hermite analytical, one enabled cylindrical receiver, simple aiming with updates, specified sun position and one CPU preparation thread. The CUDA image-plane path additionally requires a continuous closed cylinder, no-cant or on-axis slant/user-radius canting, and at most 64 facets. Unsupported inputs raise a clear backend error, never a CPU fallback. C simulate returns false on capability/runtime errors; Python callers retrieve get_last_backend_error. Backend/device setters retain their existing RuntimeError behavior. CPU-only selection reports CUDA support not enabled; hidden devices report No CUDA devices. Availability queries indicate runtime devices, not capability of every physical configuration.
 
-The density hook is a non-owning pointer scoped to one sp_simulate call and reset by RAII. The owned context persists independently. All numerical device inputs are flat double arrays; no host objects/pointer graphs are copied. Host state remains canonical. Comprehensive mutation epochs, static-cell upload skipping, time-series and batch operations are future work; current independent buffers/transfers preserve that extension path.
+The two GPU hooks are non-owning pointers scoped to one sp_simulate call and reset by RAII. A single image-plane batch runs after tracking; its prepared-intercept flag is scoped to the performance simulation and cleared on exceptions. The existing per-H loop retains its intercept clamp and shading/blocking logic. The owned context persists independently. All numerical device inputs are flat double arrays; no host objects/pointer graphs are copied. Host state remains canonical. Comprehensive mutation epochs, static-cell upload skipping, time-series and batch operations are future work; current independent buffers/transfers preserve that extension path.
+
+## Internal scientific paths
+
+Diagnostics builds retain `SOLARPILOT_INTERCEPT_PATH=legacy|flat|verify|cuda|verify_cuda`.
+With public CUDA selected, `flat` explicitly requests the historical CPU-intercept
+plus CUDA-density pipeline. The Phase 2B/2C harnesses select that path themselves.
+With CPU selected, `cuda`/`verify_cuda` are internal tests of CUDA intercept plus
+Flat CPU density. No public backend signature or serialized setting is added.
+Without diagnostic overrides, public CUDA uses both CUDA numerical stages.
+
+Every CUDA image-plane call uploads all inputs and tables and downloads the full
+output before CPU writeback. Reusable allocation capacity is not optical-data
+residency; no output is passed directly to the density kernel. The old per-H
+`Flux::imagePlaneIntercept` profile scope now measures retrieval in this batched
+CUDA route; use image-plane batch statistics for preparation/kernel/writeback.
 
 ## Proposed versions (not active in this iteration)
 
