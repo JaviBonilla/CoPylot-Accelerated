@@ -37,9 +37,10 @@ class ReceiverGrid(unittest.TestCase):
     def test_known_noninteger_overlap(self):
         np.testing.assert_allclose(conservative_rebin([[0.,3.]],(1,3)),[[0.,1.5,3.]],atol=1e-15)
     def test_identical_map_errors_are_zero(self):
-        g=physical_grid({'type':'flat','width_m':4.,'height_m':2.},1.)
-        f=np.arange(1.,9.).reshape(2,4);e=compare_maps(f,f,g,g)
-        for key in ['map_l1_normalized','map_l2_normalized','map_linf_kw_m2','peak_rel','integrated_incident_power_rel','centroid_distance_over_diagonal','uniformity_cv_abs']:self.assertEqual(e[key],0.)
+        for nx,ny in [(4,2),(7,3),(19,13)]:
+            g=physical_grid({'type':'flat','width_m':float(nx),'height_m':float(ny)},1.)
+            f=np.arange(1.,nx*ny+1).reshape(ny,nx);e=compare_maps(f,f,g,g)
+            for key in ['map_l1_normalized','map_l2_normalized','map_linf_kw_m2','peak_rel','integrated_incident_power_rel','centroid_distance_over_diagonal','uniformity_cv_abs']:self.assertEqual(e[key],0.)
     def test_metrics_have_physical_units_and_weighted_centroid(self):
         g=physical_grid({'type':'flat','width_m':2.,'height_m':2.},1.);m=map_metrics([[1,3],[1,3]],g)
         self.assertEqual(m['integrated_incident_power_kw'],8.);self.assertEqual(m['centroid_surface_s_m'],1.25);self.assertEqual(m['centroid_z_from_bottom_m'],1.)
@@ -59,7 +60,7 @@ class ReceiverGrid(unittest.TestCase):
             with self.assertRaises(ValueError):physical_grid({'type':'flat','width_m':4.,'height_m':2.},value)
         for values in [[],[[float('nan')]],[[1,-1]],[[0,0]]]:
             with self.assertRaises(ValueError):map_metrics(values,physical_grid({'type':'flat','width_m':2.,'height_m':2.},1.))
-        for shape in [(0,3),(2,2.5),(True,3)]:
+        for shape in [(0,3),(2,2.5),(True,3),(True,1),(1.,1.)]:
             with self.assertRaises(ValueError):conservative_rebin([[1.]],shape)
         with self.assertRaises(ValueError):refinement_series({'type':'flat','width_m':4.,'height_m':2.},[1,2,3,4])
         with self.assertRaises(ValueError):physical_grid({'type':'sphere','height_m':1},1)

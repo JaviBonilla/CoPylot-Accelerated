@@ -53,6 +53,11 @@ def conservative_rebin(values,target_shape):
     """Same rectangular physical extent and seam/origin; target cell averages."""
     values=checked_map(values)
     if len(target_shape)!=2:raise ValueError('Expected rows, columns')
+    if any(isinstance(v,bool) or not isinstance(v,(int,np.integer)) or v<1 for v in target_shape):
+        raise ValueError('Grid counts must be positive integers')
+    if tuple(target_shape)==values.shape:
+        # An identical partition requires no projection or floating-point weights.
+        return values.copy()
     wy=overlap_weights(values.shape[0],target_shape[0]);wx=overlap_weights(values.shape[1],target_shape[1])
     # Explicit einsum loops avoid introducing BLAS worker threads.
     tmp=np.einsum('ij,jk->ik',wy,values)

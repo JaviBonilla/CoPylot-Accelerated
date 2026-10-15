@@ -8,8 +8,10 @@ from pathlib import Path
 import shutil
 import statistics
 import re
+import subprocess
 import numpy as np
-from commercial_reference import load_manifest
+from commercial_reference import MANIFEST,load_manifest
+from receiver_grid_convergence import analyze
 
 
 def main():
@@ -17,25 +19,37 @@ def main():
     parser.add_argument('--case',type=Path,required=True);parser.add_argument('--output',type=Path,default=Path('benchmarks/results'))
     args=parser.parse_args();raw=json.loads(args.input.read_text());m=load_manifest()
     assert raw['status']=='valid' and raw['gpu_performance_collected']
+    assert raw['manifest_sha256']==hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
     levels=len(m['study']['initial_target_cell_sizes_m'])+1;points=[p['id'] for p in m['operating_points']]
     assert len(raw['rows'])==levels*len(points)
     assert {(r['level'],r['operating_point']) for r in raw['rows']}=={(l,p) for l in range(levels) for p in points}
     previous=json.loads(Path('benchmarks/results/phase2dc-final-performance.json').read_text())
     assert raw['metadata']['library_sha256']==previous['metadata']['library_sha256']
     for name in ['ssc','SolarPILOT','SolTrace']:assert raw['metadata']['commits'][name]==previous['metadata']['commits'][name]
+    cpu_counts={len(r['pipelines']['flat']['samples_s']) for r in raw['rows']}
+    cuda_counts={len(r['pipelines']['cuda']['samples_s']) for r in raw['rows']}
+    assert len(cpu_counts)==len(cuda_counts)==1
     raw['metadata'].update(phase='3A',image_block_size=64,density_block_size=256,
-        unchanged_phase2dc_library=True,cpu_repetitions=3,cuda_repetitions=10,
+        unchanged_phase2dc_library=True,cpu_repetitions=cpu_counts.pop(),cuda_repetitions=cuda_counts.pop(),
         monitoring='Stable idle preflight; exact owned process; <=4096 MiB after context; <80 C, no thermal slowdown; no concurrent server build/test.')
     assert all(s['compute_process_count']<=1 and float(s['temperature.gpu'])<80 for s in raw['gpu_telemetry'])
     args.output.mkdir(parents=True,exist_ok=True);mapdir=args.output/'phase3a-grid-maps';mapdir.mkdir(exist_ok=True)
+    maps={}
     for r in raw['rows']:
         assert r['cpu_gpu']['passed'] and r['pipelines']['cuda']['repeated_bitwise']
+        assert all(np.isfinite(p['absorbed_receiver_power_kw']) and p['absorbed_receiver_power_kw']>0 for p in r['pipelines'].values())
         assert r['convergence']['remap_relative_integral_error']<1e-12
         path=args.input.parent/r['map_file'];assert hashlib.sha256(path.read_bytes()).hexdigest()==r['map_sha256']
         arrays=np.load(path,allow_pickle=False)
         assert all(arrays[k].shape==(r['grid']['ny'],r['grid']['nx']) for k in ['flat','cuda'])
         np.testing.assert_allclose(arrays['cuda'],arrays['flat'],rtol=1e-9,atol=1e-10)
+        maps[(r['operating_point'],r['level'])]=arrays['flat'].copy()
         shutil.copyfile(path,mapdir/path.name);r['map_file']='phase3a-grid-maps/'+path.name
+    # Recompute only spatial analysis from retained measured maps. Numerical core,
+    # timing samples and their executed commit provenance remain unchanged.
+    analyze(raw,maps,m)
+    raw['metadata']['analysis_root_sha']=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+    raw['metadata']['capture_sha256']=hashlib.sha256(args.input.read_bytes()).hexdigest()
     bylevel=[]
     for level in range(levels):
         rows=[r for r in raw['rows'] if r['level']==level];metrics=rows[0]['convergence']
