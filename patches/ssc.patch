@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/13] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/14] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/13] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/14] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/13] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/14] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/13] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/14] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/13] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/14] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/13] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/14] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/13] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/14] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/13] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/14] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/13] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/14] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/13] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/14] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/13] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/14] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/13] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/14] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/13] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/14] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2166,6 +2166,798 @@ index 9eb6cc33e..6634b4bb6 100644
  	/*
  	###############################################################################################
  	-------WHEN TO CALL------
+-- 
+2.43.0
+
+
+From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 11:38:06 +0200
+Subject: [PATCH 14/14] refactor: extract a fixed image-plane CPU numerical
+ core with legacy verification
+
+---
+ solarpilot/CMakeLists.txt                 |   1 +
+ solarpilot/Flux.cpp                       |   4 +-
+ solarpilot/Flux.h                         |  10 +
+ solarpilot/ImagePlaneIntercept.cpp        | 491 ++++++++++++++++++++++
+ solarpilot/ImagePlaneIntercept.h          |  55 +++
+ solarpilot/ImagePlaneInterceptAdapter.cpp | 144 +++++++
+ 6 files changed, 703 insertions(+), 2 deletions(-)
+ create mode 100644 solarpilot/ImagePlaneIntercept.cpp
+ create mode 100644 solarpilot/ImagePlaneIntercept.h
+ create mode 100644 solarpilot/ImagePlaneInterceptAdapter.cpp
+
+diff --git a/solarpilot/CMakeLists.txt b/solarpilot/CMakeLists.txt
+index 7d2a6a904..d3616f339 100644
+--- a/solarpilot/CMakeLists.txt
++++ b/solarpilot/CMakeLists.txt
+@@ -22,6 +22,7 @@ Project(solarpilot_core)
+ include_directories(. ../nlopt ../lpsolve .. $ENV{CORETRACEDIR})
+ 
+ set(SOLARPILOT_SRC
++    ImagePlaneIntercept.cpp ImagePlaneIntercept.h ImagePlaneInterceptAdapter.cpp
+ 	Ambient.cpp                Ambient.h
+ 	API_structures.cpp         API_structures.h
+ 	AutoPilot_API.cpp          AutoPilot_API.h
+diff --git a/solarpilot/Flux.cpp b/solarpilot/Flux.cpp
+index 6634b4bb6..490372ee9 100644
+--- a/solarpilot/Flux.cpp
++++ b/solarpilot/Flux.cpp
+@@ -319,6 +319,7 @@ void Flux::initHermiteCoefs(var_map &V, Ambient& A)
+ 
+ 	//Error distribution coefficients
+ 	hermiteErrDistCoefs(_mu_GN);
++    refreshImagePlaneTables();
+ 	
+ 	return;
+ }
+@@ -708,8 +709,7 @@ void Flux::hermiteMirrorCoefs(Heliostat &H, double tht) {
+ 	
+ }
+ 
+-double Flux::imagePlaneIntercept(var_map &V, Heliostat &H, Receiver *Rec, Vect *Sun) {
+-    SP_PROFILE_SCOPE(Intercept);
++double Flux::imagePlaneInterceptLegacy(var_map &V, Heliostat &H, Receiver *Rec, Vect *Sun) {
+     SP_PROFILE_SCOPE(IPVisibility);
+ 	/* 
+ 	###############################################################################################
+diff --git a/solarpilot/Flux.h b/solarpilot/Flux.h
+index a9e747ac8..bdcf3f9da 100644
+--- a/solarpilot/Flux.h
++++ b/solarpilot/Flux.h
+@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <random>
+ #include "Toolbox.h"
++#include "ImagePlaneIntercept.h"
+ #include "definitions.h"
+ 
+ /*Notes:
+@@ -104,6 +105,15 @@ class Flux
+  void fluxDensityLegacy(simulation_info*, FluxSurface&, Hvector&, double, bool);
+  unsigned long long fluxDensityFlat(simulation_info*, FluxSurface&, Hvector&, double, bool);
+ 
++ friend struct ImagePlaneTestAccess;
++ image_plane::Tables _image_tables;
++ bool _image_tables_ready = false;
++ void refreshImagePlaneTables();
++ bool prepareImagePlane(var_map&, Heliostat&, Receiver*, Vect*, image_plane::Input&);
++ void writeImagePlane(Heliostat&, const image_plane::Output&);
++ double imagePlaneInterceptLegacy(var_map&, Heliostat&, Receiver*, Vect*);
++ double imagePlaneInterceptFlat(var_map&, Heliostat&, Receiver*, Vect*);
++
+  public:
+ 
+  void setGpuContext(solarpilot::GpuContext* context) { _gpu_context = context; }
+diff --git a/solarpilot/ImagePlaneIntercept.cpp b/solarpilot/ImagePlaneIntercept.cpp
+new file mode 100644
+index 000000000..53953d37a
+--- /dev/null
++++ b/solarpilot/ImagePlaneIntercept.cpp
+@@ -0,0 +1,491 @@
++/*
++BSD 3-Clause License
++
++Copyright (c) Alliance for Sustainable Energy, LLC. See also https://github.com/NREL/ssc/blob/develop/LICENSE
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++
++1. Redistributions of source code must retain the above copyright notice, this
++   list of conditions and the following disclaimer.
++
++2. Redistributions in binary form must reproduce the above copyright notice,
++   this list of conditions and the following disclaimer in the documentation
++   and/or other materials provided with the distribution.
++
++3. Neither the name of the copyright holder nor the names of its
++   contributors may be used to endorse or promote products derived from
++   this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
++FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
++CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
++OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++*/
++
++#include "ImagePlaneIntercept.h"
++#include "CoreProfile.h"
++#include <cmath>
++using std::sqrt;
++using std::pow;
++using std::acos;
++using std::atan2;
++using std::sin;
++using std::cos;
++using std::exp;
++namespace image_plane {
++namespace {
++inline int JMN(int i) { return i%2+1; }
++inline int JMX(int i) { return terms-i; }
++inline int IMN(int i) { return i%2+1; }
++inline double dot(const Vector& a,const Vector& b) { return a.i*b.i+a.j*b.j+a.k*b.k; }
++struct FacetPowers {
++    double values[max_facets*terms];
++    int columns;
++    double& at(int r,int c,int l) { return values[terms*(c+r*columns)+l]; }
++};
++void integral(const Tables& tables, double G[5],double F[5],double X[2],double A[2],double TA[2],double WT, Matrix<1,16>& hspill) {
++    SP_PROFILE_SCOPE(IPQuadrature);
++	double
++		xmax = X[1],
++		xmin = X[0],
++		xdiff = (xmax - xmin)/2.;
++	double 
++		ss = 2.50663,
++		dsmall = 1.23456789e-10;
++	double
++		xta = TA[0],
++		yta = TA[1];
++	Matrix<3,9> h = {};
++	double xx, x12, x[3], xsq[3], fk, s2, s3, sign2, sign3;
++	int ipak, i, j, k, n, jmin, jmax;
++	for(n=1; n<17; n++){
++		xx = xmin+xdiff*(1.+tables.xg[n-1]);
++		x12 = xx * xx;
++		x[1] = (G[0]+G[1]*xx+G[2]*sqrt(G[3]+G[4]*x12))*A[1]-yta*A[1];
++		x[2] = (F[0]+F[1]*xx+F[2]*sqrt(F[3]+F[4]*x12))*A[1]-yta*A[1];
++		x[0] = (xx-xta)*A[0];
++		h.at(0,0) = 0.;
++		h.at(1,0) = 0.;
++		h.at(2,0) = 0.;
++		for(i=0; i<3; i++){xsq[i] = x[i]*x[i];}
++		if(xsq[0] < 100.) {h.at(0,0) = exp( -xsq[0]/2. )*WT/A[1]*xdiff;}
++		if(xsq[1] < 100.) {h.at(1,0) = exp( -xsq[1]/2. );}
++		if(xsq[2] < 100.) {h.at(2,0) = exp( -xsq[2]/2. );}
++		h.at(1,1) = 0.;
++		fk = -2.;
++		for(k=3; k<terms+3; k++){
++			fk += 1.;
++			h.at(0,k-1) = x[0]*h.at(0,k-2) - fk*h.at(0,k-3);
++			h.at(1,k-1) = x[1]*h.at(1,k-2) - fk*h.at(1,k-3);
++			h.at(2,k-1) = x[2]*h.at(2,k-2) - fk*h.at(2,k-3);
++		}
++		s2 = 1.; s3 = 1.;
++		sign2 = (x[1]+dsmall)/std::abs(x[1]+dsmall);
++		sign3 = (x[2]+dsmall)/std::abs(x[2]+dsmall);
++		x[1] = std::abs(x[1]);
++		x[2] = std::abs(x[2]);
++		for(j=1; j<5; j++){
++			s2 += tables.ci[j-1]*pow(x[1], j);
++			s3 += tables.ci[j-1]*pow(x[2], j);
++		}
++		s2 = ss*((sign2 - 1.)/(-2.) + sign2*(1.-.5*pow(s2, -4)));
++		s3 = ss*((sign3 - 1.)/(-2.) + sign3*(1.-.5*pow(s3, -4)));
++		h.at(1,1) = s3 - s2;
++		ipak = 0;
++		for(i=1; i<terms+1; i++){
++			int im1 = i-1;
++			jmin = im1%2+1; 
++			jmax = terms - im1; 
++			for(j=jmin; j<jmax+1; j+=2){
++				ipak++;
++				hspill.at(ipak-1) += tables.ag[n-1]*h.at(0,i+1)*(h.at(1,j) - h.at(2,j));
++			}
++		}	
++	}
++
++}
++void aperture(const Input& in,const Tables& tables,double SigXY[2],Matrix<1,16>& hspill) {
++SP_PROFILE_SCOPE(IPAperture);
++    double G[5], F[5], X[2], A[2], TA[2];
++    double tht = in.optical_height, sig_x = SigXY[0], sig_y = SigXY[1];
++    double theta_t_zen = acos(in.tower.k), cos_t_zen = in.tower.k, sin_t_zen = sin(theta_t_zen);
++    A[0] = 1./sig_x; A[1] = 1./sig_y;
++		double
++			w = in.diameter,
++			w2 = w/2./tht,
++			h = in.receiver_height,
++			h2 = h/2./tht;
++		G[4] = -1.;
++		F[4] = -1.;
++		G[1] = 0.;
++		F[1] = 0.;
++		G[2] = cos_t_zen;		
++		F[2] = G[2];
++		X[1] = w2;	
++		X[0] = -X[1];		
++		TA[0] = in.aim_x/tht;		
++		TA[1] = in.aim_y * sin_t_zen / tht;		
++        double siglim = 4.*sqrt(sig_x*sig_x + sig_y*sig_y);
++        if( siglim < w2 )
++        {
++            double xprime = (TA[0] < 0. ? -1. : 1.) * fmin(std::abs(TA[0]), w2 - siglim);
++            X[0] = - siglim;
++            X[1] =   siglim; 
++            TA[0] += -xprime;
++        }
++        G[0] = X[0] * cos_t_zen - h2 * sin_t_zen;
++		F[0] = X[0] * cos_t_zen + h2 * sin_t_zen;
++		G[3] = F[3] = X[1]*X[1];
++		integral(tables, G, F, X, A, TA, 1.0, hspill);
++}
++double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
++    SP_PROFILE_SCOPE(IPCoefficients);
++	auto* mu_F = &out.flux;
++	double 
++		eta_spill,		
++		sig_x2 = sqrt(mu_F->at(2,0)),	
++		sig_y2 = sqrt(mu_F->at(0,2)),	
++		SigXY[] = {sig_x2, sig_y2};			
++	out.sigma[0] = sig_x2; out.sigma[1] = sig_y2;
++	Matrix<1,16> h_spill = {};
++    Matrix<1,7> axi = {}, ayi = {};
++	auto* hcoef = &out.hermite;
++	aperture(in, tables, SigXY, h_spill);
++	eta_spill = 0.;
++	axi.at(0) = 1.;
++	ayi.at(0) = 1.;
++	for(int i=1; i<terms; i++){
++		axi.at(i) = axi.at(i-1)/sig_x2;
++		ayi.at(i) = ayi.at(i-1)/sig_y2;
++	}
++	int jmin, jmax, kmin, lmin, i, j, k, l;
++	double temp_res;
++	int ipak = 0;
++    double save1 = axi.at(1)*ayi.at(1)/6.2832;
++	for(i=1; i<terms+1; i++){
++		jmin = JMN(i-1);
++		jmax = JMX(i-1);
++		kmin = jmin;	
++        double save2 = save1 / tables.fact_d.at(i-1);
++		for(j=jmin; j<jmax+1; j+=2){
++			lmin = JMN(j-1);
++			ipak ++;
++			temp_res = 0.;
++			for(k=kmin; k<i+1; k+=2){
++				for(l=lmin; l<j+1; l+=2){
++					temp_res += tables.binomials_hxn.at(i-1,k-1) * mu_F->at(k-1,l-1)*axi.at(k-1) * ayi.at(l-1) * tables.binomials_hxn.at(j-1,l-1);
++				}
++			}
++			temp_res = temp_res / tables.fact_d.at(j-1) * save2;
++			eta_spill += h_spill.at(ipak-1)*temp_res;
++			hcoef->at(ipak-1) = temp_res;	
++		}
++	}
++	return eta_spill;
++
++}
++} // namespace
++void evaluate(const Input& in,const Tables& tables,Output& out) {
++    out = {};
++    if (!in.visible) return;
++    // Preserve the oracle's branch, parity bounds, summation order and constants.
++    SP_PROFILE_SCOPE(IPSun);
++
++	int i, j, jmax, jmin;
++	double slant, tht;
++    const double h_rad = in.radial_position;
++	tht = in.tower_height; 
++	auto* mu_S = &out.sun;
++	double rec_width = in.diameter;
++    double rec_opt_ht = in.optical_height;
++    double hmr = h_rad - rec_width*0.5;
++    slant = sqrt(hmr*hmr + rec_opt_ht*rec_opt_ht)/tht;
++	Matrix<1,7> srange = {};
++    srange[0] = 1.;
++	for(i=1; i<terms; i++) { srange[i] = srange[i-1]*slant; }
++	for(i=1; i<terms+1; i+=2) {
++		jmax = JMX(i-1);
++		jmin = 2-i+2*(i/2);
++		for(j=jmin; j<jmax+1; j+=2) {
++			mu_S->at(i-1,j-1) = srange[i+j-2] * tables.sun.at(i-1,j-1); 
++		}
++	}
++	SP_PROFILE_NEXT(IPSun, IPErrors);
++	Vector 
++		n_hat, 
++		t_hat, 
++		z_hat, 
++		s_hat;	
++	z_hat = {0.,0.,1.};
++	n_hat = in.tracking;		
++	t_hat = in.tower;		
++	s_hat = in.sun;		
++    double cos_s_zen = s_hat.k; 
++	double sin_s_zen = sqrt(1.-s_hat.k*s_hat.k); 
++    sin_s_zen = sin_s_zen == 0. ? 1.e-6 : sin_s_zen;
++	double cos_s_az = s_hat.j/sin_s_zen; 
++	double sin_s_az = s_hat.i/sin_s_zen; 
++    double theta_n_zen= acos(n_hat.k);	
++	double cos_n_zen = n_hat.k;				
++	double sin_n_zen = sin(theta_n_zen);				
++    sin_n_zen = sin_n_zen == 0. ? 1.e-6 : sin_n_zen;
++	double theta_n_az = atan2(n_hat.i,n_hat.j);			
++	double sin_n_az = sin(theta_n_az);
++	double cos_n_az = cos(theta_n_az);
++	double theta_t_zen = acos(dot(t_hat, z_hat)); 
++	double cos_t_zen = dot(t_hat, z_hat); 
++	double sin_t_zen = sin(theta_t_zen);
++    sin_t_zen = sin_t_zen == 0. ? 1.e-6 : sin_t_zen;
++	double theta_t_az = atan2(t_hat.i,t_hat.j); 
++	double sin_t_az = sin(theta_t_az);
++	double cos_t_az = cos(theta_t_az);
++	double              
++		eta_cosine = 0.7071067811865*sqrt(1.+cos_s_zen*cos_t_zen+sin_s_zen*sin_t_zen*(cos_t_az*cos_s_az + sin_t_az*sin_s_az));
++	double err_angular[2], err_surface[2], err_reflected[2];
++    err_angular[0] = in.angular[0];
++    err_angular[1] = in.angular[1];
++    err_surface[0] = in.surface[0];
++    err_surface[1] = in.surface[1];
++    err_reflected[0] = in.reflected[0];
++    err_reflected[1] = in.reflected[1];
++	double A11, A12, A21, A22, B11, B12, B21, B22;
++	int cant_method = in.cant_method; 
++	double term1 = err_angular[0] * sin_n_zen; 
++    term1 *= term1;
++    term1 += err_surface[0]*err_surface[0];
++	double term2 = err_angular[1]*err_angular[1] + err_surface[1] * err_surface[1];  
++    switch (cant_method)
++    {
++    case 0:
++    case -1:
++    case 1:
++    {
++		A11 = cos_t_az * cos_n_az + sin_n_az * sin_t_az;
++		A12 = cos_n_zen * (sin_n_az * cos_t_az - cos_n_az * sin_t_az);
++		A21 = -cos_t_zen * A12/cos_n_zen;
++		A22 = sin_n_zen * sin_t_zen + cos_n_zen * cos_t_zen * A11;
++		B11 = 2.*A22;
++		B12 = -2.*A21;
++		B21 = -2.*A12;
++		B22 = 2.*A11;
++        break;
++    }
++    default: return;
++    }
++	double delta_1, delta_2, delta_a, sigma_x, sigma_y;
++	delta_1 = err_reflected[0]*err_reflected[0] + term1 * B11 * B11 + term2 * B12 * B12;
++	delta_2 = err_reflected[1]*err_reflected[1] + term1 * B21 * B21 + term2 * B22 * B22;
++	delta_a = term1 * B11 * B21 + term2 * B22 * B12;
++	sigma_x = srange.at(1) * sqrt(delta_1);	
++	sigma_y = srange.at(1) * sqrt(delta_2);	
++	double rho, rho_tmp, rs2, rs, rho_sq;
++	auto* mu_G = &out.errors;
++	if(delta_a*delta_a < 1.e-20 ) {
++		double fact1, fact2;
++		Matrix<7,7> factarr = {};
++		fact1 = 1.;	
++		for(i=1; i<terms+1; i+=2) {
++			if(i>1) {fact1 = tables.fact_odds[i-2]; }
++			fact2 = 1.;
++			for(j=1; j<terms+1; j+=2) {
++				if(j>1) {fact2 = tables.fact_odds[j-2]; }
++				factarr.at(i-1,j-1) = fact1 * fact2;
++			}
++		}
++		for(i=1; i<terms+1; i++) {	
++			term2 = double(i - 2*(i/2));
++			term1 = pow(sigma_x, i-1);
++			jmax = JMX(i-1);
++			jmin = JMN(i-1);
++			for(j=jmin; j<jmax+1; j+=2) {
++				mu_G->at(i-1,j-1) = factarr.at(i-1,j-1) * term1 * pow(sigma_y, j-1) * term2;
++			}
++		}
++	}
++	else {
++		rho_tmp = delta_a / sqrt(delta_1 * delta_2) + 1.e-10;
++		rho_sq = rho_tmp*rho_tmp;	
++		rho = (1. - rho_sq)/2.;
++		for(i=1; i<terms+1; i++) {
++			jmax = JMX(i-1); 
++			jmin = JMN(i-1);	
++			for(j=jmin; j<jmax+1; j+=2) {
++				rs2 = rho_sq;	
++				rs = 1./rho;
++				term1 = 0.;		
++				int k_ct = (i-1)/2 + 1; 
++				for(int k=1; k<k_ct+1; k++){
++					rs = rs*rho;
++					rs2 = rs2/rho_sq;
++					term1 += tables.errors.at(i-1,j-1,k-1) * rs * rs2;		
++				}
++				mu_G->at(i-1,j-1) = pow(sigma_x * rho_tmp, i-1) * pow(sigma_y, j-1) * term1 ;
++			}
++		}
++	}
++	SP_PROFILE_NEXT(IPSun, IPMirror);
++	Matrix<7,7> mu_Msave = {};
++    const Matrix<7,7>* errm_M;
++	auto* mu_M = &out.mirror;
++	errm_M = &in.mirror_normalized;
++	double 
++		xfocal  =-tht/in.focal_x,		
++		yfocal = -tht/in.focal_y,		
++		E11 = A11+B11*xfocal*srange[1]/2.+1.e-10,
++		E12 = A12+B12*yfocal*srange[1]/2.+1.e-10,
++		E21 = A21+B21*xfocal*srange[1]/2.+1.e-10,
++		E22 = A22+B22*yfocal*srange[1]/2.+1.e-10;
++	double step = E21*E21/(E22*E22);
++	double temp_res, e_ratio, start[2], binoms;	
++	double S11, S22;	
++	int k, l, l_min, ij, ijk, mstep;
++	for(i=1; i<terms+1; i++){
++		int jmax = JMX(i - 1) + 1;
++		int jmin = JMN(i - 1);
++		for(j=jmin; j<jmax; j+=2){		
++			temp_res = 0.;
++			ij = i+j+1;
++			if(j>1){mstep=1;} else {mstep=2;}
++			S11 = pow(E12, i-1);
++			e_ratio = pow(E11/E12, mstep);
++			start[0] = pow(E22, j-1);
++			start[1] = start[0]*E21/E22;
++			l_min = IMN(i - 1);
++			for(k=1; k<i+1; k+=mstep){
++				ijk = ij - k;
++				binoms = tables.binomials.at(i-1,k-1)*S11; 
++				S11 *= e_ratio;
++				S22 = start[l_min - 1];
++				for(l=l_min; l<j+1; l+=2){
++					S22 *= step;
++					temp_res += binoms*S22*tables.binomials.at(j-1,l-1)*errm_M->at(k+l-2,ijk-l-1)/step;
++				}
++			}
++			mu_M->at(i-1,j-1) = temp_res * eta_cosine;
++			mu_Msave.at(i-1,j-1) = mu_M->at(i-1,j-1);	
++		}
++	}
++	SP_PROFILE_NEXT(IPSun, IPFacets);
++	int ncanty = in.facets_y;
++	int ncantx = in.facets_x;
++	double gcanta, gcanty, gcantx, gcantb;
++	if(in.faceted){
++        switch (cant_method)
++        {
++        case 0:
++			gcanta = 0.;
++			gcantx = 0.;
++			gcantb = 0.;
++			gcanty = 0.;
++            break;
++        case -1:
++			gcanta = 0.;
++			gcanty = 0.;
++			gcantx = -.5*tht/in.slant_range*srange[1];
++			gcantb = gcantx;
++            break;
++        case 1:
++			gcanta = 0.;
++			gcanty = 0.;
++			gcantx = -.5*tht/in.cant_radius*srange[1];	
++			gcantb = gcantx;
++            break;
++        default: return;
++        }
++		FacetPowers xc = {{}, ncantx}, yc = {{}, ncantx};
++		double
++			ploc_x, ploc_y, xcentij, ycentij;
++		double thtinv = 1./tht;
++		for(i=0; i<ncanty; i++){	
++			for(j=0; j<ncantx; j++){	
++				ploc_x = in.panel_x[i*ncantx+j] * thtinv;
++				ploc_y = in.panel_y[i*ncantx+j] * thtinv;
++				xcentij = (A11 + B11*gcantx + B12*gcanty)*ploc_x + (A12 + B11*gcanta + B12*gcantb)*ploc_y;
++				ycentij = (A21 + B21*gcantx + B22*gcanty)*ploc_x + (A22 + B21*gcanta + B22*gcantb)*ploc_y;
++				xc.at(i,j,0) = 1.;
++				yc.at(i,j,0) = 1.;
++				for(k=1; k<terms; k++){
++					xc.at(i,j,k) = xc.at(i,j,k-1)*xcentij;
++					yc.at(i,j,k) = yc.at(i,j,k-1)*ycentij;
++				}
++			}
++		}
++		int m, n, ii, jj, jp1, ip1, im1, iim1, jm1, jjm1;		
++		for(i=1; i<terms+1; i++){
++			jmin = JMN(i-1);
++			jmax = JMX(i-1);
++			im1 = i-1;
++			ip1 = i+1;
++			for(j=jmin; j<jmax+1; j+=2){
++				jp1 = j+1;
++				jm1 = j-1;
++				temp_res = 0.;
++				if(j>1){mstep=1;} else {mstep=2;}
++				for(m=0; m<ncanty; m++){
++					for(n=0; n<ncantx; n++){
++						for(ii=1; ii<ip1; ii+=mstep){
++							iim1 = ii-1;
++							S11 = tables.binomials.at(im1, iim1)*xc.at(m,n,i-ii);
++							for(jj=iim1%2+1; jj<jp1; jj+=2){
++								jjm1 = jj-1;
++								temp_res += S11*tables.binomials.at(jm1,jjm1)*mu_Msave.at(iim1,jjm1)*yc.at(m,n,j-jj);
++							}
++						}
++					}
++				}
++				mu_M->at(im1,jm1) = temp_res;
++			}
++		}
++	}
++	SP_PROFILE_NEXT(IPSun, IPConvolution);
++	auto* mu_F = &out.flux;
++	double binom_temp0, binom_temp1, ugs;
++	int ipak=0, nmin, nmax, lmin, mk, ki, kp1, km1;
++	double comb_ord = mu_S->at(0,0) * mu_G->at(0,0) * mu_M->at(0,0);	
++	double muS, muM,
++		comb_ord_inv = 1./comb_ord;
++	for(int m=1; m<terms+1; m++){
++		nmin = JMN(m-1);
++		nmax = JMX(m-1);
++		for(int n=nmin; n<nmax+1; n+=2){
++			ipak ++;
++			temp_res = 0.;
++			if(n>1){mstep=1;} else {mstep=2;}
++			for(int k=1; k<m+1; k+=mstep){
++				lmin = JMN(k-1);
++				binom_temp0 = tables.binomials.at(m-1,k-1);
++				mk = m-k+1;
++				kp1 = k+1;
++				km1 = k-1;
++				for(int l=lmin; l<n+1; l+=2){
++					ugs = mu_G->at(mk-1,n-l)*binom_temp0*tables.binomials.at(n-1,l-1);
++					for(i=1; i<kp1; i+=2){
++						ki = kp1-i;
++						binom_temp1 = tables.binomials.at(km1,i-1);
++						for(j=1; j<l+1; j+=2){
++							muS = mu_S->at(i-1,j-1);
++							muM = mu_M->at(ki-1,l-j);
++							term1 = tables.binomials.at(l-1,j-1)*binom_temp1*muS*muM*ugs;
++							temp_res += term1;
++						}
++					}
++				}
++			}
++			mu_F->at(m-1,n-1) = temp_res*comb_ord_inv;
++		}
++	}
++	
++    SP_PROFILE_NEXT(IPSun, IPFinalize);
++    out.intercept = coefficients_eval(in, tables, out);
++    if (in.radial_position < in.diameter/2.) out.intercept = 0.;
++    out.updated = true;
++}
++} // namespace image_plane
+diff --git a/solarpilot/ImagePlaneIntercept.h b/solarpilot/ImagePlaneIntercept.h
+new file mode 100644
+index 000000000..42cd784e7
+--- /dev/null
++++ b/solarpilot/ImagePlaneIntercept.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: BSD-3-Clause
++ * Arithmetic extracted from SolarPILOT Flux.cpp (Alliance for Sustainable Energy).
++ * The complete upstream copyright and license remain in ImagePlaneIntercept.cpp.
++ */
++#ifndef SOLARPILOT_IMAGE_PLANE_INTERCEPT_H
++#define SOLARPILOT_IMAGE_PLANE_INTERCEPT_H
++#include <cstddef>
++#include <type_traits>
++namespace image_plane {
++constexpr int terms = 7;
++constexpr int coefficients = 16;
++constexpr int max_facets = 64;
++// Fixed storage with the original row-major indexing; no ownership or allocation.
++template<int Rows, int Cols> struct Matrix {
++    double values[Rows*Cols];
++    double& at(int r, int c) { return values[r*Cols+c]; }
++    double at(int r, int c) const { return values[r*Cols+c]; }
++    double& at(int i) { return values[i]; }
++    double at(int i) const { return values[i]; }
++    double& operator[](int i) { return values[i]; }
++    double operator[](int i) const { return values[i]; }
++};
++struct ErrorTable {
++    double values[terms*terms*4];
++    double at(int r,int c,int l) const { return values[4*(c+r*terms)+l]; }
++};
++struct Vector { double i,j,k; };
++struct Tables {
++    Matrix<7,7> sun, binomials, binomials_hxn;
++    Matrix<1,14> fact_odds, fact_d;
++    ErrorTable errors;
++    double ci[4], ag[16], xg[16];
++};
++struct Input {
++    double tower_height, radial_position, optical_height, diameter, receiver_height;
++    Vector tracking, tower, sun;
++    double angular[2], surface[2], reflected[2];
++    double focal_x, focal_y, slant_range, cant_radius, aim_x, aim_y;
++    Matrix<7,7> mirror_normalized;
++    double panel_x[max_facets], panel_y[max_facets];
++    int cant_method, facets_x, facets_y;
++    bool faceted, visible;
++};
++struct Output {
++    Matrix<7,7> sun, errors, mirror, flux;
++    Matrix<1,16> hermite;
++    double sigma[2], intercept;
++    bool updated;
++};
++static_assert(std::is_trivial<Input>::value && std::is_standard_layout<Input>::value,"Image input must be POD");
++static_assert(std::is_trivial<Output>::value && std::is_trivial<Tables>::value,"Image outputs and tables must be trivial");
++// Preconditions are established by the CPU adapter. No receiver grid is an input.
++void evaluate(const Input&, const Tables&, Output&);
++}
++#endif
+diff --git a/solarpilot/ImagePlaneInterceptAdapter.cpp b/solarpilot/ImagePlaneInterceptAdapter.cpp
+new file mode 100644
+index 000000000..8442e0495
+--- /dev/null
++++ b/solarpilot/ImagePlaneInterceptAdapter.cpp
+@@ -0,0 +1,144 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++#include "Flux.h"
++#include "Heliostat.h"
++#include "Receiver.h"
++#include "CoreProfile.h"
++#include <algorithm>
++#include <cmath>
++#include <cstdlib>
++#include <cstring>
++#include <fstream>
++#include <iomanip>
++#include <stdexcept>
++
++void Flux::refreshImagePlaneTables() {
++    _image_tables_ready = false;
++    if (_n_terms != image_plane::terms || _mu_SN.nrows()!=7 || _mu_SN.ncols()!=7
++        || _mu_GN.nrows()!=7 || _mu_GN.ncols()!=7 || _mu_GN.nlayers()!=4) return;
++    for (int i=0; i<49; ++i) {
++        _image_tables.sun.values[i]=_mu_SN.data()[i];
++        _image_tables.binomials.values[i]=_binomials.data()[i];
++        _image_tables.binomials_hxn.values[i]=_binomials_hxn.data()[i];
++    }
++    for (int i=0; i<196; ++i) _image_tables.errors.values[i]=_mu_GN.data()[i];
++    for (int i=0; i<14; ++i) {
++        _image_tables.fact_odds[i]=_fact_odds[i];
++        _image_tables.fact_d[i]=_fact_d[i];
++    }
++    std::copy(_ci,_ci+4,_image_tables.ci);
++    std::copy(_ag,_ag+16,_image_tables.ag);
++    std::copy(_xg,_xg+16,_image_tables.xg);
++    _image_tables_ready = true;
++}
++
++bool Flux::prepareImagePlane(var_map& v, Heliostat& h, Receiver* rec, Vect* sun,
++                             image_plane::Input& in) {
++    auto* hv=h.getVarMap();
++    auto* rv=rec->getVarMap();
++    const int cant=hv->cant_method.mapval();
++    if (_n_terms!=7 || v.recs.size()!=1 || !rv->is_enabled.val
++        || rv->rec_type.mapval()!=var_receiver::REC_TYPE::EXTERNAL_CYLINDRICAL
++        || rec->getGeometryType()!=Receiver::REC_GEOM_TYPE::CYLINDRICAL_CLOSED
++        || v.flux.flux_model.mapval()!=var_fluxsim::FLUX_MODEL::HERMITE_ANALYTICAL
++        || v.flux.aim_method.mapval()!=var_fluxsim::AIM_METHOD::SIMPLE_AIM_POINTS
++        || v.flux.flux_time_type.mapval()!=var_fluxsim::FLUX_TIME_TYPE::SUN_POSITION
++        || (cant!=0 && cant!=-1 && cant!=1)) return false;
++    const int nx=hv->n_cant_x.val, ny=hv->n_cant_y.val;
++    if (hv->is_faceted.val && (nx<=0 || ny<=0 || nx>image_plane::max_facets
++        || ny>image_plane::max_facets || nx*ny>image_plane::max_facets
++        || h.getPanels()->nrows()!=size_t(ny) || h.getPanels()->ncols()!=size_t(nx))) return false;
++    if (!_image_tables_ready) refreshImagePlaneTables();
++    if (!_image_tables_ready) return false;
++    PointVect normal;
++    rec->CalculateNormalVector(*h.getLocation(),normal);
++    Vect rnorm(normal.i,normal.j,normal.k);
++    in.visible=Toolbox::dotprod(rnorm,*h.getTowerVector())<0.;
++    if (!in.visible) return true; // Legacy leaves the prior optical state intact.
++    in.tower_height=v.sf.tht.val;
++    in.radial_position=h.getRadialPos();
++    in.optical_height=rv->optical_height.Val();
++    in.diameter=Receiver::getReceiverWidth(*rv);
++    in.receiver_height=rv->rec_height.val;
++    auto track=h.getTrackVector(); auto tower=h.getTowerVector();
++    in.tracking={track->i,track->j,track->k}; in.tower={tower->i,tower->j,tower->k};
++    in.sun={sun->i,sun->j,sun->k};
++    in.angular[0]=hv->err_azimuth.val; in.angular[1]=hv->err_elevation.val;
++    in.surface[0]=hv->err_surface_x.val; in.surface[1]=hv->err_surface_y.val;
++    in.reflected[0]=hv->err_reflect_x.val; in.reflected[1]=hv->err_reflect_y.val;
++    in.focal_x=h.getFocalX(); in.focal_y=h.getFocalY();
++    in.slant_range=h.getSlantRange(); in.cant_radius=hv->cant_radius.Val();
++    in.aim_x=h.getAimPointFluxPlane()->x; in.aim_y=h.getAimPointFluxPlane()->y;
++    in.cant_method=cant; in.faceted=hv->is_faceted.val; in.facets_x=nx; in.facets_y=ny;
++    std::copy(h.getMirrorShapeNormCoefObject()->data(),h.getMirrorShapeNormCoefObject()->data()+49,in.mirror_normalized.values);
++    if (in.faceted) for (int r=0; r<ny; ++r) for (int c=0; c<nx; ++c) {
++        auto panel=h.getPanels()->at(r,c).getOrientation();
++        in.panel_x[r*nx+c]=panel->x; in.panel_y[r*nx+c]=panel->y;
++    }
++    return true;
++}
++
++void Flux::writeImagePlane(Heliostat& h, const image_plane::Output& out) {
++    if (!out.updated) return;
++    matrix_t<double>* matrices[]={h.getSunShapeCoefObject(),h.getErrorDistCoefObject(),
++        h.getMirrorShapeCoefObject(),h.getFluxMomentsObject()};
++    const image_plane::Matrix<7,7>* values[]={&out.sun,&out.errors,&out.mirror,&out.flux};
++    for (int m=0; m<4; ++m) {
++        matrices[m]->resize(7,7);
++        std::copy(values[m]->values,values[m]->values+49,matrices[m]->data());
++    }
++    h.getHermiteCoefObject()->resize(1,16);
++    std::copy(out.hermite.values,out.hermite.values+16,h.getHermiteCoefObject()->data());
++    h.setImageSize(out.sigma[0],out.sigma[1]);
++}
++
++double Flux::imagePlaneInterceptFlat(var_map& v, Heliostat& h, Receiver* rec, Vect* sun) {
++    image_plane::Input input;
++    image_plane::Output output;
++    {
++        SP_PROFILE_SCOPE(IPPrepare);
++        if (!prepareImagePlane(v,h,rec,sun,input)) return imagePlaneInterceptLegacy(v,h,rec,sun);
++    }
++    { SP_PROFILE_SCOPE(IPCore); image_plane::evaluate(input,_image_tables,output); }
++    { SP_PROFILE_SCOPE(IPWriteback); writeImagePlane(h,output); }
++    return output.intercept;
++}
++
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++namespace {
++void capture(Heliostat& h,double intercept,double (&out)[215]) {
++    int offset=0;
++    for (auto matrix : {h.getSunShapeCoefObject(),h.getErrorDistCoefObject(),h.getMirrorShapeCoefObject(),
++                       h.getFluxMomentsObject(),h.getHermiteCoefObject()}) {
++        const int size=matrix==h.getHermiteCoefObject()?16:49;
++        if (matrix->nrows()*matrix->ncols()!=size_t(size))
++            throw std::runtime_error("Image-plane verification requires initialized optical state");
++        std::copy(matrix->data(),matrix->data()+size,out+offset); offset+=size;
++    }
++    out[212]=h.getImageSize()[0]; out[213]=h.getImageSize()[1]; out[214]=intercept;
++}
++}
++#endif
++
++double Flux::imagePlaneIntercept(var_map& v, Heliostat& h, Receiver* rec, Vect* sun) {
++    SP_PROFILE_SCOPE(Intercept);
++#ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
++    const char* mode=std::getenv("SOLARPILOT_INTERCEPT_PATH");
++    if (mode && std::strcmp(mode,"legacy")==0) return imagePlaneInterceptLegacy(v,h,rec,sun);
++    if (mode && std::strcmp(mode,"verify")==0) {
++        // Both calls consume the same current H geometry; the oracle writes first.
++        double expected[215],actual[215];
++        capture(h,imagePlaneInterceptLegacy(v,h,rec,sun),expected);
++        const double result=imagePlaneInterceptFlat(v,h,rec,sun);
++        capture(h,result,actual);
++        for (int i=0; i<215; ++i) {
++            if (!std::isfinite(expected[i]) || !std::isfinite(actual[i])
++                || std::abs(expected[i]-actual[i])>1.e-10+1.e-9*std::abs(expected[i]))
++                throw std::runtime_error("Legacy/Flat image-plane optical state mismatch");
++        }
++        if (std::memcmp(expected,actual,sizeof(expected))!=0)
++            throw std::runtime_error("Legacy/Flat image-plane optical state is not bitwise identical");
++        return result;
++    }
++#endif
++    return imagePlaneInterceptFlat(v,h,rec,sun);
++}
 -- 
 2.43.0
 
