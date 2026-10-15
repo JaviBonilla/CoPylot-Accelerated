@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "case_id": "ssc-mspt-8790-optical-reference",
+  "title": "Commercial-scale optical reference adapted from the public SSC molten-salt tower test",
+  "kind": "public_reference_case",
+  "exact_real_plant_reproduction": false,
+  "site": "Daggett, California, USA (reference location)",
+  "sources": {
+    "ssc_inputs": {
+      "title": "Pinned SSC molten-salt tower regression inputs",
+      "url": "https://github.com/NatLabRockies/ssc/blob/e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec/test/tcs_test/tcsmolten_salt_common_data.h",
+      "year": 2024,
+      "notes": "Year of last change at the pinned revision, not a real-plant commissioning date."
+    },
+    "ssc_layout": {
+      "title": "Pinned SSC public 8790-heliostat coordinate table",
+      "url": "https://github.com/NatLabRockies/ssc/blob/e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec/test/input_cases/moltensalt_data/helio_positions.csv",
+      "year": 2019
+    },
+    "ssc_mapping": {
+      "title": "Pinned SSC mapping from tower inputs to SolarPILOT",
+      "url": "https://github.com/NatLabRockies/ssc/blob/e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec/tcs/csp_solver_pt_heliostatfield.cpp",
+      "year": 2024,
+      "notes": "Source-file last-change year in the pinned upstream history."
+    },
+    "defaults": {
+      "title": "Pinned SolarPILOT variable definitions in SSC",
+      "url": "https://github.com/NatLabRockies/ssc/blob/e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec/solarpilot/definitions.cpp",
+      "year": 2025,
+      "notes": "Source-file last-change year in the pinned upstream history."
+    },
+    "weather": {
+      "title": "Pinned public SolarPILOT Daggett TMY2 header",
+      "url": "https://github.com/NatLabRockies/SolarPILOT/blob/c74618a70fd8e85708957b1ee57b157ba75a5045/deploy/climate_files/USA%20CA%20Daggett%20(TMY2).csv",
+      "year": null
+    },
+    "study": {
+      "title": "Phase 3A explicitly chosen study configuration",
+      "url": null,
+      "year": 2026
+    }
+  },
+  "parameters": {
+    "solarfield.0.tht": {
+      "value": 193.458,
+      "units": "m",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "receiver.0.rec_diameter": {
+      "value": 17.65,
+      "units": "m",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "receiver.0.rec_height": {
+      "value": 21.6029,
+      "units": "m",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "solarfield.0.dni_des": {
+      "value": 950.0,
+      "units": "W/m2",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.width": {
+      "value": 12.2,
+      "units": "m",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.height": {
+      "value": 12.2,
+      "units": "m",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.reflectivity": {
+      "value": 0.9,
+      "units": "1",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "receiver.0.absorptance": {
+      "value": 0.94,
+      "units": "1",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.n_cant_x": {
+      "value": 2,
+      "units": "count",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.n_cant_y": {
+      "value": 8,
+      "units": "count",
+      "classification": "published",
+      "source": "ssc_inputs",
+      "notes": ""
+    },
+    "heliostat.0.reflect_ratio": {
+      "value": 0.9602999999999999,
+      "units": "1",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "SSC available fraction 0.99 times mirror density 0.97; retain both physical mirror and effective aperture areas in metadata."
+    },
+    "heliostat.0.err_surface_x": {
+      "value": 0.00153,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Published 1.53 mrad surface-normal error converted to radians."
+    },
+    "heliostat.0.err_surface_y": {
+      "value": 0.00153,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Published 1.53 mrad surface-normal error converted to radians."
+    },
+    "heliostat.0.err_azimuth": {
+      "value": 0,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.err_elevation": {
+      "value": 0,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.err_reflect_x": {
+      "value": 0,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.err_reflect_y": {
+      "value": 0,
+      "units": "rad",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.soiling": {
+      "value": 1,
+      "units": "1",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.cant_method": {
+      "value": -1,
+      "units": "1",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "heliostat.0.focus_method": {
+      "value": 1,
+      "units": "1",
+      "classification": "derived",
+      "source": "ssc_mapping",
+      "notes": "Use the existing SSC optical mapping; on-axis slant canting and slant focusing."
+    },
+    "receiver.0.rec_type": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "receiver.0.is_open_geom": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "receiver.0.rec_offset_x_global": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "receiver.0.rec_offset_y_global": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "receiver.0.rec_offset_z_global": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "heliostat.0.is_faceted": {
+      "value": 1,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "heliostat.0.x_gap": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "heliostat.0.y_gap": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "ambient.0.sun_type": {
+      "value": 2,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "ambient.0.sun_rad_limit": {
+      "value": 4.65,
+      "units": "mrad",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "ambient.0.atm_model": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "fluxsim.0.flux_model": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "fluxsim.0.flux_time_type": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "fluxsim.0.aim_method": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "solarfield.0.des_sim_detail": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "solarfield.0.q_des": {
+      "value": 670,
+      "units": "MWt",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "land.0.is_bounds_scaled": {
+      "value": 0,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "land.0.is_bounds_fixed": {
+      "value": 1,
+      "units": "1",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "land.0.min_fixed_rad": {
+      "value": 0,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "land.0.max_fixed_rad": {
+      "value": 5000,
+      "units": "m",
+      "classification": "assumed",
+      "source": "study",
+      "notes": "Explicit benchmark optical/dispatch assumption; no layout filtering or geometry optimization. All unspecified parameters retain pinned defaults."
+    },
+    "ambient.0.latitude": {
+      "value": 34.866667,
+      "units": "deg",
+      "classification": "published",
+      "source": "weather",
+      "notes": "Public Daggett TMY2 header; specified sun avoids calendar derivation."
+    },
+    "ambient.0.longitude": {
+      "value": -116.783333,
+      "units": "deg",
+      "classification": "published",
+      "source": "weather",
+      "notes": "Public Daggett TMY2 header; specified sun avoids calendar derivation."
+    },
+    "ambient.0.time_zone": {
+      "value": -8,
+      "units": "h",
+      "classification": "published",
+      "source": "weather",
+      "notes": "Public Daggett TMY2 header; specified sun avoids calendar derivation."
+    }
+  },
+  "assets": {
+    "layout": {
+      "path": "ssc/test/input_cases/moltensalt_data/helio_positions.csv",
+      "sha256": "e6686663fce00ab3a628906502d823eba3c6cae0f77b7a76d85444db2114c2d0"
+    },
+    "weather": {
+      "path": "SolarPILOT/deploy/climate_files/USA CA Daggett (TMY2).csv",
+      "sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b"
+    },
+    "defaults": {
+      "path": "ssc/solarpilot/definitions.cpp",
+      "sha256": "3f18a94142da83d495c2462a16ff514991a3970442cc37baa8981ef1684e0422"
+    }
+  },
+  "heliostats": {
+    "count": 8790,
+    "classification": "published",
+    "source": "ssc_inputs",
+    "z_m": 0,
+    "z_classification": "assumed",
+    "z_notes": "Original table is x/y only; all pivots on a common plane, tower optical height relative to that plane."
+  },
+  "area_definition": {
+    "mirror_density": 0.97,
+    "available_fraction": 0.99,
+    "gross_structure_m2": 148.83999999999997,
+    "physical_mirror_per_heliostat_m2": 144.37479999999996,
+    "effective_aperture_per_heliostat_m2": 142.93105199999997,
+    "classification": "derived",
+    "source": "ssc_inputs"
+  },
+  "operating_points": [
+    {
+      "id": "high",
+      "azimuth_deg": 180,
+      "elevation_deg": 70,
+      "dni_w_m2": 950,
+      "classification": "assumed",
+      "source": "study",
+      "aiming": "simple, updated each simulation"
+    },
+    {
+      "id": "moderate",
+      "azimuth_deg": 180,
+      "elevation_deg": 40,
+      "dni_w_m2": 850,
+      "classification": "assumed",
+      "source": "study",
+      "aiming": "simple, updated each simulation"
+    },
+    {
+      "id": "morning",
+      "azimuth_deg": 110,
+      "elevation_deg": 25,
+      "dni_w_m2": 700,
+      "classification": "assumed",
+      "source": "study",
+      "aiming": "simple, updated each simulation"
+    },
+    {
+      "id": "afternoon",
+      "azimuth_deg": 250,
+      "elevation_deg": 35,
+      "dni_w_m2": 800,
+      "classification": "assumed",
+      "source": "study",
+      "aiming": "simple, updated each simulation"
+    }
+  ],
+  "study": {
+    "initial_target_cell_sizes_m": [
+      8,
+      4,
+      2,
+      1,
+      0.5,
+      0.25
+    ],
+    "validation_target_cell_size_m": 0.125,
+    "tolerance_bands": [
+      0.001,
+      0.0025,
+      0.005,
+      0.01,
+      0.02
+    ],
+    "energy_metrics": [
+      "integrated_incident_power_rel"
+    ],
+    "control_metrics": [
+      "peak_rel",
+      "map_l1_normalized",
+      "map_l2_normalized",
+      "map_linf_normalized",
+      "centroid_distance_over_diagonal",
+      "uniformity_cv_abs"
+    ],
+    "cpu_threads": 1,
+    "gpu_baseline": "Unchanged Phase 2D-C resident64/density256",
+    "rtol": 1e-09,
+    "atol": 1e-10
+  },
+  "limitations": [
+    "Not a validation of the full SAM thermal/electric/annual test.",
+    "Simple aiming is an explicit optical study assumption, not an operator aiming strategy.",
+    "Pillbox sun and pinned atmospheric defaults are model assumptions.",
+    "Energy convergence of dimensional maps is constrained by built-in normalization.",
+    "Hermite evaluates midpoint samples; cell-average terminology refers only to the piecewise-constant map representation."
+  ],
+  "license": {
+    "data": "Existing SSC BSD-3-Clause coordinate asset, retained in its pinned repository; no copied proprietary inputs.",
+    "notice": "See ssc/LICENSE and SolarPILOT/LICENSE.md for existing assets."
+  }
+}
