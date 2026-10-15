@@ -112,7 +112,7 @@ def main():
     for name,data in [('v1-baseline',v1),('block-sweep',sweep),('final-performance',final),('profile-calibration',profile),
         ('final-profile',profile_result),('correctness',correctness),('resource-usage',resources),('handoff-analysis',handoff),('summary',summary)]:publish(name,data)
     with (args.output/'phase2dc-block-sweep.csv').open('w',newline='') as stream:
-        writer=csv.writer(stream);writer.writerow(['heliostats','grid','block','status','kernel_median_s','image_hybrid_median_s','simulate_median_s','simulate_cv','registers','local_bytes','occupancy'])
+        writer=csv.writer(stream,lineterminator='\n');writer.writerow(['heliostats','grid','block','status','kernel_median_s','image_hybrid_median_s','simulate_median_s','simulate_cv','registers','local_bytes','occupancy'])
         for c in sweep['cases']:
             for r in sweep['resources']:
                 b=next((b for b in c['blocks'] if b['block_size']==r['block_size']),None)

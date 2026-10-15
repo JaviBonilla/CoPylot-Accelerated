@@ -94,5 +94,19 @@
     "passed": 1,
     "idle_preflight": true,
     "log": "phase2dc-validation/cuda-events-final.log"
+  },
+  "final_reconstruction": {
+    "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+    "root": "1dd301a",
+    "native_passed": 3,
+    "python_methods": 32,
+    "python_passed": 23,
+    "python_expected_skips": 9,
+    "pins_verified": true,
+    "logs": [
+      "phase2dc-validation/reconstruction-final-pins.log",
+      "phase2dc-validation/reconstruction-python-final.log",
+      "phase2dc-validation/reconstruction-native-final.log"
+    ]
   }
 }
