@@ -6,6 +6,7 @@
 #include <algorithm>
 // Friend access stays in native tests; no public SolarPILOT API is added.
 struct ImagePlaneTestAccess {
+    static double flat(Flux& f,var_map& v,Heliostat& h,Receiver* r,Vect* s) { return f.imagePlaneInterceptFlat(v,h,r,s); }
     static double legacy(Flux& f,var_map& v,Heliostat& h,Receiver* r,Vect* s) { return f.imagePlaneInterceptLegacy(v,h,r,s); }
     static bool prepare(Flux& f,var_map& v,Heliostat& h,Receiver* r,Vect* s,image_plane::Input& in) { return f.prepareImagePlane(v,h,r,s,in); }
     static const image_plane::Tables& tables(Flux& f) { return f._image_tables; }

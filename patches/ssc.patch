@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/15] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/16] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/15] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/16] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/15] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/16] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/15] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/16] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/15] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/16] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/15] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/16] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/15] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/16] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/15] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/16] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/15] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/16] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/15] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/16] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/15] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/16] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/15] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/16] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/15] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/16] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/15] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/16] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/15] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/16] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3295,6 +3295,1438 @@ index 53953d37a..3ece02fda 100644
      SP_PROFILE_NEXT(IPSun, IPFinalize);
      out.intercept = coefficients_eval(in, tables, out);
      if (in.radial_position < in.diameter/2.) out.intercept = 0.;
+-- 
+2.43.0
+
+
+From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Thu, 15 Oct 2026 12:22:32 +0200
+Subject: [PATCH 16/16] cuda: port the validated flat image-plane formulation
+ with independent device buffers
+
+---
+ solarpilot/ComputeBackend.cpp              |   3 +
+ solarpilot/ComputeBackend.h                |   2 +
+ solarpilot/ImagePlaneIntercept.cpp         | 459 +------------------
+ solarpilot/ImagePlaneIntercept.h           |  38 +-
+ solarpilot/ImagePlaneInterceptComparison.h |  65 +++
+ solarpilot/ImagePlaneInterceptCuda.h       |  44 ++
+ solarpilot/ImagePlaneInterceptKernels.cu   | 191 ++++++++
+ solarpilot/ImagePlaneInterceptNumerics.h   | 504 +++++++++++++++++++++
+ 8 files changed, 840 insertions(+), 466 deletions(-)
+ create mode 100644 solarpilot/ImagePlaneInterceptComparison.h
+ create mode 100644 solarpilot/ImagePlaneInterceptCuda.h
+ create mode 100644 solarpilot/ImagePlaneInterceptKernels.cu
+ create mode 100644 solarpilot/ImagePlaneInterceptNumerics.h
+
+diff --git a/solarpilot/ComputeBackend.cpp b/solarpilot/ComputeBackend.cpp
+index 09fb66b5a..b9435c2be 100644
+--- a/solarpilot/ComputeBackend.cpp
++++ b/solarpilot/ComputeBackend.cpp
+@@ -5,6 +5,9 @@ namespace solarpilot {
+ std::unique_ptr<GpuContext> make_gpu_context(int) {
+     throw std::runtime_error("CUDA support not enabled at build time");
+ }
++std::unique_ptr<ImagePlaneGpuContext> make_image_plane_gpu_context(int) {
++    throw std::runtime_error("CUDA support not enabled at build time");
++}
+ int cuda_device_count() { return 0; }
+ const char* cuda_probe_error() { return ""; }
+ bool cuda_probe_device(int, std::string& error) {
+diff --git a/solarpilot/ComputeBackend.h b/solarpilot/ComputeBackend.h
+index 5aefe38c2..a1b1b432b 100644
+--- a/solarpilot/ComputeBackend.h
++++ b/solarpilot/ComputeBackend.h
+@@ -5,6 +5,7 @@
+ #include <cstddef>
+ #include <chrono>
+ #include "FluxDensityNumerics.h"
++#include "ImagePlaneInterceptCuda.h"
+ 
+ namespace solarpilot {
+ enum class ComputeBackend { CPU = 0, CUDA = 1 };
+@@ -21,6 +22,7 @@ struct FluxGpuStatistics {
+ class GpuContext {
+ public:
+     FluxGpuStatistics statistics;
++    std::unique_ptr<ImagePlaneGpuContext> image_plane; // Independent RAII executor; density buffers remain unchanged.
+     virtual ~GpuContext() = default;
+     virtual void evaluate_flux(const flux_density::HeliostatData*, std::size_t,
+                               const flux_density::CellData*, std::size_t,
+diff --git a/solarpilot/ImagePlaneIntercept.cpp b/solarpilot/ImagePlaneIntercept.cpp
+index 3ece02fda..885e52c91 100644
+--- a/solarpilot/ImagePlaneIntercept.cpp
++++ b/solarpilot/ImagePlaneIntercept.cpp
+@@ -30,462 +30,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+-#include "ImagePlaneIntercept.h"
+-#include "CoreProfile.h"
+-#include <cmath>
+-using std::sqrt;
+-using std::pow;
+-using std::acos;
+-using std::atan2;
+-using std::sin;
+-using std::cos;
+-using std::exp;
++#include "ImagePlaneInterceptNumerics.h"
+ namespace image_plane {
+-namespace {
+-inline int JMN(int i) { return i%2+1; }
+-inline int JMX(int i) { return terms-i; }
+-inline int IMN(int i) { return i%2+1; }
+-inline double dot(const Vector& a,const Vector& b) { return a.i*b.i+a.j*b.j+a.k*b.k; }
+-struct FacetPowers {
+-    double values[max_facets*terms];
+-    int columns;
+-    double& at(int r,int c,int l) { return values[terms*(c+r*columns)+l]; }
+-};
+-void integral(const Tables& tables, double G[5],double F[5],double X[2],double A[2],double TA[2],double WT, Matrix<1,16>& hspill) {
+-    SP_PROFILE_SCOPE(IPQuadrature);
+-	double
+-		xmax = X[1],
+-		xmin = X[0],
+-		xdiff = (xmax - xmin)/2.;
+-	double
+-		ss = 2.50663,
+-		dsmall = 1.23456789e-10;
+-	double
+-		xta = TA[0],
+-		yta = TA[1];
+-	Matrix<3,9> h = {};
+-	double xx, x12, x[3], xsq[3], fk, s2, s3, sign2, sign3;
+-	int ipak, i, j, k, n, jmin, jmax;
+-	for(n=1; n<17; n++){
+-		xx = xmin+xdiff*(1.+tables.xg[n-1]);
+-		x12 = xx * xx;
+-		x[1] = (G[0]+G[1]*xx+G[2]*sqrt(G[3]+G[4]*x12))*A[1]-yta*A[1];
+-		x[2] = (F[0]+F[1]*xx+F[2]*sqrt(F[3]+F[4]*x12))*A[1]-yta*A[1];
+-		x[0] = (xx-xta)*A[0];
+-		h.at(0,0) = 0.;
+-		h.at(1,0) = 0.;
+-		h.at(2,0) = 0.;
+-		for(i=0; i<3; i++){xsq[i] = x[i]*x[i];}
+-		if(xsq[0] < 100.) {h.at(0,0) = exp( -xsq[0]/2. )*WT/A[1]*xdiff;}
+-		if(xsq[1] < 100.) {h.at(1,0) = exp( -xsq[1]/2. );}
+-		if(xsq[2] < 100.) {h.at(2,0) = exp( -xsq[2]/2. );}
+-		h.at(1,1) = 0.;
+-		fk = -2.;
+-		for(k=3; k<terms+3; k++){
+-			fk += 1.;
+-			h.at(0,k-1) = x[0]*h.at(0,k-2) - fk*h.at(0,k-3);
+-			h.at(1,k-1) = x[1]*h.at(1,k-2) - fk*h.at(1,k-3);
+-			h.at(2,k-1) = x[2]*h.at(2,k-2) - fk*h.at(2,k-3);
+-		}
+-		s2 = 1.; s3 = 1.;
+-		sign2 = (x[1]+dsmall)/std::abs(x[1]+dsmall);
+-		sign3 = (x[2]+dsmall)/std::abs(x[2]+dsmall);
+-		x[1] = std::abs(x[1]);
+-		x[2] = std::abs(x[2]);
+-		for(j=1; j<5; j++){
+-			s2 += tables.ci[j-1]*pow(x[1], j);
+-			s3 += tables.ci[j-1]*pow(x[2], j);
+-		}
+-		s2 = ss*((sign2 - 1.)/(-2.) + sign2*(1.-.5*pow(s2, -4)));
+-		s3 = ss*((sign3 - 1.)/(-2.) + sign3*(1.-.5*pow(s3, -4)));
+-		h.at(1,1) = s3 - s2;
+-		ipak = 0;
+-		for(i=1; i<terms+1; i++){
+-			int im1 = i-1;
+-			jmin = im1%2+1;
+-			jmax = terms - im1;
+-			for(j=jmin; j<jmax+1; j+=2){
+-				ipak++;
+-				hspill.at(ipak-1) += tables.ag[n-1]*h.at(0,i+1)*(h.at(1,j) - h.at(2,j));
+-			}
+-		}
+-	}
+-
+-}
+-void aperture(const Input& in,const Tables& tables,double SigXY[2],Matrix<1,16>& hspill) {
+-SP_PROFILE_SCOPE(IPAperture);
+-    double G[5], F[5], X[2], A[2], TA[2];
+-    double tht = in.optical_height, sig_x = SigXY[0], sig_y = SigXY[1];
+-    double theta_t_zen = acos(in.tower.k), cos_t_zen = in.tower.k, sin_t_zen = sin(theta_t_zen);
+-    A[0] = 1./sig_x; A[1] = 1./sig_y;
+-		double
+-			w = in.diameter,
+-			w2 = w/2./tht,
+-			h = in.receiver_height,
+-			h2 = h/2./tht;
+-		G[4] = -1.;
+-		F[4] = -1.;
+-		G[1] = 0.;
+-		F[1] = 0.;
+-		G[2] = cos_t_zen;
+-		F[2] = G[2];
+-		X[1] = w2;
+-		X[0] = -X[1];
+-		TA[0] = in.aim_x/tht;
+-		TA[1] = in.aim_y * sin_t_zen / tht;
+-        double siglim = 4.*sqrt(sig_x*sig_x + sig_y*sig_y);
+-        if( siglim < w2 )
+-        {
+-            double xprime = (TA[0] < 0. ? -1. : 1.) * fmin(std::abs(TA[0]), w2 - siglim);
+-            X[0] = - siglim;
+-            X[1] =   siglim;
+-            TA[0] += -xprime;
+-        }
+-        G[0] = X[0] * cos_t_zen - h2 * sin_t_zen;
+-		F[0] = X[0] * cos_t_zen + h2 * sin_t_zen;
+-		G[3] = F[3] = X[1]*X[1];
+-		integral(tables, G, F, X, A, TA, 1.0, hspill);
+-}
+-double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
+-    SP_PROFILE_SCOPE(IPCoefficients);
+-	auto* mu_F = &out.flux;
+-	double
+-		eta_spill,
+-		sig_x2 = sqrt(mu_F->at(2,0)),
+-		sig_y2 = sqrt(mu_F->at(0,2)),
+-		SigXY[] = {sig_x2, sig_y2};
+-	out.sigma[0] = sig_x2; out.sigma[1] = sig_y2;
+-	Matrix<1,16> h_spill = {};
+-    Matrix<1,7> axi = {}, ayi = {};
+-	auto* hcoef = &out.hermite;
+-	aperture(in, tables, SigXY, h_spill);
+-	eta_spill = 0.;
+-	axi.at(0) = 1.;
+-	ayi.at(0) = 1.;
+-	for(int i=1; i<terms; i++){
+-		axi.at(i) = axi.at(i-1)/sig_x2;
+-		ayi.at(i) = ayi.at(i-1)/sig_y2;
+-	}
+-	int jmin, jmax, kmin, lmin, i, j, k, l;
+-	double temp_res;
+-	int ipak = 0;
+-    double save1 = axi.at(1)*ayi.at(1)/6.2832;
+-	for(i=1; i<terms+1; i++){
+-		jmin = JMN(i-1);
+-		jmax = JMX(i-1);
+-		kmin = jmin;
+-        double save2 = save1 / tables.fact_d.at(i-1);
+-		for(j=jmin; j<jmax+1; j+=2){
+-			lmin = JMN(j-1);
+-			ipak ++;
+-			temp_res = 0.;
+-			for(k=kmin; k<i+1; k+=2){
+-				for(l=lmin; l<j+1; l+=2){
+-					temp_res += tables.binomials_hxn.at(i-1,k-1) * mu_F->at(k-1,l-1)*axi.at(k-1) * ayi.at(l-1) * tables.binomials_hxn.at(j-1,l-1);
+-				}
+-			}
+-			temp_res = temp_res / tables.fact_d.at(j-1) * save2;
+-			eta_spill += h_spill.at(ipak-1)*temp_res;
+-			hcoef->at(ipak-1) = temp_res;
+-		}
+-	}
+-	return eta_spill;
+-
++void evaluate(const Input& input,const Tables& tables,Output& output) {
++    detail::evaluate(input,tables,output);
+ }
+-} // namespace
+-void evaluate(const Input& in,const Tables& tables,Output& out) {
+-    out = {};
+-    if (!in.visible) return;
+-    // Preserve the oracle's branch, parity bounds, summation order and constants.
+-    SP_PROFILE_SCOPE(IPSun);
+-
+-	int i, j, jmax, jmin;
+-	double slant, tht;
+-    const double h_rad = in.radial_position;
+-	tht = in.tower_height;
+-	auto* mu_S = &out.sun;
+-	double rec_width = in.diameter;
+-    double rec_opt_ht = in.optical_height;
+-    double hmr = h_rad - rec_width*0.5;
+-    slant = sqrt(hmr*hmr + rec_opt_ht*rec_opt_ht)/tht;
+-	Matrix<1,7> srange = {};
+-    srange[0] = 1.;
+-	for(i=1; i<terms; i++) { srange[i] = srange[i-1]*slant; }
+-	for(i=1; i<terms+1; i+=2) {
+-		jmax = JMX(i-1);
+-		jmin = 2-i+2*(i/2);
+-		for(j=jmin; j<jmax+1; j+=2) {
+-			mu_S->at(i-1,j-1) = srange[i+j-2] * tables.sun.at(i-1,j-1);
+-		}
+-	}
+-	SP_PROFILE_NEXT(IPSun, IPErrors);
+-	Vector
+-		n_hat,
+-		t_hat,
+-		z_hat,
+-		s_hat;
+-	z_hat = {0.,0.,1.};
+-	n_hat = in.tracking;
+-	t_hat = in.tower;
+-	s_hat = in.sun;
+-    double cos_s_zen = s_hat.k;
+-	double sin_s_zen = sqrt(1.-s_hat.k*s_hat.k);
+-    sin_s_zen = sin_s_zen == 0. ? 1.e-6 : sin_s_zen;
+-	double cos_s_az = s_hat.j/sin_s_zen;
+-	double sin_s_az = s_hat.i/sin_s_zen;
+-    double theta_n_zen= acos(n_hat.k);
+-	double cos_n_zen = n_hat.k;
+-	double sin_n_zen = sin(theta_n_zen);
+-    sin_n_zen = sin_n_zen == 0. ? 1.e-6 : sin_n_zen;
+-	double theta_n_az = atan2(n_hat.i,n_hat.j);
+-	double sin_n_az = sin(theta_n_az);
+-	double cos_n_az = cos(theta_n_az);
+-	double theta_t_zen = acos(dot(t_hat, z_hat));
+-	double cos_t_zen = dot(t_hat, z_hat);
+-	double sin_t_zen = sin(theta_t_zen);
+-    sin_t_zen = sin_t_zen == 0. ? 1.e-6 : sin_t_zen;
+-	double theta_t_az = atan2(t_hat.i,t_hat.j);
+-	double sin_t_az = sin(theta_t_az);
+-	double cos_t_az = cos(theta_t_az);
+-	double
+-		eta_cosine = 0.7071067811865*sqrt(1.+cos_s_zen*cos_t_zen+sin_s_zen*sin_t_zen*(cos_t_az*cos_s_az + sin_t_az*sin_s_az));
+-	double err_angular[2], err_surface[2], err_reflected[2];
+-    err_angular[0] = in.angular[0];
+-    err_angular[1] = in.angular[1];
+-    err_surface[0] = in.surface[0];
+-    err_surface[1] = in.surface[1];
+-    err_reflected[0] = in.reflected[0];
+-    err_reflected[1] = in.reflected[1];
+-	double A11, A12, A21, A22, B11, B12, B21, B22;
+-	int cant_method = in.cant_method;
+-	double term1 = err_angular[0] * sin_n_zen;
+-    term1 *= term1;
+-    term1 += err_surface[0]*err_surface[0];
+-	double term2 = err_angular[1]*err_angular[1] + err_surface[1] * err_surface[1];
+-    switch (cant_method)
+-    {
+-    case 0:
+-    case -1:
+-    case 1:
+-    {
+-		A11 = cos_t_az * cos_n_az + sin_n_az * sin_t_az;
+-		A12 = cos_n_zen * (sin_n_az * cos_t_az - cos_n_az * sin_t_az);
+-		A21 = -cos_t_zen * A12/cos_n_zen;
+-		A22 = sin_n_zen * sin_t_zen + cos_n_zen * cos_t_zen * A11;
+-		B11 = 2.*A22;
+-		B12 = -2.*A21;
+-		B21 = -2.*A12;
+-		B22 = 2.*A11;
+-        break;
+-    }
+-    default: return;
+-    }
+-	double delta_1, delta_2, delta_a, sigma_x, sigma_y;
+-	delta_1 = err_reflected[0]*err_reflected[0] + term1 * B11 * B11 + term2 * B12 * B12;
+-	delta_2 = err_reflected[1]*err_reflected[1] + term1 * B21 * B21 + term2 * B22 * B22;
+-	delta_a = term1 * B11 * B21 + term2 * B22 * B12;
+-	sigma_x = srange.at(1) * sqrt(delta_1);
+-	sigma_y = srange.at(1) * sqrt(delta_2);
+-	double rho, rho_tmp, rs2, rs, rho_sq;
+-	auto* mu_G = &out.errors;
+-	if(delta_a*delta_a < 1.e-20 ) {
+-		double fact1, fact2;
+-		Matrix<7,7> factarr = {};
+-		fact1 = 1.;
+-		for(i=1; i<terms+1; i+=2) {
+-			if(i>1) {fact1 = tables.fact_odds[i-2]; }
+-			fact2 = 1.;
+-			for(j=1; j<terms+1; j+=2) {
+-				if(j>1) {fact2 = tables.fact_odds[j-2]; }
+-				factarr.at(i-1,j-1) = fact1 * fact2;
+-			}
+-		}
+-		for(i=1; i<terms+1; i++) {
+-			term2 = double(i - 2*(i/2));
+-			term1 = pow(sigma_x, i-1);
+-			jmax = JMX(i-1);
+-			jmin = JMN(i-1);
+-			for(j=jmin; j<jmax+1; j+=2) {
+-				mu_G->at(i-1,j-1) = factarr.at(i-1,j-1) * term1 * pow(sigma_y, j-1) * term2;
+-			}
+-		}
+-	}
+-	else {
+-		rho_tmp = delta_a / sqrt(delta_1 * delta_2) + 1.e-10;
+-		rho_sq = rho_tmp*rho_tmp;
+-		rho = (1. - rho_sq)/2.;
+-		for(i=1; i<terms+1; i++) {
+-			jmax = JMX(i-1);
+-			jmin = JMN(i-1);
+-			for(j=jmin; j<jmax+1; j+=2) {
+-				rs2 = rho_sq;
+-				rs = 1./rho;
+-				term1 = 0.;
+-				int k_ct = (i-1)/2 + 1;
+-				for(int k=1; k<k_ct+1; k++){
+-					rs = rs*rho;
+-					rs2 = rs2/rho_sq;
+-					term1 += tables.errors.at(i-1,j-1,k-1) * rs * rs2;
+-				}
+-				mu_G->at(i-1,j-1) = pow(sigma_x * rho_tmp, i-1) * pow(sigma_y, j-1) * term1 ;
+-			}
+-		}
+-	}
+-	SP_PROFILE_NEXT(IPSun, IPMirror);
+-	Matrix<7,7> mu_Msave = {};
+-    const Matrix<7,7>* errm_M;
+-	auto* mu_M = &out.mirror;
+-	errm_M = &in.mirror_normalized;
+-	double
+-		xfocal  =-tht/in.focal_x,
+-		yfocal = -tht/in.focal_y,
+-		E11 = A11+B11*xfocal*srange[1]/2.+1.e-10,
+-		E12 = A12+B12*yfocal*srange[1]/2.+1.e-10,
+-		E21 = A21+B21*xfocal*srange[1]/2.+1.e-10,
+-		E22 = A22+B22*yfocal*srange[1]/2.+1.e-10;
+-	double step = E21*E21/(E22*E22);
+-	double temp_res, e_ratio, start[2], binoms;
+-	double S11, S22;
+-	int k, l, l_min, ij, ijk, mstep;
+-	for(i=1; i<terms+1; i++){
+-		int jmax = JMX(i - 1) + 1;
+-		int jmin = JMN(i - 1);
+-		for(j=jmin; j<jmax; j+=2){
+-			temp_res = 0.;
+-			ij = i+j+1;
+-			if(j>1){mstep=1;} else {mstep=2;}
+-			S11 = pow(E12, i-1);
+-			e_ratio = pow(E11/E12, mstep);
+-			start[0] = pow(E22, j-1);
+-			start[1] = start[0]*E21/E22;
+-			l_min = IMN(i - 1);
+-			for(k=1; k<i+1; k+=mstep){
+-				ijk = ij - k;
+-				binoms = tables.binomials.at(i-1,k-1)*S11;
+-				S11 *= e_ratio;
+-				S22 = start[l_min - 1];
+-				for(l=l_min; l<j+1; l+=2){
+-					S22 *= step;
+-					temp_res += binoms*S22*tables.binomials.at(j-1,l-1)*errm_M->at(k+l-2,ijk-l-1)/step;
+-				}
+-			}
+-			mu_M->at(i-1,j-1) = temp_res * eta_cosine;
+-			mu_Msave.at(i-1,j-1) = mu_M->at(i-1,j-1);
+-		}
+-	}
+-	SP_PROFILE_NEXT(IPSun, IPFacets);
+-	int ncanty = in.facets_y;
+-	int ncantx = in.facets_x;
+-	double gcanta, gcanty, gcantx, gcantb;
+-	if(in.faceted){
+-        switch (cant_method)
+-        {
+-        case 0:
+-			gcanta = 0.;
+-			gcantx = 0.;
+-			gcantb = 0.;
+-			gcanty = 0.;
+-            break;
+-        case -1:
+-			gcanta = 0.;
+-			gcanty = 0.;
+-			gcantx = -.5*tht/in.slant_range*srange[1];
+-			gcantb = gcantx;
+-            break;
+-        case 1:
+-			gcanta = 0.;
+-			gcanty = 0.;
+-			gcantx = -.5*tht/in.cant_radius*srange[1];
+-			gcantb = gcantx;
+-            break;
+-        default: return;
+-        }
+-		FacetPowers xc = {{}, ncantx}, yc = {{}, ncantx};
+-		double
+-			ploc_x, ploc_y, xcentij, ycentij;
+-		double thtinv = 1./tht;
+-		for(i=0; i<ncanty; i++){
+-			for(j=0; j<ncantx; j++){
+-				ploc_x = in.panel_x[i*ncantx+j] * thtinv;
+-				ploc_y = in.panel_y[i*ncantx+j] * thtinv;
+-				xcentij = (A11 + B11*gcantx + B12*gcanty)*ploc_x + (A12 + B11*gcanta + B12*gcantb)*ploc_y;
+-				ycentij = (A21 + B21*gcantx + B22*gcanty)*ploc_x + (A22 + B21*gcanta + B22*gcantb)*ploc_y;
+-				xc.at(i,j,0) = 1.;
+-				yc.at(i,j,0) = 1.;
+-				for(k=1; k<terms; k++){
+-					xc.at(i,j,k) = xc.at(i,j,k-1)*xcentij;
+-					yc.at(i,j,k) = yc.at(i,j,k-1)*ycentij;
+-				}
+-			}
+-		}
+-		int m, n, ii, jj, jp1, ip1, im1, iim1, jm1, jjm1;
+-		for(i=1; i<terms+1; i++){
+-			jmin = JMN(i-1);
+-			jmax = JMX(i-1);
+-			im1 = i-1;
+-			ip1 = i+1;
+-			for(j=jmin; j<jmax+1; j+=2){
+-				jp1 = j+1;
+-				jm1 = j-1;
+-				temp_res = 0.;
+-				if(j>1){mstep=1;} else {mstep=2;}
+-				for(m=0; m<ncanty; m++){
+-					for(n=0; n<ncantx; n++){
+-						for(ii=1; ii<ip1; ii+=mstep){
+-							iim1 = ii-1;
+-							S11 = tables.binomials.at(im1, iim1)*xc.at(m,n,i-ii);
+-							for(jj=iim1%2+1; jj<jp1; jj+=2){
+-								jjm1 = jj-1;
+-								temp_res += S11*tables.binomials.at(jm1,jjm1)*mu_Msave.at(iim1,jjm1)*yc.at(m,n,j-jj);
+-							}
+-						}
+-					}
+-				}
+-				mu_M->at(im1,jm1) = temp_res;
+-			}
+-		}
+-	}
+-	SP_PROFILE_NEXT(IPSun, IPConvolution);
+-	auto* mu_F = &out.flux;
+-	double binom_temp0, binom_temp1, ugs;
+-	int ipak=0, nmin, nmax, lmin, mk, ki, kp1, km1;
+-	double comb_ord = mu_S->at(0,0) * mu_G->at(0,0) * mu_M->at(0,0);
+-	double muS, muM,
+-		comb_ord_inv = 1./comb_ord;
+-	for(int m=1; m<terms+1; m++){
+-		nmin = JMN(m-1);
+-		nmax = JMX(m-1);
+-		for(int n=nmin; n<nmax+1; n+=2){
+-			ipak ++;
+-			temp_res = 0.;
+-			if(n>1){mstep=1;} else {mstep=2;}
+-			for(int k=1; k<m+1; k+=mstep){
+-				lmin = JMN(k-1);
+-				binom_temp0 = tables.binomials.at(m-1,k-1);
+-				mk = m-k+1;
+-				kp1 = k+1;
+-				km1 = k-1;
+-				for(int l=lmin; l<n+1; l+=2){
+-					ugs = mu_G->at(mk-1,n-l)*binom_temp0*tables.binomials.at(n-1,l-1);
+-					for(i=1; i<kp1; i+=2){
+-						ki = kp1-i;
+-						binom_temp1 = tables.binomials.at(km1,i-1);
+-						for(j=1; j<l+1; j+=2){
+-							muS = mu_S->at(i-1,j-1);
+-							muM = mu_M->at(ki-1,l-j);
+-							term1 = tables.binomials.at(l-1,j-1)*binom_temp1*muS*muM*ugs;
+-							temp_res += term1;
+-						}
+-					}
+-				}
+-			}
+-			mu_F->at(m-1,n-1) = temp_res*comb_ord_inv;
+-		}
+-	}
+-
+-    SP_PROFILE_NEXT(IPSun, IPFinalize);
+-    out.intercept = coefficients_eval(in, tables, out);
+-    if (in.radial_position < in.diameter/2.) out.intercept = 0.;
+-    out.updated = true;
+ }
+-} // namespace image_plane
+diff --git a/solarpilot/ImagePlaneIntercept.h b/solarpilot/ImagePlaneIntercept.h
+index 42cd784e7..ad0d09293 100644
+--- a/solarpilot/ImagePlaneIntercept.h
++++ b/solarpilot/ImagePlaneIntercept.h
+@@ -5,7 +5,13 @@
+ #ifndef SOLARPILOT_IMAGE_PLANE_INTERCEPT_H
+ #define SOLARPILOT_IMAGE_PLANE_INTERCEPT_H
+ #include <cstddef>
++#include <cstdint>
+ #include <type_traits>
++#if defined(__CUDACC__)
++#define SP_IMAGE_HD __host__ __device__
++#else
++#define SP_IMAGE_HD
++#endif
+ namespace image_plane {
+ constexpr int terms = 7;
+ constexpr int coefficients = 16;
+@@ -13,16 +19,16 @@ constexpr int max_facets = 64;
+ // Fixed storage with the original row-major indexing; no ownership or allocation.
+ template<int Rows, int Cols> struct Matrix {
+     double values[Rows*Cols];
+-    double& at(int r, int c) { return values[r*Cols+c]; }
+-    double at(int r, int c) const { return values[r*Cols+c]; }
+-    double& at(int i) { return values[i]; }
+-    double at(int i) const { return values[i]; }
+-    double& operator[](int i) { return values[i]; }
+-    double operator[](int i) const { return values[i]; }
++    SP_IMAGE_HD double& at(int r, int c) { return values[r*Cols+c]; }
++    SP_IMAGE_HD double at(int r, int c) const { return values[r*Cols+c]; }
++    SP_IMAGE_HD double& at(int i) { return values[i]; }
++    SP_IMAGE_HD double at(int i) const { return values[i]; }
++    SP_IMAGE_HD double& operator[](int i) { return values[i]; }
++    SP_IMAGE_HD double operator[](int i) const { return values[i]; }
+ };
+ struct ErrorTable {
+     double values[terms*terms*4];
+-    double at(int r,int c,int l) const { return values[4*(c+r*terms)+l]; }
++    SP_IMAGE_HD double at(int r,int c,int l) const { return values[4*(c+r*terms)+l]; }
+ };
+ struct Vector { double i,j,k; };
+ struct Tables {
+@@ -38,17 +44,29 @@ struct Input {
+     double focal_x, focal_y, slant_range, cant_radius, aim_x, aim_y;
+     Matrix<7,7> mirror_normalized;
+     double panel_x[max_facets], panel_y[max_facets];
+-    int cant_method, facets_x, facets_y;
+-    bool faceted, visible;
++    std::int32_t cant_method, facets_x, facets_y;
++    std::uint8_t faceted, visible;
++    std::uint8_t reserved[2]; // Explicit ABI padding; never numerical input.
+ };
+ struct Output {
+     Matrix<7,7> sun, errors, mirror, flux;
+     Matrix<1,16> hermite;
+     double sigma[2], intercept;
+-    bool updated;
++    std::uint8_t updated;
++    std::uint8_t reserved[7]; // Explicit ABI padding; zeroed with the output.
+ };
+ static_assert(std::is_trivial<Input>::value && std::is_standard_layout<Input>::value,"Image input must be POD");
+ static_assert(std::is_trivial<Output>::value && std::is_trivial<Tables>::value,"Image outputs and tables must be trivial");
++static_assert(sizeof(double)==8 && sizeof(std::int32_t)==4 && sizeof(std::uint8_t)==1,"Fixed-width device fields required");
++static_assert(sizeof(Input)==1640 && alignof(Input)==8,"Input ABI must match the validated flat model");
++static_assert(sizeof(Output)==1728 && alignof(Output)==8,"Output ABI must match the validated flat model");
++static_assert(sizeof(Tables)==3256 && alignof(Tables)==8,"Tables ABI must match the validated flat model");
++static_assert(offsetof(Input,mirror_normalized)==208 && offsetof(Input,panel_x)==600
++              && offsetof(Input,cant_method)==1624 && offsetof(Input,visible)==1637,"Input field offsets changed");
++static_assert(offsetof(Output,hermite)==1568 && offsetof(Output,sigma)==1696
++              && offsetof(Output,intercept)==1712 && offsetof(Output,updated)==1720,"Output field offsets changed");
++static_assert(std::is_trivially_copyable<Input>::value && std::is_trivially_copyable<Output>::value
++              && std::is_trivially_copyable<Tables>::value,"CUDA transfers require trivially copyable records");
+ // Preconditions are established by the CPU adapter. No receiver grid is an input.
+ void evaluate(const Input&, const Tables&, Output&);
+ }
+diff --git a/solarpilot/ImagePlaneInterceptComparison.h b/solarpilot/ImagePlaneInterceptComparison.h
+new file mode 100644
+index 000000000..727dd6495
+--- /dev/null
++++ b/solarpilot/ImagePlaneInterceptComparison.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++#ifndef SOLARPILOT_IMAGE_PLANE_INTERCEPT_COMPARISON_H
++#define SOLARPILOT_IMAGE_PLANE_INTERCEPT_COMPARISON_H
++#include "ImagePlaneIntercept.h"
++#include <algorithm>
++#include <cmath>
++#include <cstring>
++#include <iomanip>
++#include <limits>
++#include <ostream>
++#include <stdexcept>
++namespace image_plane {
++constexpr int output_values=215;
++constexpr int output_families=7;
++inline void pack_output(const Output& out,double (&values)[output_values]) {
++    const Matrix<7,7>* matrices[]={&out.sun,&out.errors,&out.mirror,&out.flux};
++    for (int m=0;m<4;++m) std::copy(matrices[m]->values,matrices[m]->values+49,values+49*m);
++    std::copy(out.hermite.values,out.hermite.values+16,values+196);
++    values[212]=out.sigma[0];values[213]=out.sigma[1];values[214]=out.intercept;
++}
++struct Differences {
++    std::size_t count=0,abs_h=0,abs_index=0,rel_h=0,rel_index=0,zero_reference_nonzero=0,nonfinite=0;
++    double max_abs=0.,max_rel=0.;
++    long double squares=0.;
++    bool bitwise=true,passed=true;
++    void add(double expected,double actual,std::size_t h,std::size_t index) {
++        ++count;bitwise=bitwise && std::memcmp(&expected,&actual,sizeof(double))==0;
++        if (!std::isfinite(expected) || !std::isfinite(actual)) { ++nonfinite;passed=false;return; }
++        const double d=std::abs(actual-expected);
++        const double rel=expected==0. ? (d==0. ? 0. : std::numeric_limits<double>::infinity()) : d/std::abs(expected);
++        if (expected==0. && d!=0.) ++zero_reference_nonzero;
++        if (d>max_abs) { max_abs=d;abs_h=h;abs_index=index; }
++        if (rel>max_rel) { max_rel=rel;rel_h=h;rel_index=index; }
++        squares+=static_cast<long double>(d)*d;
++        passed=passed && d<=1.e-10+1.e-9*std::abs(expected);
++    }
++    void json(std::ostream& out) const {
++        out<<std::setprecision(17)<<"{\"count\":"<<count<<",\"max_abs\":"<<max_abs<<",\"max_rel\":";
++        if (std::isfinite(max_rel)) out<<max_rel;else out<<"null";
++        out<<",\"rms\":"<<(count?double(std::sqrt(squares/count)):0.)
++           <<",\"worst_h_abs\":"<<abs_h<<",\"worst_index_abs\":"<<abs_index
++           <<",\"worst_h_rel\":"<<rel_h<<",\"worst_index_rel\":"<<rel_index
++           <<",\"zero_reference_nonzero\":"<<zero_reference_nonzero<<",\"nonfinite\":"<<nonfinite
++           <<",\"bitwise\":"<<(bitwise?"true":"false")<<",\"passed\":"<<(passed?"true":"false")<<'}';
++    }
++};
++struct Comparison {
++    Differences families[output_families],global;
++    void add(const Output& expected,const Output& actual,std::size_t h) {
++        if (expected.updated!=actual.updated) throw std::runtime_error("CPU/CUDA image-plane updated flag mismatch");
++        double e[output_values],a[output_values];pack_output(expected,e);pack_output(actual,a);
++        const int bounds[]={0,49,98,147,196,212,214,215};
++        for (int f=0;f<output_families;++f) for (int i=bounds[f];i<bounds[f+1];++i) {
++            families[f].add(e[i],a[i],h,i-bounds[f]);global.add(e[i],a[i],h,i);
++        }
++    }
++    void json(std::ostream& out) const {
++        const char* names[]={"sun","errors","mirror","flux_moments","coefficients","sigmas","intercept"};
++        out<<"{\"families\":{";
++        for (int i=0;i<output_families;++i) { if (i) out<<',';out<<'"'<<names[i]<<"\":";families[i].json(out); }
++        out<<"},\"global\":";global.json(out);out<<'}';
++    }
++};
++}
++#endif
+diff --git a/solarpilot/ImagePlaneInterceptCuda.h b/solarpilot/ImagePlaneInterceptCuda.h
+new file mode 100644
+index 000000000..1547cb033
+--- /dev/null
++++ b/solarpilot/ImagePlaneInterceptCuda.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++#ifndef SOLARPILOT_IMAGE_PLANE_INTERCEPT_CUDA_H
++#define SOLARPILOT_IMAGE_PLANE_INTERCEPT_CUDA_H
++#include "ImagePlaneIntercept.h"
++#include <array>
++#include <memory>
++namespace solarpilot {
++constexpr int image_plane_block_size = 128; // First correctness implementation; not tuned.
++constexpr std::size_t image_plane_layout_fields = 16;
++using ImagePlaneLayout = std::array<std::uint64_t,image_plane_layout_fields>;
++inline ImagePlaneLayout image_plane_host_layout() {
++    return {{sizeof(image_plane::Input),alignof(image_plane::Input),sizeof(image_plane::Output),alignof(image_plane::Output),
++        sizeof(image_plane::Tables),alignof(image_plane::Tables),offsetof(image_plane::Input,mirror_normalized),
++        offsetof(image_plane::Input,panel_x),offsetof(image_plane::Input,cant_method),offsetof(image_plane::Input,visible),
++        offsetof(image_plane::Output,hermite),offsetof(image_plane::Output,sigma),offsetof(image_plane::Output,intercept),
++        offsetof(image_plane::Output,updated),sizeof(std::int32_t),sizeof(std::uint8_t)}};
++}
++struct ImagePlaneGpuStatistics {
++    std::size_t heliostats=0,input_capacity=0,output_capacity=0,table_capacity=0,allocations=0;
++    std::size_t input_h2d_bytes=0,tables_h2d_bytes=0,output_d2h_bytes=0;
++    bool timed=false;
++    double preparation_s=0.,writeback_s=0.,total_s=0.;
++    double input_h2d_ms=0.,tables_h2d_ms=0.,kernel_ms=0.,d2h_ms=0.;
++};
++struct ImagePlaneGpuResources {
++    int registers=0,max_threads=0,active_blocks_per_sm=0,sm_count=0,warp_size=0,max_threads_per_sm=0;
++    int compute_major=0,compute_minor=0,runtime_version=0,driver_version=0;
++    std::size_t local_bytes=0,static_shared_bytes=0,constant_bytes=0;
++    double theoretical_occupancy=0.;
++};
++// CPU-safe abstraction. Concrete CUDA buffers, events and device ownership stay in .cu.
++class ImagePlaneGpuContext {
++public:
++    ImagePlaneGpuStatistics statistics;
++    virtual ~ImagePlaneGpuContext() = default;
++    virtual void evaluate(const image_plane::Input*,std::size_t,const image_plane::Tables&,
++                          image_plane::Output*,bool timing=false)=0;
++    virtual ImagePlaneGpuResources resources()=0;
++    virtual ImagePlaneLayout device_layout()=0;
++    virtual void close()=0;
++};
++std::unique_ptr<ImagePlaneGpuContext> make_image_plane_gpu_context(int device);
++}
++#endif
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+new file mode 100644
+index 000000000..3a9162505
+--- /dev/null
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -0,0 +1,191 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++#include "ImagePlaneInterceptCuda.h"
++#include "ImagePlaneInterceptNumerics.h"
++#include "ComputeBackend.h"
++#include <cuda_runtime.h>
++#include <climits>
++#include <cmath>
++#include <limits>
++#include <stdexcept>
++#include <string>
++
++namespace solarpilot {
++namespace {
++void check(cudaError_t status,const char* operation) {
++    if (status!=cudaSuccess) throw std::runtime_error(std::string(operation)+": "+cudaGetErrorString(status));
++}
++class DeviceGuard {
++    int previous_=0;
++    bool changed_=false;
++public:
++    explicit DeviceGuard(int device) {
++        check(cudaGetDevice(&previous_),"cudaGetDevice(image-plane)");
++        if (previous_!=device) { check(cudaSetDevice(device),"cudaSetDevice(image-plane)"); changed_=true; }
++    }
++    void restore() {
++        if (changed_) { check(cudaSetDevice(previous_),"cudaSetDevice(image-plane restore)"); changed_=false; }
++    }
++    ~DeviceGuard() { if (changed_) cudaSetDevice(previous_); }
++};
++template<class T> class Buffer {
++    int device_;
++    T* pointer_=nullptr;
++    std::size_t capacity_=0;
++public:
++    explicit Buffer(int device):device_(device) {}
++    Buffer(const Buffer&)=delete;
++    Buffer& operator=(const Buffer&)=delete;
++    ~Buffer() { try { DeviceGuard guard(device_); release(); } catch (...) {} }
++    T* data() const { return pointer_; }
++    std::size_t capacity() const { return capacity_; }
++    bool reserve(std::size_t count) {
++        if (count<=capacity_) return false;
++        if (count>std::numeric_limits<std::size_t>::max()/sizeof(T)) throw std::runtime_error("Image-plane buffer size overflow");
++        T* replacement=nullptr;
++        check(cudaMalloc(reinterpret_cast<void**>(&replacement),count*sizeof(T)),"cudaMalloc(image-plane)");
++        try { release(); } catch (const std::exception& error) {
++            const cudaError_t cleanup=cudaFree(replacement);
++            if (cleanup!=cudaSuccess) throw std::runtime_error(std::string(error.what())+"; replacement cleanup: "+cudaGetErrorString(cleanup));
++            throw;
++        }
++        pointer_=replacement;capacity_=count;return true;
++    }
++    void release() {
++        if (pointer_) { check(cudaFree(pointer_),"cudaFree(image-plane)");pointer_=nullptr;capacity_=0; }
++    }
++};
++class Event {
++    int device_;
++    cudaEvent_t event_=nullptr;
++public:
++    explicit Event(int device):device_(device) {}
++    Event(const Event&)=delete;
++    Event& operator=(const Event&)=delete;
++    ~Event() { try { DeviceGuard guard(device_);release(); } catch (...) {} }
++    void record() {
++        if (!event_) check(cudaEventCreate(&event_),"cudaEventCreate(image-plane)");
++        check(cudaEventRecord(event_,0),"cudaEventRecord(image-plane)");
++    }
++    double elapsed_from(const Event& start) {
++        check(cudaEventSynchronize(event_),"cudaEventSynchronize(image-plane)");
++        float milliseconds=0.; // CUDA event API type; all optical arithmetic is double.
++        check(cudaEventElapsedTime(&milliseconds,start.event_,event_),"cudaEventElapsedTime(image-plane)");
++        return milliseconds;
++    }
++    void release() { if (event_) { check(cudaEventDestroy(event_),"cudaEventDestroy(image-plane)");event_=nullptr; } }
++};
++
++__global__ void image_plane_kernel(const image_plane::Input* inputs,std::size_t count,
++                                   const image_plane::Tables* tables,image_plane::Output* outputs) {
++    const std::size_t h=std::size_t(blockIdx.x)*blockDim.x+threadIdx.x;
++    if (h<count) image_plane::detail::evaluate(inputs[h],*tables,outputs[h]);
++}
++__global__ void image_plane_layout_kernel(std::uint64_t* result) {
++    const std::uint64_t layout[]={sizeof(image_plane::Input),alignof(image_plane::Input),sizeof(image_plane::Output),alignof(image_plane::Output),
++        sizeof(image_plane::Tables),alignof(image_plane::Tables),offsetof(image_plane::Input,mirror_normalized),
++        offsetof(image_plane::Input,panel_x),offsetof(image_plane::Input,cant_method),offsetof(image_plane::Input,visible),
++        offsetof(image_plane::Output,hermite),offsetof(image_plane::Output,sigma),offsetof(image_plane::Output,intercept),
++        offsetof(image_plane::Output,updated),sizeof(std::int32_t),sizeof(std::uint8_t)};
++    for (int i=0;i<int(image_plane_layout_fields);++i) result[i]=layout[i];
++}
++void validate(const image_plane::Input& in) {
++    if (in.visible>1 || in.faceted>1) throw std::runtime_error("Invalid image-plane visibility/facet flag");
++    if (!in.visible) return;
++    if ((in.cant_method!=0 && in.cant_method!=-1 && in.cant_method!=1)
++        || (in.faceted && (in.facets_x<=0 || in.facets_y<=0 || in.facets_x>image_plane::max_facets
++            || in.facets_y>image_plane::max_facets || in.facets_x*in.facets_y>image_plane::max_facets)))
++        throw std::runtime_error("CUDA image-plane supports no-cant/on-axis canting and at most 64 valid facets");
++    const double scalars[]={in.tower_height,in.radial_position,in.optical_height,in.diameter,in.receiver_height,
++        in.focal_x,in.focal_y,in.slant_range,in.aim_x,in.aim_y,
++        in.tracking.i,in.tracking.j,in.tracking.k,in.tower.i,in.tower.j,in.tower.k,in.sun.i,in.sun.j,in.sun.k};
++    for (double v:scalars) if (!std::isfinite(v)) throw std::runtime_error("Nonfinite CUDA image-plane input");
++    if (in.tower_height<=0. || in.optical_height<=0. || in.diameter<=0. || in.receiver_height<=0.
++        || in.focal_x==0. || in.focal_y==0. || in.slant_range<=0.
++        || (in.faceted && in.cant_method==1 && (!std::isfinite(in.cant_radius) || in.cant_radius<=0.)))
++        throw std::runtime_error("Invalid CUDA image-plane height, focus, slant or cant radius");
++    for (int k=0;k<2;++k) if (!std::isfinite(in.angular[k]) || !std::isfinite(in.surface[k]) || !std::isfinite(in.reflected[k]))
++        throw std::runtime_error("Nonfinite CUDA image-plane optical errors");
++    for (double v:in.mirror_normalized.values) if (!std::isfinite(v)) throw std::runtime_error("Nonfinite CUDA normalized mirror moments");
++    if (in.faceted) for (int i=0;i<in.facets_x*in.facets_y;++i)
++        if (!std::isfinite(in.panel_x[i]) || !std::isfinite(in.panel_y[i])) throw std::runtime_error("Nonfinite CUDA facet center");
++}
++class ImagePlaneContext final:public ImagePlaneGpuContext {
++    int device_;
++    Buffer<image_plane::Input> inputs_;
++    Buffer<image_plane::Output> outputs_;
++    Buffer<image_plane::Tables> tables_;
++    Event start_,end_;
++    std::size_t allocations_=0;
++    void snapshot(std::size_t count,bool timed) {
++        statistics=ImagePlaneGpuStatistics();
++        statistics.heliostats=count;statistics.timed=timed;statistics.allocations=allocations_;
++        statistics.input_capacity=inputs_.capacity();statistics.output_capacity=outputs_.capacity();statistics.table_capacity=tables_.capacity();
++    }
++public:
++    explicit ImagePlaneContext(int device):device_(device),inputs_(device),outputs_(device),tables_(device),start_(device),end_(device) {
++        const int count=cuda_device_count();
++        if (count<0) throw std::runtime_error(cuda_probe_error());
++        if (device<0 || device>=count) throw std::runtime_error("CUDA image-plane device index out of range");
++    }
++    ~ImagePlaneContext() override { try { close(); } catch (...) {} }
++    void evaluate(const image_plane::Input* input,std::size_t count,const image_plane::Tables& tables,
++                  image_plane::Output* output,bool timing) override {
++        if (count>std::size_t(INT_MAX) || (count && (!input || !output))) throw std::runtime_error("Invalid CUDA image-plane array dimensions");
++        for (std::size_t h=0;h<count;++h) validate(input[h]);
++        DeviceGuard guard(device_);
++        if (!count) { snapshot(0,timing);guard.restore();return; }
++        allocations_+=inputs_.reserve(count);allocations_+=outputs_.reserve(count);allocations_+=tables_.reserve(1);
++        snapshot(count,timing);
++        statistics.input_h2d_bytes=sizeof(image_plane::Input)*count;
++        statistics.tables_h2d_bytes=sizeof(tables);
++        statistics.output_d2h_bytes=sizeof(image_plane::Output)*count;
++        if (timing) start_.record();
++        check(cudaMemcpy(inputs_.data(),input,statistics.input_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(image-plane inputs H2D)");
++        if (timing) { end_.record();statistics.input_h2d_ms=end_.elapsed_from(start_);start_.record(); }
++        check(cudaMemcpy(tables_.data(),&tables,sizeof(tables),cudaMemcpyHostToDevice),"cudaMemcpy(image-plane tables H2D)");
++        if (timing) { end_.record();statistics.tables_h2d_ms=end_.elapsed_from(start_);start_.record(); }
++        image_plane_kernel<<<static_cast<unsigned>((count+image_plane_block_size-1)/image_plane_block_size),image_plane_block_size>>>(inputs_.data(),count,tables_.data(),outputs_.data());
++        check(cudaGetLastError(),"image-plane kernel launch");
++        if (timing) { end_.record();statistics.kernel_ms=end_.elapsed_from(start_);start_.record(); }
++        // Blocking default-stream D2H also reports asynchronous execution errors.
++        check(cudaMemcpy(output,outputs_.data(),statistics.output_d2h_bytes,cudaMemcpyDeviceToHost),"cudaMemcpy(image-plane outputs D2H)");
++        if (timing) { end_.record();statistics.d2h_ms=end_.elapsed_from(start_); }
++        guard.restore();
++    }
++    ImagePlaneGpuResources resources() override {
++        DeviceGuard guard(device_);
++        cudaFuncAttributes attributes;cudaDeviceProp properties;
++        check(cudaFuncGetAttributes(&attributes,image_plane_kernel),"cudaFuncGetAttributes(image-plane)");
++        check(cudaGetDeviceProperties(&properties,device_),"cudaGetDeviceProperties(image-plane)");
++        ImagePlaneGpuResources out;
++        out.registers=attributes.numRegs;out.local_bytes=attributes.localSizeBytes;out.static_shared_bytes=attributes.sharedSizeBytes;
++        out.constant_bytes=attributes.constSizeBytes;out.max_threads=attributes.maxThreadsPerBlock;
++        out.sm_count=properties.multiProcessorCount;out.warp_size=properties.warpSize;out.max_threads_per_sm=properties.maxThreadsPerMultiProcessor;
++        out.compute_major=properties.major;out.compute_minor=properties.minor;
++        check(cudaRuntimeGetVersion(&out.runtime_version),"cudaRuntimeGetVersion(image-plane)");
++        check(cudaDriverGetVersion(&out.driver_version),"cudaDriverGetVersion(image-plane)");
++        check(cudaOccupancyMaxActiveBlocksPerMultiprocessor(&out.active_blocks_per_sm,image_plane_kernel,image_plane_block_size,0),"cudaOccupancyMaxActiveBlocksPerMultiprocessor(image-plane)");
++        out.theoretical_occupancy=double(out.active_blocks_per_sm*image_plane_block_size)/out.max_threads_per_sm;
++        guard.restore();return out;
++    }
++    ImagePlaneLayout device_layout() override {
++        DeviceGuard guard(device_);
++        Buffer<std::uint64_t> data(device_);data.reserve(image_plane_layout_fields);
++        image_plane_layout_kernel<<<1,1>>>(data.data());
++        check(cudaGetLastError(),"image-plane layout kernel launch");
++        ImagePlaneLayout result;
++        check(cudaMemcpy(result.data(),data.data(),sizeof(result),cudaMemcpyDeviceToHost),"cudaMemcpy(image-plane layout D2H)");
++        data.release();guard.restore();return result;
++    }
++    void close() override {
++        DeviceGuard guard(device_);std::string error;
++        auto release=[&](auto& r) { try { r.release(); } catch (const std::exception& e) { if (error.empty()) error=e.what(); } };
++        release(inputs_);release(outputs_);release(tables_);release(start_);release(end_);
++        guard.restore();if (!error.empty()) throw std::runtime_error(error);
++    }
++};
++}
++std::unique_ptr<ImagePlaneGpuContext> make_image_plane_gpu_context(int device) {
++    return std::unique_ptr<ImagePlaneGpuContext>(new ImagePlaneContext(device));
++}
++}
+diff --git a/solarpilot/ImagePlaneInterceptNumerics.h b/solarpilot/ImagePlaneInterceptNumerics.h
+new file mode 100644
+index 000000000..8e112617b
+--- /dev/null
++++ b/solarpilot/ImagePlaneInterceptNumerics.h
+@@ -0,0 +1,504 @@
++/*
++BSD 3-Clause License
++
++Copyright (c) Alliance for Sustainable Energy, LLC. See also https://github.com/NREL/ssc/blob/develop/LICENSE
++All rights reserved.
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++
++1. Redistributions of source code must retain the above copyright notice, this
++   list of conditions and the following disclaimer.
++
++2. Redistributions in binary form must reproduce the above copyright notice,
++   this list of conditions and the following disclaimer in the documentation
++   and/or other materials provided with the distribution.
++
++3. Neither the name of the copyright holder nor the names of its
++   contributors may be used to endorse or promote products derived from
++   this software without specific prior written permission.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
++FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
++CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
++OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++*/
++
++#ifndef SOLARPILOT_IMAGE_PLANE_INTERCEPT_NUMERICS_H
++#define SOLARPILOT_IMAGE_PLANE_INTERCEPT_NUMERICS_H
++#include "ImagePlaneIntercept.h"
++#include "CoreProfile.h"
++#include <cmath>
++using std::sqrt;
++using std::pow;
++using std::acos;
++using std::atan2;
++using std::sin;
++using std::cos;
++using std::exp;
++// Host profiling has no device-side state or runtime dependency.
++#if defined(__CUDA_ARCH__)
++#define SP_IMAGE_SCOPE(id)
++#define SP_IMAGE_NEXT(variable,id)
++#else
++#define SP_IMAGE_SCOPE(id) SP_PROFILE_SCOPE(id)
++#define SP_IMAGE_NEXT(variable,id) SP_PROFILE_NEXT(variable,id)
++#endif
++namespace image_plane {
++namespace detail {
++SP_IMAGE_HD inline int JMN(int i) { return i%2+1; }
++SP_IMAGE_HD inline int JMX(int i) { return terms-i; }
++SP_IMAGE_HD inline int IMN(int i) { return i%2+1; }
++SP_IMAGE_HD inline double dot(const Vector& a,const Vector& b) { return a.i*b.i+a.j*b.j+a.k*b.k; }
++struct FacetPowers {
++    double values[max_facets*terms];
++    int columns;
++    SP_IMAGE_HD double& at(int r,int c,int l) { return values[terms*(c+r*columns)+l]; }
++};
++SP_IMAGE_HD inline void integral(const Tables& tables, double G[5],double F[5],double X[2],double A[2],double TA[2],double WT, Matrix<1,16>& hspill) {
++    SP_IMAGE_SCOPE(IPQuadrature);
++	double
++		xmax = X[1],
++		xmin = X[0],
++		xdiff = (xmax - xmin)/2.;
++	double
++		ss = 2.50663,
++		dsmall = 1.23456789e-10;
++	double
++		xta = TA[0],
++		yta = TA[1];
++	Matrix<3,9> h = {};
++	double xx, x12, x[3], xsq[3], fk, s2, s3, sign2, sign3;
++	int ipak, i, j, k, n, jmin, jmax;
++	for(n=1; n<17; n++){
++		xx = xmin+xdiff*(1.+tables.xg[n-1]);
++		x12 = xx * xx;
++		x[1] = (G[0]+G[1]*xx+G[2]*sqrt(G[3]+G[4]*x12))*A[1]-yta*A[1];
++		x[2] = (F[0]+F[1]*xx+F[2]*sqrt(F[3]+F[4]*x12))*A[1]-yta*A[1];
++		x[0] = (xx-xta)*A[0];
++		h.at(0,0) = 0.;
++		h.at(1,0) = 0.;
++		h.at(2,0) = 0.;
++		for(i=0; i<3; i++){xsq[i] = x[i]*x[i];}
++		if(xsq[0] < 100.) {h.at(0,0) = exp( -xsq[0]/2. )*WT/A[1]*xdiff;}
++		if(xsq[1] < 100.) {h.at(1,0) = exp( -xsq[1]/2. );}
++		if(xsq[2] < 100.) {h.at(2,0) = exp( -xsq[2]/2. );}
++		h.at(1,1) = 0.;
++		fk = -2.;
++		for(k=3; k<terms+3; k++){
++			fk += 1.;
++			h.at(0,k-1) = x[0]*h.at(0,k-2) - fk*h.at(0,k-3);
++			h.at(1,k-1) = x[1]*h.at(1,k-2) - fk*h.at(1,k-3);
++			h.at(2,k-1) = x[2]*h.at(2,k-2) - fk*h.at(2,k-3);
++		}
++		s2 = 1.; s3 = 1.;
++		sign2 = (x[1]+dsmall)/std::abs(x[1]+dsmall);
++		sign3 = (x[2]+dsmall)/std::abs(x[2]+dsmall);
++		x[1] = std::abs(x[1]);
++		x[2] = std::abs(x[2]);
++		for(j=1; j<5; j++){
++			s2 += tables.ci[j-1]*pow(x[1], j);
++			s3 += tables.ci[j-1]*pow(x[2], j);
++		}
++		s2 = ss*((sign2 - 1.)/(-2.) + sign2*(1.-.5*pow(s2, -4)));
++		s3 = ss*((sign3 - 1.)/(-2.) + sign3*(1.-.5*pow(s3, -4)));
++		h.at(1,1) = s3 - s2;
++		ipak = 0;
++		for(i=1; i<terms+1; i++){
++			int im1 = i-1;
++			jmin = im1%2+1;
++			jmax = terms - im1;
++			for(j=jmin; j<jmax+1; j+=2){
++				ipak++;
++				hspill.at(ipak-1) += tables.ag[n-1]*h.at(0,i+1)*(h.at(1,j) - h.at(2,j));
++			}
++		}
++	}
++
++}
++SP_IMAGE_HD inline void aperture(const Input& in,const Tables& tables,double SigXY[2],Matrix<1,16>& hspill) {
++SP_IMAGE_SCOPE(IPAperture);
++    double G[5], F[5], X[2], A[2], TA[2];
++    double tht = in.optical_height, sig_x = SigXY[0], sig_y = SigXY[1];
++    double theta_t_zen = acos(in.tower.k), cos_t_zen = in.tower.k, sin_t_zen = sin(theta_t_zen);
++    A[0] = 1./sig_x; A[1] = 1./sig_y;
++		double
++			w = in.diameter,
++			w2 = w/2./tht,
++			h = in.receiver_height,
++			h2 = h/2./tht;
++		G[4] = -1.;
++		F[4] = -1.;
++		G[1] = 0.;
++		F[1] = 0.;
++		G[2] = cos_t_zen;
++		F[2] = G[2];
++		X[1] = w2;
++		X[0] = -X[1];
++		TA[0] = in.aim_x/tht;
++		TA[1] = in.aim_y * sin_t_zen / tht;
++        double siglim = 4.*sqrt(sig_x*sig_x + sig_y*sig_y);
++        if( siglim < w2 )
++        {
++            double xprime = (TA[0] < 0. ? -1. : 1.) * fmin(std::abs(TA[0]), w2 - siglim);
++            X[0] = - siglim;
++            X[1] =   siglim;
++            TA[0] += -xprime;
++        }
++        G[0] = X[0] * cos_t_zen - h2 * sin_t_zen;
++		F[0] = X[0] * cos_t_zen + h2 * sin_t_zen;
++		G[3] = F[3] = X[1]*X[1];
++		integral(tables, G, F, X, A, TA, 1.0, hspill);
++}
++SP_IMAGE_HD inline double coefficients_eval(const Input& in,const Tables& tables,Output& out) {
++    SP_IMAGE_SCOPE(IPCoefficients);
++	auto* mu_F = &out.flux;
++	double
++		eta_spill,
++		sig_x2 = sqrt(mu_F->at(2,0)),
++		sig_y2 = sqrt(mu_F->at(0,2)),
++		SigXY[] = {sig_x2, sig_y2};
++	out.sigma[0] = sig_x2; out.sigma[1] = sig_y2;
++	Matrix<1,16> h_spill = {};
++    Matrix<1,7> axi = {}, ayi = {};
++	auto* hcoef = &out.hermite;
++	aperture(in, tables, SigXY, h_spill);
++	eta_spill = 0.;
++	axi.at(0) = 1.;
++	ayi.at(0) = 1.;
++	for(int i=1; i<terms; i++){
++		axi.at(i) = axi.at(i-1)/sig_x2;
++		ayi.at(i) = ayi.at(i-1)/sig_y2;
++	}
++	int jmin, jmax, kmin, lmin, i, j, k, l;
++	double temp_res;
++	int ipak = 0;
++    double save1 = axi.at(1)*ayi.at(1)/6.2832;
++	for(i=1; i<terms+1; i++){
++		jmin = JMN(i-1);
++		jmax = JMX(i-1);
++		kmin = jmin;
++        double save2 = save1 / tables.fact_d.at(i-1);
++		for(j=jmin; j<jmax+1; j+=2){
++			lmin = JMN(j-1);
++			ipak ++;
++			temp_res = 0.;
++			for(k=kmin; k<i+1; k+=2){
++				for(l=lmin; l<j+1; l+=2){
++					temp_res += tables.binomials_hxn.at(i-1,k-1) * mu_F->at(k-1,l-1)*axi.at(k-1) * ayi.at(l-1) * tables.binomials_hxn.at(j-1,l-1);
++				}
++			}
++			temp_res = temp_res / tables.fact_d.at(j-1) * save2;
++			eta_spill += h_spill.at(ipak-1)*temp_res;
++			hcoef->at(ipak-1) = temp_res;
++		}
++	}
++	return eta_spill;
++
++}
++SP_IMAGE_HD inline void evaluate(const Input& in,const Tables& tables,Output& out) {
++    out = {};
++    if (!in.visible) return;
++    // Preserve the oracle's branch, parity bounds, summation order and constants.
++    SP_IMAGE_SCOPE(IPSun);
++
++	int i, j, jmax, jmin;
++	double slant, tht;
++    const double h_rad = in.radial_position;
++	tht = in.tower_height;
++	auto* mu_S = &out.sun;
++	double rec_width = in.diameter;
++    double rec_opt_ht = in.optical_height;
++    double hmr = h_rad - rec_width*0.5;
++    slant = sqrt(hmr*hmr + rec_opt_ht*rec_opt_ht)/tht;
++	Matrix<1,7> srange = {};
++    srange[0] = 1.;
++	for(i=1; i<terms; i++) { srange[i] = srange[i-1]*slant; }
++	for(i=1; i<terms+1; i+=2) {
++		jmax = JMX(i-1);
++		jmin = 2-i+2*(i/2);
++		for(j=jmin; j<jmax+1; j+=2) {
++			mu_S->at(i-1,j-1) = srange[i+j-2] * tables.sun.at(i-1,j-1);
++		}
++	}
++	SP_IMAGE_NEXT(IPSun, IPErrors);
++	Vector
++		n_hat,
++		t_hat,
++		z_hat,
++		s_hat;
++	z_hat = {0.,0.,1.};
++	n_hat = in.tracking;
++	t_hat = in.tower;
++	s_hat = in.sun;
++    double cos_s_zen = s_hat.k;
++	double sin_s_zen = sqrt(1.-s_hat.k*s_hat.k);
++    sin_s_zen = sin_s_zen == 0. ? 1.e-6 : sin_s_zen;
++	double cos_s_az = s_hat.j/sin_s_zen;
++	double sin_s_az = s_hat.i/sin_s_zen;
++    double theta_n_zen= acos(n_hat.k);
++	double cos_n_zen = n_hat.k;
++	double sin_n_zen = sin(theta_n_zen);
++    sin_n_zen = sin_n_zen == 0. ? 1.e-6 : sin_n_zen;
++	double theta_n_az = atan2(n_hat.i,n_hat.j);
++	double sin_n_az = sin(theta_n_az);
++	double cos_n_az = cos(theta_n_az);
++	double theta_t_zen = acos(dot(t_hat, z_hat));
++	double cos_t_zen = dot(t_hat, z_hat);
++	double sin_t_zen = sin(theta_t_zen);
++    sin_t_zen = sin_t_zen == 0. ? 1.e-6 : sin_t_zen;
++	double theta_t_az = atan2(t_hat.i,t_hat.j);
++	double sin_t_az = sin(theta_t_az);
++	double cos_t_az = cos(theta_t_az);
++	double
++		eta_cosine = 0.7071067811865*sqrt(1.+cos_s_zen*cos_t_zen+sin_s_zen*sin_t_zen*(cos_t_az*cos_s_az + sin_t_az*sin_s_az));
++	double err_angular[2], err_surface[2], err_reflected[2];
++    err_angular[0] = in.angular[0];
++    err_angular[1] = in.angular[1];
++    err_surface[0] = in.surface[0];
++    err_surface[1] = in.surface[1];
++    err_reflected[0] = in.reflected[0];
++    err_reflected[1] = in.reflected[1];
++	double A11, A12, A21, A22, B11, B12, B21, B22;
++	int cant_method = in.cant_method;
++	double term1 = err_angular[0] * sin_n_zen;
++    term1 *= term1;
++    term1 += err_surface[0]*err_surface[0];
++	double term2 = err_angular[1]*err_angular[1] + err_surface[1] * err_surface[1];
++    switch (cant_method)
++    {
++    case 0:
++    case -1:
++    case 1:
++    {
++		A11 = cos_t_az * cos_n_az + sin_n_az * sin_t_az;
++		A12 = cos_n_zen * (sin_n_az * cos_t_az - cos_n_az * sin_t_az);
++		A21 = -cos_t_zen * A12/cos_n_zen;
++		A22 = sin_n_zen * sin_t_zen + cos_n_zen * cos_t_zen * A11;
++		B11 = 2.*A22;
++		B12 = -2.*A21;
++		B21 = -2.*A12;
++		B22 = 2.*A11;
++        break;
++    }
++    default: return;
++    }
++	double delta_1, delta_2, delta_a, sigma_x, sigma_y;
++	delta_1 = err_reflected[0]*err_reflected[0] + term1 * B11 * B11 + term2 * B12 * B12;
++	delta_2 = err_reflected[1]*err_reflected[1] + term1 * B21 * B21 + term2 * B22 * B22;
++	delta_a = term1 * B11 * B21 + term2 * B22 * B12;
++	sigma_x = srange.at(1) * sqrt(delta_1);
++	sigma_y = srange.at(1) * sqrt(delta_2);
++	double rho, rho_tmp, rs2, rs, rho_sq;
++	auto* mu_G = &out.errors;
++	if(delta_a*delta_a < 1.e-20 ) {
++		double fact1, fact2;
++		Matrix<7,7> factarr = {};
++		fact1 = 1.;
++		for(i=1; i<terms+1; i+=2) {
++			if(i>1) {fact1 = tables.fact_odds[i-2]; }
++			fact2 = 1.;
++			for(j=1; j<terms+1; j+=2) {
++				if(j>1) {fact2 = tables.fact_odds[j-2]; }
++				factarr.at(i-1,j-1) = fact1 * fact2;
++			}
++		}
++		for(i=1; i<terms+1; i++) {
++			term2 = double(i - 2*(i/2));
++			term1 = pow(sigma_x, i-1);
++			jmax = JMX(i-1);
++			jmin = JMN(i-1);
++			for(j=jmin; j<jmax+1; j+=2) {
++				mu_G->at(i-1,j-1) = factarr.at(i-1,j-1) * term1 * pow(sigma_y, j-1) * term2;
++			}
++		}
++	}
++	else {
++		rho_tmp = delta_a / sqrt(delta_1 * delta_2) + 1.e-10;
++		rho_sq = rho_tmp*rho_tmp;
++		rho = (1. - rho_sq)/2.;
++		for(i=1; i<terms+1; i++) {
++			jmax = JMX(i-1);
++			jmin = JMN(i-1);
++			for(j=jmin; j<jmax+1; j+=2) {
++				rs2 = rho_sq;
++				rs = 1./rho;
++				term1 = 0.;
++				int k_ct = (i-1)/2 + 1;
++				for(int k=1; k<k_ct+1; k++){
++					rs = rs*rho;
++					rs2 = rs2/rho_sq;
++					term1 += tables.errors.at(i-1,j-1,k-1) * rs * rs2;
++				}
++				mu_G->at(i-1,j-1) = pow(sigma_x * rho_tmp, i-1) * pow(sigma_y, j-1) * term1 ;
++			}
++		}
++	}
++	SP_IMAGE_NEXT(IPSun, IPMirror);
++	Matrix<7,7> mu_Msave = {};
++    const Matrix<7,7>* errm_M;
++	auto* mu_M = &out.mirror;
++	errm_M = &in.mirror_normalized;
++	double
++		xfocal  =-tht/in.focal_x,
++		yfocal = -tht/in.focal_y,
++		E11 = A11+B11*xfocal*srange[1]/2.+1.e-10,
++		E12 = A12+B12*yfocal*srange[1]/2.+1.e-10,
++		E21 = A21+B21*xfocal*srange[1]/2.+1.e-10,
++		E22 = A22+B22*yfocal*srange[1]/2.+1.e-10;
++	double step = E21*E21/(E22*E22);
++	double temp_res, e_ratio, start[2], binoms;
++	double S11, S22;
++	int k, l, l_min, ij, ijk, mstep;
++	for(i=1; i<terms+1; i++){
++		int jmax = JMX(i - 1) + 1;
++		int jmin = JMN(i - 1);
++		for(j=jmin; j<jmax; j+=2){
++			temp_res = 0.;
++			ij = i+j+1;
++			if(j>1){mstep=1;} else {mstep=2;}
++			S11 = pow(E12, i-1);
++			e_ratio = pow(E11/E12, mstep);
++			start[0] = pow(E22, j-1);
++			start[1] = start[0]*E21/E22;
++			l_min = IMN(i - 1);
++			for(k=1; k<i+1; k+=mstep){
++				ijk = ij - k;
++				binoms = tables.binomials.at(i-1,k-1)*S11;
++				S11 *= e_ratio;
++				S22 = start[l_min - 1];
++				for(l=l_min; l<j+1; l+=2){
++					S22 *= step;
++					temp_res += binoms*S22*tables.binomials.at(j-1,l-1)*errm_M->at(k+l-2,ijk-l-1)/step;
++				}
++			}
++			mu_M->at(i-1,j-1) = temp_res * eta_cosine;
++			mu_Msave.at(i-1,j-1) = mu_M->at(i-1,j-1);
++		}
++	}
++	SP_IMAGE_NEXT(IPSun, IPFacets);
++	int ncanty = in.facets_y;
++	int ncantx = in.facets_x;
++	double gcanta, gcanty, gcantx, gcantb;
++	if(in.faceted){
++        switch (cant_method)
++        {
++        case 0:
++			gcanta = 0.;
++			gcantx = 0.;
++			gcantb = 0.;
++			gcanty = 0.;
++            break;
++        case -1:
++			gcanta = 0.;
++			gcanty = 0.;
++			gcantx = -.5*tht/in.slant_range*srange[1];
++			gcantb = gcantx;
++            break;
++        case 1:
++			gcanta = 0.;
++			gcanty = 0.;
++			gcantx = -.5*tht/in.cant_radius*srange[1];
++			gcantb = gcantx;
++            break;
++        default: return;
++        }
++		FacetPowers xc = {{}, ncantx}, yc = {{}, ncantx};
++		double
++			ploc_x, ploc_y, xcentij, ycentij;
++		double thtinv = 1./tht;
++		for(i=0; i<ncanty; i++){
++			for(j=0; j<ncantx; j++){
++				ploc_x = in.panel_x[i*ncantx+j] * thtinv;
++				ploc_y = in.panel_y[i*ncantx+j] * thtinv;
++				xcentij = (A11 + B11*gcantx + B12*gcanty)*ploc_x + (A12 + B11*gcanta + B12*gcantb)*ploc_y;
++				ycentij = (A21 + B21*gcantx + B22*gcanty)*ploc_x + (A22 + B21*gcanta + B22*gcantb)*ploc_y;
++				xc.at(i,j,0) = 1.;
++				yc.at(i,j,0) = 1.;
++				for(k=1; k<terms; k++){
++					xc.at(i,j,k) = xc.at(i,j,k-1)*xcentij;
++					yc.at(i,j,k) = yc.at(i,j,k-1)*ycentij;
++				}
++			}
++		}
++		int m, n, ii, jj, jp1, ip1, im1, iim1, jm1, jjm1;
++		for(i=1; i<terms+1; i++){
++			jmin = JMN(i-1);
++			jmax = JMX(i-1);
++			im1 = i-1;
++			ip1 = i+1;
++			for(j=jmin; j<jmax+1; j+=2){
++				jp1 = j+1;
++				jm1 = j-1;
++				temp_res = 0.;
++				if(j>1){mstep=1;} else {mstep=2;}
++				for(m=0; m<ncanty; m++){
++					for(n=0; n<ncantx; n++){
++						for(ii=1; ii<ip1; ii+=mstep){
++							iim1 = ii-1;
++							S11 = tables.binomials.at(im1, iim1)*xc.at(m,n,i-ii);
++							for(jj=iim1%2+1; jj<jp1; jj+=2){
++								jjm1 = jj-1;
++								temp_res += S11*tables.binomials.at(jm1,jjm1)*mu_Msave.at(iim1,jjm1)*yc.at(m,n,j-jj);
++							}
++						}
++					}
++				}
++				mu_M->at(im1,jm1) = temp_res;
++			}
++		}
++	}
++	SP_IMAGE_NEXT(IPSun, IPConvolution);
++	auto* mu_F = &out.flux;
++	double binom_temp0, binom_temp1, ugs;
++	int ipak=0, nmin, nmax, lmin, mk, ki, kp1, km1;
++	double comb_ord = mu_S->at(0,0) * mu_G->at(0,0) * mu_M->at(0,0);
++	double muS, muM,
++		comb_ord_inv = 1./comb_ord;
++	for(int m=1; m<terms+1; m++){
++		nmin = JMN(m-1);
++		nmax = JMX(m-1);
++		for(int n=nmin; n<nmax+1; n+=2){
++			ipak ++;
++			temp_res = 0.;
++			if(n>1){mstep=1;} else {mstep=2;}
++			for(int k=1; k<m+1; k+=mstep){
++				lmin = JMN(k-1);
++				binom_temp0 = tables.binomials.at(m-1,k-1);
++				mk = m-k+1;
++				kp1 = k+1;
++				km1 = k-1;
++				for(int l=lmin; l<n+1; l+=2){
++					ugs = mu_G->at(mk-1,n-l)*binom_temp0*tables.binomials.at(n-1,l-1);
++					for(i=1; i<kp1; i+=2){
++						ki = kp1-i;
++						binom_temp1 = tables.binomials.at(km1,i-1);
++						for(j=1; j<l+1; j+=2){
++							muS = mu_S->at(i-1,j-1);
++							muM = mu_M->at(ki-1,l-j);
++							term1 = tables.binomials.at(l-1,j-1)*binom_temp1*muS*muM*ugs;
++							temp_res += term1;
++						}
++					}
++				}
++			}
++			mu_F->at(m-1,n-1) = temp_res*comb_ord_inv;
++		}
++	}
++
++    SP_IMAGE_NEXT(IPSun, IPFinalize);
++    out.intercept = coefficients_eval(in, tables, out);
++    if (in.radial_position < in.diameter/2.) out.intercept = 0.;
++    out.updated = true;
++}
++} // namespace detail
++} // namespace image_plane
++#undef SP_IMAGE_SCOPE
++#undef SP_IMAGE_NEXT
++#endif
 -- 
 2.43.0
 
