@@ -122,3 +122,25 @@ an idle GPU; `image_plane_cuda_baseline.py --timing` also checks before each chi
 and its native executable guards the exact GPU process set around every sample.
 It never starts/stops services, changes clocks or performs a block sweep.
 See `phase2db-report.md` for resource/precision evidence and timing limitations.
+
+
+## Phase 2D-C resident pipeline validation
+
+Current source boundaries are checked by `scripts/check_phase2dc_boundaries.py`.
+The older 2D-A checker remains a historical whole-file check; the authorized
+2D-C density interface/packing change is verified by unchanged numerical-function
+hashes in the current checker. The density kernel still uses 256 threads/block.
+
+```sh
+.venv/bin/python scripts/check_phase2dc_boundaries.py
+COPILOT_LIB_DIR=build/cuda/lib .venv/bin/python benchmarks/image_plane_pipeline_correctness.py --output artifacts/phase2dc/resident-downstream-final.json
+ctest --test-dir build/cuda --output-on-failure
+COPILOT_LIB_DIR=build/cuda/lib .venv/bin/python -m unittest discover -s tests -v
+```
+
+`image_plane_pipeline_state` adds a native check of every canonical C++ optical
+getter after return, full/resident identity and CPU backend switching. The CUDA
+core test covers health validation, resident/full fixtures, reusable capacities
+and bitwise-equivalent density packing. Production diagnostics/profile-OFF
+builds are validated separately. No CUDA dependency is introduced in CPU-only
+builds. See `phase2dc-report.md` for the formal benchmark protocol and results.

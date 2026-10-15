@@ -1,6 +1,6 @@
 # CPU/CUDA boundary
 
-Implemented public selection remains CPU/CUDA with the existing C/Python signatures. CPU defaults to flat; the original legacy implementation is retained through internal benchmark controls. CUDA now performs the validated image-plane numerical core followed by the existing flux-density kernel. CPU still prepares objects/inputs, downloads and writes all optical outputs, and performs normalization/post-processing. See [the Phase 2D-B design](image-plane-cuda-design.md); [the Phase 2B density contract](cuda-flux-density.md) remains the historical density-only reference.
+Implemented public selection remains CPU/CUDA with the existing C/Python signatures. CPU defaults to flat; the original legacy implementation is retained through internal benchmark controls. CUDA now performs the validated image-plane numerical core followed by the existing flux-density kernel. CPU still prepares objects/inputs, downloads and writes all optical outputs, and performs normalization/post-processing. See [the current Phase 2D-C handoff](cuda-imageplane-fluxdensity-handoff.md) and [the original Phase 2D-B design](image-plane-cuda-design.md); [the Phase 2B density contract](cuda-flux-density.md) remains the historical density-only reference.
 
 CopilotObject owns selected backend, requested device, unique_ptr<GpuContext> and error string. GpuContext owns the unchanged reusable density heliostat/cell/output buffers plus a separate RAII image-plane executor with independent input/output/table capacities. Optional events belong to their respective executor. Selecting CUDA validates the device/probe and creates a context lazily without optical allocation; buffers grow on first evaluation and remain reusable across simulations and explicit CPU runs. Switching device closes the prior context; data_free performs checked teardown. Failed initialization/unsupported simulation never silently selects CPU.
 
@@ -17,11 +17,27 @@ With CPU selected, `cuda`/`verify_cuda` are internal tests of CUDA intercept plu
 Flat CPU density. No public backend signature or serialized setting is added.
 Without diagnostic overrides, public CUDA uses both CUDA numerical stages.
 
-Every CUDA image-plane call uploads all inputs and tables and downloads the full
-output before CPU writeback. Reusable allocation capacity is not optical-data
-residency; no output is passed directly to the density kernel. The old per-H
-`Flux::imagePlaneIntercept` profile scope now measures retrieval in this batched
-CUDA route; use image-plane batch statistics for preparation/kernel/writeback.
+Every nonempty CUDA image-plane call uploads all inputs and tables. Production
+uses 64 image threads per block. A separate health kernel checks all 215 outputs
+and returns intercept/update/status. The existing CPU efficiency loop supplies
+current direction, aim and normalization; a separate conversion kernel combines
+those seven doubles with 18 resident optical doubles for the unchanged density
+kernel (256 threads/block). Complete optical output is then downloaded and
+written before final completion callbacks and successful public return.
+
+The pending flag and exact heliostat ordering are scoped to one simulation.
+Unsupported ordering or an unupdated image uses full materialization with the
+same CUDA optics; there is no silent CPU fallback. Full verification and mixed
+CUDA-image/Flat-density routes retain all outputs and comparisons. Diagnostic
+`SOLARPILOT_IMAGE_PIPELINE=v1` with `SOLARPILOT_IMAGE_BLOCK_SIZE=128` selects
+the full-output launch control; production ignores diagnostic selection knobs.
+No public argument or serialization setting was added.
+
+Total H2D decreases by 144 B/H; total D2H increases by 16 B/H because eager C++
+compatibility remains mandatory. See the handoff report for exact formulas.
+Allocation reuse is retained, without cross-state optical caching. The per-H
+`Flux::imagePlaneIntercept` scope measures retrieval; use image batch preparation,
+materialization and CUDA event statistics for full optical costs.
 
 ## Proposed versions (not active in this iteration)
 
