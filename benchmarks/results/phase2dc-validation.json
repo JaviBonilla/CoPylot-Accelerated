@@ -1,0 +1,98 @@
+{
+  "phase": "2D-C",
+  "source_root": "6ca3c1804b034c227401ba043043d4eb3ad81f0e",
+  "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+  "native": [
+    {
+      "configuration": "cpu-production",
+      "passed": 3,
+      "failed": 0,
+      "log": "phase2dc-validation/cpu-native-final.log"
+    },
+    {
+      "configuration": "cpu-diagnostic",
+      "passed": 3,
+      "failed": 0,
+      "log": "phase2dc-validation/cpu-diagnostic-native-final.log"
+    },
+    {
+      "configuration": "cpu-sanitizers",
+      "passed": 3,
+      "failed": 0,
+      "log": "phase2dc-validation/asan-native.log"
+    },
+    {
+      "configuration": "cuda-diagnostic",
+      "passed": 6,
+      "failed": 0,
+      "log": "phase2dc-validation/cuda-native-final.log"
+    },
+    {
+      "configuration": "cuda-production",
+      "passed": 5,
+      "failed": 0,
+      "log": "phase2dc-validation/cuda-production-native-final.log"
+    }
+  ],
+  "python": [
+    {
+      "configuration": "cpu-production",
+      "methods": 32,
+      "passed": 22,
+      "expected_skips": 10,
+      "failed": 0,
+      "log": "phase2dc-validation/cpu-production-python-final.log"
+    },
+    {
+      "configuration": "cpu-diagnostic",
+      "methods": 32,
+      "passed": 23,
+      "expected_skips": 9,
+      "failed": 0,
+      "log": "phase2dc-validation/cpu-diagnostic-python-final.log"
+    },
+    {
+      "configuration": "cpu-sanitizers",
+      "methods": 32,
+      "passed": 23,
+      "expected_skips": 9,
+      "failed": 0,
+      "log": "phase2dc-validation/asan-python-final.log"
+    },
+    {
+      "configuration": "cuda-diagnostic",
+      "methods": 32,
+      "passed": 31,
+      "expected_skips": 1,
+      "failed": 0,
+      "log": "phase2dc-validation/cuda-python-final.log"
+    },
+    {
+      "configuration": "cuda-production",
+      "methods": 32,
+      "passed": 28,
+      "expected_skips": 4,
+      "failed": 0,
+      "log": "phase2dc-validation/cuda-production-python-final.log"
+    }
+  ],
+  "sanitizer_policy": {
+    "native": [
+      "ASan",
+      "UBSan",
+      "LeakSanitizer"
+    ],
+    "python": [
+      "ASan",
+      "UBSan"
+    ],
+    "python_leak_detection": false,
+    "compute_sanitizer_available": false
+  },
+  "cpu_library_cuda_dependency": false,
+  "cuda_event_test": {
+    "passed": 1,
+    "idle_preflight": true,
+    "log": "phase2dc-validation/cuda-events-final.log"
+  }
+}

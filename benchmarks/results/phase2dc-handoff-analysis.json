@@ -1,0 +1,341 @@
+{
+  "metadata": {
+    "utc": "2026-10-15T14:16:08.762613+00:00",
+    "machine": "canonical-gpu-server",
+    "commits": {
+      ".": "f1f6241ca77fde61060d75b3fdce4c63626dbe16",
+      "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+      "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "branches": {
+      ".": "main",
+      "ssc": "feature/copilot-gpu",
+      "SolarPILOT": "feature/copilot-gpu",
+      "SolTrace": "feature/copilot-gpu"
+    },
+    "cpu_model": "Intel(R) Xeon(R) w5-3423",
+    "cpu_affinity": [
+      0
+    ],
+    "monitor_cpu": 23,
+    "cpu_governor": "powersave",
+    "cpu_threads": 1,
+    "precision": "double",
+    "fma": true,
+    "fast_math": false,
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cmake": "cmake version 3.30.5",
+    "build_settings": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CUDA_ARCHITECTURES": "89",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS": "",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+      "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+    },
+    "kernel_source_sha256": "e7256bf587eb0587588cdea3969e5bc8661366367417e3bd4b1201956789719a",
+    "library_sha256": "0484808fda73a358c8d1409375b3367098a42f430f7fc0ce6d611fc4d10e3260",
+    "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+    "parameters": {
+      "solarfield.0.des_sim_detail": 0,
+      "fluxsim.0.flux_model": 0,
+      "fluxsim.0.flux_time_type": 0,
+      "fluxsim.0.flux_solar_az_in": 180.0,
+      "fluxsim.0.flux_solar_el_in": 55.0,
+      "fluxsim.0.flux_dni": 950.0,
+      "fluxsim.0.aim_method": 0,
+      "fluxsim.0.x_res": 25,
+      "fluxsim.0.y_res": 25,
+      "land.0.is_bounds_scaled": 0,
+      "land.0.is_bounds_fixed": 1,
+      "land.0.max_fixed_rad": 5000.0,
+      "land.0.min_fixed_rad": 160.0
+    },
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "ncu_available": false,
+    "first_call_definition": "First simulate on a fresh CoPylot/GpuContext. Backend probe and process runtime initialization recorded separately; not a cold CUDA process.",
+    "monitoring": "Stable idle preflight; exact owned GPU process; <=4096 MiB after context creation; <80 C and no thermal slowdown; no concurrent server jobs.",
+    "simulate_wall_definition": "perf_counter around public simulate including its profiling/timing CSV writes; all extraction/parsing/telemetry outside this interval",
+    "phase": "2D-C",
+    "image_kernel_sha256": "404d15c7a08e52229c3a77e48a307fab95ff529e791328aa2578906631896d89",
+    "baseline_label": "Phase 2D-C selected final pipeline",
+    "gpu_model": "NVIDIA RTX 6000 Ada Generation",
+    "driver": "580.159.03",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "cuda_runtime_version": 13000,
+    "cuda_driver_api_version": 13000,
+    "density_block_size": 256,
+    "image_source_options": [
+      "--fmad=true",
+      "--ptxas-options=-v"
+    ],
+    "first_call_caveat": "Fresh prepared CoPylot context in an already initialized process; mode order can prime modules. Do not derive cold-process first-call speedups. Direct image first-use cases use independent child processes.",
+    "direct_statistics_units": "Every cuda_statistics value is in seconds, including keys inherited with an _ms suffix. Raw cuda_samples retain their explicit _ms or _s units."
+  },
+  "output_families": [
+    {
+      "name": "sun",
+      "count": 49,
+      "density_consumes": false,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "errors",
+      "count": 49,
+      "density_consumes": false,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "mirror",
+      "count": 49,
+      "density_consumes": false,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "flux_moments",
+      "count": 49,
+      "density_consumes": false,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "coefficients",
+      "count": 16,
+      "density_consumes": true,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "sigmas",
+      "count": 2,
+      "density_consumes": true,
+      "mandatory_early_cpu": false,
+      "c_python_direct": false,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    },
+    {
+      "name": "intercept",
+      "count": 1,
+      "density_consumes": false,
+      "mandatory_early_cpu": true,
+      "c_python_direct": true,
+      "cxx_optical_getter": true,
+      "materialized_before_return": true
+    }
+  ],
+  "density_input": {
+    "old_doubles": 25,
+    "old_bytes": 200,
+    "resident_optical_doubles": 18,
+    "cpu_metadata_doubles": 7,
+    "cpu_metadata_bytes": 56
+  },
+  "materialization_policy": "Early intercept/update/validation status; device SoA conversion; separate density kernel; eager complete canonical C++ optical materialization before return. No lazy or cross-state cache.",
+  "full_verification_preserved": true,
+  "density_arithmetic_unchanged": true,
+  "density_block_size": 256,
+  "transfers": [
+    {
+      "heliostats": 1000,
+      "grid": [
+        25,
+        25
+      ],
+      "v1_h2d_bytes": 1873256,
+      "final_h2d_bytes": 1729256,
+      "h2d_saved_bytes": 144000,
+      "h2d_saved_fraction": 0.07687150074522649,
+      "v1_d2h_bytes": 1733000,
+      "final_d2h_bytes": 1749000,
+      "d2h_increase_fraction": 0.009232544720138488,
+      "image_input_h2d_bytes": 1640000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 56000,
+      "required_image_d2h_bytes": 16000,
+      "eager_full_image_d2h_bytes": 1728000,
+      "final_flux_d2h_bytes": 5000
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        50,
+        50
+      ],
+      "v1_h2d_bytes": 1963256,
+      "final_h2d_bytes": 1819256,
+      "h2d_saved_bytes": 144000,
+      "h2d_saved_fraction": 0.07334754102368718,
+      "v1_d2h_bytes": 1748000,
+      "final_d2h_bytes": 1764000,
+      "d2h_increase_fraction": 0.009153318077803204,
+      "image_input_h2d_bytes": 1640000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 56000,
+      "required_image_d2h_bytes": 16000,
+      "eager_full_image_d2h_bytes": 1728000,
+      "final_flux_d2h_bytes": 20000
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        100,
+        100
+      ],
+      "v1_h2d_bytes": 2323256,
+      "final_h2d_bytes": 2179256,
+      "h2d_saved_bytes": 144000,
+      "h2d_saved_fraction": 0.061981977018460296,
+      "v1_d2h_bytes": 1808000,
+      "final_d2h_bytes": 1824000,
+      "d2h_increase_fraction": 0.008849557522123894,
+      "image_input_h2d_bytes": 1640000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 56000,
+      "required_image_d2h_bytes": 16000,
+      "eager_full_image_d2h_bytes": 1728000,
+      "final_flux_d2h_bytes": 80000
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        25,
+        25
+      ],
+      "v1_h2d_bytes": 9233256,
+      "final_h2d_bytes": 8513256,
+      "h2d_saved_bytes": 720000,
+      "h2d_saved_fraction": 0.07797899245943143,
+      "v1_d2h_bytes": 8645000,
+      "final_d2h_bytes": 8725000,
+      "d2h_increase_fraction": 0.009253903990746095,
+      "image_input_h2d_bytes": 8200000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 280000,
+      "required_image_d2h_bytes": 80000,
+      "eager_full_image_d2h_bytes": 8640000,
+      "final_flux_d2h_bytes": 5000
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        50,
+        50
+      ],
+      "v1_h2d_bytes": 9323256,
+      "final_h2d_bytes": 8603256,
+      "h2d_saved_bytes": 720000,
+      "h2d_saved_fraction": 0.07722623941678744,
+      "v1_d2h_bytes": 8660000,
+      "final_d2h_bytes": 8740000,
+      "d2h_increase_fraction": 0.009237875288683603,
+      "image_input_h2d_bytes": 8200000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 280000,
+      "required_image_d2h_bytes": 80000,
+      "eager_full_image_d2h_bytes": 8640000,
+      "final_flux_d2h_bytes": 20000
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        100,
+        100
+      ],
+      "v1_h2d_bytes": 9683256,
+      "final_h2d_bytes": 8963256,
+      "h2d_saved_bytes": 720000,
+      "h2d_saved_fraction": 0.07435515491896527,
+      "v1_d2h_bytes": 8720000,
+      "final_d2h_bytes": 8800000,
+      "d2h_increase_fraction": 0.009174311926605505,
+      "image_input_h2d_bytes": 8200000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 280000,
+      "required_image_d2h_bytes": 80000,
+      "eager_full_image_d2h_bytes": 8640000,
+      "final_flux_d2h_bytes": 80000
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        25,
+        25
+      ],
+      "v1_h2d_bytes": 18433256,
+      "final_h2d_bytes": 16993256,
+      "h2d_saved_bytes": 1440000,
+      "h2d_saved_fraction": 0.07811967674077765,
+      "v1_d2h_bytes": 17285000,
+      "final_d2h_bytes": 17445000,
+      "d2h_increase_fraction": 0.009256580850448365,
+      "image_input_h2d_bytes": 16400000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 560000,
+      "required_image_d2h_bytes": 160000,
+      "eager_full_image_d2h_bytes": 17280000,
+      "final_flux_d2h_bytes": 5000
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        50,
+        50
+      ],
+      "v1_h2d_bytes": 18523256,
+      "final_h2d_bytes": 17083256,
+      "h2d_saved_bytes": 1440000,
+      "h2d_saved_fraction": 0.07774011221353308,
+      "v1_d2h_bytes": 17300000,
+      "final_d2h_bytes": 17460000,
+      "d2h_increase_fraction": 0.009248554913294798,
+      "image_input_h2d_bytes": 16400000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 560000,
+      "required_image_d2h_bytes": 160000,
+      "eager_full_image_d2h_bytes": 17280000,
+      "final_flux_d2h_bytes": 20000
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        100,
+        100
+      ],
+      "v1_h2d_bytes": 18883256,
+      "final_h2d_bytes": 17443256,
+      "h2d_saved_bytes": 1440000,
+      "h2d_saved_fraction": 0.07625803516088539,
+      "v1_d2h_bytes": 17360000,
+      "final_d2h_bytes": 17520000,
+      "d2h_increase_fraction": 0.009216589861751152,
+      "image_input_h2d_bytes": 16400000,
+      "tables_h2d_bytes": 3256,
+      "density_metadata_h2d_bytes": 560000,
+      "required_image_d2h_bytes": 160000,
+      "eager_full_image_d2h_bytes": 17280000,
+      "final_flux_d2h_bytes": 80000
+    }
+  ]
+}

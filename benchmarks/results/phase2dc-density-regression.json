@@ -1,0 +1,933 @@
+{
+  "metadata": {
+    "commits": {
+      ".": "f1f6241ca77fde61060d75b3fdce4c63626dbe16",
+      "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+      "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "hostname": "benchmark-host",
+    "execution_hostname": "benchmark-host",
+    "platform": "Linux-6.8.0-117-generic-x86_64-with-glibc2.39",
+    "cpu_model": "Intel(R) Xeon(R) w5-3423",
+    "gpu_model": "NVIDIA RTX 6000 Ada Generation",
+    "driver": "580.159.03",
+    "gpu_memory_total": "49140 MiB",
+    "gpu_memory_used": "4 MiB",
+    "external_gpu_workload": "unspecified",
+    "cuda_compiler": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+    "cxx_compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "cmake": "cmake version 3.30.5\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "build_type": "Release",
+    "build_settings": {
+      "CMAKE_CUDA_ARCHITECTURES": "89",
+      "CMAKE_CUDA_COMPILER": "/usr/local/cuda/bin/nvcc",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CUDA_FLAGS_DEBUG": "-g",
+      "CMAKE_CUDA_FLAGS_MINSIZEREL": "-O1 -DNDEBUG",
+      "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CUDA_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "CMAKE_CXX_FLAGS": "",
+      "CMAKE_CXX_FLAGS_DEBUG": "-g",
+      "CMAKE_CXX_FLAGS_MINSIZEREL": "-Os -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG",
+      "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+      "SOLARPILOT_ENABLE_CUDA": "ON",
+      "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON",
+      "SOLARPILOT_ENABLE_SANITIZERS": "OFF",
+      "CMAKE_CUDA_COMPILER-ADVANCED": "1",
+      "CMAKE_CUDA_FLAGS-ADVANCED": "1",
+      "CMAKE_CUDA_FLAGS_DEBUG-ADVANCED": "1",
+      "CMAKE_CUDA_FLAGS_MINSIZEREL-ADVANCED": "1",
+      "CMAKE_CUDA_FLAGS_RELEASE-ADVANCED": "1",
+      "CMAKE_CUDA_FLAGS_RELWITHDEBINFO-ADVANCED": "1",
+      "CMAKE_CXX_FLAGS-ADVANCED": "1",
+      "CMAKE_CXX_FLAGS_DEBUG-ADVANCED": "1",
+      "CMAKE_CXX_FLAGS_MINSIZEREL-ADVANCED": "1",
+      "CMAKE_CXX_FLAGS_RELEASE-ADVANCED": "1",
+      "CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED": "1"
+    },
+    "block_size": 256,
+    "precision": "double",
+    "cpu_threads": 1,
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "gpu_timings_collected": false,
+    "scientific_speedups_reported": false,
+    "test_configuration": "same-state raw map, complete dimensional map, peak-cell device-term reduction diagnosis",
+    "parameters": {
+      "solarfield.0.des_sim_detail": 0,
+      "fluxsim.0.flux_model": 0,
+      "fluxsim.0.flux_time_type": 0,
+      "fluxsim.0.flux_solar_az_in": 180.0,
+      "fluxsim.0.flux_solar_el_in": 55.0,
+      "fluxsim.0.flux_dni": 950.0,
+      "fluxsim.0.aim_method": 0,
+      "fluxsim.0.x_res": 25,
+      "fluxsim.0.y_res": 25,
+      "land.0.is_bounds_scaled": 0,
+      "land.0.is_bounds_fixed": 1,
+      "land.0.max_fixed_rad": 5000.0,
+      "land.0.min_fixed_rad": 160.0
+    },
+    "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b"
+  },
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": [
+        25,
+        25
+      ],
+      "cells": 625,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 1000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 6.821210263296962e-13,
+          "raw_max_rel": 2.7296732214628126e-15,
+          "raw_rms": 9.321856750945793e-14,
+          "raw_abs_x": 6.0,
+          "raw_abs_y": 11.0,
+          "raw_rel_x": 17.0,
+          "raw_rel_y": 23.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.9966506786472006e-14,
+          "contribution_rms": 1.3896796403470258e-16,
+          "contribution_abs_h": 64.0,
+          "reduction_only_max_abs": 3.979039320256561e-13,
+          "reduction_only_max_rel": 8.873126851592508e-16,
+          "reduction_x": 11.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        },
+        {
+          "heliostats": 1000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 6.821210263296962e-13,
+          "raw_max_rel": 2.7296732214628126e-15,
+          "raw_rms": 9.321856750945793e-14,
+          "raw_abs_x": 6.0,
+          "raw_abs_y": 11.0,
+          "raw_rel_x": 17.0,
+          "raw_rel_y": 23.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.9966506786472006e-14,
+          "contribution_rms": 1.3896796403470258e-16,
+          "contribution_abs_h": 64.0,
+          "reduction_only_max_abs": 3.979039320256561e-13,
+          "reduction_only_max_rel": 8.873126851592508e-16,
+          "reduction_x": 11.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 7.389644451905042e-13,
+        "max_rel": 2.8733641108947058e-15,
+        "rms": 9.430436718958164e-14,
+        "abs_cell": [
+          13,
+          6
+        ],
+        "rel_cell": [
+          1,
+          17
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 426.01170982710215,
+        "integrated_incident_flux_kw": 95688.42236276573,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "9499e53e217022468c669976ad5d25c6d32d5154f1ba5487b8aa2aa47e6d86ed"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 426.0117098271025,
+        "integrated_incident_flux_kw": 95688.42236276572,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "c97964fbffa239af53d65e5075ec1289883ffb39c0c41cd62ac5fbed2903b7ec"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 30000,
+        "output_d2h": 5000
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec"
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        50,
+        50
+      ],
+      "cells": 2500,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 1000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 9.094947017729282e-13,
+          "raw_max_rel": 3.296230652790265e-15,
+          "raw_rms": 9.523739953771431e-14,
+          "raw_abs_x": 13.0,
+          "raw_abs_y": 26.0,
+          "raw_rel_x": 31.0,
+          "raw_rel_y": 2.0,
+          "contribution_max_abs": 2.4424906541753444e-15,
+          "contribution_max_rel": 2.166228575201825e-14,
+          "contribution_rms": 1.9046203814670264e-16,
+          "contribution_abs_h": 156.0,
+          "reduction_only_max_abs": 1.1368683772161603e-13,
+          "reduction_only_max_rel": 2.540111334045007e-16,
+          "reduction_x": 22.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        },
+        {
+          "heliostats": 1000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 9.094947017729282e-13,
+          "raw_max_rel": 3.296230652790265e-15,
+          "raw_rms": 9.523739953771431e-14,
+          "raw_abs_x": 13.0,
+          "raw_abs_y": 26.0,
+          "raw_rel_x": 31.0,
+          "raw_rel_y": 2.0,
+          "contribution_max_abs": 2.4424906541753444e-15,
+          "contribution_max_rel": 2.166228575201825e-14,
+          "contribution_rms": 1.9046203814670264e-16,
+          "contribution_abs_h": 156.0,
+          "reduction_only_max_abs": 1.1368683772161603e-13,
+          "reduction_only_max_rel": 2.540111334045007e-16,
+          "reduction_x": 22.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 8.526512829121202e-13,
+        "max_rel": 3.260468448885556e-15,
+        "rms": 1.0429770127162504e-13,
+        "abs_cell": [
+          22,
+          19
+        ],
+        "rel_cell": [
+          49,
+          36
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 425.1940279363388,
+        "integrated_incident_flux_kw": 95688.42236276573,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "a1bfd837d8f2989e9a009d6f6347760f92ed22c791ec2b687b2083b1b52a309b"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 425.1940279363385,
+        "integrated_incident_flux_kw": 95688.4223627657,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "1476b8e6fa27478dc48fc1634d850055c0d2bda6402009888c3e078af7e6d906"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 120000,
+        "output_d2h": 20000
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec"
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        100,
+        100
+      ],
+      "cells": 10000,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 1000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 7.958078640513122e-13,
+          "raw_max_rel": 3.4356020663305083e-15,
+          "raw_rms": 9.209859255081451e-14,
+          "raw_abs_x": 43.0,
+          "raw_abs_y": 48.0,
+          "raw_rel_x": 62.0,
+          "raw_rel_y": 4.0,
+          "contribution_max_abs": 3.1086244689504383e-15,
+          "contribution_max_rel": 4.816801478598754e-14,
+          "contribution_rms": 1.8388404891361754e-16,
+          "contribution_abs_h": 108.0,
+          "reduction_only_max_abs": 5.115907697472721e-13,
+          "reduction_only_max_rel": 1.1393032454523092e-15,
+          "reduction_x": 43.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        },
+        {
+          "heliostats": 1000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 7.958078640513122e-13,
+          "raw_max_rel": 3.4356020663305083e-15,
+          "raw_rms": 9.209859255081451e-14,
+          "raw_abs_x": 43.0,
+          "raw_abs_y": 48.0,
+          "raw_rel_x": 62.0,
+          "raw_rel_y": 4.0,
+          "contribution_max_abs": 3.1086244689504383e-15,
+          "contribution_max_rel": 4.816801478598754e-14,
+          "contribution_rms": 1.8388404891361754e-16,
+          "contribution_abs_h": 108.0,
+          "reduction_only_max_abs": 5.115907697472721e-13,
+          "reduction_only_max_rel": 1.1393032454523092e-15,
+          "reduction_x": 43.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 1000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 7.958078640513122e-13,
+        "max_rel": 3.465689839794229e-15,
+        "rms": 8.876639544322593e-14,
+        "abs_cell": [
+          51,
+          43
+        ],
+        "rel_cell": [
+          95,
+          62
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 426.5924080228785,
+        "integrated_incident_flux_kw": 95688.42236276573,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "d67f87598ea8ca2220aeb632aeb8686840abe0057399eeac212bf979005ec0e2"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 426.59240802287906,
+        "integrated_incident_flux_kw": 95688.42236276573,
+        "receiver_power_kw": 89947.0,
+        "flux_sha256": "52f34a2336a75dfb386db1d4c8220244f84d9d9a0eec8b165b4cec289de2d6bd"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 480000,
+        "output_d2h": 80000
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec"
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        25,
+        25
+      ],
+      "cells": 625,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 5000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 3.637978807091713e-12,
+          "raw_max_rel": 4.308827549774355e-15,
+          "raw_rms": 7.229924953042932e-13,
+          "raw_abs_x": 14.0,
+          "raw_abs_y": 12.0,
+          "raw_rel_x": 13.0,
+          "raw_rel_y": 9.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 1.3099758943944888e-13,
+          "contribution_rms": 7.262404720709228e-17,
+          "contribution_abs_h": 206.0,
+          "reduction_only_max_abs": 4.547473508864641e-13,
+          "reduction_only_max_rel": 4.2741410298434046e-16,
+          "reduction_x": 12.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        },
+        {
+          "heliostats": 5000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 3.637978807091713e-12,
+          "raw_max_rel": 4.308827549774355e-15,
+          "raw_rms": 7.229924953042932e-13,
+          "raw_abs_x": 14.0,
+          "raw_abs_y": 12.0,
+          "raw_rel_x": 13.0,
+          "raw_rel_y": 9.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 1.3099758943944888e-13,
+          "contribution_rms": 7.262404720709228e-17,
+          "contribution_abs_h": 206.0,
+          "reduction_only_max_abs": 4.547473508864641e-13,
+          "reduction_only_max_rel": 4.2741410298434046e-16,
+          "reduction_x": 12.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 3.524291969370097e-12,
+        "max_rel": 4.424699343906537e-15,
+        "rms": 7.033118397682318e-13,
+        "abs_cell": [
+          12,
+          14
+        ],
+        "rel_cell": [
+          15,
+          13
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1036.0880784982076,
+        "integrated_incident_flux_kw": 380888.43139991345,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "d3beb8dd330ba82a96afbd41670dc925c23cd6575c82adf40037c72f7473f978"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1036.088078498208,
+        "integrated_incident_flux_kw": 380888.43139991345,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "572dd0b5bd1aa40896bc3ff242fe5fecd0ae4949acedbf5f04b9c34e0d829050"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 30000,
+        "output_d2h": 5000
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081"
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        50,
+        50
+      ],
+      "cells": 2500,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 5000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 4.661160346586257e-12,
+          "raw_max_rel": 5.5832857597949096e-15,
+          "raw_rms": 6.491547054651904e-13,
+          "raw_abs_x": 16.0,
+          "raw_abs_y": 21.0,
+          "raw_rel_x": 16.0,
+          "raw_rel_y": 21.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.372344311966406e-14,
+          "contribution_rms": 7.278009116702806e-17,
+          "contribution_abs_h": 105.0,
+          "reduction_only_max_abs": 1.1368683772161603e-12,
+          "reduction_only_max_rel": 1.0709941457728438e-15,
+          "reduction_x": 24.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        },
+        {
+          "heliostats": 5000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 4.661160346586257e-12,
+          "raw_max_rel": 5.5832857597949096e-15,
+          "raw_rms": 6.491547054651904e-13,
+          "raw_abs_x": 16.0,
+          "raw_abs_y": 21.0,
+          "raw_rel_x": 16.0,
+          "raw_rel_y": 21.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.372344311966406e-14,
+          "contribution_rms": 7.278009116702806e-17,
+          "contribution_abs_h": 105.0,
+          "reduction_only_max_abs": 1.1368683772161603e-12,
+          "reduction_only_max_rel": 1.0709941457728438e-15,
+          "reduction_x": 24.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 4.206412995699793e-12,
+        "max_rel": 5.033861676344678e-15,
+        "rms": 6.535268987297262e-13,
+        "abs_cell": [
+          23,
+          21
+        ],
+        "rel_cell": [
+          28,
+          16
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1033.785204336356,
+        "integrated_incident_flux_kw": 380888.4313999128,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "411bc08c64bd4a3babafa27cbd31f6ff83463a105ec36deb422a9f8a29786c35"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1033.7852043363575,
+        "integrated_incident_flux_kw": 380888.43139991286,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "3d4821c1cf0c9890a0570dc70d8802a95dc5216d0612c2eeb473204a0af33779"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 120000,
+        "output_d2h": 20000
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081"
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        100,
+        100
+      ],
+      "cells": 10000,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 5000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 5.5706550483591855e-12,
+          "raw_max_rel": 6.827518262548304e-15,
+          "raw_rms": 6.662279190397279e-13,
+          "raw_abs_x": 18.0,
+          "raw_abs_y": 50.0,
+          "raw_rel_x": 18.0,
+          "raw_rel_y": 50.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 8.346474679111812e-14,
+          "contribution_rms": 7.642389066876994e-17,
+          "contribution_abs_h": 62.0,
+          "reduction_only_max_abs": 2.2737367544323206e-13,
+          "reduction_only_max_rel": 2.1371723076271207e-16,
+          "reduction_x": 49.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        },
+        {
+          "heliostats": 5000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 5.5706550483591855e-12,
+          "raw_max_rel": 6.827518262548304e-15,
+          "raw_rms": 6.662279190397279e-13,
+          "raw_abs_x": 18.0,
+          "raw_abs_y": 50.0,
+          "raw_rel_x": 18.0,
+          "raw_rel_y": 50.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 8.346474679111812e-14,
+          "contribution_rms": 7.642389066876994e-17,
+          "contribution_abs_h": 62.0,
+          "reduction_only_max_abs": 2.2737367544323206e-13,
+          "reduction_only_max_rel": 2.1371723076271207e-16,
+          "reduction_x": 49.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 5000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 5.002220859751105e-12,
+        "max_rel": 6.2951329309717446e-15,
+        "rms": 6.871603050820222e-13,
+        "abs_cell": [
+          42,
+          62
+        ],
+        "rel_cell": [
+          49,
+          18
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1036.1322835767824,
+        "integrated_incident_flux_kw": 380888.43139991397,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "308d37b141ebc7723073b06514dbfa32a2f860f9a38bed96781f5529674ebb20"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1036.1322835767814,
+        "integrated_incident_flux_kw": 380888.4313999137,
+        "receiver_power_kw": 358035.0,
+        "flux_sha256": "b924b0b0f02d37c1819589c9130963faa539b1658e3fa003bb82be62307795d0"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 480000,
+        "output_d2h": 80000
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081"
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        25,
+        25
+      ],
+      "cells": 625,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 10000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 7.503331289626658e-12,
+          "raw_max_rel": 6.639700425670669e-15,
+          "raw_rms": 1.4709539224951355e-12,
+          "raw_abs_x": 13.0,
+          "raw_abs_y": 12.0,
+          "raw_rel_x": 12.0,
+          "raw_rel_y": 5.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 1.3099758943944888e-13,
+          "contribution_rms": 5.1704117954305346e-17,
+          "contribution_abs_h": 206.0,
+          "reduction_only_max_abs": 1.5916157281026244e-12,
+          "reduction_only_max_rel": 1.2132439989551993e-15,
+          "reduction_x": 12.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        },
+        {
+          "heliostats": 10000.0,
+          "nx": 25.0,
+          "ny": 25.0,
+          "block": 256.0,
+          "raw_max_abs": 7.503331289626658e-12,
+          "raw_max_rel": 6.639700425670669e-15,
+          "raw_rms": 1.4709539224951355e-12,
+          "raw_abs_x": 13.0,
+          "raw_abs_y": 12.0,
+          "raw_rel_x": 12.0,
+          "raw_rel_y": 5.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 1.3099758943944888e-13,
+          "contribution_rms": 5.1704117954305346e-17,
+          "contribution_abs_h": 206.0,
+          "reduction_only_max_abs": 1.5916157281026244e-12,
+          "reduction_only_max_rel": 1.2132439989551993e-15,
+          "reduction_x": 12.0,
+          "reduction_y": 12.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 625.0,
+          "output_capacity": 625.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 7.503331289626658e-12,
+        "max_rel": 6.564210357300952e-15,
+        "rms": 1.5577509314448033e-12,
+        "abs_cell": [
+          12,
+          13
+        ],
+        "rel_cell": [
+          3,
+          15
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1369.8423138766227,
+        "integrated_incident_flux_kw": 609943.5009656108,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "bd8946a7434709fad082bd6d57796e368316c74f3c6244f05bac7f378fa9da79"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1369.8423138766236,
+        "integrated_incident_flux_kw": 609943.5009656105,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "b9dfa543c057a1ebcac2d5b680c6dc53fe651fb9a53b54e842bd75994c3bc23c"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 30000,
+        "output_d2h": 5000
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af"
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        50,
+        50
+      ],
+      "cells": 2500,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 10000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 8.86757334228605e-12,
+          "raw_max_rel": 8.577901018577355e-15,
+          "raw_rms": 1.3687632936705382e-12,
+          "raw_abs_x": 20.0,
+          "raw_abs_y": 24.0,
+          "raw_rel_x": 1.0,
+          "raw_rel_y": 33.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.372344311966406e-14,
+          "contribution_rms": 5.187252983451774e-17,
+          "contribution_abs_h": 105.0,
+          "reduction_only_max_abs": 2.7284841053187847e-12,
+          "reduction_only_max_rel": 2.084192791437534e-15,
+          "reduction_x": 24.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        },
+        {
+          "heliostats": 10000.0,
+          "nx": 50.0,
+          "ny": 50.0,
+          "block": 256.0,
+          "raw_max_abs": 8.86757334228605e-12,
+          "raw_max_rel": 8.577901018577355e-15,
+          "raw_rms": 1.3687632936705382e-12,
+          "raw_abs_x": 20.0,
+          "raw_abs_y": 24.0,
+          "raw_rel_x": 1.0,
+          "raw_rel_y": 33.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 4.372344311966406e-14,
+          "contribution_rms": 5.187252983451774e-17,
+          "contribution_abs_h": 105.0,
+          "reduction_only_max_abs": 2.7284841053187847e-12,
+          "reduction_only_max_rel": 2.084192791437534e-15,
+          "reduction_x": 24.0,
+          "reduction_y": 25.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 2500.0,
+          "output_capacity": 2500.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 9.094947017729282e-12,
+        "max_rel": 8.57896890364008e-15,
+        "rms": 1.433959489362079e-12,
+        "abs_cell": [
+          23,
+          27
+        ],
+        "rel_cell": [
+          16,
+          1
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1367.1457595828476,
+        "integrated_incident_flux_kw": 609943.5009656098,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "c087ce99f5a9dd989c361a13f0044986fe45f930a24af2a8651aa892f780f068"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1367.1457595828506,
+        "integrated_incident_flux_kw": 609943.5009656099,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "0d4b6e77adf952a931c3c59d5c7d669c9c3da5ebd09a906f10d1c8029744bef5"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 120000,
+        "output_d2h": 20000
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af"
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        100,
+        100
+      ],
+      "cells": 10000,
+      "block_size": 256,
+      "legacy_flat_bitwise": true,
+      "repeated_cuda_bitwise": true,
+      "diagnostics": [
+        {
+          "heliostats": 10000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 1.000444171950221e-11,
+          "raw_max_rel": 8.48860007987937e-15,
+          "raw_rms": 1.4518206939211579e-12,
+          "raw_abs_x": 54.0,
+          "raw_abs_y": 44.0,
+          "raw_rel_x": 54.0,
+          "raw_rel_y": 44.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 8.346474679111812e-14,
+          "contribution_rms": 5.4383146303553705e-17,
+          "contribution_abs_h": 62.0,
+          "reduction_only_max_abs": 2.2737367544323206e-12,
+          "reduction_only_max_rel": 1.7333936883442528e-15,
+          "reduction_x": 49.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        },
+        {
+          "heliostats": 10000.0,
+          "nx": 100.0,
+          "ny": 100.0,
+          "block": 256.0,
+          "raw_max_abs": 1.000444171950221e-11,
+          "raw_max_rel": 8.48860007987937e-15,
+          "raw_rms": 1.4518206939211579e-12,
+          "raw_abs_x": 54.0,
+          "raw_abs_y": 44.0,
+          "raw_rel_x": 54.0,
+          "raw_rel_y": 44.0,
+          "contribution_max_abs": 1.7763568394002505e-15,
+          "contribution_max_rel": 8.346474679111812e-14,
+          "contribution_rms": 5.4383146303553705e-17,
+          "contribution_abs_h": 62.0,
+          "reduction_only_max_abs": 2.2737367544323206e-12,
+          "reduction_only_max_rel": 1.7333936883442528e-15,
+          "reduction_x": 49.0,
+          "reduction_y": 50.0,
+          "allocations": 3.0,
+          "h_capacity": 10000.0,
+          "cell_capacity": 10000.0,
+          "output_capacity": 10000.0
+        }
+      ],
+      "dimensional_errors": {
+        "max_abs": 1.1141310096718371e-11,
+        "max_rel": 8.86708872836162e-15,
+        "rms": 1.5435814757349357e-12,
+        "abs_cell": [
+          51,
+          54
+        ],
+        "rel_cell": [
+          55,
+          54
+        ],
+        "zero_reference_nonzero_cells": 0
+      },
+      "flat": {
+        "peak_flux_kw_m2": 1369.8926994548144,
+        "integrated_incident_flux_kw": 609943.5009656063,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "6b4d46a2b762157feb4a482bcf48c40a493368ab4345adfda8233d3e1899208f"
+      },
+      "cuda": {
+        "peak_flux_kw_m2": 1369.8926994548162,
+        "integrated_incident_flux_kw": 609943.5009656062,
+        "receiver_power_kw": 573347.0,
+        "flux_sha256": "fa04b4836142a7c28476542aa473c2074420e9e3fb40cb5bba0a2d0b208c190c"
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 480000,
+        "output_d2h": 80000
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af"
+    }
+  ]
+}

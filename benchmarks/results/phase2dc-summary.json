@@ -1,0 +1,365 @@
+{
+  "metadata": {
+    "utc": "2026-10-15T14:16:08.762613+00:00",
+    "machine": "canonical-gpu-server",
+    "commits": {
+      ".": "f1f6241ca77fde61060d75b3fdce4c63626dbe16",
+      "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+      "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "branches": {
+      ".": "main",
+      "ssc": "feature/copilot-gpu",
+      "SolarPILOT": "feature/copilot-gpu",
+      "SolTrace": "feature/copilot-gpu"
+    },
+    "cpu_model": "Intel(R) Xeon(R) w5-3423",
+    "cpu_affinity": [
+      0
+    ],
+    "monitor_cpu": 23,
+    "cpu_governor": "powersave",
+    "cpu_threads": 1,
+    "precision": "double",
+    "fma": true,
+    "fast_math": false,
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cmake": "cmake version 3.30.5",
+    "build_settings": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CUDA_ARCHITECTURES": "89",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS": "",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+      "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+    },
+    "kernel_source_sha256": "e7256bf587eb0587588cdea3969e5bc8661366367417e3bd4b1201956789719a",
+    "library_sha256": "0484808fda73a358c8d1409375b3367098a42f430f7fc0ce6d611fc4d10e3260",
+    "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+    "parameters": {
+      "solarfield.0.des_sim_detail": 0,
+      "fluxsim.0.flux_model": 0,
+      "fluxsim.0.flux_time_type": 0,
+      "fluxsim.0.flux_solar_az_in": 180.0,
+      "fluxsim.0.flux_solar_el_in": 55.0,
+      "fluxsim.0.flux_dni": 950.0,
+      "fluxsim.0.aim_method": 0,
+      "fluxsim.0.x_res": 25,
+      "fluxsim.0.y_res": 25,
+      "land.0.is_bounds_scaled": 0,
+      "land.0.is_bounds_fixed": 1,
+      "land.0.max_fixed_rad": 5000.0,
+      "land.0.min_fixed_rad": 160.0
+    },
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "ncu_available": false,
+    "first_call_definition": "First simulate on a fresh CoPylot/GpuContext. Backend probe and process runtime initialization recorded separately; not a cold CUDA process.",
+    "monitoring": "Stable idle preflight; exact owned GPU process; <=4096 MiB after context creation; <80 C and no thermal slowdown; no concurrent server jobs.",
+    "simulate_wall_definition": "perf_counter around public simulate including its profiling/timing CSV writes; all extraction/parsing/telemetry outside this interval",
+    "phase": "2D-C",
+    "image_kernel_sha256": "404d15c7a08e52229c3a77e48a307fab95ff529e791328aa2578906631896d89",
+    "baseline_label": "Phase 2D-C selected final pipeline",
+    "gpu_model": "NVIDIA RTX 6000 Ada Generation",
+    "driver": "580.159.03",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "cuda_runtime_version": 13000,
+    "cuda_driver_api_version": 13000,
+    "density_block_size": 256,
+    "image_source_options": [
+      "--fmad=true",
+      "--ptxas-options=-v"
+    ],
+    "first_call_caveat": "Fresh prepared CoPylot context in an already initialized process; mode order can prime modules. Do not derive cold-process first-call speedups. Direct image first-use cases use independent child processes.",
+    "direct_statistics_units": "Every cuda_statistics value is in seconds, including keys inherited with an _ms suffix. Raw cuda_samples retain their explicit _ms or _s units."
+  },
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": [
+        25,
+        25
+      ],
+      "median_s": {
+        "legacy": 0.06640276778489351,
+        "flat": 0.03324261587113142,
+        "density_only": 0.009836503304541111,
+        "v1": 0.006099507212638855,
+        "final": 0.00543846283107996,
+        "exact_v1_baseline": 0.0061853304505348206
+      },
+      "ratios": {
+        "legacy_to_flat": 1.9975193300765197,
+        "phase2c_density_only_to_exact_v1": 1.5800793742569392,
+        "exact_v1_to_final": 1.1373306470325824,
+        "same_campaign_v1_compat_to_final": 1.1215498573937346,
+        "flat_to_final": 6.112502172701282,
+        "legacy_to_final": 12.209841245105535
+      },
+      "final_coefficient_of_variation": 0.0019610173861983435,
+      "first_calls_s": {
+        "legacy": 0.06981988810002804,
+        "flat": 0.032829536125063896,
+        "density_only": 0.010290563106536865,
+        "v1": 0.010382650420069695,
+        "final": 0.006473720073699951
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        50,
+        50
+      ],
+      "median_s": {
+        "legacy": 0.23818022944033146,
+        "flat": 0.10284517426043749,
+        "density_only": 0.011047939769923687,
+        "v1": 0.00685308501124382,
+        "final": 0.0062569743022322655,
+        "exact_v1_baseline": 0.0068775564432144165
+      },
+      "ratios": {
+        "legacy_to_flat": 2.315910602058795,
+        "phase2c_density_only_to_exact_v1": 1.6212177306654822,
+        "exact_v1_to_final": 1.0991824659981022,
+        "same_campaign_v1_compat_to_final": 1.0952714011944853,
+        "flat_to_final": 16.436886151785217,
+        "legacy_to_final": 38.066358903752764
+      },
+      "final_coefficient_of_variation": 0.001201564867908622,
+      "first_calls_s": {
+        "legacy": 0.23902001231908798,
+        "flat": 0.10281502269208431,
+        "density_only": 0.011445386335253716,
+        "v1": 0.008260227739810944,
+        "final": 0.007213683798909187
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        100,
+        100
+      ],
+      "median_s": {
+        "legacy": 0.9696968458592892,
+        "flat": 0.3862571557983756,
+        "density_only": 0.014498624950647354,
+        "v1": 0.010374213568866253,
+        "final": 0.00972155760973692,
+        "exact_v1_baseline": 0.01038082130253315
+      },
+      "ratios": {
+        "legacy_to_flat": 2.5104954854621937,
+        "phase2c_density_only_to_exact_v1": 1.3643004391942024,
+        "exact_v1_to_final": 1.0678146156471804,
+        "same_campaign_v1_compat_to_final": 1.0671349165771178,
+        "flat_to_final": 39.73202354029236,
+        "legacy_to_final": 99.74706572618157
+      },
+      "final_coefficient_of_variation": 0.0017278599333016287,
+      "first_calls_s": {
+        "legacy": 0.9595478437840939,
+        "flat": 0.3883045520633459,
+        "density_only": 0.0144819226115942,
+        "v1": 0.01168830506503582,
+        "final": 0.011031165719032288
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        25,
+        25
+      ],
+      "median_s": {
+        "legacy": 0.3421012759208679,
+        "flat": 0.16840218473225832,
+        "density_only": 0.05284583102911711,
+        "v1": 0.030642625875771046,
+        "final": 0.027826307341456413,
+        "exact_v1_baseline": 0.030756776221096516
+      },
+      "ratios": {
+        "legacy_to_flat": 2.0314539058075334,
+        "phase2c_density_only_to_exact_v1": 1.7356213749064076,
+        "exact_v1_to_final": 1.1053128912751642,
+        "same_campaign_v1_compat_to_final": 1.1012106457301578,
+        "flat_to_final": 6.051905582217445,
+        "legacy_to_final": 12.294167232574042
+      },
+      "final_coefficient_of_variation": 0.02733926393942687,
+      "first_calls_s": {
+        "legacy": 0.3378703724592924,
+        "flat": 0.16797717660665512,
+        "density_only": 0.05374749004840851,
+        "v1": 0.03737085871398449,
+        "final": 0.030849169939756393
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        50,
+        50
+      ],
+      "median_s": {
+        "legacy": 1.198123473674059,
+        "flat": 0.5233398824930191,
+        "density_only": 0.055718990974128246,
+        "v1": 0.03372716624289751,
+        "final": 0.031076820567250252,
+        "exact_v1_baseline": 0.033814835362136364
+      },
+      "ratios": {
+        "legacy_to_flat": 2.2893792614592887,
+        "phase2c_density_only_to_exact_v1": 1.643245091225852,
+        "exact_v1_to_final": 1.0881047270894733,
+        "same_campaign_v1_compat_to_final": 1.085283681768922,
+        "flat_to_final": 16.84020028241021,
+        "legacy_to_final": 38.553605285370786
+      },
+      "final_coefficient_of_variation": 0.011180733899525183,
+      "first_calls_s": {
+        "legacy": 1.2034558728337288,
+        "flat": 0.5192369967699051,
+        "density_only": 0.0592850036919117,
+        "v1": 0.03740979544818401,
+        "final": 0.03482729569077492
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        100,
+        100
+      ],
+      "median_s": {
+        "legacy": 4.8302101865410805,
+        "flat": 1.921291757375002,
+        "density_only": 0.0690735224634409,
+        "v1": 0.04670401196926832,
+        "final": 0.04371968749910593,
+        "exact_v1_baseline": 0.04622110445052385
+      },
+      "ratios": {
+        "legacy_to_flat": 2.514043048381386,
+        "phase2c_density_only_to_exact_v1": 1.4909736104105593,
+        "exact_v1_to_final": 1.0572148863476913,
+        "same_campaign_v1_compat_to_final": 1.0682604254713262,
+        "flat_to_final": 43.94568825347373,
+        "legacy_to_final": 110.48135205998118
+      },
+      "final_coefficient_of_variation": 0.01879933441026104,
+      "first_calls_s": {
+        "legacy": 4.837019281461835,
+        "flat": 1.929261188954115,
+        "density_only": 0.06921499036252499,
+        "v1": 0.050231846049427986,
+        "final": 0.047261396422982216
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        25,
+        25
+      ],
+      "median_s": {
+        "legacy": 0.6837781136855483,
+        "flat": 0.34317419212311506,
+        "density_only": 0.11279037967324257,
+        "v1": 0.06812491547316313,
+        "final": 0.06332380138337612,
+        "exact_v1_baseline": 0.06828950345516205
+      },
+      "ratios": {
+        "legacy_to_flat": 1.9925103034561535,
+        "phase2c_density_only_to_exact_v1": 1.6585904815167742,
+        "exact_v1_to_final": 1.0784176243893269,
+        "same_campaign_v1_compat_to_final": 1.0758184755952982,
+        "flat_to_final": 5.4193555128736435,
+        "legacy_to_final": 10.798121697492643
+      },
+      "final_coefficient_of_variation": 0.013492833611209377,
+      "first_calls_s": {
+        "legacy": 0.6881840340793133,
+        "flat": 0.34523037634789944,
+        "density_only": 0.1217223983258009,
+        "v1": 0.0794543232768774,
+        "final": 0.06801147200167179
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        50,
+        50
+      ],
+      "median_s": {
+        "legacy": 2.396874036639929,
+        "flat": 1.038287801668048,
+        "density_only": 0.11870653182268143,
+        "v1": 0.07327643316239119,
+        "final": 0.06861405353993177,
+        "exact_v1_baseline": 0.0744728771969676
+      },
+      "ratios": {
+        "legacy_to_flat": 2.308487138912026,
+        "phase2c_density_only_to_exact_v1": 1.5944351805584875,
+        "exact_v1_to_final": 1.0853880998828633,
+        "same_campaign_v1_compat_to_final": 1.0679507969857227,
+        "flat_to_final": 15.132290662054949,
+        "legacy_to_final": 34.93269837563239
+      },
+      "final_coefficient_of_variation": 0.027224917110613513,
+      "first_calls_s": {
+        "legacy": 2.38207552023232,
+        "flat": 1.0373158752918243,
+        "density_only": 0.12164601497352123,
+        "v1": 0.0808588657528162,
+        "final": 0.07517640292644501
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        100,
+        100
+      ],
+      "median_s": {
+        "legacy": 9.655764695256948,
+        "flat": 3.8355895429849625,
+        "density_only": 0.14201153628528118,
+        "v1": 0.09759179688990116,
+        "final": 0.09292723052203655,
+        "exact_v1_baseline": 0.09835381619632244
+      },
+      "ratios": {
+        "legacy_to_flat": 2.5174134476710885,
+        "phase2c_density_only_to_exact_v1": 1.4479243940478497,
+        "exact_v1_to_final": 1.058396076626851,
+        "same_campaign_v1_compat_to_final": 1.050195904275426,
+        "flat_to_final": 41.27519481036723,
+        "legacy_to_final": 103.90673047086239
+      },
+      "final_coefficient_of_variation": 0.009586990014608754,
+      "first_calls_s": {
+        "legacy": 9.664051212370396,
+        "flat": 3.8296923991292715,
+        "density_only": 0.1421346478164196,
+        "v1": 0.10326445288956165,
+        "final": 0.09844687953591347
+      }
+    }
+  ],
+  "interpretation": "Ratios of medians, Flat CPU 1T is the primary GPU baseline. Exact historical v1 and same-campaign full-output control are separate. No cold-process speedup claims."
+}

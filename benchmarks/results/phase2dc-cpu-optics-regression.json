@@ -1,0 +1,620 @@
+{
+  "phase": "2D-C Legacy/Flat CPU regression",
+  "gpu_timings_collected": false,
+  "cpu_timing_samples_discarded": true,
+  "rtol": 1e-09,
+  "atol": 1e-10,
+  "commits": {
+    ".": "f1f6241ca77fde61060d75b3fdce4c63626dbe16",
+    "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+    "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "binary_sha256": "a8899a4868db869ea34bb34c5fa827ddb7eeb7cd6caf96e37e3fed65efefd745",
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": [
+        25,
+        25
+      ],
+      "compared_values": 215000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        50,
+        50
+      ],
+      "compared_values": 215000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        100,
+        100
+      ],
+      "compared_values": 215000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        25,
+        25
+      ],
+      "compared_values": 1075000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        50,
+        50
+      ],
+      "compared_values": 1075000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        100,
+        100
+      ],
+      "compared_values": 1075000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        25,
+        25
+      ],
+      "compared_values": 2150000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        50,
+        50
+      ],
+      "compared_values": 2150000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        100,
+        100
+      ],
+      "compared_values": 2150000,
+      "bitwise": true,
+      "families": {
+        "sun": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "errors": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "mirror": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "flux_moments": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "coefficients": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "sigmas": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        },
+        "intercept": {
+          "bitwise": true,
+          "max_abs": 0.0,
+          "max_rel": 0.0,
+          "rms": 0.0,
+          "heliostat_index": 0,
+          "family_index": 0
+        }
+      }
+    }
+  ],
+  "total_compared_values": 10320000
+}

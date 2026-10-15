@@ -1,0 +1,4553 @@
+{
+  "metadata": {
+    "utc": "2026-10-15T14:37:38.626946+00:00",
+    "machine": "canonical-gpu-server",
+    "commits": {
+      ".": "6ca3c1804b034c227401ba043043d4eb3ad81f0e",
+      "ssc": "cb3c0371884a2cf69aded43c20dd5081a56cf96d",
+      "SolarPILOT": "0b56acb4e80a5206ec8196d21eac38af5c93e405",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "branches": {
+      ".": "main",
+      "ssc": "feature/copilot-gpu",
+      "SolarPILOT": "feature/copilot-gpu",
+      "SolTrace": "feature/copilot-gpu"
+    },
+    "cpu_model": "Intel(R) Xeon(R) w5-3423",
+    "cpu_affinity": [
+      0
+    ],
+    "monitor_cpu": 23,
+    "cpu_governor": "powersave",
+    "cpu_threads": 1,
+    "precision": "double",
+    "fma": true,
+    "fast_math": false,
+    "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cmake": "cmake version 3.30.5",
+    "build_settings": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CUDA_ARCHITECTURES": "89",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "CMAKE_CXX_FLAGS": "",
+      "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+      "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+      "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+    },
+    "kernel_source_sha256": "e7256bf587eb0587588cdea3969e5bc8661366367417e3bd4b1201956789719a",
+    "library_sha256": "0484808fda73a358c8d1409375b3367098a42f430f7fc0ce6d611fc4d10e3260",
+    "weather_sha256": "bd53fe9a4fdc5e3d4644731baacc99eb47d354ccb04daa69cf0a79f882eeac5b",
+    "parameters": {
+      "solarfield.0.des_sim_detail": 0,
+      "fluxsim.0.flux_model": 0,
+      "fluxsim.0.flux_time_type": 0,
+      "fluxsim.0.flux_solar_az_in": 180.0,
+      "fluxsim.0.flux_solar_el_in": 55.0,
+      "fluxsim.0.flux_dni": 950.0,
+      "fluxsim.0.aim_method": 0,
+      "fluxsim.0.x_res": 25,
+      "fluxsim.0.y_res": 25,
+      "land.0.is_bounds_scaled": 0,
+      "land.0.is_bounds_fixed": 1,
+      "land.0.max_fixed_rad": 5000.0,
+      "land.0.min_fixed_rad": 160.0
+    },
+    "rtol": 1e-09,
+    "atol": 1e-10,
+    "ncu_available": false,
+    "first_call_definition": "First simulate on a fresh CoPylot/GpuContext. Backend probe and process runtime initialization recorded separately; not a cold CUDA process.",
+    "monitoring": "Stable idle preflight; exact owned GPU process; <=4096 MiB after context creation; <80 C and no thermal slowdown; no concurrent server jobs.",
+    "simulate_wall_definition": "perf_counter around public simulate including its profiling/timing CSV writes; all extraction/parsing/telemetry outside this interval",
+    "phase": "2D-C",
+    "image_kernel_sha256": "404d15c7a08e52229c3a77e48a307fab95ff529e791328aa2578906631896d89",
+    "baseline_label": "Final profile with independent event warmup",
+    "gpu_model": "NVIDIA RTX 6000 Ada Generation",
+    "driver": "580.159.03",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "cuda_runtime_version": 13000,
+    "cuda_driver_api_version": 13000,
+    "density_block_size": 256,
+    "image_source_options": [
+      "--fmad=true",
+      "--ptxas-options=-v"
+    ],
+    "first_call_caveat": "Fresh prepared CoPylot context in an already initialized process; mode order can prime modules. Do not derive cold-process first-call speedups. Direct image first-use cases use independent child processes.",
+    "direct_statistics_units": "Every cuda_statistics value is in seconds, including keys inherited with an _ms suffix. Raw cuda_samples retain their explicit _ms or _s units."
+  },
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": [
+        25,
+        25
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.001817227,
+          "flux_density": 0.000411438,
+          "shading_blocking": 0.001298823,
+          "neighbor_list": 5.4815e-05,
+          "other_preparation_tracking": 0.0016082129999999998,
+          "projected_shadow_geometry": 0.000159555,
+          "normalization_dimensional_postprocessing": 9.29e-06,
+          "api_results_callbacks": 0.00017547799999999975,
+          "timing_driver_other": 7.26057929859164e-05
+        },
+        {
+          "image_plane": 0.001841143,
+          "flux_density": 0.000398037,
+          "shading_blocking": 0.0012978089999999979,
+          "neighbor_list": 5.8452e-05,
+          "other_preparation_tracking": 0.0016344140000000024,
+          "projected_shadow_geometry": 0.000163472,
+          "normalization_dimensional_postprocessing": 8.754e-06,
+          "api_results_callbacks": 0.00016464899999999935,
+          "timing_driver_other": 6.78106919717791e-05
+        },
+        {
+          "image_plane": 0.001824414,
+          "flux_density": 0.000405458,
+          "shading_blocking": 0.0012980829999999991,
+          "neighbor_list": 5.4e-05,
+          "other_preparation_tracking": 0.0015531180000000013,
+          "projected_shadow_geometry": 0.000158208,
+          "normalization_dimensional_postprocessing": 8.472e-06,
+          "api_results_callbacks": 0.0001632179999999997,
+          "timing_driver_other": 6.938173468494426e-05
+        },
+        {
+          "image_plane": 0.001819372,
+          "flux_density": 0.000398284,
+          "shading_blocking": 0.0012959140000000002,
+          "neighbor_list": 5.0601e-05,
+          "other_preparation_tracking": 0.0015385159999999995,
+          "projected_shadow_geometry": 0.000159369,
+          "normalization_dimensional_postprocessing": 8.441e-06,
+          "api_results_callbacks": 0.0001633170000000005,
+          "timing_driver_other": 6.769098747825587e-05
+        },
+        {
+          "image_plane": 0.0018270089999999999,
+          "flux_density": 0.000403476,
+          "shading_blocking": 0.0012982969999999986,
+          "neighbor_list": 5.3718e-05,
+          "other_preparation_tracking": 0.0015422980000000014,
+          "projected_shadow_geometry": 0.000162792,
+          "normalization_dimensional_postprocessing": 8.714e-06,
+          "api_results_callbacks": 0.00016636200000000063,
+          "timing_driver_other": 6.800428522491398e-05
+        },
+        {
+          "image_plane": 0.001833065,
+          "flux_density": 0.000405262,
+          "shading_blocking": 0.001394273999999999,
+          "neighbor_list": 5.1586e-05,
+          "other_preparation_tracking": 0.0015737080000000014,
+          "projected_shadow_geometry": 0.000174588,
+          "normalization_dimensional_postprocessing": 9.403000000000001e-06,
+          "api_results_callbacks": 0.00017486699999999956,
+          "timing_driver_other": 7.136295439910938e-05
+        },
+        {
+          "image_plane": 0.001831026,
+          "flux_density": 0.000399139,
+          "shading_blocking": 0.0012924539999999984,
+          "neighbor_list": 5.0872e-05,
+          "other_preparation_tracking": 0.0015937800000000012,
+          "projected_shadow_geometry": 0.000161697,
+          "normalization_dimensional_postprocessing": 8.646e-06,
+          "api_results_callbacks": 0.0001626000000000006,
+          "timing_driver_other": 6.800534878826162e-05
+        },
+        {
+          "image_plane": 0.0018319030000000002,
+          "flux_density": 0.000403451,
+          "shading_blocking": 0.0012937550000000008,
+          "neighbor_list": 5.4537e-05,
+          "other_preparation_tracking": 0.0015407929999999989,
+          "projected_shadow_geometry": 0.000161622,
+          "normalization_dimensional_postprocessing": 8.717e-06,
+          "api_results_callbacks": 0.00016687400000000002,
+          "timing_driver_other": 6.671233053016663e-05
+        },
+        {
+          "image_plane": 0.001825634,
+          "flux_density": 0.000402877,
+          "shading_blocking": 0.001292165999999999,
+          "neighbor_list": 5.4934e-05,
+          "other_preparation_tracking": 0.0015423510000000004,
+          "projected_shadow_geometry": 0.000161084,
+          "normalization_dimensional_postprocessing": 8.871e-06,
+          "api_results_callbacks": 0.00016805600000000063,
+          "timing_driver_other": 6.924904816341376e-05
+        },
+        {
+          "image_plane": 0.001821638,
+          "flux_density": 0.000406376,
+          "shading_blocking": 0.0013101909999999994,
+          "neighbor_list": 5.2492e-05,
+          "other_preparation_tracking": 0.0015442180000000006,
+          "projected_shadow_geometry": 0.000159462,
+          "normalization_dimensional_postprocessing": 9.028e-06,
+          "api_results_callbacks": 0.00016640499999999968,
+          "timing_driver_other": 7.135442799568233e-05
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.32407398861475767,
+          "flux_density": 0.07337352665774757,
+          "shading_blocking": 0.23162475030064233,
+          "neighbor_list": 0.009775397177082413,
+          "other_preparation_tracking": 0.2867996136157482,
+          "projected_shadow_geometry": 0.028454136579209786,
+          "normalization_dimensional_postprocessing": 0.0016567260745251413,
+          "api_results_callbacks": 0.03129375437088507,
+          "timing_driver_other": 0.012948106609401757,
+          "image_numerical_kernel_only": 0.11829987171455393
+        },
+        {
+          "image_plane": 0.32676008580846744,
+          "flux_density": 0.07064231527640437,
+          "shading_blocking": 0.2303309304073614,
+          "neighbor_list": 0.010373871304769125,
+          "other_preparation_tracking": 0.2900704936480009,
+          "projected_shadow_geometry": 0.02901248015351431,
+          "normalization_dimensional_postprocessing": 0.0015536315164912905,
+          "api_results_callbacks": 0.029221370294582303,
+          "timing_driver_other": 0.012034821590408836,
+          "image_numerical_kernel_only": 0.11812852869451156
+        },
+        {
+          "image_plane": 0.32965264186469656,
+          "flux_density": 0.07326204516363947,
+          "shading_blocking": 0.23455010228470657,
+          "neighbor_list": 0.009757238576712093,
+          "other_preparation_tracking": 0.28063227525529527,
+          "projected_shadow_geometry": 0.02858654075452716,
+          "normalization_dimensional_postprocessing": 0.0015308023189241637,
+          "api_results_callbacks": 0.02949179566692206,
+          "timing_driver_other": 0.012536558114576695,
+          "image_numerical_kernel_only": 0.12026700026554633
+        },
+        {
+          "image_plane": 0.33070441708968656,
+          "flux_density": 0.07239546286089306,
+          "shading_blocking": 0.2355562710475725,
+          "neighbor_list": 0.009197665023510986,
+          "other_preparation_tracking": 0.27965365904452527,
+          "projected_shadow_geometry": 0.028968255116142413,
+          "normalization_dimensional_postprocessing": 0.0015343074339134843,
+          "api_results_callbacks": 0.02968587693217028,
+          "timing_driver_other": 0.012304085451585426,
+          "image_numerical_kernel_only": 0.12098507650668779
+        },
+        {
+          "image_plane": 0.33034133401168775,
+          "flux_density": 0.07295245950167718,
+          "shading_blocking": 0.23474496454225005,
+          "neighbor_list": 0.009712746779265917,
+          "other_preparation_tracking": 0.27886276354607914,
+          "projected_shadow_geometry": 0.02943440697141102,
+          "normalization_dimensional_postprocessing": 0.0015755775612368889,
+          "api_results_callbacks": 0.03007989835236313,
+          "timing_driver_other": 0.012295848734028893,
+          "image_numerical_kernel_only": 0.1197916245685788
+        },
+        {
+          "image_plane": 0.3222622419612127,
+          "flux_density": 0.07124714110066199,
+          "shading_blocking": 0.245120530449399,
+          "neighbor_list": 0.009069083755246605,
+          "other_preparation_tracking": 0.27666594925564375,
+          "projected_shadow_geometry": 0.03069346711629113,
+          "normalization_dimensional_postprocessing": 0.0016530956955488668,
+          "api_results_callbacks": 0.03074251674928671,
+          "timing_driver_other": 0.012545973916709325,
+          "image_numerical_kernel_only": 0.11701589896338445
+        },
+        {
+          "image_plane": 0.32883510603770705,
+          "flux_density": 0.07168162297465157,
+          "shading_blocking": 0.23211262327179302,
+          "neighbor_list": 0.009136134339081057,
+          "other_preparation_tracking": 0.28622794832010967,
+          "projected_shadow_geometry": 0.029039265494307083,
+          "normalization_dimensional_postprocessing": 0.001552740554640958,
+          "api_results_callbacks": 0.029201435829819652,
+          "timing_driver_other": 0.012213123177890025,
+          "image_numerical_kernel_only": 0.12045502146741086
+        },
+        {
+          "image_plane": 0.3313643765993118,
+          "flux_density": 0.07297836681492902,
+          "shading_blocking": 0.2340212986425825,
+          "neighbor_list": 0.00986494318017748,
+          "other_preparation_tracking": 0.27870684851413147,
+          "projected_shadow_geometry": 0.0292350486214248,
+          "normalization_dimensional_postprocessing": 0.0015767774116949426,
+          "api_results_callbacks": 0.030185058368610976,
+          "timing_driver_other": 0.012067281847137045,
+          "image_numerical_kernel_only": 0.12054198593135217
+        },
+        {
+          "image_plane": 0.3304182137995416,
+          "flux_density": 0.07291598355470917,
+          "shading_blocking": 0.23386680005548657,
+          "neighbor_list": 0.009942405847428355,
+          "other_preparation_tracking": 0.27914733318503976,
+          "projected_shadow_geometry": 0.029154303410040217,
+          "normalization_dimensional_postprocessing": 0.0016055463332824288,
+          "api_results_callbacks": 0.03041615314915036,
+          "timing_driver_other": 0.012533260665321526,
+          "image_numerical_kernel_only": 0.11990974709160913
+        },
+        {
+          "image_plane": 0.32874642571451584,
+          "flux_density": 0.0733376540762556,
+          "shading_blocking": 0.23644687267905423,
+          "neighbor_list": 0.009473099144070537,
+          "other_preparation_tracking": 0.27868113644094955,
+          "projected_shadow_geometry": 0.028777705854449744,
+          "normalization_dimensional_postprocessing": 0.0016292604410704263,
+          "api_results_callbacks": 0.030030691592415122,
+          "timing_driver_other": 0.012877154057219025,
+          "image_numerical_kernel_only": 0.12028662841315141
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.0018263214999999998,
+          "minimum": 0.001817227,
+          "maximum": 0.001841143,
+          "mean": 0.0018272431,
+          "stdev": 7.207004100179203e-06,
+          "coefficient_of_variation": 0.003944195548024892
+        },
+        "flux_density": {
+          "median": 0.0004034635,
+          "minimum": 0.000398037,
+          "maximum": 0.000411438,
+          "mean": 0.0004033798,
+          "stdev": 4.1437717601238515e-06,
+          "coefficient_of_variation": 0.010272630806311698
+        },
+        "shading_blocking": {
+          "median": 0.0012979459999999986,
+          "minimum": 0.001292165999999999,
+          "maximum": 0.001394273999999999,
+          "mean": 0.0013071765999999993,
+          "stdev": 3.102539762911086e-05,
+          "coefficient_of_variation": 0.023734664183179897
+        },
+        "neighbor_list": {
+          "median": 5.3859e-05,
+          "minimum": 5.0601e-05,
+          "maximum": 5.8452e-05,
+          "mean": 5.3600699999999997e-05,
+          "stdev": 2.3468517469627753e-06,
+          "coefficient_of_variation": 0.04378397571230927
+        },
+        "other_preparation_tracking": {
+          "median": 0.0015486680000000009,
+          "minimum": 0.0015385159999999995,
+          "maximum": 0.0016344140000000024,
+          "mean": 0.0015671409000000006,
+          "stdev": 3.404696504487152e-05,
+          "coefficient_of_variation": 0.021725528983942356
+        },
+        "projected_shadow_geometry": {
+          "median": 0.00016135299999999998,
+          "minimum": 0.000158208,
+          "maximum": 0.000174588,
+          "mean": 0.00016218489999999999,
+          "stdev": 4.663148136660944e-06,
+          "coefficient_of_variation": 0.02875204865965293
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 8.7355e-06,
+          "minimum": 8.441e-06,
+          "maximum": 9.403000000000001e-06,
+          "mean": 8.8336e-06,
+          "stdev": 3.20767551697834e-07,
+          "coefficient_of_variation": 0.03631221152167112
+        },
+        "api_results_callbacks": {
+          "median": 0.00016638350000000015,
+          "minimum": 0.0001626000000000006,
+          "maximum": 0.00017547799999999975,
+          "mean": 0.00016718260000000003,
+          "stdev": 4.571409221089828e-06,
+          "coefficient_of_variation": 0.02734380982883283
+        },
+        "timing_driver_other": {
+          "median": 6.862719847583769e-05,
+          "minimum": 6.671233053016663e-05,
+          "maximum": 7.26057929859164e-05,
+          "mean": 6.921776022224434e-05,
+          "stdev": 1.9494830331111963e-06,
+          "coefficient_of_variation": 0.028164491697676975
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.3292438739512018,
+          "minimum": 0.3222622419612127,
+          "maximum": 0.3313643765993118,
+          "mean": 0.32831588315015847,
+          "stdev": 0.003033576573975593,
+          "coefficient_of_variation": 0.00923981058993773
+        },
+        "flux_density": {
+          "median": 0.07293422152819318,
+          "minimum": 0.07064231527640437,
+          "maximum": 0.07337352665774757,
+          "mean": 0.0724786577981569,
+          "stdev": 0.0009631421240437799,
+          "coefficient_of_variation": 0.013288630795647434
+        },
+        "shading_blocking": {
+          "median": 0.23428570046364455,
+          "minimum": 0.2303309304073614,
+          "maximum": 0.245120530449399,
+          "mean": 0.2348375143680848,
+          "stdev": 0.0040634264969342205,
+          "coefficient_of_variation": 0.01730314046232493
+        },
+        "neighbor_list": {
+          "median": 0.009734992677989005,
+          "minimum": 0.009069083755246605,
+          "maximum": 0.010373871304769125,
+          "mean": 0.009630258512734457,
+          "stdev": 0.00041101207340017026,
+          "coefficient_of_variation": 0.04267923575017985
+        },
+        "other_preparation_tracking": {
+          "median": 0.2794004961147825,
+          "minimum": 0.27666594925564375,
+          "maximum": 0.2900704936480009,
+          "mean": 0.2815448020825523,
+          "stdev": 0.0044676665659102305,
+          "coefficient_of_variation": 0.01586840365321416
+        },
+        "projected_shadow_geometry": {
+          "median": 0.029025872823910698,
+          "minimum": 0.028454136579209786,
+          "maximum": 0.03069346711629113,
+          "mean": 0.029135561007131765,
+          "stdev": 0.0006211875008493885,
+          "coefficient_of_variation": 0.021320595155086768
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.0015761774864659157,
+          "minimum": 0.0015308023189241637,
+          "maximum": 0.0016567260745251413,
+          "mean": 0.001586846534132859,
+          "stdev": 4.692413127681668e-05,
+          "coefficient_of_variation": 0.029570680130362213
+        },
+        "api_results_callbacks": {
+          "median": 0.030055294972389124,
+          "minimum": 0.029201435829819652,
+          "maximum": 0.03129375437088507,
+          "mean": 0.030034855130620566,
+          "stdev": 0.0006690501024007784,
+          "coefficient_of_variation": 0.022275789228584662
+        },
+        "timing_driver_other": {
+          "median": 0.012418673058453476,
+          "minimum": 0.012034821590408836,
+          "maximum": 0.012948106609401757,
+          "mean": 0.012435621416427855,
+          "stdev": 0.0003112964963868024,
+          "coefficient_of_variation": 0.025032645009244955
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.12008837367857773,
+          "minimum": 0.11701589896338445,
+          "maximum": 0.12098507650668779,
+          "mean": 0.11956813836167864,
+          "stdev": 0.0012956695047979998,
+          "coefficient_of_variation": 0.010836243856860613
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.4908553683672765,
+          "minimum": 1.47549695754559,
+          "maximum": 1.4955828929873476,
+          "mean": 1.4888222820120494,
+          "stdev": 0.006695342081722059,
+          "coefficient_of_variation": 0.004497072728300202
+        },
+        "flux_density": {
+          "median": 1.078672111093819,
+          "minimum": 1.0760119773447772,
+          "maximum": 1.0791834992508862,
+          "mean": 1.0781433527756974,
+          "stdev": 0.0011186219993221968,
+          "coefficient_of_variation": 0.0010375447721699405
+        },
+        "shading_blocking": {
+          "median": 1.305970281393749,
+          "minimum": 1.2992596942076264,
+          "maximum": 1.3247147926745517,
+          "mean": 1.3069454069713309,
+          "stdev": 0.006999211842240045,
+          "coefficient_of_variation": 0.005355397252942471
+        },
+        "neighbor_list": {
+          "median": 1.009830694925769,
+          "minimum": 1.0091520847786393,
+          "maximum": 1.0104826166205276,
+          "mean": 1.0097240587291816,
+          "stdev": 0.0004190661067157442,
+          "coefficient_of_variation": 0.00041503032743735196
+        },
+        "other_preparation_tracking": {
+          "median": 1.3877335718883725,
+          "minimum": 1.3824871080947139,
+          "maximum": 1.4085905587141176,
+          "mean": 1.3919239318989693,
+          "stdev": 0.008700611814979073,
+          "coefficient_of_variation": 0.006250781106341803
+        },
+        "projected_shadow_geometry": {
+          "median": 1.0298935596755547,
+          "minimum": 1.02928748672659,
+          "maximum": 1.0316653876508781,
+          "mean": 1.0300102966374518,
+          "stdev": 0.0006596718307311523,
+          "coefficient_of_variation": 0.0006404516856624656
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0015786657442316,
+          "minimum": 1.001533149267378,
+          "maximum": 1.0016594753706418,
+          "mean": 1.0015893706093986,
+          "stdev": 4.707415894616554e-05,
+          "coefficient_of_variation": 4.69994593867586e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.030986607236497,
+          "minimum": 1.030079809455405,
+          "maximum": 1.032304689385544,
+          "mean": 1.0309653224242834,
+          "stdev": 0.0007113247103643466,
+          "coefficient_of_variation": 0.0006899598802137092
+        },
+        "timing_driver_other": {
+          "median": 1.0125748494653422,
+          "minimum": 1.0121814228410178,
+          "maximum": 1.013117959345505,
+          "mean": 1.012592303976419,
+          "stdev": 0.0003192204381374022,
+          "coefficient_of_variation": 0.00031525070542589873
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.1364778135637468,
+          "minimum": 1.1325232230410591,
+          "maximum": 1.1376371131742318,
+          "mean": 1.135808448443216,
+          "stdev": 0.0016694317389329993,
+          "coefficient_of_variation": 0.0014698180324518525
+        }
+      },
+      "dominant_components": [
+        "image_plane",
+        "other_preparation_tracking",
+        "shading_blocking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.4952913792802882,
+        "minimum": 0.4912055278759103,
+        "maximum": 0.5045827433726592,
+        "mean": 0.49636529044973965,
+        "stdev": 0.004202530264180508,
+        "coefficient_of_variation": 0.008466607849176437
+      },
+      "plain_median_s": 0.005456949584186077,
+      "instrumented_median_s": 0.005537758581340313,
+      "observer_ratio": 1.0148084558795294,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        50,
+        50
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.001816841,
+          "flux_density": 0.001182929,
+          "shading_blocking": 0.0012975260000000013,
+          "neighbor_list": 5.569e-05,
+          "other_preparation_tracking": 0.0015524149999999984,
+          "projected_shadow_geometry": 0.000160247,
+          "normalization_dimensional_postprocessing": 1.8436e-05,
+          "api_results_callbacks": 0.00019341300000000079,
+          "timing_driver_other": 7.436324010181346e-05
+        },
+        {
+          "image_plane": 0.001816371,
+          "flux_density": 0.001182993,
+          "shading_blocking": 0.001296754000000003,
+          "neighbor_list": 5.5695e-05,
+          "other_preparation_tracking": 0.0015628769999999968,
+          "projected_shadow_geometry": 0.000159592,
+          "normalization_dimensional_postprocessing": 1.8918e-05,
+          "api_results_callbacks": 0.0001896899999999993,
+          "timing_driver_other": 7.646738682746956e-05
+        },
+        {
+          "image_plane": 0.0018288129999999999,
+          "flux_density": 0.001176294,
+          "shading_blocking": 0.0012941040000000019,
+          "neighbor_list": 5.2567e-05,
+          "other_preparation_tracking": 0.0015765839999999976,
+          "projected_shadow_geometry": 0.000162455,
+          "normalization_dimensional_postprocessing": 1.831e-05,
+          "api_results_callbacks": 0.00018647100000000055,
+          "timing_driver_other": 7.535435288143124e-05
+        },
+        {
+          "image_plane": 0.001818752,
+          "flux_density": 0.001176041,
+          "shading_blocking": 0.0012961979999999995,
+          "neighbor_list": 5.1673e-05,
+          "other_preparation_tracking": 0.0015531340000000005,
+          "projected_shadow_geometry": 0.000159562,
+          "normalization_dimensional_postprocessing": 1.8669e-05,
+          "api_results_callbacks": 0.0001878050000000001,
+          "timing_driver_other": 7.754465495681765e-05
+        },
+        {
+          "image_plane": 0.001829831,
+          "flux_density": 0.001175997,
+          "shading_blocking": 0.0012945489999999992,
+          "neighbor_list": 5.8266e-05,
+          "other_preparation_tracking": 0.0015536270000000012,
+          "projected_shadow_geometry": 0.000159947,
+          "normalization_dimensional_postprocessing": 1.8148e-05,
+          "api_results_callbacks": 0.00018661299999999954,
+          "timing_driver_other": 7.572229306411753e-05
+        },
+        {
+          "image_plane": 0.001825605,
+          "flux_density": 0.001177902,
+          "shading_blocking": 0.0013009679999999998,
+          "neighbor_list": 5.5973e-05,
+          "other_preparation_tracking": 0.0015547590000000008,
+          "projected_shadow_geometry": 0.000159964,
+          "normalization_dimensional_postprocessing": 1.858e-05,
+          "api_results_callbacks": 0.00018646299999999956,
+          "timing_driver_other": 7.281411861038197e-05
+        },
+        {
+          "image_plane": 0.0018232300000000001,
+          "flux_density": 0.001176822,
+          "shading_blocking": 0.0012910309999999998,
+          "neighbor_list": 5.593e-05,
+          "other_preparation_tracking": 0.0015589410000000003,
+          "projected_shadow_geometry": 0.000159724,
+          "normalization_dimensional_postprocessing": 1.8587e-05,
+          "api_results_callbacks": 0.00018885199999999977,
+          "timing_driver_other": 7.632738934326179e-05
+        },
+        {
+          "image_plane": 0.00181451,
+          "flux_density": 0.001176729,
+          "shading_blocking": 0.0012961130000000004,
+          "neighbor_list": 5.3103e-05,
+          "other_preparation_tracking": 0.0015530729999999992,
+          "projected_shadow_geometry": 0.000160192,
+          "normalization_dimensional_postprocessing": 1.8373e-05,
+          "api_results_callbacks": 0.0001902090000000002,
+          "timing_driver_other": 7.721821598815921e-05
+        },
+        {
+          "image_plane": 0.001840104,
+          "flux_density": 0.00118011,
+          "shading_blocking": 0.0013962700000000015,
+          "neighbor_list": 5.6228e-05,
+          "other_preparation_tracking": 0.0016753899999999982,
+          "projected_shadow_geometry": 0.000172324,
+          "normalization_dimensional_postprocessing": 1.8557e-05,
+          "api_results_callbacks": 0.00019845200000000087,
+          "timing_driver_other": 7.499067002773255e-05
+        },
+        {
+          "image_plane": 0.001816452,
+          "flux_density": 0.00117791,
+          "shading_blocking": 0.001294925,
+          "neighbor_list": 5.6286e-05,
+          "other_preparation_tracking": 0.0015599929999999998,
+          "projected_shadow_geometry": 0.000159644,
+          "normalization_dimensional_postprocessing": 1.8293999999999998e-05,
+          "api_results_callbacks": 0.00018668200000000051,
+          "timing_driver_other": 7.55275111093516e-05
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.2860328992331352,
+          "flux_density": 0.1862334741768561,
+          "shading_blocking": 0.20427496055536687,
+          "neighbor_list": 0.008767510287522847,
+          "other_preparation_tracking": 0.24440320493813553,
+          "projected_shadow_geometry": 0.025228357354007427,
+          "normalization_dimensional_postprocessing": 0.0029024568084175116,
+          "api_results_callbacks": 0.030449819846303884,
+          "timing_driver_other": 0.011707316800254644,
+          "image_numerical_kernel_only": 0.10482850355514409
+        },
+        {
+          "image_plane": 0.28562178369820224,
+          "flux_density": 0.18602398450673754,
+          "shading_blocking": 0.20391274166884377,
+          "neighbor_list": 0.008757960374324063,
+          "other_preparation_tracking": 0.2457602089225683,
+          "projected_shadow_geometry": 0.02509561741734673,
+          "normalization_dimensional_postprocessing": 0.002974828878022491,
+          "api_results_callbacks": 0.02982848556253749,
+          "timing_driver_other": 0.012024388971417332,
+          "image_numerical_kernel_only": 0.10385955407986869
+        },
+        {
+          "image_plane": 0.2870548857853051,
+          "flux_density": 0.18463393459032698,
+          "shading_blocking": 0.20312567545960522,
+          "neighbor_list": 0.00825104271517981,
+          "other_preparation_tracking": 0.2474644154710945,
+          "projected_shadow_geometry": 0.025499327416336023,
+          "normalization_dimensional_postprocessing": 0.002873981625638562,
+          "api_results_callbacks": 0.029268936521815943,
+          "timing_driver_other": 0.01182780041469785,
+          "image_numerical_kernel_only": 0.10465499408106528
+        },
+        {
+          "image_plane": 0.28689751772090494,
+          "flux_density": 0.1855136069337715,
+          "shading_blocking": 0.20446767270897923,
+          "neighbor_list": 0.008151114298811669,
+          "other_preparation_tracking": 0.24499782778957224,
+          "projected_shadow_geometry": 0.025169974643372506,
+          "normalization_dimensional_postprocessing": 0.0029449258383394627,
+          "api_results_callbacks": 0.02962514312868086,
+          "timing_driver_other": 0.012232216937567656,
+          "image_numerical_kernel_only": 0.10467145478029799
+        },
+        {
+          "image_plane": 0.2880398752634074,
+          "flux_density": 0.18511765796411872,
+          "shading_blocking": 0.20377932851851813,
+          "neighbor_list": 0.009171847767415513,
+          "other_preparation_tracking": 0.24456167115206934,
+          "projected_shadow_geometry": 0.025177797254913824,
+          "normalization_dimensional_postprocessing": 0.0028567379480839037,
+          "api_results_callbacks": 0.029375382339970255,
+          "timing_driver_other": 0.011919701791502927,
+          "image_numerical_kernel_only": 0.10461315084237872
+        },
+        {
+          "image_plane": 0.2873598173841107,
+          "flux_density": 0.18540796262958242,
+          "shading_blocking": 0.2047791975277082,
+          "neighbor_list": 0.008810444240917849,
+          "other_preparation_tracking": 0.24472723415870512,
+          "projected_shadow_geometry": 0.02517917393304241,
+          "normalization_dimensional_postprocessing": 0.0029245896056358184,
+          "api_results_callbacks": 0.02935025573927181,
+          "timing_driver_other": 0.011461324781025656,
+          "image_numerical_kernel_only": 0.10473871716417123
+        },
+        {
+          "image_plane": 0.2871479594435162,
+          "flux_density": 0.1853425162641233,
+          "shading_blocking": 0.20332975939860687,
+          "neighbor_list": 0.008808644752267052,
+          "other_preparation_tracking": 0.24552400248067144,
+          "projected_shadow_geometry": 0.025155586883803017,
+          "normalization_dimensional_postprocessing": 0.0029273427500516305,
+          "api_results_callbacks": 0.029743074892814865,
+          "timing_driver_other": 0.012021113134145665,
+          "image_numerical_kernel_only": 0.10482302911965155
+        },
+        {
+          "image_plane": 0.2862219755090989,
+          "flux_density": 0.18561798999115264,
+          "shading_blocking": 0.20444969900580584,
+          "neighbor_list": 0.008376501405591414,
+          "other_preparation_tracking": 0.24498273482639527,
+          "projected_shadow_geometry": 0.02526878920521439,
+          "normalization_dimensional_postprocessing": 0.00289816884780391,
+          "api_results_callbacks": 0.03000369010896068,
+          "timing_driver_other": 0.01218045109997697,
+          "image_numerical_kernel_only": 0.10465398013341544
+        },
+        {
+          "image_plane": 0.27827972544790547,
+          "flux_density": 0.17846854677688204,
+          "shading_blocking": 0.21115851726377827,
+          "neighbor_list": 0.0085033848100351,
+          "other_preparation_tracking": 0.2533699558384558,
+          "projected_shadow_geometry": 0.02606063320773438,
+          "normalization_dimensional_postprocessing": 0.002806383152874393,
+          "api_results_callbacks": 0.030011981971990703,
+          "timing_driver_other": 0.011340871530343877,
+          "image_numerical_kernel_only": 0.10038796975452807
+        },
+        {
+          "image_plane": 0.28624866168634355,
+          "flux_density": 0.18562294026319487,
+          "shading_blocking": 0.2040629470165952,
+          "neighbor_list": 0.008869924540630599,
+          "other_preparation_tracking": 0.2458341362667794,
+          "projected_shadow_geometry": 0.025157769842668355,
+          "normalization_dimensional_postprocessing": 0.0028828909417314454,
+          "api_results_callbacks": 0.029418598818427424,
+          "timing_driver_other": 0.011902130623629107,
+          "image_numerical_kernel_only": 0.10437533788751946
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.001820991,
+          "minimum": 0.00181451,
+          "maximum": 0.001840104,
+          "mean": 0.0018230509,
+          "stdev": 8.128770529558672e-06,
+          "coefficient_of_variation": 0.004458882925078325
+        },
+        "flux_density": {
+          "median": 0.001177362,
+          "minimum": 0.001175997,
+          "maximum": 0.001182993,
+          "mean": 0.0011783727,
+          "stdev": 2.709429872377848e-06,
+          "coefficient_of_variation": 0.0022992978981758896
+        },
+        "shading_blocking": {
+          "median": 0.0012961555,
+          "minimum": 0.0012910309999999998,
+          "maximum": 0.0013962700000000015,
+          "mean": 0.0013058438000000006,
+          "stdev": 3.187518349855711e-05,
+          "coefficient_of_variation": 0.024409644934989237
+        },
+        "neighbor_list": {
+          "median": 5.58125e-05,
+          "minimum": 5.1673e-05,
+          "maximum": 5.8266e-05,
+          "mean": 5.51411e-05,
+          "stdev": 2.0272374442959454e-06,
+          "coefficient_of_variation": 0.03676454485485319
+        },
+        "other_preparation_tracking": {
+          "median": 0.0015568500000000007,
+          "minimum": 0.0015524149999999984,
+          "maximum": 0.0016753899999999982,
+          "mean": 0.0015700792999999993,
+          "stdev": 3.7718397588945064e-05,
+          "coefficient_of_variation": 0.024023243659696093
+        },
+        "projected_shadow_geometry": {
+          "median": 0.0001599555,
+          "minimum": 0.000159562,
+          "maximum": 0.000172324,
+          "mean": 0.0001613651,
+          "stdev": 3.943154671917739e-06,
+          "coefficient_of_variation": 0.024436229841011094
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.84965e-05,
+          "minimum": 1.8148e-05,
+          "maximum": 1.8918e-05,
+          "mean": 1.84872e-05,
+          "stdev": 2.214923123822692e-07,
+          "coefficient_of_variation": 0.011980846876880717
+        },
+        "api_results_callbacks": {
+          "median": 0.00018832849999999993,
+          "minimum": 0.00018646299999999956,
+          "maximum": 0.00019845200000000087,
+          "mean": 0.00018946500000000012,
+          "stdev": 3.85779781740857e-06,
+          "coefficient_of_variation": 0.02036153282879987
+        },
+        "timing_driver_other": {
+          "median": 7.562490208673457e-05,
+          "minimum": 7.281411861038197e-05,
+          "maximum": 7.754465495681765e-05,
+          "mean": 7.563298329105365e-05,
+          "stdev": 1.3909799900001151e-06,
+          "coefficient_of_variation": 0.018391182384638913
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.2865730897036243,
+          "minimum": 0.27827972544790547,
+          "maximum": 0.2880398752634074,
+          "mean": 0.28589051011719296,
+          "stdev": 0.002768560032428712,
+          "coefficient_of_variation": 0.009683987171500784
+        },
+        "flux_density": {
+          "median": 0.18546078478167696,
+          "minimum": 0.17846854677688204,
+          "maximum": 0.1862334741768561,
+          "mean": 0.18479826140967462,
+          "stdev": 0.0022678491007663173,
+          "coefficient_of_variation": 0.012272026173118478
+        },
+        "shading_blocking": {
+          "median": 0.20416895378598104,
+          "minimum": 0.20312567545960522,
+          "maximum": 0.21115851726377827,
+          "mean": 0.20473404991238076,
+          "stdev": 0.0023150165308163484,
+          "coefficient_of_variation": 0.011307432895539834
+        },
+        "neighbor_list": {
+          "median": 0.008762735330923456,
+          "minimum": 0.008151114298811669,
+          "maximum": 0.009171847767415513,
+          "mean": 0.008646837519269592,
+          "stdev": 0.0003164592053893788,
+          "coefficient_of_variation": 0.036598259731855175
+        },
+        "other_preparation_tracking": {
+          "median": 0.24526091513512183,
+          "minimum": 0.24440320493813553,
+          "maximum": 0.2533699558384558,
+          "mean": 0.2461625391844447,
+          "stdev": 0.002682987780009541,
+          "coefficient_of_variation": 0.010899252944410163
+        },
+        "projected_shadow_geometry": {
+          "median": 0.025178485593978117,
+          "minimum": 0.02509561741734673,
+          "maximum": 0.02606063320773438,
+          "mean": 0.025299302715843908,
+          "stdev": 0.00028938480045338023,
+          "coefficient_of_variation": 0.011438449656248845
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.0029003128281107106,
+          "minimum": 0.002806383152874393,
+          "maximum": 0.002974828878022491,
+          "mean": 0.0028992306396599127,
+          "stdev": 4.781774586435815e-05,
+          "coefficient_of_variation": 0.01649325348947309
+        },
+        "api_results_callbacks": {
+          "median": 0.02968410901074786,
+          "minimum": 0.029268936521815943,
+          "maximum": 0.030449819846303884,
+          "mean": 0.029707536893077393,
+          "stdev": 0.00037533536783813454,
+          "coefficient_of_variation": 0.01263434828639722
+        },
+        "timing_driver_other": {
+          "median": 0.011910916207566017,
+          "minimum": 0.011340871530343877,
+          "maximum": 0.012232216937567656,
+          "mean": 0.011861731608456168,
+          "stdev": 0.0002891193739797578,
+          "coefficient_of_variation": 0.02437412879698324
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.10465448710724036,
+          "minimum": 0.10038796975452807,
+          "maximum": 0.10482850355514409,
+          "mean": 0.10416066913980405,
+          "stdev": 0.0013557380612127731,
+          "coefficient_of_variation": 0.01301583479070307
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.4016855719368935,
+          "minimum": 1.3855783677694355,
+          "maximum": 1.4045730445507394,
+          "mean": 1.400364267490118,
+          "stdev": 0.005382969891089648,
+          "coefficient_of_variation": 0.003843978324823712
+        },
+        "flux_density": {
+          "median": 1.2276879805441607,
+          "minimum": 1.2172388483443886,
+          "maximum": 1.2288536923885836,
+          "mean": 1.226698708748689,
+          "stdev": 0.0033904409679226645,
+          "coefficient_of_variation": 0.0027638742453565727
+        },
+        "shading_blocking": {
+          "median": 1.2565481360650632,
+          "minimum": 1.2549030244847705,
+          "maximum": 1.2676818117264084,
+          "mean": 1.2574506400090084,
+          "stdev": 0.0036850853618787278,
+          "coefficient_of_variation": 0.00293060041056747
+        },
+        "neighbor_list": {
+          "median": 1.008840199684234,
+          "minimum": 1.0082181009792124,
+          "maximum": 1.009256749262472,
+          "mean": 1.0087223499692053,
+          "stdev": 0.0003219897918721805,
+          "coefficient_of_variation": 0.0003192055691856241
+        },
+        "other_preparation_tracking": {
+          "median": 1.3249613562644997,
+          "minimum": 1.3234571752228317,
+          "maximum": 1.3393514067907446,
+          "mean": 1.3265611454802717,
+          "stdev": 0.004756543088500521,
+          "coefficient_of_variation": 0.0035856191813747494
+        },
+        "projected_shadow_geometry": {
+          "median": 1.025828816067748,
+          "minimum": 1.0257416192456383,
+          "maximum": 1.0267579626579495,
+          "mean": 1.0259560521145037,
+          "stdev": 0.00030478030501835014,
+          "coefficient_of_variation": 0.0002970695522388074
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0029087491151065,
+          "minimum": 1.002814281103952,
+          "maximum": 1.0029837048894912,
+          "mean": 1.0029076626942672,
+          "stdev": 4.809544885794496e-05,
+          "coefficient_of_variation": 4.795600895972681e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.03059221535932,
+          "minimum": 1.0301514370179354,
+          "maximum": 1.0314061308734706,
+          "mean": 1.0306172342095743,
+          "stdev": 0.0003987594186663467,
+          "coefficient_of_variation": 0.00038691320640700603
+        },
+        "timing_driver_other": {
+          "median": 1.0120544963829665,
+          "minimum": 1.0114709622394307,
+          "maximum": 1.0123836970058322,
+          "mean": 1.012004199233806,
+          "stdev": 0.0002960555926741344,
+          "coefficient_of_variation": 0.0002925438381562841
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.116887263744065,
+          "minimum": 1.111590292681097,
+          "maximum": 1.1171043805253709,
+          "mean": 1.1162738892457476,
+          "stdev": 0.0016833793887040735,
+          "coefficient_of_variation": 0.0015080343676599944
+        }
+      },
+      "dominant_components": [
+        "image_plane",
+        "other_preparation_tracking",
+        "shading_blocking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.43962788496537253,
+        "minimum": 0.43805018616906033,
+        "maximum": 0.4470465374603752,
+        "mean": 0.4402786580225897,
+        "stdev": 0.002600792726054658,
+        "coefficient_of_variation": 0.0059071514793279335
+      },
+      "plain_median_s": 0.006186367943882942,
+      "instrumented_median_s": 0.006352280266582966,
+      "observer_ratio": 1.0268190195289106,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 1000,
+      "grid": [
+        100,
+        100
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.00186265,
+          "flux_density": 0.004365421,
+          "shading_blocking": 0.001293785,
+          "neighbor_list": 5.5532e-05,
+          "other_preparation_tracking": 0.001605838,
+          "projected_shadow_geometry": 0.000159822,
+          "normalization_dimensional_postprocessing": 5.7809e-05,
+          "api_results_callbacks": 0.00023509700000000008,
+          "timing_driver_other": 0.00010197160398578604
+        },
+        {
+          "image_plane": 0.001851241,
+          "flux_density": 0.00436536,
+          "shading_blocking": 0.0012951759999999988,
+          "neighbor_list": 5.4806e-05,
+          "other_preparation_tracking": 0.001604961000000001,
+          "projected_shadow_geometry": 0.000159772,
+          "normalization_dimensional_postprocessing": 5.9325e-05,
+          "api_results_callbacks": 0.000240851000000002,
+          "timing_driver_other": 0.00010172297440337943
+        },
+        {
+          "image_plane": 0.001852715,
+          "flux_density": 0.004368821,
+          "shading_blocking": 0.0013016899999999999,
+          "neighbor_list": 5.4252e-05,
+          "other_preparation_tracking": 0.0016013560000000002,
+          "projected_shadow_geometry": 0.000159283,
+          "normalization_dimensional_postprocessing": 5.8094e-05,
+          "api_results_callbacks": 0.00023654900000000083,
+          "timing_driver_other": 0.00010154462181568083
+        },
+        {
+          "image_plane": 0.00185782,
+          "flux_density": 0.004367772,
+          "shading_blocking": 0.0012975359999999982,
+          "neighbor_list": 5.792e-05,
+          "other_preparation_tracking": 0.0016055010000000016,
+          "projected_shadow_geometry": 0.000160805,
+          "normalization_dimensional_postprocessing": 6.1244e-05,
+          "api_results_callbacks": 0.00023499899999999962,
+          "timing_driver_other": 0.00010154262864875939
+        },
+        {
+          "image_plane": 0.0018554740000000002,
+          "flux_density": 0.004377327,
+          "shading_blocking": 0.0012926180000000004,
+          "neighbor_list": 5.421e-05,
+          "other_preparation_tracking": 0.0015997629999999997,
+          "projected_shadow_geometry": 0.00016368,
+          "normalization_dimensional_postprocessing": 5.8096e-05,
+          "api_results_callbacks": 0.00023506099999999822,
+          "timing_driver_other": 9.891567477798499e-05
+        },
+        {
+          "image_plane": 0.0018508980000000001,
+          "flux_density": 0.004365304,
+          "shading_blocking": 0.001293449,
+          "neighbor_list": 5.2584e-05,
+          "other_preparation_tracking": 0.001595198,
+          "projected_shadow_geometry": 0.000160013,
+          "normalization_dimensional_postprocessing": 5.7724e-05,
+          "api_results_callbacks": 0.00023595500000000297,
+          "timing_driver_other": 0.00010124883782863282
+        },
+        {
+          "image_plane": 0.001856483,
+          "flux_density": 0.004371575,
+          "shading_blocking": 0.0012935009999999992,
+          "neighbor_list": 5.0879e-05,
+          "other_preparation_tracking": 0.0016011750000000011,
+          "projected_shadow_geometry": 0.000159521,
+          "normalization_dimensional_postprocessing": 5.7904999999999995e-05,
+          "api_results_callbacks": 0.00023422999999999847,
+          "timing_driver_other": 0.00010669055157280088
+        },
+        {
+          "image_plane": 0.0018607189999999998,
+          "flux_density": 0.004370125,
+          "shading_blocking": 0.0012952739999999964,
+          "neighbor_list": 5.4788e-05,
+          "other_preparation_tracking": 0.0016011480000000036,
+          "projected_shadow_geometry": 0.000159619,
+          "normalization_dimensional_postprocessing": 5.7997e-05,
+          "api_results_callbacks": 0.00023683199999999932,
+          "timing_driver_other": 0.00010244433352756509
+        },
+        {
+          "image_plane": 0.001821292,
+          "flux_density": 0.004183212,
+          "shading_blocking": 0.001293083,
+          "neighbor_list": 5.5534e-05,
+          "other_preparation_tracking": 0.001597966,
+          "projected_shadow_geometry": 0.000159677,
+          "normalization_dimensional_postprocessing": 5.7833e-05,
+          "api_results_callbacks": 0.00023828499999999954,
+          "timing_driver_other": 0.00010367051061916342
+        },
+        {
+          "image_plane": 0.001829253,
+          "flux_density": 0.0041819,
+          "shading_blocking": 0.0012978290000000006,
+          "neighbor_list": 5.4688e-05,
+          "other_preparation_tracking": 0.0016029159999999998,
+          "projected_shadow_geometry": 0.000160141,
+          "normalization_dimensional_postprocessing": 5.8228e-05,
+          "api_results_callbacks": 0.0002361129999999996,
+          "timing_driver_other": 0.00010053930957984979
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.19127790411929282,
+          "flux_density": 0.44829065013735675,
+          "shading_blocking": 0.1328604317402514,
+          "neighbor_list": 0.005702651905378128,
+          "other_preparation_tracking": 0.16490555230189083,
+          "projected_shadow_geometry": 0.01641232501659121,
+          "normalization_dimensional_postprocessing": 0.005936479939458406,
+          "api_results_callbacks": 0.024142410772143668,
+          "timing_driver_other": 0.010471594067636798,
+          "image_numerical_kernel_only": 0.06800298622286227
+        },
+        {
+          "image_plane": 0.19019830599328522,
+          "flux_density": 0.4485013442608756,
+          "shading_blocking": 0.1330676455216576,
+          "neighbor_list": 0.005630821896375452,
+          "other_preparation_tracking": 0.16489525857805074,
+          "projected_shadow_geometry": 0.01641513111753638,
+          "normalization_dimensional_postprocessing": 0.006095108364092868,
+          "api_results_callbacks": 0.024745266659926567,
+          "timing_driver_other": 0.010451117608199624,
+          "image_numerical_kernel_only": 0.06799644204934284
+        },
+        {
+          "image_plane": 0.190328438648597,
+          "flux_density": 0.4488066862227607,
+          "shading_blocking": 0.133721929872912,
+          "neighbor_list": 0.005573279459368378,
+          "other_preparation_tracking": 0.1645064606270056,
+          "projected_shadow_geometry": 0.016363058912603652,
+          "normalization_dimensional_postprocessing": 0.005967966101020175,
+          "api_results_callbacks": 0.024300554501845737,
+          "timing_driver_other": 0.01043162565388675,
+          "image_numerical_kernel_only": 0.06837673852123921
+        },
+        {
+          "image_plane": 0.19064067533094975,
+          "flux_density": 0.44820004293828947,
+          "shading_blocking": 0.13314698910885817,
+          "neighbor_list": 0.005943475640895571,
+          "other_preparation_tracking": 0.16474889649401742,
+          "projected_shadow_geometry": 0.01650104627821499,
+          "normalization_dimensional_postprocessing": 0.006284568752607187,
+          "api_results_callbacks": 0.024114482599012707,
+          "timing_driver_other": 0.010419822857154802,
+          "image_numerical_kernel_only": 0.06809055708825237
+        },
+        {
+          "image_plane": 0.19059542122750378,
+          "flux_density": 0.44964169986511554,
+          "shading_blocking": 0.13277850953247178,
+          "neighbor_list": 0.005568484271265983,
+          "other_preparation_tracking": 0.16432863130885964,
+          "projected_shadow_geometry": 0.01681330945435927,
+          "normalization_dimensional_postprocessing": 0.005967656561952934,
+          "api_results_callbacks": 0.024145609320937896,
+          "timing_driver_other": 0.010160678457533125,
+          "image_numerical_kernel_only": 0.06826565153536314
+        },
+        {
+          "image_plane": 0.1905711241046915,
+          "flux_density": 0.4494579876031561,
+          "shading_blocking": 0.13317537211779856,
+          "neighbor_list": 0.005414124381743941,
+          "other_preparation_tracking": 0.16424388379562552,
+          "projected_shadow_geometry": 0.016475168961965492,
+          "normalization_dimensional_postprocessing": 0.005943346185375538,
+          "api_results_callbacks": 0.024294266668462038,
+          "timing_driver_other": 0.010424726181181334,
+          "image_numerical_kernel_only": 0.06830709218185176
+        },
+        {
+          "image_plane": 0.19076147924391756,
+          "flux_density": 0.44919781846950874,
+          "shading_blocking": 0.1329126979150827,
+          "neighbor_list": 0.005228032415298864,
+          "other_preparation_tracking": 0.1645275025563821,
+          "projected_shadow_geometry": 0.016391457358063057,
+          "normalization_dimensional_postprocessing": 0.005949983627977766,
+          "api_results_callbacks": 0.024068123049498714,
+          "timing_driver_other": 0.01096290536427049,
+          "image_numerical_kernel_only": 0.06816633421413158
+        },
+        {
+          "image_plane": 0.19105958039775178,
+          "flux_density": 0.4487266743585276,
+          "shading_blocking": 0.13299939804995645,
+          "neighbor_list": 0.005625659914706103,
+          "other_preparation_tracking": 0.16440669710724737,
+          "projected_shadow_geometry": 0.016389760712664698,
+          "normalization_dimensional_postprocessing": 0.005955161679075891,
+          "api_results_callbacks": 0.024318031118487116,
+          "timing_driver_other": 0.010519036661582928,
+          "image_numerical_kernel_only": 0.06781842714921153
+        },
+        {
+          "image_plane": 0.19150222849475954,
+          "flux_density": 0.43984952454961646,
+          "shading_blocking": 0.13596297360812498,
+          "neighbor_list": 0.005839198084232499,
+          "other_preparation_tracking": 0.16802031198668688,
+          "projected_shadow_geometry": 0.01678945569373704,
+          "normalization_dimensional_postprocessing": 0.0060809295711711404,
+          "api_results_callbacks": 0.025054800941789503,
+          "timing_driver_other": 0.010900577069881946,
+          "image_numerical_kernel_only": 0.06643231107931372
+        },
+        {
+          "image_plane": 0.19211598845917094,
+          "flux_density": 0.43920105755595695,
+          "shading_blocking": 0.13630356281278613,
+          "neighbor_list": 0.00574356809957679,
+          "other_preparation_tracking": 0.16834510685893117,
+          "projected_shadow_geometry": 0.016818694028567997,
+          "normalization_dimensional_postprocessing": 0.006115354068573678,
+          "api_results_callbacks": 0.02479759901066728,
+          "timing_driver_other": 0.010559069105769096,
+          "image_numerical_kernel_only": 0.06677527967238629
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.0018540945,
+          "minimum": 0.001821292,
+          "maximum": 0.00186265,
+          "mean": 0.0018498545,
+          "stdev": 1.3630680697521214e-05,
+          "coefficient_of_variation": 0.007368515035923752
+        },
+        "flux_density": {
+          "median": 0.0043665965,
+          "minimum": 0.0041819,
+          "maximum": 0.004377327,
+          "mean": 0.0043316817,
+          "stdev": 7.868045801150378e-05,
+          "coefficient_of_variation": 0.018163951892287877
+        },
+        "shading_blocking": {
+          "median": 0.0012944804999999995,
+          "minimum": 0.0012926180000000004,
+          "maximum": 0.0013016899999999999,
+          "mean": 0.0012953940999999992,
+          "stdev": 2.8523125296268406e-06,
+          "coefficient_of_variation": 0.002201887849903626
+        },
+        "neighbor_list": {
+          "median": 5.4738000000000003e-05,
+          "minimum": 5.0879e-05,
+          "maximum": 5.792e-05,
+          "mean": 5.45193e-05,
+          "stdev": 1.8549357610919527e-06,
+          "coefficient_of_variation": 0.03402346987382363
+        },
+        "other_preparation_tracking": {
+          "median": 0.0016012655000000008,
+          "minimum": 0.001595198,
+          "maximum": 0.001605838,
+          "mean": 0.0016015822000000008,
+          "stdev": 3.4028427266366927e-06,
+          "coefficient_of_variation": 0.002124675665499211
+        },
+        "projected_shadow_geometry": {
+          "median": 0.000159797,
+          "minimum": 0.000159283,
+          "maximum": 0.00016368,
+          "mean": 0.00016023330000000002,
+          "stdev": 1.279881682899722e-06,
+          "coefficient_of_variation": 0.007987613579073276
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 5.80455e-05,
+          "minimum": 5.7724e-05,
+          "maximum": 6.1244e-05,
+          "mean": 5.84255e-05,
+          "stdev": 1.0897642201667085e-06,
+          "coefficient_of_variation": 0.018652201866765514
+        },
+        "api_results_callbacks": {
+          "median": 0.00023603400000000128,
+          "minimum": 0.00023422999999999847,
+          "maximum": 0.000240851000000002,
+          "mean": 0.00023639720000000008,
+          "stdev": 1.944113554068781e-06,
+          "coefficient_of_variation": 0.00822392800789849
+        },
+        "timing_driver_other": {
+          "median": 0.00010163379810953013,
+          "minimum": 9.891567477798499e-05,
+          "maximum": 0.00010669055157280088,
+          "mean": 0.00010202910467596026,
+          "stdev": 2.046293988675322e-06,
+          "coefficient_of_variation": 0.02005598299793238
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.19070107728743366,
+          "minimum": 0.19019830599328522,
+          "maximum": 0.19211598845917094,
+          "mean": 0.190905114601992,
+          "stdev": 0.0005883824013927218,
+          "coefficient_of_variation": 0.003082067249059352
+        },
+        "flux_density": {
+          "median": 0.44861400930970163,
+          "minimum": 0.43920105755595695,
+          "maximum": 0.44964169986511554,
+          "mean": 0.4469873485961164,
+          "stdev": 0.003963827050265345,
+          "coefficient_of_variation": 0.00886787302306163
+        },
+        "shading_blocking": {
+          "median": 0.13310731731525788,
+          "minimum": 0.13277850953247178,
+          "maximum": 0.13630356281278613,
+          "mean": 0.13369295102798998,
+          "stdev": 0.0013142470496271068,
+          "coefficient_of_variation": 0.009830339142951193
+        },
+        "neighbor_list": {
+          "median": 0.005628240905540777,
+          "minimum": 0.005228032415298864,
+          "maximum": 0.005943475640895571,
+          "mean": 0.005626929606884171,
+          "stdev": 0.00020420950394475513,
+          "coefficient_of_variation": 0.03629146234474277
+        },
+        "other_preparation_tracking": {
+          "median": 0.16463819952519976,
+          "minimum": 0.16424388379562552,
+          "maximum": 0.16834510685893117,
+          "mean": 0.16529283016146973,
+          "stdev": 0.0015412391972128123,
+          "coefficient_of_variation": 0.00932429552877291
+        },
+        "projected_shadow_geometry": {
+          "median": 0.016445150039750937,
+          "minimum": 0.016363058912603652,
+          "maximum": 0.016818694028567997,
+          "mean": 0.016536940753430377,
+          "stdev": 0.00019092217033097963,
+          "coefficient_of_variation": 0.011545192861102515
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.005967811331486554,
+          "minimum": 0.005936479939458406,
+          "maximum": 0.006284568752607187,
+          "mean": 0.006029655485130558,
+          "stdev": 0.00011299729027666238,
+          "coefficient_of_variation": 0.018740256479880077
+        },
+        "api_results_callbacks": {
+          "median": 0.02429741058515389,
+          "minimum": 0.024068123049498714,
+          "maximum": 0.025054800941789503,
+          "mean": 0.024398114464277122,
+          "stdev": 0.0003426270935545677,
+          "coefficient_of_variation": 0.01404317919961522
+        },
+        "timing_driver_other": {
+          "median": 0.01046135583791821,
+          "minimum": 0.010160678457533125,
+          "maximum": 0.01096290536427049,
+          "mean": 0.01053011530270969,
+          "stdev": 0.00023679120479106773,
+          "coefficient_of_variation": 0.022487047670801362
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.06804677165555732,
+          "minimum": 0.06643231107931372,
+          "maximum": 0.06837673852123921,
+          "mean": 0.06782318197139547,
+          "stdev": 0.0006683818331533122,
+          "coefficient_of_variation": 0.009854769618966022
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.2356373862683794,
+          "minimum": 1.2348702248969463,
+          "maximum": 1.237801448864868,
+          "mean": 1.235949570644957,
+          "stdev": 0.0008992995469560747,
+          "coefficient_of_variation": 0.0007276183173774575
+        },
+        "flux_density": {
+          "median": 1.8136116235000392,
+          "minimum": 1.7831702671225718,
+          "maximum": 1.8169981260479133,
+          "mean": 1.8083596927185481,
+          "stdev": 0.01283508889502906,
+          "coefficient_of_variation": 0.007097641551462463
+        },
+        "shading_blocking": {
+          "median": 1.1535453258150707,
+          "minimum": 1.1531079556860262,
+          "maximum": 1.1578142006197034,
+          "mean": 1.1543275293303608,
+          "stdev": 0.0017546859579011928,
+          "coefficient_of_variation": 0.0015200936591359881
+        },
+        "neighbor_list": {
+          "median": 1.0056600973034504,
+          "minimum": 1.0052555083834867,
+          "maximum": 1.0059790117515979,
+          "mean": 1.005658809282647,
+          "stdev": 0.00020651053123301233,
+          "coefficient_of_variation": 0.00020534850321683124
+        },
+        "other_preparation_tracking": {
+          "median": 1.1970861212369677,
+          "minimum": 1.1965213064087963,
+          "maximum": 1.202421831756572,
+          "mean": 1.198028616834696,
+          "stdev": 0.002217655845713701,
+          "coefficient_of_variation": 0.0018510875404403576
+        },
+        "projected_shadow_geometry": {
+          "median": 1.016720115784023,
+          "minimum": 1.016635262696127,
+          "maximum": 1.0171064013589541,
+          "mean": 1.0168150440642119,
+          "stdev": 0.0001974238182878432,
+          "coefficient_of_variation": 0.00019415902571498134
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0060036399218668,
+          "minimum": 1.0059719321951346,
+          "maximum": 1.0063243143408958,
+          "mean": 1.0060662444823443,
+          "stdev": 0.00011438717381053931,
+          "coefficient_of_variation": 0.00011369745723791324
+        },
+        "api_results_callbacks": {
+          "median": 1.0249024762864556,
+          "minimum": 1.024661683482155,
+          "maximum": 1.02569867615738,
+          "mean": 1.0250083828888414,
+          "stdev": 0.0003600813999053782,
+          "coefficient_of_variation": 0.0003512960536874241
+        },
+        "timing_driver_other": {
+          "median": 1.0105719529062211,
+          "minimum": 1.010264977594242,
+          "maximum": 1.011084422842915,
+          "mean": 1.010642230770651,
+          "stdev": 0.00024189548126869078,
+          "coefficient_of_variation": 0.00023934828162112005
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.0730152241478765,
+          "minimum": 1.0711596083151906,
+          "maximum": 1.0733952675384095,
+          "mean": 1.0727583468456319,
+          "stdev": 0.0007684832697511115,
+          "coefficient_of_variation": 0.0007163619579477343
+        }
+      },
+      "dominant_components": [
+        "flux_density",
+        "image_plane",
+        "other_preparation_tracking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.306246027049208,
+        "minimum": 0.3051436932104704,
+        "maximum": 0.31310364973784555,
+        "mean": 0.3072616329780075,
+        "stdev": 0.0030912432537769825,
+        "coefficient_of_variation": 0.010060622355665995
+      },
+      "plain_median_s": 0.009559829719364643,
+      "instrumented_median_s": 0.009733759798109531,
+      "observer_ratio": 1.018193846946099,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        25,
+        25
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.007365566,
+          "flux_density": 0.001359794,
+          "shading_blocking": 0.009814493999999998,
+          "neighbor_list": 0.000300512,
+          "other_preparation_tracking": 0.007738169000000004,
+          "projected_shadow_geometry": 0.000789335,
+          "normalization_dimensional_postprocessing": 5.6813e-05,
+          "api_results_callbacks": 0.0008245749999999975,
+          "timing_driver_other": 8.575263287258217e-05
+        },
+        {
+          "image_plane": 0.00719559,
+          "flux_density": 0.001352483,
+          "shading_blocking": 0.009755078999999977,
+          "neighbor_list": 0.000285326,
+          "other_preparation_tracking": 0.007514035000000024,
+          "projected_shadow_geometry": 0.000795443,
+          "normalization_dimensional_postprocessing": 5.597e-05,
+          "api_results_callbacks": 0.0008345759999999966,
+          "timing_driver_other": 8.58690368871727e-05
+        },
+        {
+          "image_plane": 0.007215444,
+          "flux_density": 0.001350615,
+          "shading_blocking": 0.009673451999999983,
+          "neighbor_list": 0.000287975,
+          "other_preparation_tracking": 0.007490258000000018,
+          "projected_shadow_geometry": 0.000799945,
+          "normalization_dimensional_postprocessing": 5.7026999999999995e-05,
+          "api_results_callbacks": 0.0008248050000000014,
+          "timing_driver_other": 8.716042855167264e-05
+        },
+        {
+          "image_plane": 0.007173276,
+          "flux_density": 0.001355461,
+          "shading_blocking": 0.00968661899999999,
+          "neighbor_list": 0.000281041,
+          "other_preparation_tracking": 0.007498130000000012,
+          "projected_shadow_geometry": 0.000831555,
+          "normalization_dimensional_postprocessing": 5.6254e-05,
+          "api_results_callbacks": 0.0008167139999999996,
+          "timing_driver_other": 8.839325041770651e-05
+        },
+        {
+          "image_plane": 0.007172535,
+          "flux_density": 0.001363566,
+          "shading_blocking": 0.009706303000000001,
+          "neighbor_list": 0.00028663,
+          "other_preparation_tracking": 0.007484696999999999,
+          "projected_shadow_geometry": 0.000797317,
+          "normalization_dimensional_postprocessing": 5.7356000000000004e-05,
+          "api_results_callbacks": 0.0008247699999999955,
+          "timing_driver_other": 8.692297794914497e-05
+        },
+        {
+          "image_plane": 0.007162271,
+          "flux_density": 0.001352424,
+          "shading_blocking": 0.009675685000000026,
+          "neighbor_list": 0.000281133,
+          "other_preparation_tracking": 0.007521750999999973,
+          "projected_shadow_geometry": 0.000792574,
+          "normalization_dimensional_postprocessing": 5.7509e-05,
+          "api_results_callbacks": 0.0008273469999999991,
+          "timing_driver_other": 8.535809171772088e-05
+        },
+        {
+          "image_plane": 0.0071682099999999995,
+          "flux_density": 0.001353735,
+          "shading_blocking": 0.009692153,
+          "neighbor_list": 0.000287522,
+          "other_preparation_tracking": 0.007494419999999998,
+          "projected_shadow_geometry": 0.000802681,
+          "normalization_dimensional_postprocessing": 5.6896000000000005e-05,
+          "api_results_callbacks": 0.0008263050000000029,
+          "timing_driver_other": 8.502656584071996e-05
+        },
+        {
+          "image_plane": 0.007153118,
+          "flux_density": 0.001355747,
+          "shading_blocking": 0.009681073999999996,
+          "neighbor_list": 0.000285394,
+          "other_preparation_tracking": 0.0074836480000000025,
+          "projected_shadow_geometry": 0.000812706,
+          "normalization_dimensional_postprocessing": 5.6707e-05,
+          "api_results_callbacks": 0.0008265080000000001,
+          "timing_driver_other": 8.467872066307211e-05
+        },
+        {
+          "image_plane": 0.007179269,
+          "flux_density": 0.001361876,
+          "shading_blocking": 0.009687844999999999,
+          "neighbor_list": 0.000286776,
+          "other_preparation_tracking": 0.00748546,
+          "projected_shadow_geometry": 0.000809355,
+          "normalization_dimensional_postprocessing": 5.6473e-05,
+          "api_results_callbacks": 0.0008368820000000006,
+          "timing_driver_other": 8.46322880878464e-05
+        },
+        {
+          "image_plane": 0.0071723609999999995,
+          "flux_density": 0.001353543,
+          "shading_blocking": 0.009683542999999961,
+          "neighbor_list": 0.000281878,
+          "other_preparation_tracking": 0.007482471000000038,
+          "projected_shadow_geometry": 0.000803131,
+          "normalization_dimensional_postprocessing": 5.6015000000000005e-05,
+          "api_results_callbacks": 0.0008369930000000012,
+          "timing_driver_other": 8.552104526996646e-05
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.25994576446196604,
+          "flux_density": 0.047989888467606524,
+          "shading_blocking": 0.3463734009901451,
+          "neighbor_list": 0.010605678038862776,
+          "other_preparation_tracking": 0.2730956801202906,
+          "projected_shadow_geometry": 0.027857233237959713,
+          "normalization_dimensional_postprocessing": 0.002005046009550071,
+          "api_results_callbacks": 0.029100924318813386,
+          "timing_driver_other": 0.003026384354805821,
+          "image_numerical_kernel_only": 0.02326111672026275
+        },
+        {
+          "image_plane": 0.25814358252165814,
+          "flux_density": 0.04852066431239686,
+          "shading_blocking": 0.34996588755637664,
+          "neighbor_list": 0.010236141279113266,
+          "other_preparation_tracking": 0.26956787617042294,
+          "projected_shadow_geometry": 0.028536715642744417,
+          "normalization_dimensional_postprocessing": 0.0020079376831833393,
+          "api_results_callbacks": 0.029940621759521384,
+          "timing_driver_other": 0.0030805730745830672,
+          "image_numerical_kernel_only": 0.0237350644730326
+        },
+        {
+          "image_plane": 0.2596727507224345,
+          "flux_density": 0.04860656006989742,
+          "shading_blocking": 0.348132684533541,
+          "neighbor_list": 0.010363778083412897,
+          "other_preparation_tracking": 0.2695628846236941,
+          "projected_shadow_geometry": 0.02878879228730178,
+          "normalization_dimensional_postprocessing": 0.0020523141688090535,
+          "api_results_callbacks": 0.029683465516414233,
+          "timing_driver_other": 0.0031367699944950104,
+          "image_numerical_kernel_only": 0.02387791332819095
+        },
+        {
+          "image_plane": 0.25814811155366624,
+          "flux_density": 0.048779622788060015,
+          "shading_blocking": 0.348596987232871,
+          "neighbor_list": 0.010113956777789382,
+          "other_preparation_tracking": 0.26983878770089065,
+          "projected_shadow_geometry": 0.02992556718896762,
+          "normalization_dimensional_postprocessing": 0.0020244395820459074,
+          "api_results_callbacks": 0.0293914770293853,
+          "timing_driver_other": 0.003181050146323835,
+          "image_numerical_kernel_only": 0.023916413900539408
+        },
+        {
+          "image_plane": 0.25818970343024017,
+          "flux_density": 0.049084277894434654,
+          "shading_blocking": 0.34939773636155846,
+          "neighbor_list": 0.010317818552883986,
+          "other_preparation_tracking": 0.26942659724842166,
+          "projected_shadow_geometry": 0.028701015717579458,
+          "normalization_dimensional_postprocessing": 0.0020646436204138224,
+          "api_results_callbacks": 0.029689241209441015,
+          "timing_driver_other": 0.0031289659650267365,
+          "image_numerical_kernel_only": 0.023849016040014145
+        },
+        {
+          "image_plane": 0.2580435782557559,
+          "flux_density": 0.0487253733178991,
+          "shading_blocking": 0.3485973065631768,
+          "neighbor_list": 0.010128709914184401,
+          "other_preparation_tracking": 0.27099498787309273,
+          "projected_shadow_geometry": 0.02855499756885456,
+          "normalization_dimensional_postprocessing": 0.002071944518981517,
+          "api_results_callbacks": 0.0298078054208176,
+          "timing_driver_other": 0.003075296567237361,
+          "image_numerical_kernel_only": 0.023771679699990948
+        },
+        {
+          "image_plane": 0.2581562026163159,
+          "flux_density": 0.048753466618416376,
+          "shading_blocking": 0.3490535871097993,
+          "neighbor_list": 0.010354828846901582,
+          "other_preparation_tracking": 0.2699043426478535,
+          "projected_shadow_geometry": 0.02890778574738562,
+          "normalization_dimensional_postprocessing": 0.0020490548273638626,
+          "api_results_callbacks": 0.029758581431469734,
+          "timing_driver_other": 0.0030621501544941384,
+          "image_numerical_kernel_only": 0.02386030920355824
+        },
+        {
+          "image_plane": 0.2578668391577988,
+          "flux_density": 0.04887409848232173,
+          "shading_blocking": 0.3489985698590107,
+          "neighbor_list": 0.010288331423387791,
+          "other_preparation_tracking": 0.2697823040427382,
+          "projected_shadow_geometry": 0.02929770309738746,
+          "normalization_dimensional_postprocessing": 0.0020442630539746856,
+          "api_results_callbacks": 0.02979525928394219,
+          "timing_driver_other": 0.0030526315994385367,
+          "image_numerical_kernel_only": 0.02388384976297583
+        },
+        {
+          "image_plane": 0.2583533244883849,
+          "flux_density": 0.049008498238601116,
+          "shading_blocking": 0.3486269929261846,
+          "neighbor_list": 0.010319927137913491,
+          "other_preparation_tracking": 0.26937192022263345,
+          "projected_shadow_geometry": 0.029125465968930363,
+          "normalization_dimensional_postprocessing": 0.0020322385599192004,
+          "api_results_callbacks": 0.030116053167040913,
+          "timing_driver_other": 0.0030455792903920785,
+          "image_numerical_kernel_only": 0.02375883541881244
+        },
+        {
+          "image_plane": 0.2584126518512853,
+          "flux_density": 0.04876673608937758,
+          "shading_blocking": 0.3488879081722101,
+          "neighbor_list": 0.010155768996922575,
+          "other_preparation_tracking": 0.2695855902275901,
+          "projected_shadow_geometry": 0.028935968434100658,
+          "normalization_dimensional_postprocessing": 0.0020181617592100773,
+          "api_results_callbacks": 0.030155980814541145,
+          "timing_driver_other": 0.0030812336547624765,
+          "image_numerical_kernel_only": 0.023943976742115028
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.0071729055,
+          "minimum": 0.007153118,
+          "maximum": 0.007365566,
+          "mean": 0.0071957639999999995,
+          "stdev": 6.216896258494974e-05,
+          "coefficient_of_variation": 0.008639661137434433
+        },
+        "flux_density": {
+          "median": 0.001354598,
+          "minimum": 0.001350615,
+          "maximum": 0.001363566,
+          "mean": 0.0013559244,
+          "stdev": 4.368904113797357e-06,
+          "coefficient_of_variation": 0.0032220853270266076
+        },
+        "shading_blocking": {
+          "median": 0.009687231999999994,
+          "minimum": 0.009673451999999983,
+          "maximum": 0.009814493999999998,
+          "mean": 0.009705624699999993,
+          "stdev": 4.49435943206089e-05,
+          "coefficient_of_variation": 0.004630675068304354
+        },
+        "neighbor_list": {
+          "median": 0.000286012,
+          "minimum": 0.000281041,
+          "maximum": 0.000300512,
+          "mean": 0.0002864187,
+          "stdev": 5.599136819387635e-06,
+          "coefficient_of_variation": 0.019548782322479762
+        },
+        "other_preparation_tracking": {
+          "median": 0.007492339000000008,
+          "minimum": 0.007482471000000038,
+          "maximum": 0.007738169000000004,
+          "mean": 0.0075193039000000066,
+          "stdev": 7.804410523180462e-05,
+          "coefficient_of_variation": 0.01037916624593462
+        },
+        "projected_shadow_geometry": {
+          "median": 0.000801313,
+          "minimum": 0.000789335,
+          "maximum": 0.000831555,
+          "mean": 0.0008034042,
+          "stdev": 1.2214004237395335e-05,
+          "coefficient_of_variation": 0.015202813524494065
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 5.676e-05,
+          "minimum": 5.597e-05,
+          "maximum": 5.7509e-05,
+          "mean": 5.6702e-05,
+          "stdev": 5.265727764410999e-07,
+          "coefficient_of_variation": 0.009286670248687876
+        },
+        "api_results_callbacks": {
+          "median": 0.0008264065000000015,
+          "minimum": 0.0008167139999999996,
+          "maximum": 0.0008369930000000012,
+          "mean": 0.0008279474999999994,
+          "stdev": 6.396622637507169e-06,
+          "coefficient_of_variation": 0.0077258795243746415
+        },
+        "timing_driver_other": {
+          "median": 8.563683907127431e-05,
+          "minimum": 8.46322880878464e-05,
+          "maximum": 8.839325041770651e-05,
+          "mean": 8.593150382576048e-05,
+          "stdev": 1.2093610688368514e-06,
+          "coefficient_of_variation": 0.014073547127593851
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.25817295302327803,
+          "minimum": 0.2578668391577988,
+          "maximum": 0.25994576446196604,
+          "mean": 0.2584932509059506,
+          "stdev": 0.0007124932747456847,
+          "coefficient_of_variation": 0.0027563322146655043
+        },
+        "flux_density": {
+          "median": 0.04876010135389698,
+          "minimum": 0.047989888467606524,
+          "maximum": 0.049084277894434654,
+          "mean": 0.04871091862790114,
+          "stdev": 0.0003039381254537846,
+          "coefficient_of_variation": 0.0062396303337151965
+        },
+        "shading_blocking": {
+          "median": 0.3487574505491974,
+          "minimum": 0.3463734009901451,
+          "maximum": 0.34996588755637664,
+          "mean": 0.34866310613048734,
+          "stdev": 0.0009478965275100112,
+          "coefficient_of_variation": 0.0027186602506640333
+        },
+        "neighbor_list": {
+          "median": 0.010303074988135888,
+          "minimum": 0.010113956777789382,
+          "maximum": 0.010605678038862776,
+          "mean": 0.010288493905137214,
+          "stdev": 0.00014486493612754937,
+          "coefficient_of_variation": 0.014080285944983251
+        },
+        "other_preparation_tracking": {
+          "median": 0.26968394713516414,
+          "minimum": 0.26937192022263345,
+          "maximum": 0.2730956801202906,
+          "mean": 0.27011309708776277,
+          "stdev": 0.001145070073759994,
+          "coefficient_of_variation": 0.004239224554846179
+        },
+        "projected_shadow_geometry": {
+          "median": 0.028848289017343702,
+          "minimum": 0.027857233237959713,
+          "maximum": 0.02992556718896762,
+          "mean": 0.028863124489121164,
+          "stdev": 0.00054148701130881,
+          "coefficient_of_variation": 0.01876051262270315
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.002038250806946943,
+          "minimum": 0.002005046009550071,
+          "maximum": 0.002071944518981517,
+          "mean": 0.0020370043783451536,
+          "stdev": 2.313937010130787e-05,
+          "coefficient_of_variation": 0.011359509261392021
+        },
+        "api_results_callbacks": {
+          "median": 0.02977692035770596,
+          "minimum": 0.029100924318813386,
+          "maximum": 0.030155980814541145,
+          "mean": 0.02974394099513869,
+          "stdev": 0.00031591222789592653,
+          "coefficient_of_variation": 0.010621061544855767
+        },
+        "timing_driver_other": {
+          "median": 0.003077934820910214,
+          "minimum": 0.003026384354805821,
+          "maximum": 0.003181050146323835,
+          "mean": 0.003087063480155906,
+          "stdev": 4.7707143828644696e-05,
+          "coefficient_of_variation": 0.015453891419892453
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.02385466262178619,
+          "minimum": 0.02326111672026275,
+          "maximum": 0.023943976742115028,
+          "mean": 0.023785817528949232,
+          "stdev": 0.000196785130793024,
+          "coefficient_of_variation": 0.008273212831701952
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.3480231067137578,
+          "minimum": 1.3474670756729985,
+          "maximum": 1.35125231635622,
+          "mean": 1.3486065139742283,
+          "stdev": 0.0012974534900031568,
+          "coefficient_of_variation": 0.0009620697190462711
+        },
+        "flux_density": {
+          "median": 1.0512595208337512,
+          "minimum": 1.0504090112975377,
+          "maximum": 1.0516179055129615,
+          "mean": 1.051205266012169,
+          "stdev": 0.00033573440225154205,
+          "coefficient_of_variation": 0.000319380441771546
+        },
+        "shading_blocking": {
+          "median": 1.535526265861853,
+          "minimum": 1.529925498005816,
+          "maximum": 1.5383808031870463,
+          "mean": 1.5353067086263197,
+          "stdev": 0.0022303622380605756,
+          "coefficient_of_variation": 0.0014527144482135044
+        },
+        "neighbor_list": {
+          "median": 1.0104103336583918,
+          "minimum": 1.0102172940481786,
+          "maximum": 1.0107193641639671,
+          "mean": 1.0103954668869815,
+          "stdev": 0.0001479089369747059,
+          "coefficient_of_variation": 0.00014638717395517608
+        },
+        "other_preparation_tracking": {
+          "median": 1.3692702141972768,
+          "minimum": 1.368685419679894,
+          "maximum": 1.375696873235646,
+          "mean": 1.3700783201100366,
+          "stdev": 0.002155922409655992,
+          "coefficient_of_variation": 0.0015735760343122875
+        },
+        "projected_shadow_geometry": {
+          "median": 1.0297052380636211,
+          "minimum": 1.0286554960756897,
+          "maximum": 1.030848733021703,
+          "mean": 1.0297212525308976,
+          "stdev": 0.0005742009017841237,
+          "coefficient_of_variation": 0.0005576275136332532
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0020424137948072,
+          "minimum": 1.00200907429595,
+          "maximum": 1.0020762463863018,
+          "mean": 1.0020411627195989,
+          "stdev": 2.3233945910045362e-05,
+          "coefficient_of_variation": 2.3186618249281358e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0306907981677378,
+          "minimum": 1.0299731713086615,
+          "maximum": 1.0310936400266388,
+          "mean": 1.0306558625542923,
+          "stdev": 0.0003355087690832794,
+          "coefficient_of_variation": 0.0003255293849993559
+        },
+        "timing_driver_other": {
+          "median": 1.003087437760103,
+          "minimum": 1.003035571159872,
+          "maximum": 1.0031912015183808,
+          "mean": 1.003096625019313,
+          "stdev": 4.8004646696846156e-05,
+          "coefficient_of_variation": 4.785645320651129e-05
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.0244376136849844,
+          "minimum": 1.0238150821252816,
+          "maximum": 1.02453135493411,
+          "mean": 1.0243654051666486,
+          "stdev": 0.00020640892909436445,
+          "coefficient_of_variation": 0.00020149931660449317
+        }
+      },
+      "dominant_components": [
+        "shading_blocking",
+        "other_preparation_tracking",
+        "image_plane"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.5309349813166502,
+        "minimum": 0.5301608562306495,
+        "maximum": 0.5353834588789801,
+        "mean": 0.5313553648972567,
+        "stdev": 0.0014895176421617375,
+        "coefficient_of_variation": 0.0028032419366834697
+      },
+      "plain_median_s": 0.027626503258943558,
+      "instrumented_median_s": 0.027783389203250408,
+      "observer_ratio": 1.0056788201835156,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        50,
+        50
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.007269362,
+          "flux_density": 0.004578769,
+          "shading_blocking": 0.009683579000000001,
+          "neighbor_list": 0.000279498,
+          "other_preparation_tracking": 0.007518488999999996,
+          "projected_shadow_geometry": 0.000801965,
+          "normalization_dimensional_postprocessing": 6.907900000000001e-05,
+          "api_results_callbacks": 0.0008399899999999953,
+          "timing_driver_other": 9.531982035065542e-05
+        },
+        {
+          "image_plane": 0.007290405,
+          "flux_density": 0.004581744,
+          "shading_blocking": 0.00970973899999999,
+          "neighbor_list": 0.000287045,
+          "other_preparation_tracking": 0.0074968490000000085,
+          "projected_shadow_geometry": 0.000802699,
+          "normalization_dimensional_postprocessing": 6.781099999999999e-05,
+          "api_results_callbacks": 0.0008379330000000025,
+          "timing_driver_other": 9.298973634242966e-05
+        },
+        {
+          "image_plane": 0.007275943,
+          "flux_density": 0.004588268,
+          "shading_blocking": 0.009693131999999995,
+          "neighbor_list": 0.000279963,
+          "other_preparation_tracking": 0.007513421000000005,
+          "projected_shadow_geometry": 0.000804134,
+          "normalization_dimensional_postprocessing": 6.8242e-05,
+          "api_results_callbacks": 0.0008270569999999956,
+          "timing_driver_other": 9.191834005356156e-05
+        },
+        {
+          "image_plane": 0.007282359,
+          "flux_density": 0.004595682,
+          "shading_blocking": 0.00970901100000001,
+          "neighbor_list": 0.000278617,
+          "other_preparation_tracking": 0.0075046649999999885,
+          "projected_shadow_geometry": 0.000799596,
+          "normalization_dimensional_postprocessing": 6.7577e-05,
+          "api_results_callbacks": 0.000838224000000002,
+          "timing_driver_other": 9.294591278457415e-05
+        },
+        {
+          "image_plane": 0.007274211,
+          "flux_density": 0.004600032,
+          "shading_blocking": 0.009724578999999985,
+          "neighbor_list": 0.000284577,
+          "other_preparation_tracking": 0.007504875000000014,
+          "projected_shadow_geometry": 0.000803278,
+          "normalization_dimensional_postprocessing": 6.8369e-05,
+          "api_results_callbacks": 0.0008399489999999996,
+          "timing_driver_other": 9.437544274807155e-05
+        },
+        {
+          "image_plane": 0.0072906310000000005,
+          "flux_density": 0.004597299,
+          "shading_blocking": 0.009682003999999992,
+          "neighbor_list": 0.000284124,
+          "other_preparation_tracking": 0.007526741000000009,
+          "projected_shadow_geometry": 0.000803719,
+          "normalization_dimensional_postprocessing": 6.8485e-05,
+          "api_results_callbacks": 0.0008301079999999926,
+          "timing_driver_other": 9.69392240657875e-05
+        },
+        {
+          "image_plane": 0.007283414,
+          "flux_density": 0.004579399,
+          "shading_blocking": 0.009717364000000025,
+          "neighbor_list": 0.00028127,
+          "other_preparation_tracking": 0.007496336999999976,
+          "projected_shadow_geometry": 0.00079945,
+          "normalization_dimensional_postprocessing": 6.772700000000001e-05,
+          "api_results_callbacks": 0.0008504109999999988,
+          "timing_driver_other": 9.26790640144344e-05
+        },
+        {
+          "image_plane": 0.0072702949999999995,
+          "flux_density": 0.004585109,
+          "shading_blocking": 0.00974056599999998,
+          "neighbor_list": 0.000284185,
+          "other_preparation_tracking": 0.007523609000000019,
+          "projected_shadow_geometry": 0.000808017,
+          "normalization_dimensional_postprocessing": 6.7331e-05,
+          "api_results_callbacks": 0.0008460919999999962,
+          "timing_driver_other": 9.600136863804204e-05
+        },
+        {
+          "image_plane": 0.00727635,
+          "flux_density": 0.004579467,
+          "shading_blocking": 0.009675326000000015,
+          "neighbor_list": 0.000282562,
+          "other_preparation_tracking": 0.007508621999999986,
+          "projected_shadow_geometry": 0.000803316,
+          "normalization_dimensional_postprocessing": 7.109299999999999e-05,
+          "api_results_callbacks": 0.0008318770000000017,
+          "timing_driver_other": 9.319417289447435e-05
+        },
+        {
+          "image_plane": 0.007286969,
+          "flux_density": 0.004587218,
+          "shading_blocking": 0.009755468999999985,
+          "neighbor_list": 0.000287501,
+          "other_preparation_tracking": 0.0074997350000000134,
+          "projected_shadow_geometry": 0.00079869,
+          "normalization_dimensional_postprocessing": 6.8619e-05,
+          "api_results_callbacks": 0.0008509079999999974,
+          "timing_driver_other": 9.136392912006963e-05
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.2334709061834109,
+          "flux_density": 0.1470568321724121,
+          "shading_blocking": 0.31100858152732636,
+          "neighbor_list": 0.008976668287595387,
+          "other_preparation_tracking": 0.24147214569311667,
+          "projected_shadow_geometry": 0.025756798915417767,
+          "normalization_dimensional_postprocessing": 0.0022186179101059823,
+          "api_results_callbacks": 0.026978052060827654,
+          "timing_driver_other": 0.0030613972497871827,
+          "image_numerical_kernel_only": 0.023021544337055905
+        },
+        {
+          "image_plane": 0.23391262458557283,
+          "flux_density": 0.14700524377166985,
+          "shading_blocking": 0.3115369493918229,
+          "neighbor_list": 0.009209838043862549,
+          "other_preparation_tracking": 0.24053637976377568,
+          "projected_shadow_geometry": 0.02575459523060992,
+          "normalization_dimensional_postprocessing": 0.0021757157504654783,
+          "api_results_callbacks": 0.026885078024727484,
+          "timing_driver_other": 0.0029835754374932734,
+          "image_numerical_kernel_only": 0.023087850302857787
+        },
+        {
+          "image_plane": 0.2336370399095042,
+          "flux_density": 0.14733339085139907,
+          "shading_blocking": 0.31125514148916383,
+          "neighbor_list": 0.008989862428029538,
+          "other_preparation_tracking": 0.24126267097390788,
+          "projected_shadow_geometry": 0.025821462242157374,
+          "normalization_dimensional_postprocessing": 0.002191311679806231,
+          "api_results_callbacks": 0.02655754028260444,
+          "timing_driver_other": 0.0029515801434273664,
+          "image_numerical_kernel_only": 0.02314861576541951
+        },
+        {
+          "image_plane": 0.23364350756297156,
+          "flux_density": 0.1474455272150154,
+          "shading_blocking": 0.3114989778734441,
+          "neighbor_list": 0.00893900632290614,
+          "other_preparation_tracking": 0.2407758603613287,
+          "projected_shadow_geometry": 0.025653831962049907,
+          "normalization_dimensional_postprocessing": 0.002168106146728406,
+          "api_results_callbacks": 0.02689315309550995,
+          "timing_driver_other": 0.0029820294600458376,
+          "image_numerical_kernel_only": 0.023291076206396297
+        },
+        {
+          "image_plane": 0.2331907983910245,
+          "flux_density": 0.14746412149774887,
+          "shading_blocking": 0.311742722478986,
+          "neighbor_list": 0.009122740299081588,
+          "other_preparation_tracking": 0.24058523915168853,
+          "projected_shadow_geometry": 0.025750839252524485,
+          "normalization_dimensional_postprocessing": 0.0021917183451505536,
+          "api_results_callbacks": 0.026926408639746983,
+          "timing_driver_other": 0.0030254119440485338,
+          "image_numerical_kernel_only": 0.023208384070419065
+        },
+        {
+          "image_plane": 0.23382358102723175,
+          "flux_density": 0.14744360470759135,
+          "shading_blocking": 0.31051919193276684,
+          "neighbor_list": 0.00911236505259712,
+          "other_preparation_tracking": 0.24139605119014929,
+          "projected_shadow_geometry": 0.025776706394772367,
+          "normalization_dimensional_postprocessing": 0.0021964364876853547,
+          "api_results_callbacks": 0.02662304884163683,
+          "timing_driver_other": 0.0031090143655691307,
+          "image_numerical_kernel_only": 0.02312042477321227
+        },
+        {
+          "image_plane": 0.2336820478457564,
+          "flux_density": 0.1469260619021257,
+          "shading_blocking": 0.3117732315069055,
+          "neighbor_list": 0.009024305030247617,
+          "other_preparation_tracking": 0.2405134984091126,
+          "projected_shadow_geometry": 0.02564966280240145,
+          "normalization_dimensional_postprocessing": 0.0021729623023556736,
+          "api_results_callbacks": 0.02728470247476764,
+          "timing_driver_other": 0.0029735277263273764,
+          "image_numerical_kernel_only": 0.02309647133068232
+        },
+        {
+          "image_plane": 0.2328640074640767,
+          "flux_density": 0.14685880784749525,
+          "shading_blocking": 0.3119855843164998,
+          "neighbor_list": 0.009102307122500344,
+          "other_preparation_tracking": 0.24097753149394888,
+          "projected_shadow_geometry": 0.025880390922115384,
+          "normalization_dimensional_postprocessing": 0.0021565791328362533,
+          "api_results_callbacks": 0.027099914625650638,
+          "timing_driver_other": 0.0030748770748766866,
+          "image_numerical_kernel_only": 0.023055099056739695
+        },
+        {
+          "image_plane": 0.23380229687745555,
+          "flux_density": 0.14714656429040807,
+          "shading_blocking": 0.3108857382943602,
+          "neighbor_list": 0.009079228543196463,
+          "other_preparation_tracking": 0.2412656166875687,
+          "projected_shadow_geometry": 0.025811997212669822,
+          "normalization_dimensional_postprocessing": 0.002284346779897743,
+          "api_results_callbacks": 0.02672971384272712,
+          "timing_driver_other": 0.002994497471716288,
+          "image_numerical_kernel_only": 0.023097887151684784
+        },
+        {
+          "image_plane": 0.2333586958905173,
+          "flux_density": 0.14690157323923114,
+          "shading_blocking": 0.3124102111097722,
+          "neighbor_list": 0.009206963612335885,
+          "other_preparation_tracking": 0.24017233765156293,
+          "projected_shadow_geometry": 0.025577336313739946,
+          "normalization_dimensional_postprocessing": 0.0021974623953129767,
+          "api_results_callbacks": 0.027249571283040685,
+          "timing_driver_other": 0.002925848504486997,
+          "image_numerical_kernel_only": 0.02306043316908829
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.0072793545,
+          "minimum": 0.007269362,
+          "maximum": 0.0072906310000000005,
+          "mean": 0.0072799939,
+          "stdev": 7.872013655278528e-06,
+          "coefficient_of_variation": 0.0010813214630960785
+        },
+        "flux_density": {
+          "median": 0.0045861635000000005,
+          "minimum": 0.004578769,
+          "maximum": 0.004600032,
+          "mean": 0.0045872987,
+          "stdev": 7.926851330201267e-06,
+          "coefficient_of_variation": 0.0017279998205046616
+        },
+        "shading_blocking": {
+          "median": 0.009709375,
+          "minimum": 0.009675326000000015,
+          "maximum": 0.009755468999999985,
+          "mean": 0.009709076899999999,
+          "stdev": 2.6309423991534127e-05,
+          "coefficient_of_variation": 0.002709776043851721
+        },
+        "neighbor_list": {
+          "median": 0.00028334300000000003,
+          "minimum": 0.000278617,
+          "maximum": 0.000287501,
+          "mean": 0.0002829342,
+          "stdev": 3.0842803158381515e-06,
+          "coefficient_of_variation": 0.010901051607893819
+        },
+        "other_preparation_tracking": {
+          "median": 0.0075067485,
+          "minimum": 0.007496336999999976,
+          "maximum": 0.007526741000000009,
+          "mean": 0.007509334300000002,
+          "stdev": 1.0885383105088734e-05,
+          "coefficient_of_variation": 0.0014495803050196781
+        },
+        "projected_shadow_geometry": {
+          "median": 0.0008029885000000001,
+          "minimum": 0.00079869,
+          "maximum": 0.000808017,
+          "mean": 0.0008024864,
+          "stdev": 2.757618505562755e-06,
+          "coefficient_of_variation": 0.0034363429779778886
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 6.83055e-05,
+          "minimum": 6.7331e-05,
+          "maximum": 7.109299999999999e-05,
+          "mean": 6.84333e-05,
+          "stdev": 1.0751357588695475e-06,
+          "coefficient_of_variation": 0.015710710412468017
+        },
+        "api_results_callbacks": {
+          "median": 0.0008390865000000008,
+          "minimum": 0.0008270569999999956,
+          "maximum": 0.0008509079999999974,
+          "mean": 0.0008392548999999981,
+          "stdev": 8.14943431506521e-06,
+          "coefficient_of_variation": 0.009710320803685777
+        },
+        "timing_driver_other": {
+          "median": 9.3091954618452e-05,
+          "minimum": 9.136392912006963e-05,
+          "maximum": 9.69392240657875e-05,
+          "mean": 9.377270110121003e-05,
+          "stdev": 1.8202224891336666e-06,
+          "coefficient_of_variation": 0.01941100627110099
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.23364027373623789,
+          "minimum": 0.2328640074640767,
+          "maximum": 0.23391262458557283,
+          "mean": 0.23353855057375217,
+          "stdev": 0.0003240210696838792,
+          "coefficient_of_variation": 0.0013874414690329781
+        },
+        "flux_density": {
+          "median": 0.1471016982314101,
+          "minimum": 0.14685880784749525,
+          "maximum": 0.14746412149774887,
+          "mean": 0.14715817274950968,
+          "stdev": 0.0002430089278602697,
+          "coefficient_of_variation": 0.0016513451024831333
+        },
+        "shading_blocking": {
+          "median": 0.3115179636326335,
+          "minimum": 0.31051919193276684,
+          "maximum": 0.3124102111097722,
+          "mean": 0.3114616329921048,
+          "stdev": 0.0005602818530469636,
+          "coefficient_of_variation": 0.0017988791995486846
+        },
+        "neighbor_list": {
+          "median": 0.009090767832848404,
+          "minimum": 0.00893900632290614,
+          "maximum": 0.009209838043862549,
+          "mean": 0.009076328474235264,
+          "stdev": 9.309414555970754e-05,
+          "coefficient_of_variation": 0.010256806573712208
+        },
+        "other_preparation_tracking": {
+          "median": 0.24087669592763877,
+          "minimum": 0.24017233765156293,
+          "maximum": 0.24147214569311667,
+          "mean": 0.24089573313761597,
+          "stdev": 0.0004434752952100633,
+          "coefficient_of_variation": 0.0018409429234544396
+        },
+        "projected_shadow_geometry": {
+          "median": 0.025755697073013846,
+          "minimum": 0.025577336313739946,
+          "maximum": 0.025880390922115384,
+          "mean": 0.02574336212484584,
+          "stdev": 9.154328405321552e-05,
+          "coefficient_of_variation": 0.0035559956624649203
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.0021915150124783922,
+          "minimum": 0.0021565791328362533,
+          "maximum": 0.002284346779897743,
+          "mean": 0.0021953256930344655,
+          "stdev": 3.5946065498302065e-05,
+          "coefficient_of_variation": 0.016373910081932307
+        },
+        "api_results_callbacks": {
+          "median": 0.026909780867628467,
+          "minimum": 0.02655754028260444,
+          "maximum": 0.02728470247476764,
+          "mean": 0.026922718317123943,
+          "stdev": 0.00024382092191119447,
+          "coefficient_of_variation": 0.009056326298080921
+        },
+        "timing_driver_other": {
+          "median": 0.0029890364546047805,
+          "minimum": 0.002925848504486997,
+          "maximum": 0.0031090143655691307,
+          "mean": 0.003008175937777867,
+          "stdev": 5.812279174952813e-05,
+          "coefficient_of_variation": 0.019321606499007937
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.02309717924118355,
+          "minimum": 0.023021544337055905,
+          "maximum": 0.023291076206396297,
+          "mean": 0.02311877861635559,
+          "stdev": 7.987001502097697e-05,
+          "coefficient_of_variation": 0.00345476793330562
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.3048702401065775,
+          "minimum": 1.3035498395718568,
+          "maximum": 1.3053341330145718,
+          "mean": 1.3046972702111126,
+          "stdev": 0.0005513650093123177,
+          "coefficient_of_variation": 0.00042259995625123175
+        },
+        "flux_density": {
+          "median": 1.1724727329079934,
+          "minimum": 1.1721389251841954,
+          "maximum": 1.1729711619372738,
+          "mean": 1.1725504555739543,
+          "stdev": 0.0003341216385466762,
+          "coefficient_of_variation": 0.0002849528879191184
+        },
+        "shading_blocking": {
+          "median": 1.4524707224559466,
+          "minimum": 1.4503666937492004,
+          "maximum": 1.4543555127745618,
+          "mean": 1.4523527574180692,
+          "stdev": 0.0011817708455955018,
+          "coefficient_of_variation": 0.0008136940833137561
+        },
+        "neighbor_list": {
+          "median": 1.0091741682016386,
+          "minimum": 1.009019632878235,
+          "maximum": 1.0092954476109042,
+          "mean": 1.0091594707831628,
+          "stdev": 9.480784125829376e-05,
+          "coefficient_of_variation": 9.394733340283443e-05
+        },
+        "other_preparation_tracking": {
+          "median": 1.3173090751919707,
+          "minimum": 1.3160879098679434,
+          "maximum": 1.318343148932567,
+          "mean": 1.3173424927270099,
+          "stdev": 0.0007695486527837541,
+          "coefficient_of_variation": 0.0005841674864603537
+        },
+        "projected_shadow_geometry": {
+          "median": 1.0264365898747505,
+          "minimum": 1.0262487083551406,
+          "maximum": 1.026567980647278,
+          "mean": 1.0264236024367286,
+          "stdev": 9.644146017297256e-05,
+          "coefficient_of_variation": 9.395873199332188e-05
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0021963282989594,
+          "minimum": 1.00216124001796,
+          "maximum": 1.0022895769676712,
+          "mean": 1.0022001569221473,
+          "stdev": 3.61063456903058e-05,
+          "coefficient_of_variation": 3.602708045984731e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0276539426977362,
+          "minimum": 1.0272820853636428,
+          "maximum": 1.0280500394557226,
+          "mean": 1.0276676635349165,
+          "stdev": 0.0002575020587599805,
+          "coefficient_of_variation": 0.0002505693892072449
+        },
+        "timing_driver_other": {
+          "median": 1.00299799760875,
+          "minimum": 1.0029344342144448,
+          "maximum": 1.0031187104812573,
+          "mean": 1.003017255431841,
+          "stdev": 5.8475340208596786e-05,
+          "coefficient_of_variation": 5.8299435918897223e-05
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.0236432721360837,
+          "minimum": 1.0235640245735351,
+          "maximum": 1.0238464865416936,
+          "mean": 1.0236659116042226,
+          "stdev": 8.370176079886047e-05,
+          "coefficient_of_variation": 8.176667782918405e-05
+        }
+      },
+      "dominant_components": [
+        "shading_blocking",
+        "other_preparation_tracking",
+        "image_plane"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.47131181805629685,
+        "minimum": 0.4707733093445549,
+        "maximum": 0.47193795393707444,
+        "mean": 0.4713055473604668,
+        "stdev": 0.00042131051707797087,
+        "coefficient_of_variation": 0.0008939222537004038
+      },
+      "plain_median_s": 0.030545033514499664,
+      "instrumented_median_s": 0.031168363988399506,
+      "observer_ratio": 1.0204069337034432,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 5000,
+      "grid": [
+        100,
+        100
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.008492409,
+          "flux_density": 0.015908836,
+          "shading_blocking": 0.009754807999999976,
+          "neighbor_list": 0.000294757,
+          "other_preparation_tracking": 0.007875772000000024,
+          "projected_shadow_geometry": 0.000805107,
+          "normalization_dimensional_postprocessing": 0.000113609,
+          "api_results_callbacks": 0.000996076999999998,
+          "timing_driver_other": 0.000143244221091271
+        },
+        {
+          "image_plane": 0.007842691,
+          "flux_density": 0.015915395,
+          "shading_blocking": 0.010401763999999987,
+          "neighbor_list": 0.000317673,
+          "other_preparation_tracking": 0.008604256000000013,
+          "projected_shadow_geometry": 0.000852617,
+          "normalization_dimensional_postprocessing": 0.000117805,
+          "api_results_callbacks": 0.0009728230000000046,
+          "timing_driver_other": 0.0001236001072416268
+        },
+        {
+          "image_plane": 0.007468905,
+          "flux_density": 0.015920644,
+          "shading_blocking": 0.010215847999999967,
+          "neighbor_list": 0.000296164,
+          "other_preparation_tracking": 0.008069378000000033,
+          "projected_shadow_geometry": 0.000869415,
+          "normalization_dimensional_postprocessing": 0.000119065,
+          "api_results_callbacks": 0.0009415740000000006,
+          "timing_driver_other": 0.00011971378770542218
+        },
+        {
+          "image_plane": 0.00724811,
+          "flux_density": 0.015898661,
+          "shading_blocking": 0.009682257000000047,
+          "neighbor_list": 0.000294116,
+          "other_preparation_tracking": 0.007843919999999954,
+          "projected_shadow_geometry": 0.000807646,
+          "normalization_dimensional_postprocessing": 0.000112972,
+          "api_results_callbacks": 0.0009032350000000022,
+          "timing_driver_other": 0.00011447885053920276
+        },
+        {
+          "image_plane": 0.007206838,
+          "flux_density": 0.015896768,
+          "shading_blocking": 0.009688262999999976,
+          "neighbor_list": 0.000280019,
+          "other_preparation_tracking": 0.007565213000000023,
+          "projected_shadow_geometry": 0.000802995,
+          "normalization_dimensional_postprocessing": 0.000113379,
+          "api_results_callbacks": 0.0008871079999999976,
+          "timing_driver_other": 0.00011861230987739863
+        },
+        {
+          "image_plane": 0.007267262,
+          "flux_density": 0.015912074,
+          "shading_blocking": 0.010020788999999987,
+          "neighbor_list": 0.000283188,
+          "other_preparation_tracking": 0.0076216900000000126,
+          "projected_shadow_geometry": 0.000803939,
+          "normalization_dimensional_postprocessing": 0.000113733,
+          "api_results_callbacks": 0.0009045560000000008,
+          "timing_driver_other": 0.00011719268447780984
+        },
+        {
+          "image_plane": 0.007202111000000001,
+          "flux_density": 0.015913514,
+          "shading_blocking": 0.009696498999999987,
+          "neighbor_list": 0.000286311,
+          "other_preparation_tracking": 0.007558094000000016,
+          "projected_shadow_geometry": 0.000800765,
+          "normalization_dimensional_postprocessing": 0.000115013,
+          "api_results_callbacks": 0.000902145,
+          "timing_driver_other": 0.00011624808993148522
+        },
+        {
+          "image_plane": 0.007155145,
+          "flux_density": 0.015898501,
+          "shading_blocking": 0.009683297999999991,
+          "neighbor_list": 0.000276898,
+          "other_preparation_tracking": 0.007543255000000008,
+          "projected_shadow_geometry": 0.000802603,
+          "normalization_dimensional_postprocessing": 0.000113036,
+          "api_results_callbacks": 0.0008966310000000019,
+          "timing_driver_other": 0.00011681634531784252
+        },
+        {
+          "image_plane": 0.007183946,
+          "flux_density": 0.015903897,
+          "shading_blocking": 0.009674165999999956,
+          "neighbor_list": 0.000278363,
+          "other_preparation_tracking": 0.007543318000000042,
+          "projected_shadow_geometry": 0.00080122,
+          "normalization_dimensional_postprocessing": 0.00011409,
+          "api_results_callbacks": 0.0009071089999999962,
+          "timing_driver_other": 0.00011594330295658373
+        },
+        {
+          "image_plane": 0.007219358,
+          "flux_density": 0.015908753,
+          "shading_blocking": 0.009668073000000018,
+          "neighbor_list": 0.000284959,
+          "other_preparation_tracking": 0.00756442199999998,
+          "projected_shadow_geometry": 0.000796018,
+          "normalization_dimensional_postprocessing": 0.00011269700000000001,
+          "api_results_callbacks": 0.0009008480000000027,
+          "timing_driver_other": 0.00011763667978954145
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.19133675469191508,
+          "flux_density": 0.3584312827097597,
+          "shading_blocking": 0.21977901739809355,
+          "neighbor_list": 0.006640971696337849,
+          "other_preparation_tracking": 0.17744372123074362,
+          "projected_shadow_geometry": 0.01813932425531362,
+          "normalization_dimensional_postprocessing": 0.0025596479589941774,
+          "api_results_callbacks": 0.022441940867810102,
+          "timing_driver_other": 0.0032273391910322465,
+          "image_numerical_kernel_only": 0.014899575476090688
+        },
+        {
+          "image_plane": 0.1737083057364326,
+          "flux_density": 0.35251118532861875,
+          "shading_blocking": 0.2303893907219111,
+          "neighbor_list": 0.007036161262532177,
+          "other_preparation_tracking": 0.19057626162786942,
+          "projected_shadow_geometry": 0.01888467294096885,
+          "normalization_dimensional_postprocessing": 0.002609271098055558,
+          "api_results_callbacks": 0.021547123954193066,
+          "timing_driver_other": 0.002737627329418482,
+          "image_numerical_kernel_only": 0.014739584742478676
+        },
+        {
+          "image_plane": 0.169667993656249,
+          "flux_density": 0.36166261656767607,
+          "shading_blocking": 0.23206914984956942,
+          "neighbor_list": 0.006727833822121091,
+          "other_preparation_tracking": 0.1833086878617255,
+          "projected_shadow_geometry": 0.019750137229573507,
+          "normalization_dimensional_postprocessing": 0.002704749848161315,
+          "api_results_callbacks": 0.021389343077584878,
+          "timing_driver_other": 0.002719488087339323,
+          "image_numerical_kernel_only": 0.015044555728394478
+        },
+        {
+          "image_plane": 0.168932365179633,
+          "flux_density": 0.37055155149676117,
+          "shading_blocking": 0.22566525277445648,
+          "neighbor_list": 0.006854988613193362,
+          "other_preparation_tracking": 0.1828189635477137,
+          "projected_shadow_geometry": 0.018823879467594982,
+          "normalization_dimensional_postprocessing": 0.002633048775346056,
+          "api_results_callbacks": 0.021051781066102223,
+          "timing_driver_other": 0.0026681690791990225,
+          "image_numerical_kernel_only": 0.01534613523039347
+        },
+        {
+          "image_plane": 0.16933680130759882,
+          "flux_density": 0.37352134795440034,
+          "shading_blocking": 0.22764206253099586,
+          "neighbor_list": 0.006579518197211109,
+          "other_preparation_tracking": 0.17775742574353237,
+          "projected_shadow_geometry": 0.018867720457431583,
+          "normalization_dimensional_postprocessing": 0.002664030632498503,
+          "api_results_callbacks": 0.020844097110880106,
+          "timing_driver_other": 0.0027869960654512273,
+          "image_numerical_kernel_only": 0.015567211118451153
+        },
+        {
+          "image_plane": 0.16883167151383277,
+          "flux_density": 0.36966632697043245,
+          "shading_blocking": 0.23280109575758057,
+          "neighbor_list": 0.006578970648458701,
+          "other_preparation_tracking": 0.17706567651754762,
+          "projected_shadow_geometry": 0.018676960479085413,
+          "normalization_dimensional_postprocessing": 0.0026422237833564747,
+          "api_results_callbacks": 0.02101447580366122,
+          "timing_driver_other": 0.0027225985260448623,
+          "image_numerical_kernel_only": 0.015367936517676282
+        },
+        {
+          "image_plane": 0.1691005544588968,
+          "flux_density": 0.37363823478830255,
+          "shading_blocking": 0.22766704889859876,
+          "neighbor_list": 0.006722383041261263,
+          "other_preparation_tracking": 0.17745878757665132,
+          "projected_shadow_geometry": 0.018801404961861667,
+          "normalization_dimensional_postprocessing": 0.002700425204496445,
+          "api_results_callbacks": 0.02118173681332063,
+          "timing_driver_other": 0.0027294242566105755,
+          "image_numerical_kernel_only": 0.015509864466037963
+        },
+        {
+          "image_plane": 0.1684111030130582,
+          "flux_density": 0.374204029361279,
+          "shading_blocking": 0.2279164009931509,
+          "neighbor_list": 0.0065173658398410906,
+          "other_preparation_tracking": 0.1775460727712391,
+          "projected_shadow_geometry": 0.018890917865618313,
+          "normalization_dimensional_postprocessing": 0.002660535522366639,
+          "api_results_callbacks": 0.02110406088286145,
+          "timing_driver_other": 0.0027495137505853693,
+          "image_numerical_kernel_only": 0.01550433492991283
+        },
+        {
+          "image_plane": 0.1689463610273697,
+          "flux_density": 0.37401527298564075,
+          "shading_blocking": 0.22750938574353116,
+          "neighbor_list": 0.006546320907014295,
+          "other_preparation_tracking": 0.17739778753518798,
+          "projected_shadow_geometry": 0.01884245836234698,
+          "normalization_dimensional_postprocessing": 0.0026830783986422795,
+          "api_results_callbacks": 0.021332672128267064,
+          "timing_driver_other": 0.002726662911999714,
+          "image_numerical_kernel_only": 0.015580809075252269
+        },
+        {
+          "image_plane": 0.16957691271169023,
+          "flux_density": 0.37368381216623975,
+          "shading_blocking": 0.22709525849961343,
+          "neighbor_list": 0.00669345771042391,
+          "other_preparation_tracking": 0.17768218852817463,
+          "projected_shadow_geometry": 0.018697822563022118,
+          "normalization_dimensional_postprocessing": 0.0026471618850137857,
+          "api_results_callbacks": 0.021160194945658767,
+          "timing_driver_other": 0.0027631909901634087,
+          "image_numerical_kernel_only": 0.015610355564486806
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.007233734,
+          "minimum": 0.007155145,
+          "maximum": 0.008492409,
+          "mean": 0.0074286775000000005,
+          "stdev": 0.0004271719730634774,
+          "coefficient_of_variation": 0.05750309837295769
+        },
+        "flux_density": {
+          "median": 0.0159087945,
+          "minimum": 0.015896768,
+          "maximum": 0.015920644,
+          "mean": 0.0159077043,
+          "stdev": 8.044254734488197e-06,
+          "coefficient_of_variation": 0.0005056829434834415
+        },
+        "shading_blocking": {
+          "median": 0.009692380999999983,
+          "minimum": 0.009668073000000018,
+          "maximum": 0.010401763999999987,
+          "mean": 0.009848576499999989,
+          "stdev": 0.0002679473664257525,
+          "coefficient_of_variation": 0.027206710170322872
+        },
+        "neighbor_list": {
+          "median": 0.000285635,
+          "minimum": 0.000276898,
+          "maximum": 0.000317673,
+          "mean": 0.00028924479999999997,
+          "stdev": 1.2155398158842838e-05,
+          "coefficient_of_variation": 0.0420246039301064
+        },
+        "other_preparation_tracking": {
+          "median": 0.007593451500000018,
+          "minimum": 0.007543255000000008,
+          "maximum": 0.008604256000000013,
+          "mean": 0.007778931800000011,
+          "stdev": 0.0003424361148577131,
+          "coefficient_of_variation": 0.044020968901888634
+        },
+        "projected_shadow_geometry": {
+          "median": 0.000803467,
+          "minimum": 0.000796018,
+          "maximum": 0.000869415,
+          "mean": 0.0008142325,
+          "stdev": 2.5155261036875227e-05,
+          "coefficient_of_variation": 0.030894444813828026
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.000113671,
+          "minimum": 0.00011269700000000001,
+          "maximum": 0.000119065,
+          "mean": 0.0001145399,
+          "stdev": 2.174225248987171e-06,
+          "coefficient_of_variation": 0.01898225202734742
+        },
+        "api_results_callbacks": {
+          "median": 0.0009038955000000015,
+          "minimum": 0.0008871079999999976,
+          "maximum": 0.000996076999999998,
+          "mean": 0.0009212106000000004,
+          "stdev": 3.655758836928108e-05,
+          "coefficient_of_variation": 0.03968428974794804
+        },
+        "timing_driver_other": {
+          "median": 0.00011741468213367565,
+          "minimum": 0.00011447885053920276,
+          "maximum": 0.000143244221091271,
+          "mean": 0.00012034863789281841,
+          "stdev": 8.423943225962839e-06,
+          "coefficient_of_variation": 0.06999616591809821
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.1692186778832478,
+          "minimum": 0.1684111030130582,
+          "maximum": 0.19133675469191508,
+          "mean": 0.17178488232966763,
+          "stdev": 0.007030317149824618,
+          "coefficient_of_variation": 0.040925121317328325
+        },
+        "flux_density": {
+          "median": 0.37203644972558075,
+          "minimum": 0.35251118532861875,
+          "maximum": 0.374204029361279,
+          "mean": 0.36818856603291106,
+          "stdev": 0.00781602224286498,
+          "coefficient_of_variation": 0.021228313326183884
+        },
+        "shading_blocking": {
+          "median": 0.2276545557147973,
+          "minimum": 0.21977901739809355,
+          "maximum": 0.23280109575758057,
+          "mean": 0.22785340631675013,
+          "stdev": 0.0036430087603940117,
+          "coefficient_of_variation": 0.01598838840850897
+        },
+        "neighbor_list": {
+          "median": 0.006667214703380879,
+          "minimum": 0.0065173658398410906,
+          "maximum": 0.007036161262532177,
+          "mean": 0.006689797173839484,
+          "stdev": 0.0001587885460541577,
+          "coefficient_of_variation": 0.023735928299157084
+        },
+        "other_preparation_tracking": {
+          "median": 0.17761413064970688,
+          "minimum": 0.17706567651754762,
+          "maximum": 0.19057626162786942,
+          "mean": 0.17990555729403854,
+          "stdev": 0.0044153686208376,
+          "coefficient_of_variation": 0.024542702778331076
+        },
+        "projected_shadow_geometry": {
+          "median": 0.018833168914970982,
+          "minimum": 0.01813932425531362,
+          "maximum": 0.019750137229573507,
+          "mean": 0.018837529858281705,
+          "stdev": 0.0003906040600212307,
+          "coefficient_of_variation": 0.0207354182294504
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.0026538487036902123,
+          "minimum": 0.0025596479589941774,
+          "maximum": 0.002704749848161315,
+          "mean": 0.0026504173106931235,
+          "stdev": 4.361287425033689e-05,
+          "coefficient_of_variation": 0.016455097117869136
+        },
+        "api_results_callbacks": {
+          "median": 0.021170965879489696,
+          "minimum": 0.020844097110880106,
+          "maximum": 0.022441940867810102,
+          "mean": 0.02130674266503395,
+          "stdev": 0.0004467912929106849,
+          "coefficient_of_variation": 0.0209694790017765
+        },
+        "timing_driver_other": {
+          "median": 0.0027335257930145287,
+          "minimum": 0.0026681690791990225,
+          "maximum": 0.0032273391910322465,
+          "mean": 0.0027831010187844233,
+          "stdev": 0.00015914286294132428,
+          "coefficient_of_variation": 0.057181849263535964
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.015436135723794556,
+          "minimum": 0.014739584742478676,
+          "maximum": 0.015610355564486806,
+          "mean": 0.015317036284917462,
+          "stdev": 0.0003119598030818984,
+          "coefficient_of_variation": 0.02036685147694546
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.2036862091076534,
+          "minimum": 1.2025172577739487,
+          "maximum": 1.23660869441274,
+          "mean": 1.2074956710129294,
+          "stdev": 0.010457874973167249,
+          "coefficient_of_variation": 0.008660797072998591
+        },
+        "flux_density": {
+          "median": 1.5924580193309663,
+          "minimum": 1.5444282238412534,
+          "maximum": 1.5979649069637603,
+          "mean": 1.5829661851605503,
+          "stdev": 0.01935339036229096,
+          "coefficient_of_variation": 0.012226028921981089
+        },
+        "shading_blocking": {
+          "median": 1.2947574270825672,
+          "minimum": 1.2816881656593846,
+          "maximum": 1.3034429461124726,
+          "mean": 1.2951167211531907,
+          "stdev": 0.0060893099127384345,
+          "coefficient_of_variation": 0.004701746038238488
+        },
+        "neighbor_list": {
+          "median": 1.0067119655165326,
+          "minimum": 1.006560120545389,
+          "maximum": 1.0070860196394247,
+          "mean": 1.006734875125128,
+          "stdev": 0.00016095976572016597,
+          "coefficient_of_variation": 0.00015988297385660763
+        },
+        "other_preparation_tracking": {
+          "median": 1.2159742088451564,
+          "minimum": 1.2151638003969136,
+          "maximum": 1.2354468402559409,
+          "mean": 1.2194038305554025,
+          "stdev": 0.0066195880698390365,
+          "coefficient_of_variation": 0.0054285445920110075
+        },
+        "projected_shadow_geometry": {
+          "median": 1.019194665379977,
+          "minimum": 1.018474438078046,
+          "maximum": 1.0201480642636918,
+          "mean": 1.019199340693329,
+          "stdev": 0.0004058713881216928,
+          "coefficient_of_variation": 0.0003982257169098945
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0026609104022637,
+          "minimum": 1.00256621657,
+          "maximum": 1.0027120853606286,
+          "mean": 1.0026574624160178,
+          "stdev": 4.3843698818022173e-05,
+          "coefficient_of_variation": 4.3727494644457904e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0216288700708573,
+          "minimum": 1.021287822551421,
+          "maximum": 1.02295714372989,
+          "mean": 1.0217707951032589,
+          "stdev": 0.0004668084847782052,
+          "coefficient_of_variation": 0.00045686223076187076
+        },
+        "timing_driver_other": {
+          "median": 1.0027410184545742,
+          "minimum": 1.0026753072512842,
+          "maximum": 1.0032377886331805,
+          "mean": 1.0027908912809593,
+          "stdev": 0.00016009240787522125,
+          "coefficient_of_variation": 0.00015964685087109252
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.0156781505821968,
+          "minimum": 1.0149600902606304,
+          "maximum": 1.0158579030699153,
+          "mean": 1.0155553890543656,
+          "stdev": 0.0003216613790976536,
+          "coefficient_of_variation": 0.00031673445147799235
+        }
+      },
+      "dominant_components": [
+        "flux_density",
+        "shading_blocking",
+        "other_preparation_tracking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.3537632570715709,
+        "minimum": 0.35262793266769327,
+        "maximum": 0.373072099827254,
+        "mean": 0.3585599624167757,
+        "stdev": 0.008075748587773959,
+        "coefficient_of_variation": 0.02252272823028421
+      },
+      "plain_median_s": 0.042570062913000584,
+      "instrumented_median_s": 0.04274804797023535,
+      "observer_ratio": 1.0041809911720945,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        25,
+        25
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.016080622,
+          "flux_density": 0.002531306,
+          "shading_blocking": 0.024520851,
+          "neighbor_list": 0.000643881,
+          "other_preparation_tracking": 0.014868187,
+          "projected_shadow_geometry": 0.001596832,
+          "normalization_dimensional_postprocessing": 0.000123737,
+          "api_results_callbacks": 0.0018820650000000022,
+          "timing_driver_other": 0.00010738355261707272
+        },
+        {
+          "image_plane": 0.016072013,
+          "flux_density": 0.002501451,
+          "shading_blocking": 0.024545712,
+          "neighbor_list": 0.000641917,
+          "other_preparation_tracking": 0.014883625999999999,
+          "projected_shadow_geometry": 0.001596496,
+          "normalization_dimensional_postprocessing": 0.00012449,
+          "api_results_callbacks": 0.0018669929999999973,
+          "timing_driver_other": 0.00010436711557102601
+        },
+        {
+          "image_plane": 0.017028398,
+          "flux_density": 0.002658245,
+          "shading_blocking": 0.02644178200000008,
+          "neighbor_list": 0.000649576,
+          "other_preparation_tracking": 0.01528616399999992,
+          "projected_shadow_geometry": 0.001743398,
+          "normalization_dimensional_postprocessing": 0.000131937,
+          "api_results_callbacks": 0.002127515999999996,
+          "timing_driver_other": 0.00012008448496723945
+        },
+        {
+          "image_plane": 0.017195979,
+          "flux_density": 0.002677061,
+          "shading_blocking": 0.025067661000000015,
+          "neighbor_list": 0.000678478,
+          "other_preparation_tracking": 0.015599740999999986,
+          "projected_shadow_geometry": 0.001595288,
+          "normalization_dimensional_postprocessing": 0.000124167,
+          "api_results_callbacks": 0.0018863059999999904,
+          "timing_driver_other": 0.00010486765098000062
+        },
+        {
+          "image_plane": 0.016430174,
+          "flux_density": 0.00269675,
+          "shading_blocking": 0.024578883999999978,
+          "neighbor_list": 0.000672306,
+          "other_preparation_tracking": 0.015134816000000025,
+          "projected_shadow_geometry": 0.001590596,
+          "normalization_dimensional_postprocessing": 0.000123683,
+          "api_results_callbacks": 0.0018742439999999902,
+          "timing_driver_other": 0.00010562386245442645
+        },
+        {
+          "image_plane": 0.016206364,
+          "flux_density": 0.002692674,
+          "shading_blocking": 0.02497651299999999,
+          "neighbor_list": 0.00064551,
+          "other_preparation_tracking": 0.01500923200000001,
+          "projected_shadow_geometry": 0.001609196,
+          "normalization_dimensional_postprocessing": 0.000125418,
+          "api_results_callbacks": 0.001891478000000002,
+          "timing_driver_other": 0.00010337678050041654
+        },
+        {
+          "image_plane": 0.016200748,
+          "flux_density": 0.002694627,
+          "shading_blocking": 0.02454185799999994,
+          "neighbor_list": 0.000645068,
+          "other_preparation_tracking": 0.01491640100000006,
+          "projected_shadow_geometry": 0.001607935,
+          "normalization_dimensional_postprocessing": 0.000122696,
+          "api_results_callbacks": 0.0018759350000000022,
+          "timing_driver_other": 0.00010378411567878165
+        },
+        {
+          "image_plane": 0.016167756,
+          "flux_density": 0.002687634,
+          "shading_blocking": 0.024529738000000013,
+          "neighbor_list": 0.00064699,
+          "other_preparation_tracking": 0.014930374999999985,
+          "projected_shadow_geometry": 0.001606827,
+          "normalization_dimensional_postprocessing": 0.000124103,
+          "api_results_callbacks": 0.0018828410000000032,
+          "timing_driver_other": 0.00010545938604927807
+        },
+        {
+          "image_plane": 0.01615092,
+          "flux_density": 0.002688846,
+          "shading_blocking": 0.024592472000000025,
+          "neighbor_list": 0.000641301,
+          "other_preparation_tracking": 0.014891076999999971,
+          "projected_shadow_geometry": 0.001611235,
+          "normalization_dimensional_postprocessing": 0.000124712,
+          "api_results_callbacks": 0.001903173000000001,
+          "timing_driver_other": 0.00010509259826088635
+        },
+        {
+          "image_plane": 0.016147625,
+          "flux_density": 0.002680929,
+          "shading_blocking": 0.02454904400000004,
+          "neighbor_list": 0.000655688,
+          "other_preparation_tracking": 0.014931359999999965,
+          "projected_shadow_geometry": 0.001604989,
+          "normalization_dimensional_postprocessing": 0.00012286100000000002,
+          "api_results_callbacks": 0.0018826169999999962,
+          "timing_driver_other": 0.00010244737414073779
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.25788881293183863,
+          "flux_density": 0.04059516475838066,
+          "shading_blocking": 0.3932468008058698,
+          "neighbor_list": 0.010326074871939978,
+          "other_preparation_tracking": 0.23844470045242,
+          "projected_shadow_geometry": 0.025608779867568168,
+          "normalization_dimensional_postprocessing": 0.001984400108761149,
+          "api_results_callbacks": 0.030183130273851437,
+          "timing_driver_other": 0.0017221359293701772,
+          "image_numerical_kernel_only": 0.01663562319050374
+        },
+        {
+          "image_plane": 0.25782434527841464,
+          "flux_density": 0.04012782756715264,
+          "shading_blocking": 0.3937579023730584,
+          "neighbor_list": 0.010297517196388785,
+          "other_preparation_tracking": 0.23876045451299654,
+          "projected_shadow_geometry": 0.025610702028402283,
+          "normalization_dimensional_postprocessing": 0.0019970462159102187,
+          "api_results_callbacks": 0.02994996630878674,
+          "timing_driver_other": 0.0016742385188897257,
+          "image_numerical_kernel_only": 0.01661881168341657
+        },
+        {
+          "image_plane": 0.2572766879834475,
+          "flux_density": 0.040162584257694665,
+          "shading_blocking": 0.3995005341865018,
+          "neighbor_list": 0.009814238654366423,
+          "other_preparation_tracking": 0.23095382465759767,
+          "projected_shadow_geometry": 0.02634044983426899,
+          "normalization_dimensional_postprocessing": 0.0019933944686089736,
+          "api_results_callbacks": 0.03214396739562883,
+          "timing_driver_other": 0.0018143185618852374,
+          "image_numerical_kernel_only": 0.015718834131739273
+        },
+        {
+          "image_plane": 0.26484057501207436,
+          "flux_density": 0.041230241941002534,
+          "shading_blocking": 0.38607477675145774,
+          "neighbor_list": 0.010449448888780464,
+          "other_preparation_tracking": 0.24025642136917175,
+          "projected_shadow_geometry": 0.024569522399967,
+          "normalization_dimensional_postprocessing": 0.0019123342542767842,
+          "api_results_callbacks": 0.02905158035426325,
+          "timing_driver_other": 0.0016150990290060769,
+          "image_numerical_kernel_only": 0.01725340727585866
+        },
+        {
+          "image_plane": 0.25994200041482496,
+          "flux_density": 0.04266531745912607,
+          "shading_blocking": 0.3888628492263034,
+          "neighbor_list": 0.010636562128367558,
+          "other_preparation_tracking": 0.23944812434428914,
+          "projected_shadow_geometry": 0.025164840377942373,
+          "normalization_dimensional_postprocessing": 0.0019567903807535332,
+          "api_results_callbacks": 0.02965243914187888,
+          "timing_driver_other": 0.0016710765265142012,
+          "image_numerical_kernel_only": 0.017707385218282728
+        },
+        {
+          "image_plane": 0.25618755973557195,
+          "flux_density": 0.0425653515633378,
+          "shading_blocking": 0.3948246451933195,
+          "neighbor_list": 0.010204116832431323,
+          "other_preparation_tracking": 0.23726349226668364,
+          "projected_shadow_geometry": 0.025437907995664137,
+          "normalization_dimensional_postprocessing": 0.0019825872951462747,
+          "api_results_callbacks": 0.029900175826824613,
+          "timing_driver_other": 0.0016341632910208343,
+          "image_numerical_kernel_only": 0.017805947448946813
+        },
+        {
+          "image_plane": 0.25834783740814066,
+          "flux_density": 0.042970303474357215,
+          "shading_blocking": 0.3913606915111364,
+          "neighbor_list": 0.010286680761974353,
+          "other_preparation_tracking": 0.23786679110511696,
+          "projected_shadow_geometry": 0.025641194464777712,
+          "normalization_dimensional_postprocessing": 0.0019565915264300893,
+          "api_results_callbacks": 0.02991489963106894,
+          "timing_driver_other": 0.0016550101169976559,
+          "image_numerical_kernel_only": 0.01786076993783703
+        },
+        {
+          "image_plane": 0.25793413337448806,
+          "flux_density": 0.04287747456219706,
+          "shading_blocking": 0.3913379638419365,
+          "neighbor_list": 0.010321828517943988,
+          "other_preparation_tracking": 0.23819343491954717,
+          "projected_shadow_geometry": 0.02563469721634397,
+          "normalization_dimensional_postprocessing": 0.001979891319127657,
+          "api_results_callbacks": 0.03003811794394691,
+          "timing_driver_other": 0.0016824583044688524,
+          "image_numerical_kernel_only": 0.01797372387502506
+        },
+        {
+          "image_plane": 0.2575541651952962,
+          "flux_density": 0.04287826866015754,
+          "shading_blocking": 0.39216921364533436,
+          "neighbor_list": 0.010226646141142963,
+          "other_preparation_tracking": 0.2374638042658789,
+          "projected_shadow_geometry": 0.02569391002855832,
+          "normalization_dimensional_postprocessing": 0.0019887470837472903,
+          "api_results_callbacks": 0.030349362961195264,
+          "timing_driver_other": 0.001675882018689166,
+          "image_numerical_kernel_only": 0.01794656475897468
+        },
+        {
+          "image_plane": 0.25763008170085255,
+          "flux_density": 0.04277334637782244,
+          "shading_blocking": 0.39167197723490826,
+          "neighbor_list": 0.010461287837082459,
+          "other_preparation_tracking": 0.23822497096042503,
+          "projected_shadow_geometry": 0.025607075170433407,
+          "normalization_dimensional_postprocessing": 0.0019602071182510403,
+          "api_results_callbacks": 0.030036539213748957,
+          "timing_driver_other": 0.0016345143864757877,
+          "image_numerical_kernel_only": 0.01790599308601289
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.016184252,
+          "minimum": 0.016072013,
+          "maximum": 0.017195979,
+          "mean": 0.0163680599,
+          "stdev": 0.00040628680166367723,
+          "coefficient_of_variation": 0.024821927836644664
+        },
+        "flux_density": {
+          "median": 0.0026842815,
+          "minimum": 0.002501451,
+          "maximum": 0.00269675,
+          "mean": 0.0026509523,
+          "stdev": 7.21313729309237e-05,
+          "coefficient_of_variation": 0.027209608008006668
+        },
+        "shading_blocking": {
+          "median": 0.024563964000000008,
+          "minimum": 0.024520851,
+          "maximum": 0.02644178200000008,
+          "mean": 0.024834451500000007,
+          "stdev": 0.0005984779573793623,
+          "coefficient_of_variation": 0.024098698430257748
+        },
+        "neighbor_list": {
+          "median": 0.0006462499999999999,
+          "minimum": 0.000641301,
+          "maximum": 0.000678478,
+          "mean": 0.0006520715,
+          "stdev": 1.3039131670560829e-05,
+          "coefficient_of_variation": 0.019996475341371046
+        },
+        "other_preparation_tracking": {
+          "median": 0.014930867499999976,
+          "minimum": 0.014868187,
+          "maximum": 0.015599740999999986,
+          "mean": 0.015045097899999992,
+          "stdev": 0.0002354266004070189,
+          "coefficient_of_variation": 0.015648060382978234
+        },
+        "projected_shadow_geometry": {
+          "median": 0.001605908,
+          "minimum": 0.001590596,
+          "maximum": 0.001743398,
+          "mean": 0.0016162792,
+          "stdev": 4.5204558759291314e-05,
+          "coefficient_of_variation": 0.027968285899670868
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.000124135,
+          "minimum": 0.000122696,
+          "maximum": 0.000131937,
+          "mean": 0.0001247804,
+          "stdev": 2.6430073022978925e-06,
+          "coefficient_of_variation": 0.021181269672944567
+        },
+        "api_results_callbacks": {
+          "median": 0.0018827289999999997,
+          "minimum": 0.0018669929999999973,
+          "maximum": 0.002127515999999996,
+          "mean": 0.0019073167999999982,
+          "stdev": 7.799473962860088e-05,
+          "coefficient_of_variation": 0.04089238852643722
+        },
+        "timing_driver_other": {
+          "median": 0.00010498012462044348,
+          "minimum": 0.00010244737414073779,
+          "maximum": 0.00012008448496723945,
+          "mean": 0.00010624869212198657,
+          "stdev": 5.047405031407136e-06,
+          "coefficient_of_variation": 0.04750557329790087
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.2578565791051266,
+          "minimum": 0.25618755973557195,
+          "maximum": 0.26484057501207436,
+          "mean": 0.258542619903495,
+          "stdev": 0.0024021458725491988,
+          "coefficient_of_variation": 0.00929110207611355
+        },
+        "flux_density": {
+          "median": 0.042615334511231936,
+          "minimum": 0.04012782756715264,
+          "maximum": 0.042970303474357215,
+          "mean": 0.04188458806212286,
+          "stdev": 0.0012090931960482606,
+          "coefficient_of_variation": 0.028867257671364558
+        },
+        "shading_blocking": {
+          "median": 0.3919205954401213,
+          "minimum": 0.38607477675145774,
+          "maximum": 0.3995005341865018,
+          "mean": 0.3922807354769826,
+          "stdev": 0.0035594392099825957,
+          "coefficient_of_variation": 0.009073703825028768
+        },
+        "neighbor_list": {
+          "median": 0.010309672857166385,
+          "minimum": 0.009814238654366423,
+          "maximum": 0.010636562128367558,
+          "mean": 0.01030244018304183,
+          "stdev": 0.0002143314315541898,
+          "coefficient_of_variation": 0.02080394816627877
+        },
+        "other_preparation_tracking": {
+          "median": 0.2382092029399861,
+          "minimum": 0.23095382465759767,
+          "maximum": 0.24025642136917175,
+          "mean": 0.23768760188541269,
+          "stdev": 0.0025292277109323696,
+          "coefficient_of_variation": 0.010640974501277059
+        },
+        "projected_shadow_geometry": {
+          "median": 0.025609740947985224,
+          "minimum": 0.024569522399967,
+          "maximum": 0.02634044983426899,
+          "mean": 0.025530907938392636,
+          "stdev": 0.00044597113480874606,
+          "coefficient_of_variation": 0.017467891697580704
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.001981239307136966,
+          "minimum": 0.0019123342542767842,
+          "maximum": 0.0019970462159102187,
+          "mean": 0.001971198977101301,
+          "stdev": 2.5506073213789465e-05,
+          "coefficient_of_variation": 0.012939370154958586
+        },
+        "api_results_callbacks": {
+          "median": 0.02999325276126785,
+          "minimum": 0.02905158035426325,
+          "maximum": 0.03214396739562883,
+          "mean": 0.030122017905119383,
+          "stdev": 0.0007920508157510048,
+          "coefficient_of_variation": 0.02629474619681412
+        },
+        "timing_driver_other": {
+          "median": 0.0016726575227019634,
+          "minimum": 0.0016150990290060769,
+          "maximum": 0.0018143185618852374,
+          "mean": 0.0016778896683317716,
+          "stdev": 5.6681151976081705e-05,
+          "coefficient_of_variation": 0.03378121520495236
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.017756666333614772,
+          "minimum": 0.015718834131739273,
+          "maximum": 0.01797372387502506,
+          "mean": 0.017342706060659744,
+          "stdev": 0.0007720836385569507,
+          "coefficient_of_variation": 0.044519213775314335
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.34744844962806,
+          "minimum": 1.344424946219636,
+          "maximum": 1.3602491731863795,
+          "mean": 1.3487080059497447,
+          "stdev": 0.004396371676964354,
+          "coefficient_of_variation": 0.0032596912434493036
+        },
+        "flux_density": {
+          "median": 1.0445122412892736,
+          "minimum": 1.0418053869250594,
+          "maximum": 1.0448996552879757,
+          "mean": 1.0437170928194779,
+          "stdev": 0.001316260576898207,
+          "coefficient_of_variation": 0.0012611277384971106
+        },
+        "shading_blocking": {
+          "median": 1.6445223430791636,
+          "minimum": 1.6288628681984594,
+          "maximum": 1.665280415604196,
+          "mean": 1.645547521416126,
+          "stdev": 0.00965524878167248,
+          "coefficient_of_variation": 0.005867499209845585
+        },
+        "neighbor_list": {
+          "median": 1.0104170695875996,
+          "minimum": 1.0099115126044926,
+          "maximum": 1.0107509149026666,
+          "mean": 1.0104097279847848,
+          "stdev": 0.00021877778397338957,
+          "coefficient_of_variation": 0.00021652382980291737
+        },
+        "other_preparation_tracking": {
+          "median": 1.3126963521845394,
+          "minimum": 1.3003120385518727,
+          "maximum": 1.316233566333196,
+          "mean": 1.3118110723143173,
+          "stdev": 0.004324758541302479,
+          "coefficient_of_variation": 0.0032967845999902056
+        },
+        "projected_shadow_geometry": {
+          "median": 1.0262828376115682,
+          "minimum": 1.0251883890899312,
+          "maximum": 1.0270530390522903,
+          "mean": 1.0262000063491266,
+          "stdev": 0.0004695388553453563,
+          "coefficient_of_variation": 0.0004575510158256743
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0019851724105724,
+          "minimum": 1.0019159982834254,
+          "maximum": 1.0020010423900432,
+          "mean": 1.0019750928659399,
+          "stdev": 2.5606166766891548e-05,
+          "coefficient_of_variation": 2.555569190213149e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0309206661067356,
+          "minimum": 1.0299208276839908,
+          "maximum": 1.0332115173257057,
+          "mean": 1.0310581531362035,
+          "stdev": 0.0008430808364850621,
+          "coefficient_of_variation": 0.000817685049015553
+        },
+        "timing_driver_other": {
+          "median": 1.001675459995976,
+          "minimum": 1.0016177117937533,
+          "maximum": 1.001817616296871,
+          "mean": 1.001680712620099,
+          "stdev": 5.687617829459806e-05,
+          "coefficient_of_variation": 5.6780746177918196e-05
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.0180776679690613,
+          "minimum": 1.0159698617395296,
+          "maximum": 1.0183026913963529,
+          "mean": 1.0176493487045826,
+          "stdev": 0.0007989596202025838,
+          "coefficient_of_variation": 0.000785103062483772
+        }
+      },
+      "dominant_components": [
+        "shading_blocking",
+        "image_plane",
+        "other_preparation_tracking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.5049742539825006,
+        "minimum": 0.5022116603953595,
+        "maximum": 0.5106397578431273,
+        "mean": 0.5053912696683126,
+        "stdev": 0.002481003553923058,
+        "coefficient_of_variation": 0.004909074815541108
+      },
+      "plain_median_s": 0.06327708717435598,
+      "instrumented_median_s": 0.06270894035696983,
+      "observer_ratio": 0.9910212868076456,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        50,
+        50
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.017315011999999998,
+          "flux_density": 0.008431249,
+          "shading_blocking": 0.025443292000000006,
+          "neighbor_list": 0.000690313,
+          "other_preparation_tracking": 0.016201290999999996,
+          "projected_shadow_geometry": 0.001741826,
+          "normalization_dimensional_postprocessing": 0.000136651,
+          "api_results_callbacks": 0.0020267039999999903,
+          "timing_driver_other": 0.00012261991649818726
+        },
+        {
+          "image_plane": 0.016431686,
+          "flux_density": 0.008426661,
+          "shading_blocking": 0.024557459999999937,
+          "neighbor_list": 0.000650808,
+          "other_preparation_tracking": 0.014896805000000062,
+          "projected_shadow_geometry": 0.001616763,
+          "normalization_dimensional_postprocessing": 0.000135446,
+          "api_results_callbacks": 0.0019420930000000058,
+          "timing_driver_other": 0.00011810692775535148
+        },
+        {
+          "image_plane": 0.016485833,
+          "flux_density": 0.008441304,
+          "shading_blocking": 0.02473022200000007,
+          "neighbor_list": 0.0006459,
+          "other_preparation_tracking": 0.014948501999999928,
+          "projected_shadow_geometry": 0.00161161,
+          "normalization_dimensional_postprocessing": 0.000137606,
+          "api_results_callbacks": 0.001996471999999999,
+          "timing_driver_other": 0.00011553546357251365
+        },
+        {
+          "image_plane": 0.016023322,
+          "flux_density": 0.008432878,
+          "shading_blocking": 0.024571105999999995,
+          "neighbor_list": 0.000648868,
+          "other_preparation_tracking": 0.014921072000000004,
+          "projected_shadow_geometry": 0.001610466,
+          "normalization_dimensional_postprocessing": 0.0001349,
+          "api_results_callbacks": 0.001960261000000005,
+          "timing_driver_other": 0.00011655926754665369
+        },
+        {
+          "image_plane": 0.016021003,
+          "flux_density": 0.008423104,
+          "shading_blocking": 0.024535571000000103,
+          "neighbor_list": 0.00064593,
+          "other_preparation_tracking": 0.014920011999999903,
+          "projected_shadow_geometry": 0.001614742,
+          "normalization_dimensional_postprocessing": 0.000138522,
+          "api_results_callbacks": 0.0019695969999999896,
+          "timing_driver_other": 0.00011598383016014902
+        },
+        {
+          "image_plane": 0.015987822,
+          "flux_density": 0.008434952,
+          "shading_blocking": 0.024526987,
+          "neighbor_list": 0.000644371,
+          "other_preparation_tracking": 0.014972879,
+          "projected_shadow_geometry": 0.001624416,
+          "normalization_dimensional_postprocessing": 0.000140584,
+          "api_results_callbacks": 0.0019889909999999955,
+          "timing_driver_other": 0.00011339475867558346
+        },
+        {
+          "image_plane": 0.016023381,
+          "flux_density": 0.008453044,
+          "shading_blocking": 0.025940670000000072,
+          "neighbor_list": 0.000651077,
+          "other_preparation_tracking": 0.015123742999999929,
+          "projected_shadow_geometry": 0.001599494,
+          "normalization_dimensional_postprocessing": 0.000143699,
+          "api_results_callbacks": 0.002156092999999998,
+          "timing_driver_other": 0.00012051127097512104
+        },
+        {
+          "image_plane": 0.016269525,
+          "flux_density": 0.008424103,
+          "shading_blocking": 0.025315791999999927,
+          "neighbor_list": 0.000637075,
+          "other_preparation_tracking": 0.01518798600000007,
+          "projected_shadow_geometry": 0.001625289,
+          "normalization_dimensional_postprocessing": 0.00013843,
+          "api_results_callbacks": 0.0020635850000000067,
+          "timing_driver_other": 0.00012044600304603192
+        },
+        {
+          "image_plane": 0.01600249,
+          "flux_density": 0.008433708,
+          "shading_blocking": 0.024543482999999994,
+          "neighbor_list": 0.000679027,
+          "other_preparation_tracking": 0.015312478999999999,
+          "projected_shadow_geometry": 0.001624445,
+          "normalization_dimensional_postprocessing": 0.000136858,
+          "api_results_callbacks": 0.0019749269999999874,
+          "timing_driver_other": 0.0001182339602070065
+        },
+        {
+          "image_plane": 0.015971562,
+          "flux_density": 0.008439254,
+          "shading_blocking": 0.024590204999999934,
+          "neighbor_list": 0.000645566,
+          "other_preparation_tracking": 0.014882721000000071,
+          "projected_shadow_geometry": 0.001613557,
+          "normalization_dimensional_postprocessing": 0.000135563,
+          "api_results_callbacks": 0.0019689269999999953,
+          "timing_driver_other": 0.00011776439764021873
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.24012289873958095,
+          "flux_density": 0.11692373934682768,
+          "shading_blocking": 0.35284509352448573,
+          "neighbor_list": 0.009573193399901564,
+          "other_preparation_tracking": 0.22467792446482185,
+          "projected_shadow_geometry": 0.024155473194010457,
+          "normalization_dimensional_postprocessing": 0.0018950627487675136,
+          "api_results_callbacks": 0.02810613353124453,
+          "timing_driver_other": 0.0017004810503596587,
+          "image_numerical_kernel_only": 0.015620805326307032
+        },
+        {
+          "image_plane": 0.23891658241241184,
+          "flux_density": 0.12252358323229623,
+          "shading_blocking": 0.3570652710823157,
+          "neighbor_list": 0.009462743090797678,
+          "other_preparation_tracking": 0.21659942500508733,
+          "projected_shadow_geometry": 0.023507721029408558,
+          "normalization_dimensional_postprocessing": 0.001969383751699706,
+          "api_results_callbacks": 0.028238016615402067,
+          "timing_driver_other": 0.0017172737805808973,
+          "image_numerical_kernel_only": 0.01633550575670256
+        },
+        {
+          "image_plane": 0.23853452615245135,
+          "flux_density": 0.12213774394953487,
+          "shading_blocking": 0.3578230949212542,
+          "neighbor_list": 0.009345566611154458,
+          "other_preparation_tracking": 0.2162907898714584,
+          "projected_shadow_geometry": 0.02331848367580529,
+          "normalization_dimensional_postprocessing": 0.0019910296316682464,
+          "api_results_callbacks": 0.028887075496678676,
+          "timing_driver_other": 0.0016716896899946366,
+          "image_numerical_kernel_only": 0.016249797876288136
+        },
+        {
+          "image_plane": 0.23419256005139832,
+          "flux_density": 0.12325267428446583,
+          "shading_blocking": 0.35912466949327193,
+          "neighbor_list": 0.009483679979434398,
+          "other_preparation_tracking": 0.21808237083366602,
+          "projected_shadow_geometry": 0.023538137435903446,
+          "normalization_dimensional_postprocessing": 0.0019716620779969118,
+          "api_results_callbacks": 0.028650646973137982,
+          "timing_driver_other": 0.0017035988707252278,
+          "image_numerical_kernel_only": 0.016552958759599803
+        },
+        {
+          "image_plane": 0.23427839992299143,
+          "flux_density": 0.12317277061273561,
+          "shading_blocking": 0.358788667293613,
+          "neighbor_list": 0.009445566352010411,
+          "other_preparation_tracking": 0.21817838360006603,
+          "projected_shadow_geometry": 0.02361270215406932,
+          "normalization_dimensional_postprocessing": 0.002025635505725367,
+          "api_results_callbacks": 0.02880181931512788,
+          "timing_driver_other": 0.0016960552436610682,
+          "image_numerical_kernel_only": 0.016392963158369248
+        },
+        {
+          "image_plane": 0.2336226043809349,
+          "flux_density": 0.12325602912442833,
+          "shading_blocking": 0.3584014495881512,
+          "neighbor_list": 0.009415893622505144,
+          "other_preparation_tracking": 0.2187917145350135,
+          "projected_shadow_geometry": 0.02373683523109407,
+          "normalization_dimensional_postprocessing": 0.002054288583791423,
+          "api_results_callbacks": 0.029064200083678635,
+          "timing_driver_other": 0.0016569848504028519,
+          "image_numerical_kernel_only": 0.016400641070219168
+        },
+        {
+          "image_plane": 0.2282152148370824,
+          "flux_density": 0.12039364554130681,
+          "shading_blocking": 0.369463571830931,
+          "neighbor_list": 0.009273054009667691,
+          "other_preparation_tracking": 0.21540199648787012,
+          "projected_shadow_geometry": 0.02278101399702249,
+          "normalization_dimensional_postprocessing": 0.0020466528354330404,
+          "api_results_callbacks": 0.03070845205538887,
+          "timing_driver_other": 0.0017163984052976772,
+          "image_numerical_kernel_only": 0.01596998447471
+        },
+        {
+          "image_plane": 0.23314710301093447,
+          "flux_density": 0.12071988640822165,
+          "shading_blocking": 0.3627827834695465,
+          "neighbor_list": 0.009129473088531539,
+          "other_preparation_tracking": 0.21764832940547724,
+          "projected_shadow_geometry": 0.023290871854312816,
+          "normalization_dimensional_postprocessing": 0.0019837428240716097,
+          "api_results_callbacks": 0.0295717831077933,
+          "timing_driver_other": 0.0017260268311108365,
+          "image_numerical_kernel_only": 0.01603892627732453
+        },
+        {
+          "image_plane": 0.23250764470432952,
+          "flux_density": 0.12253727908619604,
+          "shading_blocking": 0.3566037176196173,
+          "neighbor_list": 0.009865900148079877,
+          "other_preparation_tracking": 0.22248215289461243,
+          "projected_shadow_geometry": 0.023602319445394093,
+          "normalization_dimensional_postprocessing": 0.001988473746207317,
+          "api_results_callbacks": 0.02869463597433802,
+          "timing_driver_other": 0.0017178763812254528,
+          "image_numerical_kernel_only": 0.016276721418308663
+        },
+        {
+          "image_plane": 0.23362150378327717,
+          "flux_density": 0.12344385666780974,
+          "shading_blocking": 0.35968934475156816,
+          "neighbor_list": 0.009442914832710482,
+          "other_preparation_tracking": 0.21769465381075281,
+          "projected_shadow_geometry": 0.02360205049324752,
+          "normalization_dimensional_postprocessing": 0.001982926398643564,
+          "api_results_callbacks": 0.028800169111793537,
+          "timing_driver_other": 0.0017225801501969385,
+          "image_numerical_kernel_only": 0.016476238231149267
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.016023351499999998,
+          "minimum": 0.015971562,
+          "maximum": 0.017315011999999998,
+          "mean": 0.0162531636,
+          "stdev": 0.0004197702605905593,
+          "coefficient_of_variation": 0.025826987958858627
+        },
+        "flux_density": {
+          "median": 0.008433293,
+          "minimum": 0.008423104,
+          "maximum": 0.008453044,
+          "mean": 0.0084340257,
+          "stdev": 8.968915839968695e-06,
+          "coefficient_of_variation": 0.0010634205015487082
+        },
+        "shading_blocking": {
+          "median": 0.024580655499999965,
+          "minimum": 0.024526987,
+          "maximum": 0.025940670000000072,
+          "mean": 0.024875478800000003,
+          "stdev": 0.0005049075088653685,
+          "coefficient_of_variation": 0.020297398611896004
+        },
+        "neighbor_list": {
+          "median": 0.000647399,
+          "minimum": 0.000637075,
+          "maximum": 0.000690313,
+          "mean": 0.0006538935,
+          "stdev": 1.690161732727901e-05,
+          "coefficient_of_variation": 0.025847660708171915
+        },
+        "other_preparation_tracking": {
+          "median": 0.014960690499999964,
+          "minimum": 0.014882721000000071,
+          "maximum": 0.016201290999999996,
+          "mean": 0.015136748999999996,
+          "stdev": 0.00040066753219485026,
+          "coefficient_of_variation": 0.026469853744344334
+        },
+        "projected_shadow_geometry": {
+          "median": 0.0016157525,
+          "minimum": 0.001599494,
+          "maximum": 0.001741826,
+          "mean": 0.0016282608,
+          "stdev": 4.067188625738092e-05,
+          "coefficient_of_variation": 0.024978729609765785
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.000137232,
+          "minimum": 0.0001349,
+          "maximum": 0.000143699,
+          "mean": 0.0001378259,
+          "stdev": 2.6804025174506075e-06,
+          "coefficient_of_variation": 0.019447741806515373
+        },
+        "api_results_callbacks": {
+          "median": 0.0019819589999999915,
+          "minimum": 0.0019420930000000058,
+          "maximum": 0.002156092999999998,
+          "mean": 0.0020047649999999973,
+          "stdev": 6.366466920252333e-05,
+          "coefficient_of_variation": 0.03175667432468315
+        },
+        "timing_driver_other": {
+          "median": 0.0001179356626977851,
+          "minimum": 0.00011339475867558346,
+          "maximum": 0.00012261991649818726,
+          "mean": 0.00011791557960768167,
+          "stdev": 2.7306143166072934e-06,
+          "coefficient_of_variation": 0.023157366699908127
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.23390758221616662,
+          "minimum": 0.2282152148370824,
+          "maximum": 0.24012289873958095,
+          "mean": 0.23471590379953924,
+          "stdev": 0.003557745638150046,
+          "coefficient_of_variation": 0.015157667548546534
+        },
+        "flux_density": {
+          "median": 0.12253043115924614,
+          "minimum": 0.11692373934682768,
+          "maximum": 0.12344385666780974,
+          "mean": 0.12183612082538228,
+          "stdev": 0.0020250547443881003,
+          "coefficient_of_variation": 0.01662113608566416
+        },
+        "shading_blocking": {
+          "median": 0.3585950584408821,
+          "minimum": 0.35284509352448573,
+          "maximum": 0.369463571830931,
+          "mean": 0.35925876635747545,
+          "stdev": 0.004381440316918342,
+          "coefficient_of_variation": 0.01219577843942895
+        },
+        "neighbor_list": {
+          "median": 0.009444240592360447,
+          "minimum": 0.009129473088531539,
+          "maximum": 0.009865900148079877,
+          "mean": 0.009443798513479325,
+          "stdev": 0.00019300216146489203,
+          "coefficient_of_variation": 0.020436920714627292
+        },
+        "other_preparation_tracking": {
+          "median": 0.2178885123222094,
+          "minimum": 0.21540199648787012,
+          "maximum": 0.22467792446482185,
+          "mean": 0.21858477409088256,
+          "stdev": 0.002863170741485724,
+          "coefficient_of_variation": 0.013098674202693015
+        },
+        "projected_shadow_geometry": {
+          "median": 0.023570093964575482,
+          "minimum": 0.02278101399702249,
+          "maximum": 0.024155473194010457,
+          "mean": 0.023514560851026805,
+          "stdev": 0.00035155826237462547,
+          "coefficient_of_variation": 0.014950662468326473
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.0019861082851394636,
+          "minimum": 0.0018950627487675136,
+          "maximum": 0.002054288583791423,
+          "mean": 0.00199088581040047,
+          "stdev": 4.530339313250941e-05,
+          "coefficient_of_variation": 0.022755395058743508
+        },
+        "api_results_callbacks": {
+          "median": 0.02880099421346071,
+          "minimum": 0.02810613353124453,
+          "maximum": 0.03070845205538887,
+          "mean": 0.02895229322645835,
+          "stdev": 0.0007389164150106708,
+          "coefficient_of_variation": 0.025521861402515934
+        },
+        "timing_driver_other": {
+          "median": 0.0017099986380114526,
+          "minimum": 0.0016569848504028519,
+          "maximum": 0.0017260268311108365,
+          "mean": 0.0017028965253555245,
+          "stdev": 2.2780932223637567e-05,
+          "coefficient_of_variation": 0.01337775483385959
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.01630611358750561,
+          "minimum": 0.015620805326307032,
+          "maximum": 0.016552958759599803,
+          "mean": 0.01623145423489784,
+          "stdev": 0.00028077898536394503,
+          "coefficient_of_variation": 0.017298449128499312
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.3053257220173784,
+          "minimum": 1.2956979966752105,
+          "maximum": 1.3160022829234959,
+          "mean": 1.3067296918342899,
+          "stdev": 0.006074842144233592,
+          "coefficient_of_variation": 0.0046488896534570825
+        },
+        "flux_density": {
+          "median": 1.1396406617063988,
+          "minimum": 1.1324050306372684,
+          "maximum": 1.1408282374230398,
+          "mean": 1.138745049174814,
+          "stdev": 0.0026170958658822746,
+          "coefficient_of_variation": 0.0022982280957258524
+        },
+        "shading_blocking": {
+          "median": 1.5590776221389417,
+          "minimum": 1.545225092159347,
+          "maximum": 1.5859511922312992,
+          "mean": 1.56075861268775,
+          "stdev": 0.01075260314768864,
+          "coefficient_of_variation": 0.006889344105025829
+        },
+        "neighbor_list": {
+          "median": 1.0095342846724749,
+          "minimum": 1.0092135882949187,
+          "maximum": 1.0099642060096257,
+          "mean": 1.0095338686190758,
+          "stdev": 0.00019672379212089787,
+          "coefficient_of_variation": 0.00019486596560647638
+        },
+        "other_preparation_tracking": {
+          "median": 1.2785901718519694,
+          "minimum": 1.2745380379807965,
+          "maximum": 1.289786569419856,
+          "mean": 1.279744876740618,
+          "stdev": 0.004708078635025537,
+          "coefficient_of_variation": 0.0036789196976639133
+        },
+        "projected_shadow_geometry": {
+          "median": 1.0241390548261615,
+          "minimum": 1.0233120869767394,
+          "maximum": 1.0247534033654655,
+          "mean": 1.024080929985466,
+          "stdev": 0.0003686474923316699,
+          "coefficient_of_variation": 0.0003599788664523826
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0019900607669343,
+          "minimum": 1.0018986608301794,
+          "maximum": 1.0020585173725294,
+          "mean": 1.0019948592017707,
+          "stdev": 4.5483266584063484e-05,
+          "coefficient_of_variation": 4.53927145098302e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0296550902982624,
+          "minimum": 1.0289189329215178,
+          "maximum": 1.0316813368697026,
+          "mean": 1.0298160581285654,
+          "stdev": 0.0007843986249312524,
+          "coefficient_of_variation": 0.0007616880886055534
+        },
+        "timing_driver_other": {
+          "median": 1.0017129277832852,
+          "minimum": 1.0016597350061638,
+          "maximum": 1.0017290111507482,
+          "mean": 1.001705801797969,
+          "stdev": 2.285823414075605e-05,
+          "coefficient_of_variation": 2.2819308922567526e-05
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.016576411326242,
+          "minimum": 1.015868686996666,
+          "maximum": 1.0168315710612357,
+          "mean": 1.0164993357412926,
+          "stdev": 0.000290039935408482,
+          "coefficient_of_variation": 0.0002853321445576424
+        }
+      },
+      "dominant_components": [
+        "shading_blocking",
+        "image_plane",
+        "other_preparation_tracking"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.46234241321135533,
+        "minimum": 0.4559873269638932,
+        "maximum": 0.4727130995218706,
+        "mean": 0.4630363101783391,
+        "stdev": 0.004220120808367554,
+        "coefficient_of_variation": 0.0091140170124934
+      },
+      "plain_median_s": 0.06813505291938782,
+      "instrumented_median_s": 0.06880073994398117,
+      "observer_ratio": 1.0097701109204529,
+      "cross_campaign_flux_hash_equal": true
+    },
+    {
+      "heliostats": 10000,
+      "grid": [
+        100,
+        100
+      ],
+      "samples_s": [
+        {
+          "image_plane": 0.016414077,
+          "flux_density": 0.031716551,
+          "shading_blocking": 0.024610882000000046,
+          "neighbor_list": 0.000642565,
+          "other_preparation_tracking": 0.015026300999999952,
+          "projected_shadow_geometry": 0.001606692,
+          "normalization_dimensional_postprocessing": 0.000242638,
+          "api_results_callbacks": 0.0021253680000000025,
+          "timing_driver_other": 0.00015207764959430936
+        },
+        {
+          "image_plane": 0.01634339,
+          "flux_density": 0.031703809,
+          "shading_blocking": 0.02453261799999993,
+          "neighbor_list": 0.000655843,
+          "other_preparation_tracking": 0.015027519000000069,
+          "projected_shadow_geometry": 0.001607334,
+          "normalization_dimensional_postprocessing": 0.000246897,
+          "api_results_callbacks": 0.0021042899999999948,
+          "timing_driver_other": 0.00015607628004551954
+        },
+        {
+          "image_plane": 0.016101993,
+          "flux_density": 0.031720813,
+          "shading_blocking": 0.02482625399999995,
+          "neighbor_list": 0.00066057,
+          "other_preparation_tracking": 0.015098568000000048,
+          "projected_shadow_geometry": 0.001738817,
+          "normalization_dimensional_postprocessing": 0.000238738,
+          "api_results_callbacks": 0.0020823130000000023,
+          "timing_driver_other": 0.0001608898410644516
+        },
+        {
+          "image_plane": 0.016236502,
+          "flux_density": 0.031723985,
+          "shading_blocking": 0.025303899999999983,
+          "neighbor_list": 0.000678532,
+          "other_preparation_tracking": 0.01567108400000002,
+          "projected_shadow_geometry": 0.001733741,
+          "normalization_dimensional_postprocessing": 0.000233276,
+          "api_results_callbacks": 0.0021404440000000052,
+          "timing_driver_other": 0.00015056347166156336
+        },
+        {
+          "image_plane": 0.016347462,
+          "flux_density": 0.031711093,
+          "shading_blocking": 0.024600237999999972,
+          "neighbor_list": 0.000681514,
+          "other_preparation_tracking": 0.015183606000000035,
+          "projected_shadow_geometry": 0.001609289,
+          "normalization_dimensional_postprocessing": 0.00024253,
+          "api_results_callbacks": 0.0021198499999999926,
+          "timing_driver_other": 0.00014991226734446805
+        },
+        {
+          "image_plane": 0.016346067,
+          "flux_density": 0.031721078,
+          "shading_blocking": 0.02500204200000005,
+          "neighbor_list": 0.000638903,
+          "other_preparation_tracking": 0.015102131999999945,
+          "projected_shadow_geometry": 0.00161691,
+          "normalization_dimensional_postprocessing": 0.000247841,
+          "api_results_callbacks": 0.002120029999999995,
+          "timing_driver_other": 0.00015867894580079422
+        },
+        {
+          "image_plane": 0.016222169,
+          "flux_density": 0.031718375,
+          "shading_blocking": 0.02458316999999992,
+          "neighbor_list": 0.000662109,
+          "other_preparation_tracking": 0.01505273200000008,
+          "projected_shadow_geometry": 0.001606372,
+          "normalization_dimensional_postprocessing": 0.000234625,
+          "api_results_callbacks": 0.002101857999999998,
+          "timing_driver_other": 0.0001519887593650765
+        },
+        {
+          "image_plane": 0.016022802,
+          "flux_density": 0.031729813,
+          "shading_blocking": 0.024575314999999983,
+          "neighbor_list": 0.000648787,
+          "other_preparation_tracking": 0.014978288000000015,
+          "projected_shadow_geometry": 0.001604012,
+          "normalization_dimensional_postprocessing": 0.00023373100000000002,
+          "api_results_callbacks": 0.002089408000000001,
+          "timing_driver_other": 0.00014998784615420646
+        },
+        {
+          "image_plane": 0.016071836,
+          "flux_density": 0.031708571,
+          "shading_blocking": 0.02485071800000005,
+          "neighbor_list": 0.000644808,
+          "other_preparation_tracking": 0.014994756999999952,
+          "projected_shadow_geometry": 0.001752381,
+          "normalization_dimensional_postprocessing": 0.000237301,
+          "api_results_callbacks": 0.0021713409999999933,
+          "timing_driver_other": 0.0001508797406549467
+        },
+        {
+          "image_plane": 0.016420493,
+          "flux_density": 0.031706067,
+          "shading_blocking": 0.025438776999999833,
+          "neighbor_list": 0.000675263,
+          "other_preparation_tracking": 0.01564169400000017,
+          "projected_shadow_geometry": 0.001603391,
+          "normalization_dimensional_postprocessing": 0.000245539,
+          "api_results_callbacks": 0.002146596999999986,
+          "timing_driver_other": 0.0001494002028503555
+        }
+      ],
+      "fractions": [
+        {
+          "image_plane": 0.1773782389818345,
+          "flux_density": 0.34274397292991515,
+          "shading_blocking": 0.26595677045683025,
+          "neighbor_list": 0.006943859720614354,
+          "other_preparation_tracking": 0.16238127856905815,
+          "projected_shadow_geometry": 0.01736266971004228,
+          "normalization_dimensional_postprocessing": 0.00262206039060706,
+          "api_results_callbacks": 0.022967726606153004,
+          "timing_driver_other": 0.001643422634945303,
+          "image_numerical_kernel_only": 0.012094256449285289
+        },
+        {
+          "image_plane": 0.1769190670974219,
+          "flux_density": 0.3431973606280489,
+          "shading_blocking": 0.26556839737761917,
+          "neighbor_list": 0.007099575530069005,
+          "other_preparation_tracking": 0.1626746129333507,
+          "projected_shadow_geometry": 0.01739957449427368,
+          "normalization_dimensional_postprocessing": 0.0026726882800417887,
+          "api_results_callbacks": 0.02277918006621839,
+          "timing_driver_other": 0.001689543592956497,
+          "image_numerical_kernel_only": 0.012160153835045392
+        },
+        {
+          "image_plane": 0.17383325606766292,
+          "flux_density": 0.34245029226527746,
+          "shading_blocking": 0.26801828623219703,
+          "neighbor_list": 0.007131355352136603,
+          "other_preparation_tracking": 0.16300052033304385,
+          "projected_shadow_geometry": 0.018771851460611458,
+          "normalization_dimensional_postprocessing": 0.0025773582119357347,
+          "api_results_callbacks": 0.022480151925418412,
+          "timing_driver_other": 0.0017369281517165239,
+          "image_numerical_kernel_only": 0.012171399228856617
+        },
+        {
+          "image_plane": 0.17296421987797733,
+          "flux_density": 0.3379492896281265,
+          "shading_blocking": 0.2695574036433678,
+          "neighbor_list": 0.007228266164857659,
+          "other_preparation_tracking": 0.16694093461154724,
+          "projected_shadow_geometry": 0.018469197339147578,
+          "normalization_dimensional_postprocessing": 0.002485042736191271,
+          "api_results_callbacks": 0.022801723342410714,
+          "timing_driver_other": 0.0016039226563740302,
+          "image_numerical_kernel_only": 0.012008859308563035
+        },
+        {
+          "image_plane": 0.17645177597980743,
+          "flux_density": 0.3422842443744992,
+          "shading_blocking": 0.26553086250489166,
+          "neighbor_list": 0.00735614835227037,
+          "other_preparation_tracking": 0.16388930859589496,
+          "projected_shadow_geometry": 0.017370396830698753,
+          "normalization_dimensional_postprocessing": 0.0026178283349661676,
+          "api_results_callbacks": 0.022881307037801554,
+          "timing_driver_other": 0.0016181279891698832,
+          "image_numerical_kernel_only": 0.012110508059212117
+        },
+        {
+          "image_plane": 0.17585174312439852,
+          "flux_density": 0.3412568209884989,
+          "shading_blocking": 0.2689731216303856,
+          "neighbor_list": 0.006873347958099498,
+          "other_preparation_tracking": 0.16246943298927805,
+          "projected_shadow_geometry": 0.017394792397172436,
+          "normalization_dimensional_postprocessing": 0.002666284915367963,
+          "api_results_callbacks": 0.022807380575157174,
+          "timing_driver_other": 0.0017070754216418924,
+          "image_numerical_kernel_only": 0.012171223671115944
+        },
+        {
+          "image_plane": 0.17569123651862364,
+          "flux_density": 0.3435200634459793,
+          "shading_blocking": 0.26624352975533166,
+          "neighbor_list": 0.007170850514509458,
+          "other_preparation_tracking": 0.16302586282164047,
+          "projected_shadow_geometry": 0.017397518358296876,
+          "normalization_dimensional_postprocessing": 0.002541063181389743,
+          "api_results_callbacks": 0.0227637889240681,
+          "timing_driver_other": 0.0016460864801606878,
+          "image_numerical_kernel_only": 0.012088019967111494
+        },
+        {
+          "image_plane": 0.17410006254754382,
+          "flux_density": 0.34476881309036145,
+          "shading_blocking": 0.2670296917246802,
+          "neighbor_list": 0.0070495695621797805,
+          "other_preparation_tracking": 0.16275061488340978,
+          "projected_shadow_geometry": 0.0174288235932149,
+          "normalization_dimensional_postprocessing": 0.0025396670145022057,
+          "api_results_callbacks": 0.02270302432042402,
+          "timing_driver_other": 0.0016297332636837632,
+          "image_numerical_kernel_only": 0.012239201944262366
+        },
+        {
+          "image_plane": 0.1735945767366971,
+          "flux_density": 0.34248955512428747,
+          "shading_blocking": 0.2684167429790242,
+          "neighbor_list": 0.006964678574148975,
+          "other_preparation_tracking": 0.16196086711466054,
+          "projected_shadow_geometry": 0.018927758967701633,
+          "normalization_dimensional_postprocessing": 0.0025631276136836487,
+          "api_results_callbacks": 0.023453015688191158,
+          "timing_driver_other": 0.0016296772016052242,
+          "image_numerical_kernel_only": 0.012113205818476531
+        },
+        {
+          "image_plane": 0.17463552352116335,
+          "flux_density": 0.33720093600978246,
+          "shading_blocking": 0.270546940285721,
+          "neighbor_list": 0.0071815692451786504,
+          "other_preparation_tracking": 0.16635282634010254,
+          "projected_shadow_geometry": 0.017052412902226602,
+          "normalization_dimensional_postprocessing": 0.002611360804444966,
+          "api_results_callbacks": 0.022829527157555884,
+          "timing_driver_other": 0.0015889037338245467,
+          "image_numerical_kernel_only": 0.011903276989442256
+        }
+      ],
+      "component_statistics_s": {
+        "image_plane": {
+          "median": 0.016289946,
+          "minimum": 0.016022802,
+          "maximum": 0.016420493,
+          "mean": 0.0162526791,
+          "stdev": 0.00014514013380059857,
+          "coefficient_of_variation": 0.008930228235454337
+        },
+        "flux_density": {
+          "median": 0.031717463,
+          "minimum": 0.031703809,
+          "maximum": 0.031729813,
+          "mean": 0.0317160155,
+          "stdev": 8.406384680045898e-06,
+          "coefficient_of_variation": 0.0002650517269436288
+        },
+        "shading_blocking": {
+          "median": 0.024718567999999996,
+          "minimum": 0.02453261799999993,
+          "maximum": 0.025438776999999833,
+          "mean": 0.024832391399999973,
+          "stdev": 0.00032321372396093914,
+          "coefficient_of_variation": 0.013015811435741927
+        },
+        "neighbor_list": {
+          "median": 0.0006582065,
+          "minimum": 0.000638903,
+          "maximum": 0.000681514,
+          "mean": 0.0006588894,
+          "stdev": 1.547239966449219e-05,
+          "coefficient_of_variation": 0.023482544512769803
+        },
+        "other_preparation_tracking": {
+          "median": 0.015075650000000065,
+          "minimum": 0.014978288000000015,
+          "maximum": 0.01567108400000002,
+          "mean": 0.01517766810000003,
+          "stdev": 0.0002592835745277668,
+          "coefficient_of_variation": 0.017083228650109056
+        },
+        "projected_shadow_geometry": {
+          "median": 0.0016083115,
+          "minimum": 0.001603391,
+          "maximum": 0.001752381,
+          "mean": 0.0016478939,
+          "stdev": 6.495941349018542e-05,
+          "coefficient_of_variation": 0.03941965771593998
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.000240634,
+          "minimum": 0.000233276,
+          "maximum": 0.000247841,
+          "mean": 0.0002403116,
+          "stdev": 5.521672616960268e-06,
+          "coefficient_of_variation": 0.022977137254132834
+        },
+        "api_results_callbacks": {
+          "median": 0.0021199399999999938,
+          "minimum": 0.0020823130000000023,
+          "maximum": 0.0021713409999999933,
+          "mean": 0.0021201498999999973,
+          "stdev": 2.7329240845859246e-05,
+          "coefficient_of_variation": 0.01289023990514033
+        },
+        "timing_driver_other": {
+          "median": 0.0001514342500100116,
+          "minimum": 0.0001494002028503555,
+          "maximum": 0.0001608898410644516,
+          "mean": 0.00015304550045356914,
+          "stdev": 4.0526263723475456e-06,
+          "coefficient_of_variation": 0.026479879253797658
+        }
+      },
+      "fraction_statistics": {
+        "image_plane": {
+          "median": 0.1751633800198935,
+          "minimum": 0.17296421987797733,
+          "maximum": 0.1773782389818345,
+          "mean": 0.17514197004531304,
+          "stdev": 0.001522857299490628,
+          "coefficient_of_variation": 0.008694987838132868
+        },
+        "flux_density": {
+          "median": 0.34246992369478246,
+          "minimum": 0.33720093600978246,
+          "maximum": 0.34476881309036145,
+          "mean": 0.3417861348484777,
+          "stdev": 0.002404197970294467,
+          "coefficient_of_variation": 0.007034217380878565
+        },
+        "shading_blocking": {
+          "median": 0.26752398897843865,
+          "minimum": 0.26553086250489166,
+          "maximum": 0.270546940285721,
+          "mean": 0.26758417465900486,
+          "stdev": 0.00177998385473967,
+          "coefficient_of_variation": 0.006652052039355419
+        },
+        "neighbor_list": {
+          "median": 0.007115465441102803,
+          "minimum": 0.006873347958099498,
+          "maximum": 0.00735614835227037,
+          "mean": 0.007099922097406435,
+          "stdev": 0.0001458030842818747,
+          "coefficient_of_variation": 0.020535870997110774
+        },
+        "other_preparation_tracking": {
+          "median": 0.1628755676082268,
+          "minimum": 0.16196086711466054,
+          "maximum": 0.16694093461154724,
+          "mean": 0.16354462591919863,
+          "stdev": 0.0017162607769559079,
+          "coefficient_of_variation": 0.0104941435238835
+        },
+        "projected_shadow_geometry": {
+          "median": 0.01739854642628528,
+          "minimum": 0.017052412902226602,
+          "maximum": 0.018927758967701633,
+          "mean": 0.01775749960533862,
+          "stdev": 0.0006835445293318382,
+          "coefficient_of_variation": 0.0384932870349797
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 0.00259435950819035,
+          "minimum": 0.002485042736191271,
+          "maximum": 0.0026726882800417887,
+          "mean": 0.002589648148313055,
+          "stdev": 5.938598753082299e-05,
+          "coefficient_of_variation": 0.02293206803770162
+        },
+        "api_results_callbacks": {
+          "median": 0.022804551958783944,
+          "minimum": 0.022480151925418412,
+          "maximum": 0.023453015688191158,
+          "mean": 0.022846682564339842,
+          "stdev": 0.0002480503982024708,
+          "coefficient_of_variation": 0.010857173574496953
+        },
+        "timing_driver_other": {
+          "median": 0.001636577949314533,
+          "minimum": 0.0015889037338245467,
+          "maximum": 0.0017369281517165239,
+          "mean": 0.0016493421126078352,
+          "stdev": 4.7290484615849216e-05,
+          "coefficient_of_variation": 0.028672331988829472
+        },
+        "image_numerical_kernel_only": {
+          "median": 0.012111856938844324,
+          "minimum": 0.011903276989442256,
+          "maximum": 0.012239201944262366,
+          "mean": 0.012106010527137103,
+          "stdev": 9.444160631625889e-05,
+          "coefficient_of_variation": 0.00780121627224398
+        }
+      },
+      "amdahl_statistics": {
+        "image_plane": {
+          "median": 1.2123618002845982,
+          "minimum": 1.209137529518321,
+          "maximum": 1.215625512705003,
+          "mean": 1.212333555216389,
+          "stdev": 0.002238487013659254,
+          "coefficient_of_variation": 0.0018464283233170981
+        },
+        "flux_density": {
+          "median": 1.5208429803098649,
+          "minimum": 1.5087528850444476,
+          "maximum": 1.5261788815584991,
+          "mean": 1.5192812241929685,
+          "stdev": 0.005530551473951228,
+          "coefficient_of_variation": 0.0036402420999371056
+        },
+        "shading_blocking": {
+          "median": 1.3652330456555537,
+          "minimum": 1.3615275972118843,
+          "maximum": 1.3708901301910943,
+          "mean": 1.365351873235134,
+          "stdev": 0.0033203333141364833,
+          "coefficient_of_variation": 0.0024318517293780957
+        },
+        "neighbor_list": {
+          "median": 1.0071664583841917,
+          "minimum": 1.006920917834566,
+          "maximum": 1.0074106622834158,
+          "mean": 1.0071507109958941,
+          "stdev": 0.0001478971615552501,
+          "coefficient_of_variation": 0.00014684710037984875
+        },
+        "other_preparation_tracking": {
+          "median": 1.1945655670599384,
+          "minimum": 1.193261699554572,
+          "maximum": 1.200395075868604,
+          "mean": 1.195525582230962,
+          "stdev": 0.0024589057559189186,
+          "coefficient_of_variation": 0.002056757122110571
+        },
+        "projected_shadow_geometry": {
+          "median": 1.017706615804507,
+          "minimum": 1.0173482422929336,
+          "maximum": 1.0192929309138188,
+          "mean": 1.0180789730635469,
+          "stdev": 0.0007088885346563086,
+          "coefficient_of_variation": 0.0006963001431246148
+        },
+        "normalization_dimensional_postprocessing": {
+          "median": 1.0026011080080326,
+          "minimum": 1.002491233558049,
+          "maximum": 1.0026798506855612,
+          "mean": 1.0025963750366165,
+          "stdev": 5.9694170070976184e-05,
+          "coefficient_of_variation": 5.95395829840259e-05
+        },
+        "api_results_callbacks": {
+          "median": 1.0233367357705916,
+          "minimum": 1.0229971309224029,
+          "maximum": 1.0240162696367539,
+          "mean": 1.023380916966589,
+          "stdev": 0.0002598676840967151,
+          "coefficient_of_variation": 0.0002539305548778365
+        },
+        "timing_driver_other": {
+          "median": 1.0016392607743545,
+          "minimum": 1.0015914323666542,
+          "maximum": 1.0017399503204107,
+          "mean": 1.001652068958979,
+          "stdev": 4.7448211658432084e-05,
+          "coefficient_of_variation": 4.736995322911398e-05
+        },
+        "image_numerical_kernel_only": {
+          "median": 1.012260352577143,
+          "minimum": 1.0120466718614096,
+          "maximum": 1.0123908561347579,
+          "mean": 1.0122543702874391,
+          "stdev": 9.676289611272948e-05,
+          "coefficient_of_variation": 9.55914826875509e-05
+        }
+      },
+      "dominant_components": [
+        "flux_density",
+        "shading_blocking",
+        "image_plane"
+      ],
+      "measured_host_preparation_integration_fraction": {
+        "median": 0.34847341256400144,
+        "minimum": 0.3468089915774984,
+        "maximum": 0.3517688590455618,
+        "mean": 0.3489774094951997,
+        "stdev": 0.001599365011223939,
+        "coefficient_of_variation": 0.004583004422943712
+      },
+      "plain_median_s": 0.09263135120272636,
+      "instrumented_median_s": 0.0926057742908597,
+      "observer_ratio": 0.9997238849316719,
+      "cross_campaign_flux_hash_equal": true
+    }
+  ],
+  "definitions": "Per-sample disjoint functional budgets sum to the instrumented public wall time. Component medians need not sum. Nested scopes are retained in raw calibration data, never added to parents.",
+  "amdahl": "Ideal elimination upper bounds 1/(1-f), conditional on this measured instrumented workload; not predictions or an implementation plan.",
+  "host_fraction": "Lower bound from explicitly timed, nonoverlapping host preparation/integration subsets; excludes shading and unassigned driver/wait time.",
+  "observer": "Primary speedups use no-CSV/event runs. Reprofiling independently warms events three times, retains ten samples and a paired plain calibration."
+}
