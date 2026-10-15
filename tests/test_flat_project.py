@@ -95,6 +95,14 @@ class FlatProject(unittest.TestCase):
         for key in ('positions','templates','focus','cant','aims','flags'):
             self.assertTrue(state[key+'_preserved'],key)
 
+    def test_single_row_and_zero_rows(self):
+        cp=self.cp;r,rows=self.loaded(count=1)
+        self.assertTrue(cp.restore_loaded_layout(r),cp.get_last_backend_error(r))
+        self.assertEqual(len(cp.get_layout_info(r,restype='dictionary')['id']),1)
+        empty,_=self.loaded(count=0)
+        self.assertFalse(cp.restore_loaded_layout(empty))
+        self.assertIn('empty',cp.get_last_backend_error(empty))
+
     def test_restore_errors_and_recovery(self):
         cp=self.cp;r,_=self.loaded()
         good=cp.data_get_string(r,'solarfield.0.layout_data')

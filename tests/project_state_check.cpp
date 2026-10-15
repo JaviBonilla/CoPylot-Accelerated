@@ -2,7 +2,7 @@
 extern "C" {
 void* sp_data_create();bool sp_data_free(void*);
 bool sp_load_from_script(void*,const char*);bool sp_generate_layout(void*,int);
-bool sp_restore_loaded_layout(void*);
+bool sp_restore_loaded_layout(void*);bool sp_update_geometry(void*);
 }
 #include "SolarField.h"
 #include "Heliostat.h"
@@ -23,8 +23,20 @@ int main(int argc,char** argv) {
         require(sf.getHeliostats()->empty());
         layout_shell serialized;
         SolarField::parseHeliostatXYZFile(v.sf.layout_data.val,serialized);
+        auto receiver_state=[&]() {
+            std::vector<double> state={v.sf.tht.val};
+            for (auto& rec:v.recs) for (double value:{double(rec.rec_type.mapval()),double(rec.is_enabled.val),
+                rec.rec_width.val,rec.rec_height.val,rec.rec_diameter.val,rec.rec_azimuth.val,rec.rec_elevation.val,
+                rec.rec_offset_x.val,rec.rec_offset_y.val,rec.rec_offset_z.val}) state.push_back(value);
+            return state;
+        };
+        const auto receiver_before=receiver_state();
         const bool generated=std::string(argv[2])=="generated";
         require(generated?sp_generate_layout(data,1):sp_restore_loaded_layout(data));
+        const bool updated=std::string(argv[2])=="updated";
+        if (updated) require(sp_update_geometry(data));
+        const bool receiver_preserved=receiver_before==receiver_state();
+        require(receiver_preserved);
         const auto& hs=*sf.getHeliostats();
         bool positions=hs.size()==serialized.size(),templates=positions,focus=positions,cant=positions,aims=positions,flags=positions;
         if (positions) for (unsigned i=0;i<hs.size();++i) {
@@ -37,10 +49,10 @@ int main(int argc,char** argv) {
             aims=aims && (!row.is_user_aim || point(row.aim,*h.getAimPoint()));
             flags=flags && row.is_enabled==h.IsEnabled() && row.is_in_layout==h.IsInLayout();
         }
-        if (!generated) require(positions && templates && focus && cant && aims && flags);
+        if (!generated && !updated) require(positions && templates && focus && cant && aims && flags);
         std::cout<<"{\"prepared\":true,\"count\":"<<hs.size()<<",\"positions_preserved\":"<<positions
           <<",\"templates_preserved\":"<<templates<<",\"focus_preserved\":"<<focus<<",\"cant_preserved\":"<<cant
-          <<",\"aims_preserved\":"<<aims<<",\"flags_preserved\":"<<flags<<",\"active_receivers\":"<<sf.getActiveReceiverCount()<<"}\n";
+          <<",\"aims_preserved\":"<<aims<<",\"flags_preserved\":"<<flags<<",\"active_receivers\":"<<sf.getActiveReceiverCount()<<",\"receiver_configuration_preserved\":"<<receiver_preserved<<"}\n";
         require(sp_data_free(data));return 0;
     } catch (...) { sp_data_free(data);std::cerr<<"Project state check failed; private input details suppressed\n";return 1; }
 }
