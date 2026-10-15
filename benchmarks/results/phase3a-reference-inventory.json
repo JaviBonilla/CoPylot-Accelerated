@@ -1,0 +1,95 @@
+{
+  "inventory": [
+    {
+      "path": "SolarPILOT/deploy/samples/multi-receiver.spt",
+      "sha256": "bc72a7a8a449bc0e73b673d3b215e9e31bac58ab423979d4195487dcbc1ccd40",
+      "receiver_parameters": {
+        "receiver.0.is_enabled": "true",
+        "receiver.0.rec_diameter": "17.65",
+        "receiver.0.rec_height": "9",
+        "receiver.0.rec_type": "Flat plate",
+        "receiver.1.is_enabled": "true",
+        "receiver.1.rec_diameter": "17.65",
+        "receiver.1.rec_height": "9",
+        "receiver.1.rec_type": "Flat plate",
+        "receiver.2.is_enabled": "true",
+        "receiver.2.rec_diameter": "17.65",
+        "receiver.2.rec_height": "9",
+        "receiver.2.rec_type": "Flat plate"
+      },
+      "decision": "Public multi-receiver demonstration; outside the single-cylinder CUDA scope and not a documented commercial plant reproduction."
+    },
+    {
+      "path": "SolarPILOT/deploy/samples/multi-receiver-surround.spt",
+      "sha256": "9e0174cd5e6cd2b4aaea11706e8cc5113974ec44f62e0a10e2de542e3b31a4b3",
+      "receiver_parameters": {
+        "receiver.0.is_enabled": "true",
+        "receiver.0.rec_diameter": "17.65",
+        "receiver.0.rec_height": "9",
+        "receiver.0.rec_type": "Flat plate",
+        "receiver.1.is_enabled": "true",
+        "receiver.1.rec_diameter": "17.65",
+        "receiver.1.rec_height": "9",
+        "receiver.1.rec_type": "Flat plate",
+        "receiver.2.is_enabled": "true",
+        "receiver.2.rec_diameter": "17.65",
+        "receiver.2.rec_height": "9",
+        "receiver.2.rec_type": "Flat plate"
+      },
+      "decision": "Public multi-receiver demonstration; outside the single-cylinder CUDA scope and not a documented commercial plant reproduction."
+    },
+    {
+      "path": "SolarPILOT/deploy/api/test_solarpilot_soltrace.py",
+      "decision": "Public 100 MWt, 90 m tower, 10 m x 15 m receiver API demonstration; no fixed commercial layout."
+    },
+    {
+      "path": "ssc/test/tcs_test/tcsmolten_salt_common_data.h",
+      "decision": "Selected source of public commercial-scale tower/receiver/heliostat parameters."
+    },
+    {
+      "path": "ssc/test/input_cases/moltensalt_data/helio_positions.csv",
+      "decision": "Selected complete public 8790-coordinate table; use original row order and asset hash."
+    },
+    {
+      "path": "ssc/test/ssc_test/cmod_tcsmolten_salt_test.cpp",
+      "decision": "Public regression checks support count 8790, tower 193.458 m and receiver 17.65 m x 21.6029 m; not independent field validation."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "ssc-mspt",
+      "name": "Pinned public SSC molten-salt tower reference",
+      "heliostats": 8790,
+      "external_cylinder": true,
+      "complete_public_layout": true,
+      "public_geometry": true,
+      "selection": "selected",
+      "source": "https://github.com/NatLabRockies/ssc/blob/e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec/test/tcs_test/tcsmolten_salt_common_data.h",
+      "reason": "Existing pinned public coordinates and explicit optical mapping; no reconstructed proprietary layout needed."
+    },
+    {
+      "id": "crescent-dunes",
+      "name": "Crescent Dunes",
+      "heliostats": 10347,
+      "external_cylinder": true,
+      "complete_public_layout": false,
+      "public_geometry": "Tower 195 m published; receiver diameter/height and optical details absent from the consulted project record.",
+      "selection": "not selected",
+      "source": "https://solarpaces.nlr.gov/project/crescent-dunes-solar-energy-project",
+      "source_year": 2023,
+      "reason": "Suitable scale but consulted authoritative inventory is insufficient for an exact optical reconstruction; avoid inventing layout/receiver inputs."
+    },
+    {
+      "id": "gemasolar",
+      "name": "Gemasolar SAM public case study",
+      "heliostats": 2650,
+      "external_cylinder": true,
+      "complete_public_layout": "Not available as an explicit coordinate asset in this workspace; old version-specific SAM case exists.",
+      "selection": "not selected",
+      "source": "https://sam.nrel.gov/images/web_page_files/sam_case_csp_salt_tower_gemasolar_2013-1-15.pdf",
+      "source_year": 2013,
+      "reason": "Credible documented alternative, below preferred field scale and requires another case-format reconstruction; public SSC case is already complete."
+    }
+  ],
+  "selection_not_performance_driven": true
+}
