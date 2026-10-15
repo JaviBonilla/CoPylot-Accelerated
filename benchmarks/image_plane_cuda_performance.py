@@ -2,6 +2,7 @@
 """Controlled Phase 2D-C measurements, retaining the exact full-output v1 baseline."""
 import argparse
 import csv
+from datetime import datetime,timezone
 import hashlib
 import json
 import os
@@ -14,7 +15,7 @@ from unittest.mock import patch
 import numpy as np
 from cases import ROOT,SIZES,api
 from cuda_flux_correctness import collect
-from cuda_flux_performance import (Window,gpu_snapshot,public_snapshot,
+from cuda_flux_performance import (Window,GPU_FIELDS,public_snapshot,
     metadata,context_for,simulate_once,correctness)
 
 
@@ -24,9 +25,24 @@ def distribution(values):
         'mean':mean,'stdev':sd,'coefficient_of_variation':sd/mean if mean else None}
 
 
+def gpu_snapshot(environment=None):
+    # Timed calls change diagnostic environment variables on the main thread.
+    # Give exec an explicit stable environment instead of libc's mutable environ.
+    environment=os.environ.copy() if environment is None else environment
+    def query(*args):
+        return subprocess.check_output(['nvidia-smi',*args],text=True,env=environment).strip()
+    row=next(csv.reader([query('--query-gpu='+','.join(GPU_FIELDS),'--format=csv,noheader,nounits')]))
+    result=dict(zip(GPU_FIELDS,(x.strip() for x in row)))
+    result['utc']=datetime.now(timezone.utc).isoformat()
+    result['_pids']=[int(x) for x in query('--query-compute-apps=pid','--format=csv,noheader,nounits').splitlines() if x.strip()]
+    return result
+
+
 class PipelineWindow(Window):
+    def __init__(self,monitor_cpu):
+        super().__init__(monitor_cpu);self.telemetry_env=os.environ.copy()
     def sample(self,initial=False):
-        value=gpu_snapshot()
+        value=gpu_snapshot(self.telemetry_env)
         if set(value['_pids'])-self.allowed:
             raise RuntimeError('External GPU process invalidates this performance window')
         if float(value['memory.used'])>(128 if initial else 4096):
