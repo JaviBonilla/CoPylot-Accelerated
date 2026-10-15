@@ -95,6 +95,35 @@ class FlatProject(unittest.TestCase):
         for key in ('positions','templates','focus','cant','aims','flags'):
             self.assertTrue(state[key+'_preserved'],key)
 
+    def test_repeated_load_restore_simulate_and_project_replacement(self):
+        cp=self.cp;projects=[]
+        for index,count in enumerate((3,7)):
+            source=self.context();rows=configure_flat(cp,source,count=count,rotated=bool(index),hour_day=bool(index))
+            weather='unavailable-public-'+str(index)+'.epw'
+            self.assertTrue(cp.data_set_string(source,'ambient.0.weather_file',weather))
+            self.assertTrue(cp.data_set_number(source,'receiver.0.rec_width',8+3*index))
+            name=self.base/('project-'+str(index)+'.spt');self.assertTrue(cp.save_spt(source,name))
+            projects.append((name,rows,weather,8+3*index))
+        target=self.context()
+        for backend in ('cpu','cuda') if cp.cuda_available() else ('cpu',):
+            self.assertTrue(cp.set_compute_backend(target,backend))
+            for name,rows,weather,width in projects+projects[::-1]:
+                self.assertTrue(cp.load_spt(target,name))
+                self.assertEqual(cp.get_layout_info(target,restype='matrix')[0],[])
+                self.assertFalse(cp.simulate(target,nthreads=1))
+                self.assertTrue(cp.restore_loaded_layout(target),cp.get_last_backend_error(target))
+                self.assertEqual(cp.data_get_string(target,'ambient.0.weather_file'),weather)
+                self.assertEqual(cp.data_get_number(target,'receiver.0.rec_width'),width)
+                self.assertEqual(cp.get_compute_backend(target),backend)
+                geometry=np.asarray(cp.get_layout_info(target,get_optical_details=True,restype='matrix')[0])
+                np.testing.assert_array_equal(geometry[:,1:4],np.asarray(rows)[:,3:6])
+                np.testing.assert_array_equal(geometry[:,6:8],np.asarray(rows)[:,6:8])
+                with patch.dict(os.environ,{'SOLARPILOT_INTERCEPT_PATH':'verify_cuda' if backend=='cuda' else 'verify'}):
+                    self.assertTrue(cp.simulate(target,nthreads=1),cp.get_last_backend_error(target))
+                details=cp.detail_results(target,restype='dictionary')
+                for axis,index in zip('xyz',range(11,14)):
+                    np.testing.assert_array_equal(details[axis+'_aimpoint'],np.asarray(rows)[:,index])
+
     def test_single_row_and_zero_rows(self):
         cp=self.cp;r,rows=self.loaded(count=1)
         self.assertTrue(cp.restore_loaded_layout(r),cp.get_last_backend_error(r))
