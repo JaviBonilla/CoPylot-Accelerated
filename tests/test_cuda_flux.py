@@ -15,6 +15,9 @@ class CudaFlux(unittest.TestCase):
     def setUp(self):
         self.cp=api()
         if not self.cp.cuda_available(): self.skipTest('No CUDA device in this build/run')
+        library=Path(os.environ.get('COPILOT_LIB_DIR',Path(__file__).resolve().parents[1]/'build/cpu/lib'))
+        cache=library.parent/'CMakeCache.txt'
+        self.diagnostics=cache.exists() and 'SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS:BOOL=ON' in cache.read_text()
         self.context=self.cp.data_create(); self.assertTrue(self.context)
         configure(self.cp,self.context,'small')
         self.assertTrue(self.cp.assign_layout(self.context,layout(257),nthreads=1))
@@ -34,8 +37,11 @@ class CudaFlux(unittest.TestCase):
         self.assertFalse(self.cp.simulate(self.context,nthreads=2))
         self.assertFalse(self.cp.simulate(self.context,nthreads=1,update_aimpoints=False))
         with patch.dict(os.environ, {'SOLARPILOT_CUDA_BLOCK_SIZE':'127'}):
-            self.assertFalse(self.cp.simulate(self.context,nthreads=1))
-            self.assertIn('block size',self.cp.get_last_backend_error(self.context))
+            if self.diagnostics:
+                self.assertFalse(self.cp.simulate(self.context,nthreads=1))
+                self.assertIn('block size',self.cp.get_last_backend_error(self.context))
+            else:
+                self.assertTrue(self.cp.simulate(self.context,nthreads=1),self.cp.get_last_backend_error(self.context))
         self.assertTrue(self.cp.simulate(self.context,nthreads=1))
         self.assertEqual(self.cp.get_last_backend_error(self.context),'')
         self.assertGreaterEqual(self.cp.add_receiver(self.context,'Second receiver'),0)
@@ -49,10 +55,12 @@ class CudaFlux(unittest.TestCase):
             compare=Path(directory)/'compare.csv'
             with patch.dict(os.environ, {'SOLARPILOT_FLUX_PATH':'verify_cuda','SOLARPILOT_CUDA_COMPARE_FILE':str(compare)}):
                 self.assertTrue(self.cp.simulate(self.context,nthreads=1),self.cp.get_last_backend_error(self.context))
-            self.assertTrue(compare.exists())
-            rows=list(csv.reader(compare.read_text().splitlines()))
-            self.assertEqual(len(rows),1)
-            self.assertEqual(list(map(int,rows[0][1:4])),[20,30,256])
+            if self.diagnostics:
+                self.assertTrue(compare.exists())
+                rows=list(csv.reader(compare.read_text().splitlines()))
+                self.assertEqual(len(rows),1)
+                self.assertEqual(list(map(int,rows[0][1:4])),[20,30,256])
+            else:self.assertFalse(compare.exists())
             cuda=np.asarray(self.cp.get_fluxmap(self.context))
             self.assertTrue(self.cp.set_compute_backend(self.context,'cpu'))
             with patch.dict(os.environ,{'SOLARPILOT_FLUX_PATH':'flat'}):

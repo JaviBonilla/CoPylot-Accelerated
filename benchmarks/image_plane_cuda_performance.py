@@ -114,7 +114,7 @@ def call(cp,context,directory,cuda,image,instrumented):
     return sample
 
 
-def full_case(cp,size,grid,modes,directory,window):
+def full_case(cp,size,grid,modes,directory,window,instrumented_warmups=0):
     result={'heliostats':SIZES[size],'grid':[grid,grid],'pipelines':{}};reference=None
     for mode in modes:
         context=context_for(cp,size,grid)
@@ -132,6 +132,7 @@ def full_case(cp,size,grid,modes,directory,window):
                 warmups=3 if cuda else 2;repeats=5 if not cuda and SIZES[size]>=5000 and grid>=50 else 10
                 for _ in range(warmups):call(cp,context,directory,cuda,image,False)
                 plain=[call(cp,context,directory,cuda,image,False) for _ in range(repeats)]
+                for _ in range(instrumented_warmups):call(cp,context,directory,cuda,image,True)
                 samples=[call(cp,context,directory,cuda,image,True) for _ in range(repeats)]
                 if mode=='final':assert all(s.get('resident_handoff') for s in samples)
                 observed=collect(cp,context)
@@ -143,6 +144,7 @@ def full_case(cp,size,grid,modes,directory,window):
                 assert np.array_equal(previous.view(np.uint64),collect(cp,context)[0].view(np.uint64))
             result['pipelines'][mode]={'backend_selection_s':selection,'first_call_s':first,'warmups_excluded':warmups,
                 'repetitions':repeats,'plain_samples_s':plain,'plain_statistics':distribution(plain),
+                'instrumented_warmups_excluded':instrumented_warmups,
                 'instrumented_samples':samples,'instrumented_statistics':stats(samples),'correctness':check,
                 'repeated_map_bitwise':True,'physical_metrics':observed[1]}
             window.validate();print(size,grid,mode,'PASS',flush=True)
@@ -209,7 +211,7 @@ def sweep(args,result,cpus):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['v1','sweep','final'],required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--stage',choices=['v1','sweep','final','profile'],required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--direct-binary',type=Path,default=Path('build/cuda/image_plane_cuda_benchmark'))
     p.add_argument('--resource-binary',type=Path,default=Path('build/cuda/cuda_image_plane_resources'))
     p.add_argument('--skip-direct',action='store_true');args=p.parse_args()
@@ -219,14 +221,14 @@ def main():
         if k.startswith('SOLARPILOT_'):os.environ.pop(k)
     result={'status':'running_unvalidated','stage':args.stage,'metadata':metadata(cpus[0],cpus[-1]),'direct':[],'cases':[]}
     result['metadata'].update(phase='2D-C',image_kernel_sha256=hashlib.sha256((ROOT/'ssc/solarpilot/ImagePlaneInterceptKernels.cu').read_bytes()).hexdigest(),
-        baseline_label={'v1':'CUDA imagePlane v1 / Phase 2D-B baseline','sweep':'Bounded image-plane block experiment','final':'Phase 2D-C selected final pipeline'}[args.stage],
+        baseline_label={'v1':'CUDA imagePlane v1 / Phase 2D-B baseline','sweep':'Bounded image-plane block experiment','final':'Phase 2D-C selected final pipeline','profile':'Final profile with independent event warmup'}[args.stage],
         monitoring='Stable idle preflight; exact owned GPU process; <=4096 MiB after context creation; <80 C and no thermal slowdown; no concurrent server jobs.')
     window=None
     try:
         if args.stage=='sweep':
             sweep(args,result,cpus)
             args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n');return
-        if not args.skip_direct:
+        if not args.skip_direct and args.stage!='profile':
             for h in [1000,5000,10000]:
                 wait_idle()
                 command=[str(args.direct_binary.resolve()),str(h),'10','timing','3']
@@ -238,11 +240,12 @@ def main():
                 row['cuda_statistics']={k:distribution([s[k]/1000 if k.endswith('_ms') else s[k] for s in row['cuda_samples']]) for k in row['cuda_samples'][0]}
                 result['direct'].append(row);print('direct',h,'PASS',flush=True)
         wait_idle();cp=api();window=PipelineWindow(cpus[-1]);result['runtime_probe_s']=window.initialize(cp)
-        modes=['legacy','flat','density_only','v1'] if args.stage=='v1' else ['legacy','flat','density_only','v1','final']
+        modes=['final'] if args.stage=='profile' else (['legacy','flat','density_only','v1'] if args.stage=='v1' else ['legacy','flat','density_only','v1','final'])
         with tempfile.TemporaryDirectory() as temp:
             for size in SIZES:
                 for grid in [25,50,100]:
-                    window.validate();result['cases'].append(full_case(cp,size,grid,modes,Path(temp),window))
+                    window.validate();result['cases'].append(full_case(cp,size,grid,modes,Path(temp),window,
+                        instrumented_warmups=3 if args.stage=='profile' else 0))
         window.close();result.update(status='valid',gpu_telemetry=window.samples)
         args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     except Exception as e:
