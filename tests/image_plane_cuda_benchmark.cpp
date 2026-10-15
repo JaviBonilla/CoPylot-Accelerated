@@ -22,7 +22,8 @@ int main(int argc,char** argv) {
         const int count=argc>1?std::stoi(argv[1]):1000;
         const int repetitions=argc>2?std::stoi(argv[2]):5;
         const bool timing=argc>3 && std::string(argv[3])=="timing";
-        require(count>0 && repetitions>0,"Invalid image-plane benchmark size/repeats");
+        const int warmups=argc>4?std::stoi(argv[4]):2;
+        require(count>0 && repetitions>0 && warmups>=0,"Invalid image-plane benchmark size/repeats");
         // Reject timing before creating any device context; correctness needs no idle window.
         ImagePlaneGpuWindow window;if (timing) window.begin();
         struct Context { void* data=sp_data_create();~Context() { if (data) sp_data_free(data); } } api;
@@ -55,7 +56,9 @@ int main(int argc,char** argv) {
         } selected(flux,context.get());
         auto cpu=[&]() { for (auto h:*field.getHeliostats()) ImagePlaneTestAccess::flat(flux,*field.getVarMap(),*h,h->getWhichReceiver(),&sun); };
         auto gpu=[&]() { flux.imagePlaneInterceptCudaBatch(*field.getVarMap(),*field.getHeliostats(),&sun,timing);flux.clearImagePlaneBatch(); };
-        for (int i=0;i<2;++i) { cpu();gpu();if (timing) window.check(); }
+        gpu();const auto first_use=context->image_plane->statistics;
+        if (timing) window.check();
+        for (int i=0;i<warmups;++i) { cpu();gpu();if (timing) window.check(); }
         const auto allocations=context->image_plane->statistics.allocations;
         std::vector<double> cpu_samples;std::vector<solarpilot::ImagePlaneGpuStatistics> gpu_samples;
         for (int i=0;i<repetitions;++i) {
@@ -79,8 +82,9 @@ int main(int argc,char** argv) {
         }
         if (timing) window.check();
         const auto& stats=context->image_plane->statistics;
-        std::cout<<std::setprecision(17)<<"{\"heliostats\":"<<count<<",\"grid\":[25,25],\"warmups\":2,\"repetitions\":"<<repetitions
-            <<",\"gpu_timings_collected\":"<<(timing?"true":"false")<<",\"stage\":\"Phase 2D-B preliminary baseline\",\"errors\":";
+        std::cout<<std::setprecision(17)<<"{\"heliostats\":"<<count<<",\"grid\":[25,25],\"warmups\":"<<warmups<<",\"repetitions\":"<<repetitions
+            <<",\"warmups_excluded\":"<<warmups<<",\"first_use_hybrid_s\":"<<first_use.total_s
+            <<",\"gpu_timings_collected\":"<<(timing?"true":"false")<<",\"stage\":\"Image-plane direct measurement\",\"errors\":";
         comparison.json(std::cout);
         std::cout<<",\"deterministic\":true,\"allocation_reuse\":true,\"allocations\":"<<stats.allocations
             <<",\"input_capacity\":"<<stats.input_capacity<<",\"output_capacity\":"<<stats.output_capacity
