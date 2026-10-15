@@ -136,17 +136,17 @@ at that exported precision. Map integration and peak comparisons use raw doubles
 
 | Configuration | Python methods | Expected skips | Native tests |
 | --- | ---: | ---: | ---: |
-| CPU Release, diagnostics/profile ON | 53 | 11 | 4/4 |
-| CPU Release, diagnostics/profile OFF | 53 | 13 | 4/4 |
-| CUDA Release sm89, diagnostics/profile ON | 53 | 1 | 8/8 |
-| CUDA Release sm89, diagnostics/profile OFF | 53 | 5 | 7/7 |
-| Fresh mailbox reconstruction, CPU diagnostics | 53 | 11 | 4/4 |
+| CPU Release, diagnostics/profile ON | 54 | 11 | 4/4 |
+| CPU Release, diagnostics/profile OFF | 54 | 13 | 4/4 |
+| CUDA Release sm89, diagnostics/profile ON | 54 | 1 | 8/8 |
+| CUDA Release sm89, diagnostics/profile OFF | 54 | 5 | 7/7 |
+| Fresh mailbox reconstruction, CPU diagnostics | 54 | 11 | 4/4 |
 
 Skips reflect unavailable CUDA in CPU builds, disabled diagnostics/profiling,
 and the existing opt-in GPU timing gate. CUDA production also passed the
 private compatibility paths. Legacy/Flat differential controls require diagnostic
 builds; production checks exercise default Flat CPU against CUDA. CPU ASan/UBSan native tests passed with LeakSanitizer
-(4/4); the eight project Python methods passed with two CUDA skips and CPython
+(4/4); the nine project Python methods passed with two CUDA skips and CPython
 leak detection disabled. Separate native private restoration/generation/update
 checks passed with leak detection enabled. LeakSanitizer must run outside the
 sandbox's ptrace environment. Compute Sanitizer and Nsight Compute are unavailable
@@ -165,3 +165,25 @@ convergence, annual simulation, batching, CPU multicore, multi-GPU, launch tunin
 shading/blocking optimization, SolTrace modification or OptiX work was performed.
 Phase 3C may next study CESA-I receiver-grid convergence and resolution selection;
 the native compatibility grid is not a scientific resolution recommendation.
+
+
+Repeated lifecycle tests replace project A with B and back in the same context,
+including warmed CUDA buffers, different receiver geometry, weather references,
+field sizes and time modes. No stale field, receiver, aims or weather survives.
+Backend agreement establishes model/software compatibility; it does not establish
+experimental agreement with measured data, thermal validity or annual accuracy.
+
+## Changed files
+
+* SSC: `CoPilot_API.cpp/.h`, `SolarField.cpp/.h`, `FluxDensityCuda.cpp`,
+  `ImagePlaneIntercept.h`, `ImagePlaneInterceptAdapter.cpp`,
+  `ImagePlaneInterceptCuda.cpp/.h`, `ImagePlaneInterceptKernels.cu`,
+  `ImagePlaneInterceptNumerics.h` (all under `solarpilot/`).
+* SolarPILOT: `deploy/api/copylot.py`. SolTrace: no changes.
+* ROOT: `CMakeLists.txt`, `README.md`, `repos.lock.json`, both updated SSC and
+  SolarPILOT mailboxes; `benchmarks/flat_compatibility.py`; the five new
+  `benchmarks/results/phase3b-*.json` receipts; `docs/phase3b-design.md`, this report
+  and `docs/spt-files.md`.
+* Tests: `test_flat_project.py`, `test_cuda_flux.py`, `project_state_check.cpp`,
+  `flat_image_plane_fixtures.h`, `flat_image_plane_numerics.cpp`,
+  `cuda_flat_image_plane_numerics.cpp` (all under `tests/`).
