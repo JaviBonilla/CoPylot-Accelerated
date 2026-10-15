@@ -33,7 +33,7 @@ class ImagePlaneGpuWindow {
         int memory,utilization,temperature;
         if (!(row>>memory>>utilization>>temperature)) throw std::runtime_error("Invalid GPU timing-window telemetry");
         if (memory>(initial?128:4096) || temperature>=80 || (initial && utilization!=0))
-            throw std::runtime_error("GPU timing window is not idle/thermally valid; no preliminary result may be published");
+            throw std::runtime_error("GPU timing window rejected: memory_mib="+std::to_string(memory)+", utilization_pct="+std::to_string(utilization)+", temperature_c="+std::to_string(temperature)+", initial="+std::to_string(initial));
         maximum_memory_mib=std::max(maximum_memory_mib,memory);maximum_temperature_c=std::max(maximum_temperature_c,temperature);++checks;
     }
 public:
