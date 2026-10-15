@@ -1,4 +1,4 @@
-# CoPylot-GPU: Phase 2B hybrid CUDA flux density
+# CoPylot-GPU: hybrid CUDA flux density
 
 Headless workspace for accelerating CoPylot's C++ core with CUDA while preserving the Python API and original CPU reference. Legacy and flat CPU remain available; the first hybrid CUDA backend evaluates double-precision Hermite flux density for one cylindrical receiver with simple aiming. Optical preparation and normalization remain CPU operations.
 
@@ -17,6 +17,8 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 2C performance report](docs/phase2c-report.md), [measurement protocol](docs/phase2c-methodology.md).
+
 * [Phase 2B report](docs/phase2b-report.md), [implemented CUDA contract](docs/cuda-flux-density.md).
 * [Python SPT load/save, preparation semantics and limits](docs/spt-files.md), [validation report](docs/spt-validation-report.md).
 * [Phase 2A report](docs/phase2a-report.md), [flux density analysis](docs/flux-density-analysis.md), [scaling evidence](docs/flux-density-scaling.md), [CUDA design](docs/flux-density-cuda-design.md).
@@ -34,4 +36,4 @@ The tracked mailbox patches preserve the inner repositories' small commits. `boo
 
 Cases: exactly 1000/5000/10000 deterministically assigned heliostats, 25×25 flux map, one simulation thread, double precision, Hermite, DNI 950 W/m², azimuth 180°, elevation 55°. Regression JSON contains every flux cell and heliostat result column; `rtol=1e-9`, `atol=1e-10`. Original results were captured before dispatch/profiling; tests never regenerate them.
 
-Phase 2A extracted the pure contribution and validated bitwise legacy/flat equality. Phase 2B adds a real one-block-per-cell double CUDA kernel, reusable RAII buffers and strict contribution/map comparisons. Nine 1k/5k/10k × 25/50/100 cases pass. GPU performance comparisons will use flat CPU and require controlled measurements; no GPU speedup is claimed. Phase 2C tuning awaits review.
+Phase 2A extracted the pure contribution and validated bitwise legacy/flat equality. Phase 2B adds a real one-block-per-cell double CUDA kernel, reusable RAII buffers and strict contribution/map comparisons. Nine 1k/5k/10k × 25/50/100 cases pass. Phase 2C measured all nine cases against same-server Flat CPU, retained the 256-thread kernel after a controlled block sweep, and identified CPU imagePlaneIntercept as the next hotspot. See the report for scoped timings and limits. Phase 2D awaits review.
