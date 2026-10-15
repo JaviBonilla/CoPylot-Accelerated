@@ -70,3 +70,10 @@ scope probes remain identical across backends. It uses two CPU warmups and the
 same 5/10 CPU repeat schedule; CUDA uses three warmups per block and ten rotating
 rounds. These wall times are the primary end-to-end speedup data. Instrumented
 runs supply stage decomposition; the two datasets are not silently mixed.
+
+The final `final` stage removes the diagnostic block override and verifies the
+actual production default through the raw diagnostic. It repeats the complete
+nine-case profile with three excluded warmups and ten profiled calls, followed
+by three warmups and ten event/file-output-free calls. This is a fresh final
+profile, not a relabeling of the baseline. Keeping the baseline algorithm is a
+valid outcome when the block sweep gives no material kernel/end-to-end benefit.

@@ -268,6 +268,33 @@ def sweep(cp,size,grid,directory,window):
     finally:cp.data_free(context)
 
 
+def final_case(cp,size,grid,directory,window):
+    context=context_for(cp,size,grid)
+    try:
+        os.environ['SOLARPILOT_FLUX_PATH']='flat'
+        os.environ.pop('SOLARPILOT_CUDA_BLOCK_SIZE',None)
+        simulate_once(cp,context,False,directory);reference=collect(cp,context)
+        cp.set_compute_backend(context,'cuda')
+        first=simulate_once(cp,context,True,directory)
+        for _ in range(3):simulate_once(cp,context,True,directory)
+        samples=[simulate_once(cp,context,True,directory) for _ in range(10)]
+        for _ in range(3):plain_call(cp,context)
+        bare=[plain_call(cp,context) for _ in range(10)]
+        actual=collect(cp,context)
+        compare=directory/'final-compare.csv';compare.write_text('')
+        with patch.dict(os.environ,{'SOLARPILOT_FLUX_PATH':'verify_cuda','SOLARPILOT_CUDA_TIMING_FILE':'',
+                                   'SOLARPILOT_CUDA_COMPARE_FILE':str(compare),'SOLARPILOT_PROFILE_FILE':''}):
+            assert cp.simulate(context,nthreads=1),cp.get_last_backend_error(context)
+        raw=dict(zip(COLUMNS,map(float,next(csv.reader(compare.read_text().splitlines())))))
+        assert raw['block']==256,'Final measurement must use the selected unchanged production default'
+        window.validate()
+        return dict(heliostats=SIZES[size],grid=[grid,grid],block_size=256,first_call=first,
+                    warmups_excluded=3,repetitions=10,samples=samples,statistics=summarize(samples),
+                    plain_samples_s=bare,plain_simulate_wall_s=distribution(bare),
+                    correctness=correctness(reference,actual),raw_correctness=raw)
+    finally:cp.data_free(context)
+
+
 def plain_call(cp, context):
     # Instrumentation is disabled at runtime; compiled scope probes remain the
     # same for all backends. No event synchronization or per-call CSV writes.
@@ -344,7 +371,7 @@ def allocation_growth(cp,directory):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=('baseline','sweep','plain'),required=True)
+    parser.add_argument('--stage',choices=('baseline','sweep','plain','final'),required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--sizes',nargs='+',choices=SIZES,default=list(SIZES))
     parser.add_argument('--grids',nargs='+',type=int,default=[25,50,100])
@@ -365,7 +392,7 @@ def main():
             for size in args.sizes:
                 for grid in args.grids:
                     window.validate()
-                    runner={'baseline':baseline,'sweep':sweep,'plain':plain}[args.stage]
+                    runner={'baseline':baseline,'sweep':sweep,'plain':plain,'final':final_case}[args.stage]
                     item=runner(cp,size,grid,directory,window)
                     result['cases'].extend(item if isinstance(item,list) else [item])
                     progress.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
