@@ -1,0 +1,64 @@
+{
+  "library_sha256": "419b3f615643168e047f73463ec736f26ed0d5a1aec8e74069f18f69124e6e52",
+  "kernel_symbol": "_ZN10solarpilot54_GLOBAL__N__e97f1c4f_21_FluxDensityKernels_cu_d2ab97e619flux_density_kernelEPKdmPKN12flux_density8CellDataENS3_10ParametersEPd",
+  "attributes": {
+    "registers_per_thread": 94,
+    "static_shared_bytes": 0,
+    "local_bytes_per_thread": 40,
+    "constant_bytes": 0,
+    "max_threads_per_block": 640,
+    "ptx_version": 89,
+    "binary_version": 89
+  },
+  "hardware": {
+    "max_threads_per_sm": 1536,
+    "sm_count": 142,
+    "warp_size": 32,
+    "registers_per_sm": 65536,
+    "max_blocks_per_sm": 24
+  },
+  "block_sizes": [
+    {
+      "block_size": 64,
+      "dynamic_shared_bytes": 512,
+      "active_blocks_per_sm": 10,
+      "active_warps_per_sm": 20,
+      "theoretical_occupancy": 0.4166666666666667
+    },
+    {
+      "block_size": 128,
+      "dynamic_shared_bytes": 1024,
+      "active_blocks_per_sm": 5,
+      "active_warps_per_sm": 20,
+      "theoretical_occupancy": 0.4166666666666667
+    },
+    {
+      "block_size": 256,
+      "dynamic_shared_bytes": 2048,
+      "active_blocks_per_sm": 2,
+      "active_warps_per_sm": 16,
+      "theoretical_occupancy": 0.3333333333333333
+    },
+    {
+      "block_size": 512,
+      "dynamic_shared_bytes": 4096,
+      "active_blocks_per_sm": 1,
+      "active_warps_per_sm": 16,
+      "theoretical_occupancy": 0.3333333333333333
+    }
+  ],
+  "cuobjdump_resource_usage": "\nResource usage:\n Common:\n  GLOBAL:272 CONSTANT[4]:16\n Function _ZN10solarpilot54_GLOBAL__N__e97f1c4f_21_FluxDensityKernels_cu_d2ab97e619contribution_kernelEPKdPKN12flux_density8CellDataEmNS3_10ParametersEPd:\n  REG:80 STACK:40 SHARED:0 LOCAL:0 CONSTANT[2]:488 CONSTANT[0]:400 TEXTURE:0 SURFACE:0 SAMPLER:0\n Function _ZN10solarpilot54_GLOBAL__N__e97f1c4f_21_FluxDensityKernels_cu_d2ab97e619flux_density_kernelEPKdmPKN12flux_density8CellDataENS3_10ParametersEPd:\n  REG:94 STACK:40 SHARED:0 LOCAL:0 CONSTANT[2]:488 CONSTANT[0]:400 TEXTURE:0 SURFACE:0 SAMPLER:0\n",
+  "definition": "Theoretical resource occupancy from the actual compiled kernel; not measured achieved occupancy.",
+  "occupancy_api": "cuOccupancyMaxActiveBlocksPerMultiprocessor",
+  "ncu_available": false,
+  "ptxas": {
+    "compiler": "nvcc 13.0.88",
+    "architecture": "sm_89",
+    "optimization": "-O3 -DNDEBUG",
+    "registers_per_thread": 94,
+    "stack_frame_bytes": 40,
+    "spill_store_bytes": 0,
+    "spill_load_bytes": 0,
+    "source": "Recompiled unmodified Phase 2B density source for compiler diagnostics; runtime attributes above query the original baseline cubin."
+  }
+}

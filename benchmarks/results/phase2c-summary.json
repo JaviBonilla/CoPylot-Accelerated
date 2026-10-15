@@ -1,0 +1,1617 @@
+{
+  "selected_block_size": 256,
+  "ssc_modified": false,
+  "decision": "Retain CUDA v1: no alternative gives a material consistent kernel and end-to-end gain; no additional optimization justified.",
+  "primary_speedup_source": "event/file-output-free rotating plain control; final repeat reported separately",
+  "cases": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "cells": 625,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 100.0
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "legacy_simulate_s": 0.07247230503708124,
+      "flat_simulate_s": 0.03317398764193058,
+      "cuda_simulate_s": 0.01005362719297409,
+      "final_confirmation_s": 0.010226977989077568,
+      "flat_density_s": 0.0238235245,
+      "cuda_kernel_s": 0.0002979840040206909,
+      "cuda_hybrid_s": 0.000535077,
+      "speedups": {
+        "legacy_to_flat": 2.1846124083521143,
+        "flat_density_to_kernel": 79.94900457256016,
+        "flat_density_to_hybrid": 44.52354427493613,
+        "flat_to_cuda_simulate": 3.299703381194998,
+        "legacy_to_cuda": 7.2085729504400184
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 30000,
+        "total_h2d": 230000,
+        "output_d2h": 5000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.0093928905,
+        "preparation_s": 0.00011098750000000001,
+        "h2d_heliostat_s": 5.012799985706806e-05,
+        "h2d_cell_s": 1.873599924147129e-05,
+        "h2d_total_s": 6.940799951553344e-05,
+        "kernel_s": 0.0002979840040206909,
+        "d2h_s": 1.5232000034302472e-05,
+        "postprocessing_s": 1.5026e-05,
+        "hybrid_density_s": 0.000535077,
+        "simulate_wall_s": 0.01039921399205923
+      },
+      "transfer_fraction": 0.008139076627759218,
+      "exclusive_profile_s": {
+        "API": 0.00021458399999999943,
+        "PerformanceSimulationPrep": 2.6085000000000344e-05,
+        "calcHeliostatShadows": 0.000164326,
+        "HermiteFluxSimulation": 4.2550000000003176e-07,
+        "AnalyticalFluxSimulation": 6.68899999999999e-06,
+        "CalcDimensionalFluxProfiles": 1.4069999999999999e-05,
+        "Flux::fluxDensity": 0.0005376245,
+        "Flux::imagePlaneIntercept": 0.0066010349999999956,
+        "UpdateNeighborList": 5.4529000000000006e-05,
+        "SolarField::Simulate": 0.0013214400000000131,
+        "ShadingBlockingNeighbors": 0.0013897245000000001
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.02076713677834136,
+        "PerformanceSimulationPrep": 0.0025244694984856418,
+        "calcHeliostatShadows": 0.015903238443862225,
+        "HermiteFluxSimulation": 4.117928969161229e-05,
+        "AnalyticalFluxSimulation": 0.0006473519829545796,
+        "CalcDimensionalFluxProfiles": 0.001361674749614434,
+        "Flux::fluxDensity": 0.05203054061294138,
+        "Flux::imagePlaneIntercept": 0.6388388543582878,
+        "UpdateNeighborList": 0.0052772396888219955,
+        "SolarField::Simulate": 0.12788709887210487,
+        "ShadingBlockingNeighbors": 0.13449557644424626
+      },
+      "flat_density_fraction": 0.7168425422247062,
+      "flat_zero_density_amdahl_limit": 3.531603962886167,
+      "intercept_removal_amdahl_limit": 2.7688471256319587,
+      "correctness": {
+        "max_abs": 7.389644451905042e-13,
+        "max_rel": 2.8733641108947058e-15,
+        "rms": 9.430436718958164e-14,
+        "abs_cell": [
+          13,
+          6
+        ],
+        "rel_cell": [
+          1,
+          17
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 3.410605131648481e-13,
+        "integrated_flux_difference_kw": -1.4551915228366852e-11,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "cells": 2500,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 100.0
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "legacy_simulate_s": 0.2544803274795413,
+      "flat_simulate_s": 0.10379241686314344,
+      "cuda_simulate_s": 0.01094472873955965,
+      "final_confirmation_s": 0.010527248494327068,
+      "flat_density_s": 0.0933682275,
+      "cuda_kernel_s": 0.001008239984512329,
+      "cuda_hybrid_s": 0.0011852065,
+      "speedups": {
+        "legacy_to_flat": 2.451820038212319,
+        "flat_density_to_kernel": 92.60516239609446,
+        "flat_density_to_hybrid": 78.7780251795784,
+        "flat_to_cuda_simulate": 9.483324743169415,
+        "legacy_to_cuda": 23.251405634177466
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 120000,
+        "total_h2d": 320000,
+        "output_d2h": 20000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.009062306999999999,
+        "preparation_s": 8.33745e-05,
+        "h2d_heliostat_s": 3.126400057226419e-05,
+        "h2d_cell_s": 1.8463999964296817e-05,
+        "h2d_total_s": 4.934400040656328e-05,
+        "kernel_s": 0.001008239984512329,
+        "d2h_s": 1.3151999562978745e-05,
+        "postprocessing_s": 2.0331e-05,
+        "hybrid_density_s": 0.0011852065,
+        "simulate_wall_s": 0.010694853961467743
+      },
+      "transfer_fraction": 0.005843558050881995,
+      "exclusive_profile_s": {
+        "API": 0.00019452900000000058,
+        "PerformanceSimulationPrep": 2.6272499999999664e-05,
+        "calcHeliostatShadows": 0.0001637815,
+        "HermiteFluxSimulation": 2.6450000000009886e-07,
+        "AnalyticalFluxSimulation": 1.3894499999999926e-05,
+        "CalcDimensionalFluxProfiles": 1.6152e-05,
+        "Flux::fluxDensity": 0.001186674,
+        "Flux::imagePlaneIntercept": 0.006318315499999991,
+        "UpdateNeighborList": 5.1967e-05,
+        "SolarField::Simulate": 0.0012906345000000064,
+        "ShadingBlockingNeighbors": 0.0013692809999999987
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.018262476023512046,
+        "PerformanceSimulationPrep": 0.002466474928302272,
+        "calcHeliostatShadows": 0.015375885944228517,
+        "HermiteFluxSimulation": 2.483138713621479e-05,
+        "AnalyticalFluxSimulation": 0.0013044223386162782,
+        "CalcDimensionalFluxProfiles": 0.0015163575237201942,
+        "Flux::fluxDensity": 0.11140552551406252,
+        "Flux::imagePlaneIntercept": 0.593166496140596,
+        "UpdateNeighborList": 0.0048786869387795525,
+        "SolarField::Simulate": 0.12116538722435988,
+        "ShadingBlockingNeighbors": 0.12854875844707214
+      },
+      "flat_density_fraction": 0.9035780270398324,
+      "flat_zero_density_amdahl_limit": 10.371080048456431,
+      "intercept_removal_amdahl_limit": 2.458007982414315,
+      "correctness": {
+        "max_abs": 8.526512829121202e-13,
+        "max_rel": 3.260468448885556e-15,
+        "rms": 1.0429770127162504e-13,
+        "abs_cell": [
+          22,
+          19
+        ],
+        "rel_cell": [
+          49,
+          36
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": -2.8421709430404007e-13,
+        "integrated_flux_difference_kw": -2.9103830456733704e-11,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "cells": 10000,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 100.0
+      },
+      "layout_sha256": "c56b4aaffa396596703839c1636b05524ed4320ca7cf4c84b1c135b52e8c03ec",
+      "legacy_simulate_s": 1.0263289138674736,
+      "flat_simulate_s": 0.38843293488025665,
+      "cuda_simulate_s": 0.014337494969367981,
+      "final_confirmation_s": 0.014519077725708485,
+      "flat_density_s": 0.3774317495,
+      "cuda_kernel_s": 0.0042817919254302984,
+      "cuda_hybrid_s": 0.004587995500000001,
+      "speedups": {
+        "legacy_to_flat": 2.642229383004979,
+        "flat_density_to_kernel": 88.14808287585578,
+        "flat_density_to_hybrid": 82.26506532101001,
+        "flat_to_cuda_simulate": 27.092106097344242,
+        "legacy_to_cuda": 71.5835587778913
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 200000,
+        "cell_h2d": 480000,
+        "total_h2d": 680000,
+        "output_d2h": 80000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.0089833045,
+        "preparation_s": 0.000132767,
+        "h2d_heliostat_s": 2.9440000653266906e-05,
+        "h2d_cell_s": 5.5344000458717344e-05,
+        "h2d_total_s": 8.476800099015236e-05,
+        "kernel_s": 0.0042817919254302984,
+        "d2h_s": 2.680000010877848e-05,
+        "postprocessing_s": 5.7224e-05,
+        "hybrid_density_s": 0.004587995500000001,
+        "simulate_wall_s": 0.014105078764259815
+      },
+      "transfer_fraction": 0.007909775121683664,
+      "exclusive_profile_s": {
+        "API": 0.0002255049999999991,
+        "PerformanceSimulationPrep": 5.5560000000000505e-05,
+        "calcHeliostatShadows": 0.00016026849999999999,
+        "HermiteFluxSimulation": 2.4099999999978305e-07,
+        "AnalyticalFluxSimulation": 4.85679999999997e-05,
+        "CalcDimensionalFluxProfiles": 4.06965e-05,
+        "Flux::fluxDensity": 0.0045894265,
+        "Flux::imagePlaneIntercept": 0.006233375999999995,
+        "UpdateNeighborList": 5.1794e-05,
+        "SolarField::Simulate": 0.0012867865000000022,
+        "ShadingBlockingNeighbors": 0.0013564380000000002
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.016034900270997965,
+        "PerformanceSimulationPrep": 0.00395068428219622,
+        "calcHeliostatShadows": 0.01139615269764505,
+        "HermiteFluxSimulation": 1.7136697480353187e-05,
+        "AnalyticalFluxSimulation": 0.0034535067353798246,
+        "CalcDimensionalFluxProfiles": 0.002893790908754445,
+        "Flux::fluxDensity": 0.3263386453895724,
+        "Flux::imagePlaneIntercept": 0.443234351839793,
+        "UpdateNeighborList": 0.003682896719079718,
+        "SolarField::Simulate": 0.09149904967768625,
+        "ShadingBlockingNeighbors": 0.09645173301608401
+      },
+      "flat_density_fraction": 0.9745299162745598,
+      "flat_zero_density_amdahl_limit": 39.26174765578692,
+      "intercept_removal_amdahl_limit": 1.7960878213381695,
+      "correctness": {
+        "max_abs": 7.958078640513122e-13,
+        "max_rel": 3.465689839794229e-15,
+        "rms": 8.876639544322593e-14,
+        "abs_cell": [
+          51,
+          43
+        ],
+        "rel_cell": [
+          95,
+          62
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 5.684341886080801e-13,
+        "integrated_flux_difference_kw": 0.0,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "cells": 625,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 500.0
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "legacy_simulate_s": 0.3552963603287935,
+      "flat_simulate_s": 0.1696433685719967,
+      "cuda_simulate_s": 0.05468044430017471,
+      "final_confirmation_s": 0.05334519688040018,
+      "flat_density_s": 0.116526197,
+      "cuda_kernel_s": 0.0012183040380477905,
+      "cuda_hybrid_s": 0.0016954395000000001,
+      "speedups": {
+        "legacy_to_flat": 2.094372231107906,
+        "flat_density_to_kernel": 95.64623719602989,
+        "flat_density_to_hybrid": 68.72919794542948,
+        "flat_to_cuda_simulate": 3.102450441710377,
+        "legacy_to_cuda": 6.49768605350667
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 30000,
+        "total_h2d": 1030000,
+        "output_d2h": 5000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.049880401000000005,
+        "preparation_s": 0.0003069975,
+        "h2d_heliostat_s": 0.00011335999891161919,
+        "h2d_cell_s": 1.3183999806642532e-05,
+        "h2d_total_s": 0.00012651199894025923,
+        "kernel_s": 0.0012183040380477905,
+        "d2h_s": 1.0176000185310841e-05,
+        "postprocessing_s": 6.08305e-05,
+        "hybrid_density_s": 0.0016954395000000001,
+        "simulate_wall_s": 0.053317117504775524
+      },
+      "transfer_fraction": 0.0025636794621038384,
+      "exclusive_profile_s": {
+        "API": 0.0007881645000000007,
+        "PerformanceSimulationPrep": 7.106850000000373e-05,
+        "calcHeliostatShadows": 0.0008086705,
+        "HermiteFluxSimulation": 5.21499999999917e-07,
+        "AnalyticalFluxSimulation": 4.2615000000000404e-06,
+        "CalcDimensionalFluxProfiles": 5.9732000000000003e-05,
+        "Flux::fluxDensity": 0.0016971175,
+        "Flux::imagePlaneIntercept": 0.032765208499999955,
+        "UpdateNeighborList": 0.0002833435,
+        "SolarField::Simulate": 0.006316549500000174,
+        "ShadingBlockingNeighbors": 0.010446985999999998
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.014799634585408405,
+        "PerformanceSimulationPrep": 0.0013344775494622651,
+        "calcHeliostatShadows": 0.01518468276609705,
+        "HermiteFluxSimulation": 9.792383996347525e-06,
+        "AnalyticalFluxSimulation": 8.001964410439504e-05,
+        "CalcDimensionalFluxProfiles": 0.0011216082087630364,
+        "Flux::fluxDensity": 0.03186735617818593,
+        "Flux::imagePlaneIntercept": 0.6152435347122541,
+        "UpdateNeighborList": 0.0053204378808620065,
+        "SolarField::Simulate": 0.11860801195771527,
+        "ShadingBlockingNeighbors": 0.1961666318628627
+      },
+      "flat_density_fraction": 0.6902881394471361,
+      "flat_zero_density_amdahl_limit": 3.2288075704137027,
+      "intercept_removal_amdahl_limit": 2.599046644354982,
+      "correctness": {
+        "max_abs": 3.524291969370097e-12,
+        "max_rel": 4.424699343906537e-15,
+        "rms": 7.033118397682318e-13,
+        "abs_cell": [
+          12,
+          14
+        ],
+        "rel_cell": [
+          15,
+          13
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 4.547473508864641e-13,
+        "integrated_flux_difference_kw": 0.0,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "cells": 2500,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 500.0
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "legacy_simulate_s": 1.2775231413543224,
+      "flat_simulate_s": 0.5253776591271162,
+      "cuda_simulate_s": 0.057867975905537605,
+      "final_confirmation_s": 0.05600675381720066,
+      "flat_density_s": 0.469717798,
+      "cuda_kernel_s": 0.0043209919929504395,
+      "cuda_hybrid_s": 0.004847936,
+      "speedups": {
+        "legacy_to_flat": 2.4316282185977443,
+        "flat_density_to_kernel": 108.70600981587783,
+        "flat_density_to_hybrid": 96.89026381536391,
+        "flat_to_cuda_simulate": 9.078901601547823,
+        "legacy_to_cuda": 22.07651332819594
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 120000,
+        "total_h2d": 1120000,
+        "output_d2h": 20000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.049275369,
+        "preparation_s": 0.000334121,
+        "h2d_heliostat_s": 0.00011304000020027162,
+        "h2d_cell_s": 1.9872000440955163e-05,
+        "h2d_total_s": 0.00013311999943107366,
+        "kernel_s": 0.0043209919929504395,
+        "d2h_s": 1.4287999831140041e-05,
+        "postprocessing_s": 7.0579e-05,
+        "hybrid_density_s": 0.004847936,
+        "simulate_wall_s": 0.055859388783574104
+      },
+      "transfer_fraction": 0.00263891178318013,
+      "exclusive_profile_s": {
+        "API": 0.0007854539999999979,
+        "PerformanceSimulationPrep": 8.040750000000083e-05,
+        "calcHeliostatShadows": 0.0008065925,
+        "HermiteFluxSimulation": 3.7450000000020453e-07,
+        "AnalyticalFluxSimulation": 1.3664500000000208e-05,
+        "CalcDimensionalFluxProfiles": 6.66325e-05,
+        "Flux::fluxDensity": 0.004850286,
+        "Flux::imagePlaneIntercept": 0.03219422099999994,
+        "UpdateNeighborList": 0.0002820595,
+        "SolarField::Simulate": 0.0063225424999999065,
+        "ShadingBlockingNeighbors": 0.010250839499999987
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.014076236937533213,
+        "PerformanceSimulationPrep": 0.0014409946623923444,
+        "calcHeliostatShadows": 0.014455063112591301,
+        "HermiteFluxSimulation": 6.711469714469697e-06,
+        "AnalyticalFluxSimulation": 0.0002448835191276969,
+        "CalcDimensionalFluxProfiles": 0.0011941308564730516,
+        "Flux::fluxDensity": 0.08692269050867446,
+        "Flux::imagePlaneIntercept": 0.5769573811010038,
+        "UpdateNeighborList": 0.005054829884986466,
+        "SolarField::Simulate": 0.11330721630753998,
+        "ShadingBlockingNeighbors": 0.18370680601362357
+      },
+      "flat_density_fraction": 0.9002577151682865,
+      "flat_zero_density_amdahl_limit": 10.025838105545835,
+      "intercept_removal_amdahl_limit": 2.3638280289645133,
+      "correctness": {
+        "max_abs": 4.206412995699793e-12,
+        "max_rel": 5.033861676344678e-15,
+        "rms": 6.535268987297262e-13,
+        "abs_cell": [
+          23,
+          21
+        ],
+        "rel_cell": [
+          28,
+          16
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 1.5916157281026244e-12,
+        "integrated_flux_difference_kw": 5.820766091346741e-11,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "cells": 10000,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 500.0
+      },
+      "layout_sha256": "fd2507b45ea379b82dd4f3bfaf65fb5c5f6a89377c2a5790f74b4ff2c8e85081",
+      "legacy_simulate_s": 5.1257283966988325,
+      "flat_simulate_s": 1.9329839292913675,
+      "cuda_simulate_s": 0.0701250983402133,
+      "final_confirmation_s": 0.06866340339183807,
+      "flat_density_s": 1.885004231,
+      "cuda_kernel_s": 0.01687430381774902,
+      "cuda_hybrid_s": 0.0175359545,
+      "speedups": {
+        "legacy_to_flat": 2.6517180608831685,
+        "flat_density_to_kernel": 111.70856299370895,
+        "flat_density_to_hybrid": 107.49367711920101,
+        "flat_to_cuda_simulate": 27.564794560621618,
+        "legacy_to_cuda": 73.09406358093446
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 1000000,
+        "cell_h2d": 480000,
+        "total_h2d": 1480000,
+        "output_d2h": 80000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.0498530015,
+        "preparation_s": 0.000392816,
+        "h2d_heliostat_s": 0.00011275199800729751,
+        "h2d_cell_s": 6.0143999755382535e-05,
+        "h2d_total_s": 0.0001732959970831871,
+        "kernel_s": 0.01687430381774902,
+        "d2h_s": 2.324800007045269e-05,
+        "postprocessing_s": 0.000113098,
+        "hybrid_density_s": 0.0175359545,
+        "simulate_wall_s": 0.06933834124356508
+      },
+      "transfer_fraction": 0.0028345644506152646,
+      "exclusive_profile_s": {
+        "API": 0.0008483845000000004,
+        "PerformanceSimulationPrep": 0.00011294650000000239,
+        "calcHeliostatShadows": 0.000808923,
+        "HermiteFluxSimulation": 4.4199999999806894e-07,
+        "AnalyticalFluxSimulation": 4.842749999999993e-05,
+        "CalcDimensionalFluxProfiles": 9.76855e-05,
+        "Flux::fluxDensity": 0.017537722,
+        "Flux::imagePlaneIntercept": 0.03282502450000002,
+        "UpdateNeighborList": 0.00028047049999999996,
+        "SolarField::Simulate": 0.006357707500000115,
+        "ShadingBlockingNeighbors": 0.010346034999999995
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.012247298051101549,
+        "PerformanceSimulationPrep": 0.0016304982579582368,
+        "calcHeliostatShadows": 0.011677630934312466,
+        "HermiteFluxSimulation": 6.380722111923582e-06,
+        "AnalyticalFluxSimulation": 0.0006991004979106986,
+        "CalcDimensionalFluxProfiles": 0.0014101901128213445,
+        "Flux::fluxDensity": 0.25317495601506235,
+        "Flux::imagePlaneIntercept": 0.47386280464366176,
+        "UpdateNeighborList": 0.0040488785545250705,
+        "SolarField::Simulate": 0.09178001091984245,
+        "ShadingBlockingNeighbors": 0.14935559795367348
+      },
+      "flat_density_fraction": 0.9725705605346877,
+      "flat_zero_density_amdahl_limit": 36.457179566670185,
+      "intercept_removal_amdahl_limit": 1.9006449436115753,
+      "correctness": {
+        "max_abs": 5.002220859751105e-12,
+        "max_rel": 6.2951329309717446e-15,
+        "rms": 6.871603050820222e-13,
+        "abs_cell": [
+          42,
+          62
+        ],
+        "rel_cell": [
+          49,
+          18
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": -9.094947017729282e-13,
+        "integrated_flux_difference_kw": -2.9103830456733704e-10,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "cells": 625,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 25,
+        "fluxsim.0.y_res": 25,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 1000.0
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "legacy_simulate_s": 0.7144981855526567,
+      "flat_simulate_s": 0.34591840114444494,
+      "cuda_simulate_s": 0.11396354250609875,
+      "final_confirmation_s": 0.11299440916627645,
+      "flat_density_s": 0.2352639395,
+      "cuda_kernel_s": 0.0022364161014556887,
+      "cuda_hybrid_s": 0.0033283419999999998,
+      "speedups": {
+        "legacy_to_flat": 2.06551077707573,
+        "flat_density_to_kernel": 105.19685462238719,
+        "flat_density_to_hybrid": 70.68502560734444,
+        "flat_to_cuda_simulate": 3.0353426502684675,
+        "legacy_to_cuda": 6.269532956247129
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 30000,
+        "total_h2d": 2030000,
+        "output_d2h": 5000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.1075550845,
+        "preparation_s": 0.0008445804999999999,
+        "h2d_heliostat_s": 0.00018547199666500092,
+        "h2d_cell_s": 1.131199998781085e-05,
+        "h2d_total_s": 0.00019686400098726153,
+        "kernel_s": 0.0022364161014556887,
+        "d2h_s": 1.2336000334471463e-05,
+        "postprocessing_s": 0.000133802,
+        "hybrid_density_s": 0.0033283419999999998,
+        "simulate_wall_s": 0.11466661468148232
+      },
+      "transfer_fraction": 0.001824419443295181,
+      "exclusive_profile_s": {
+        "API": 0.0019279145000000025,
+        "PerformanceSimulationPrep": 0.00014216749999999834,
+        "calcHeliostatShadows": 0.001607766,
+        "HermiteFluxSimulation": 6.410000000002265e-07,
+        "AnalyticalFluxSimulation": 5.118000000000136e-06,
+        "CalcDimensionalFluxProfiles": 0.000132833,
+        "Flux::fluxDensity": 0.003330607,
+        "Flux::imagePlaneIntercept": 0.06742087300000002,
+        "UpdateNeighborList": 0.0006345055,
+        "SolarField::Simulate": 0.012727775499999934,
+        "ShadingBlockingNeighbors": 0.02661745299999996
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.016825095977444283,
+        "PerformanceSimulationPrep": 0.001240709498462343,
+        "calcHeliostatShadows": 0.014031129108304155,
+        "HermiteFluxSimulation": 5.5940688871553076e-06,
+        "AnalyticalFluxSimulation": 4.466528013174963e-05,
+        "CalcDimensionalFluxProfiles": 0.0011592464157367216,
+        "Flux::fluxDensity": 0.029066528851848825,
+        "Flux::imagePlaneIntercept": 0.5883884680093856,
+        "UpdateNeighborList": 0.0055373907586235074,
+        "SolarField::Simulate": 0.11107652562749153,
+        "ShadingBlockingNeighbors": 0.2322930821880903
+      },
+      "flat_density_fraction": 0.6798868172002923,
+      "flat_zero_density_amdahl_limit": 3.1238950900241185,
+      "intercept_removal_amdahl_limit": 2.42947517812208,
+      "correctness": {
+        "max_abs": 7.503331289626658e-12,
+        "max_rel": 6.564210357300952e-15,
+        "rms": 1.5577509314448033e-12,
+        "abs_cell": [
+          12,
+          13
+        ],
+        "rel_cell": [
+          3,
+          15
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 9.094947017729282e-13,
+        "integrated_flux_difference_kw": -3.4924596548080444e-10,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "cells": 2500,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 50,
+        "fluxsim.0.y_res": 50,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 1000.0
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "legacy_simulate_s": 2.5302817951887846,
+      "flat_simulate_s": 1.0461454950273037,
+      "cuda_simulate_s": 0.12086221016943455,
+      "final_confirmation_s": 0.11893955338746309,
+      "flat_density_s": 0.93704587,
+      "cuda_kernel_s": 0.007928719997406006,
+      "cuda_hybrid_s": 0.0090855095,
+      "speedups": {
+        "legacy_to_flat": 2.4186710235011297,
+        "flat_density_to_kernel": 118.18375100981848,
+        "flat_density_to_hybrid": 103.13630402345625,
+        "flat_to_cuda_simulate": 8.655687278602064,
+        "legacy_to_cuda": 20.935260009242164
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 120000,
+        "total_h2d": 2120000,
+        "output_d2h": 20000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.1060060495,
+        "preparation_s": 0.0008877500000000001,
+        "h2d_heliostat_s": 0.0001844640001654625,
+        "h2d_cell_s": 2.1776000037789344e-05,
+        "h2d_total_s": 0.0002061279993504286,
+        "kernel_s": 0.007928719997406006,
+        "d2h_s": 1.3824000023305415e-05,
+        "postprocessing_s": 0.00014544200000000002,
+        "hybrid_density_s": 0.0090855095,
+        "simulate_wall_s": 0.11882849503308535
+      },
+      "transfer_fraction": 0.0018510038296158924,
+      "exclusive_profile_s": {
+        "API": 0.001862296500000006,
+        "PerformanceSimulationPrep": 0.00015288049999999387,
+        "calcHeliostatShadows": 0.0016290555,
+        "HermiteFluxSimulation": 7.119999999990675e-07,
+        "AnalyticalFluxSimulation": 1.6594500000000588e-05,
+        "CalcDimensionalFluxProfiles": 0.000141574,
+        "Flux::fluxDensity": 0.009087722999999999,
+        "Flux::imagePlaneIntercept": 0.06638893949999998,
+        "UpdateNeighborList": 0.0006323979999999999,
+        "SolarField::Simulate": 0.012746262500000063,
+        "ShadingBlockingNeighbors": 0.025982596999999948
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.01568305053633162,
+        "PerformanceSimulationPrep": 0.001287460190962901,
+        "calcHeliostatShadows": 0.013718846452747397,
+        "HermiteFluxSimulation": 5.9960011640753515e-06,
+        "AnalyticalFluxSimulation": 0.00013974809173789642,
+        "CalcDimensionalFluxProfiles": 0.0011922441977583083,
+        "Flux::fluxDensity": 0.07653089562762036,
+        "Flux::imagePlaneIntercept": 0.5590844923093389,
+        "UpdateNeighborList": 0.0053256448653987215,
+        "SolarField::Simulate": 0.1073407370613911,
+        "ShadingBlockingNeighbors": 0.21880854193525906
+      },
+      "flat_density_fraction": 0.8944922833985036,
+      "flat_zero_density_amdahl_limit": 9.477979736562864,
+      "intercept_removal_amdahl_limit": 2.2680082295984545,
+      "correctness": {
+        "max_abs": 9.094947017729282e-12,
+        "max_rel": 8.57896890364008e-15,
+        "rms": 1.433959489362079e-12,
+        "abs_cell": [
+          23,
+          27
+        ],
+        "rel_cell": [
+          16,
+          1
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 2.9558577807620168e-12,
+        "integrated_flux_difference_kw": 1.1641532182693481e-10,
+        "receiver_power_difference_kw": 0.0
+      }
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "cells": 10000,
+      "effective_parameters": {
+        "solarfield.0.des_sim_detail": 0,
+        "fluxsim.0.flux_model": 0,
+        "fluxsim.0.flux_time_type": 0,
+        "fluxsim.0.flux_solar_az_in": 180.0,
+        "fluxsim.0.flux_solar_el_in": 55.0,
+        "fluxsim.0.flux_dni": 950.0,
+        "fluxsim.0.aim_method": 0,
+        "fluxsim.0.x_res": 100,
+        "fluxsim.0.y_res": 100,
+        "land.0.is_bounds_scaled": 0,
+        "land.0.is_bounds_fixed": 1,
+        "land.0.max_fixed_rad": 5000.0,
+        "land.0.min_fixed_rad": 160.0,
+        "solarfield.0.q_des": 1000.0
+      },
+      "layout_sha256": "2be89bf240b5b7fbcf0920c4675a0963d042fba0e7bce45b4191830f3a99b1af",
+      "legacy_simulate_s": 10.203233901411295,
+      "flat_simulate_s": 3.85013978369534,
+      "cuda_simulate_s": 0.1434662425890565,
+      "final_confirmation_s": 0.14376287255436182,
+      "flat_density_s": 3.730592542,
+      "cuda_kernel_s": 0.03105598449707031,
+      "cuda_hybrid_s": 0.032416885,
+      "speedups": {
+        "legacy_to_flat": 2.65009440556423,
+        "flat_density_to_kernel": 120.12475541878018,
+        "flat_density_to_hybrid": 115.08177118190105,
+        "flat_to_cuda_simulate": 26.836555514481887,
+        "legacy_to_cuda": 71.11940563354233
+      },
+      "transfer_bytes": {
+        "heliostat_h2d": 2000000,
+        "cell_h2d": 480000,
+        "total_h2d": 2480000,
+        "output_d2h": 80000
+      },
+      "cuda_stages_s": {
+        "optical_preparation_s": 0.107142146,
+        "preparation_s": 0.000993529,
+        "h2d_heliostat_s": 0.0001894560009241104,
+        "h2d_cell_s": 6.862400099635123e-05,
+        "h2d_total_s": 0.000256800003349781,
+        "kernel_s": 0.03105598449707031,
+        "d2h_s": 2.5296000763773918e-05,
+        "postprocessing_s": 0.0002523935,
+        "hybrid_density_s": 0.032416885,
+        "simulate_wall_s": 0.1436009332537651
+      },
+      "transfer_fraction": 0.001964444086272389,
+      "exclusive_profile_s": {
+        "API": 0.0019512985000000177,
+        "PerformanceSimulationPrep": 0.00019000549999999977,
+        "calcHeliostatShadows": 0.001626392,
+        "HermiteFluxSimulation": 6.015000000025861e-07,
+        "AnalyticalFluxSimulation": 5.8094499999997856e-05,
+        "CalcDimensionalFluxProfiles": 0.00023558299999999998,
+        "Flux::fluxDensity": 0.032419289000000004,
+        "Flux::imagePlaneIntercept": 0.0671249759999999,
+        "UpdateNeighborList": 0.0006516989999999999,
+        "SolarField::Simulate": 0.012796055499999653,
+        "ShadingBlockingNeighbors": 0.02643167050000006
+      },
+      "exclusive_profile_fractions": {
+        "API": 0.013596247981734748,
+        "PerformanceSimulationPrep": 0.0013239193777340962,
+        "calcHeliostatShadows": 0.011332366087253866,
+        "HermiteFluxSimulation": 4.191128707908369e-06,
+        "AnalyticalFluxSimulation": 0.0004047905681139267,
+        "CalcDimensionalFluxProfiles": 0.0016414940555127715,
+        "Flux::fluxDensity": 0.22589096062725492,
+        "Flux::imagePlaneIntercept": 0.46771307386542027,
+        "UpdateNeighborList": 0.004540905050379771,
+        "SolarField::Simulate": 0.08916029186002784,
+        "ShadingBlockingNeighbors": 0.18417046222784492
+      },
+      "flat_density_fraction": 0.9709401085249484,
+      "flat_zero_density_amdahl_limit": 34.411690795835085,
+      "intercept_removal_amdahl_limit": 1.8786860073042015,
+      "correctness": {
+        "max_abs": 1.1141310096718371e-11,
+        "max_rel": 8.86708872836162e-15,
+        "rms": 1.5435814757349357e-12,
+        "abs_cell": [
+          51,
+          54
+        ],
+        "rel_cell": [
+          55,
+          54
+        ],
+        "zero_reference_nonzero_cells": 0,
+        "peak_flux_difference_kw_m2": 1.8189894035458565e-12,
+        "integrated_flux_difference_kw": -1.1641532182693481e-10,
+        "receiver_power_difference_kw": 0.0
+      }
+    }
+  ],
+  "block_comparison": [
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.00029679998755455017,
+      "kernel_min_s": 0.0002952319979667664,
+      "kernel_max_s": 0.00030399999022483827,
+      "hybrid_median_s": 0.000438493,
+      "profiled_simulate_median_s": 0.009937258437275887,
+      "plain_simulate_median_s": 0.010168390348553658,
+      "plain_simulate_min_s": 0.009776923805475235,
+      "plain_simulate_max_s": 0.01093858852982521,
+      "plain_speedup_vs_256": 0.9887137342641561,
+      "paired_95pct_speedup_interval": [
+        0.9532847597561198,
+        1.0401203809535309
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.00029999999701976776,
+      "kernel_min_s": 0.0002952319979667664,
+      "kernel_max_s": 0.0003061760067939758,
+      "hybrid_median_s": 0.0004512165,
+      "profiled_simulate_median_s": 0.010176882147789001,
+      "plain_simulate_median_s": 0.010210818611085415,
+      "plain_simulate_min_s": 0.00979173369705677,
+      "plain_simulate_max_s": 0.011002661660313606,
+      "plain_speedup_vs_256": 0.9846054049044933,
+      "paired_95pct_speedup_interval": [
+        0.9234178247098911,
+        1.027770250469204
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.000292495995759964,
+      "kernel_min_s": 0.0002889919877052307,
+      "kernel_max_s": 0.0002979840040206909,
+      "hybrid_median_s": 0.00043848650000000004,
+      "profiled_simulate_median_s": 0.010263544507324696,
+      "plain_simulate_median_s": 0.01005362719297409,
+      "plain_simulate_min_s": 0.00973924994468689,
+      "plain_simulate_max_s": 0.010851366445422173,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 25,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.0002938880026340485,
+      "kernel_min_s": 0.0002908160090446472,
+      "kernel_max_s": 0.00030003198981285096,
+      "hybrid_median_s": 0.00043369700000000003,
+      "profiled_simulate_median_s": 0.01012683380395174,
+      "plain_simulate_median_s": 0.010283474810421467,
+      "plain_simulate_min_s": 0.009747982025146484,
+      "plain_simulate_max_s": 0.011513900011777878,
+      "plain_speedup_vs_256": 0.9776488374129682,
+      "paired_95pct_speedup_interval": [
+        0.9377014084842591,
+        1.0345232575497691
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.0011118080019950865,
+      "kernel_min_s": 0.0010174720287323,
+      "kernel_max_s": 0.0011232320070266723,
+      "hybrid_median_s": 0.001288188,
+      "profiled_simulate_median_s": 0.011486219242215157,
+      "plain_simulate_median_s": 0.011118201538920403,
+      "plain_simulate_min_s": 0.01057409681379795,
+      "plain_simulate_max_s": 0.012078972533345222,
+      "plain_speedup_vs_256": 0.9843974046743538,
+      "paired_95pct_speedup_interval": [
+        0.9256035367733371,
+        1.0400411801216018
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.0011015840172767639,
+      "kernel_min_s": 0.0010096000432968139,
+      "kernel_max_s": 0.0011147840023040772,
+      "hybrid_median_s": 0.0012843540000000001,
+      "profiled_simulate_median_s": 0.012287354096770287,
+      "plain_simulate_median_s": 0.011024696752429008,
+      "plain_simulate_min_s": 0.010626604780554771,
+      "plain_simulate_max_s": 0.011779353022575378,
+      "plain_speedup_vs_256": 0.9927464659876709,
+      "paired_95pct_speedup_interval": [
+        0.9641587615508797,
+        1.0478550704614535
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.0011007040143013,
+      "kernel_min_s": 0.0010058239698410034,
+      "kernel_max_s": 0.0011155200004577637,
+      "hybrid_median_s": 0.0012897465,
+      "profiled_simulate_median_s": 0.011411531828343868,
+      "plain_simulate_median_s": 0.01094472873955965,
+      "plain_simulate_min_s": 0.010629747062921524,
+      "plain_simulate_max_s": 0.012048764154314995,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 50,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.001119551956653595,
+      "kernel_min_s": 0.0010226880311965942,
+      "kernel_max_s": 0.0011254719495773315,
+      "hybrid_median_s": 0.0013000720000000002,
+      "profiled_simulate_median_s": 0.011531224474310875,
+      "plain_simulate_median_s": 0.010844404809176922,
+      "plain_simulate_min_s": 0.010658763349056244,
+      "plain_simulate_max_s": 0.012039177119731903,
+      "plain_speedup_vs_256": 1.009251215917155,
+      "paired_95pct_speedup_interval": [
+        0.9804746678928129,
+        1.050625727342909
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.004319952011108399,
+      "kernel_min_s": 0.004314239978790283,
+      "kernel_max_s": 0.004327167987823486,
+      "hybrid_median_s": 0.0046538659999999996,
+      "profiled_simulate_median_s": 0.014905090443789959,
+      "plain_simulate_median_s": 0.014275670051574707,
+      "plain_simulate_min_s": 0.014113623648881912,
+      "plain_simulate_max_s": 0.015194538980722427,
+      "plain_speedup_vs_256": 1.004330789207786,
+      "paired_95pct_speedup_interval": [
+        0.9775099380699174,
+        1.031219100109622
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.0042721440792083745,
+      "kernel_min_s": 0.0042675199508667,
+      "kernel_max_s": 0.004283999919891358,
+      "hybrid_median_s": 0.004609066,
+      "profiled_simulate_median_s": 0.015058641321957111,
+      "plain_simulate_median_s": 0.014536689966917038,
+      "plain_simulate_min_s": 0.014115678146481514,
+      "plain_simulate_max_s": 0.01551990956068039,
+      "plain_speedup_vs_256": 0.9862970870258367,
+      "paired_95pct_speedup_interval": [
+        0.9676630970601141,
+        1.018313473783454
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.004286511898040772,
+      "kernel_min_s": 0.004281951904296875,
+      "kernel_max_s": 0.004294144153594971,
+      "hybrid_median_s": 0.00461609,
+      "profiled_simulate_median_s": 0.014599880203604698,
+      "plain_simulate_median_s": 0.014337494969367981,
+      "plain_simulate_min_s": 0.014088856056332588,
+      "plain_simulate_max_s": 0.01499328576028347,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 1000,
+      "grid": 100,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.0043716800212860105,
+      "kernel_min_s": 0.004368607997894287,
+      "kernel_max_s": 0.004391168117523193,
+      "hybrid_median_s": 0.0046997424999999995,
+      "profiled_simulate_median_s": 0.014761890284717083,
+      "plain_simulate_median_s": 0.014470787718892097,
+      "plain_simulate_min_s": 0.014223923906683922,
+      "plain_simulate_max_s": 0.015105456113815308,
+      "plain_speedup_vs_256": 0.9907888394112714,
+      "paired_95pct_speedup_interval": [
+        0.954774574872981,
+        1.0117268166090188
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.0012332959771156312,
+      "kernel_min_s": 0.001230847954750061,
+      "kernel_max_s": 0.0012392319440841675,
+      "hybrid_median_s": 0.0017467855,
+      "profiled_simulate_median_s": 0.05375435948371887,
+      "plain_simulate_median_s": 0.05333365127444267,
+      "plain_simulate_min_s": 0.05266869626939297,
+      "plain_simulate_max_s": 0.055228013545274734,
+      "plain_speedup_vs_256": 1.0252522186940054,
+      "paired_95pct_speedup_interval": [
+        0.9874520375594946,
+        1.0420434946635064
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.0012380160093307495,
+      "kernel_min_s": 0.0012326719760894775,
+      "kernel_max_s": 0.0012421120405197144,
+      "hybrid_median_s": 0.0017842625,
+      "profiled_simulate_median_s": 0.05434626527130604,
+      "plain_simulate_median_s": 0.0536428140476346,
+      "plain_simulate_min_s": 0.05298490636050701,
+      "plain_simulate_max_s": 0.05813068151473999,
+      "plain_speedup_vs_256": 1.0193433225113564,
+      "paired_95pct_speedup_interval": [
+        0.9802646553687209,
+        1.0526878002257454
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.0012206079959869384,
+      "kernel_min_s": 0.0012165119647979737,
+      "kernel_max_s": 0.0012247040271759033,
+      "hybrid_median_s": 0.00173152,
+      "profiled_simulate_median_s": 0.0540766092017293,
+      "plain_simulate_median_s": 0.05468044430017471,
+      "plain_simulate_min_s": 0.05261054076254368,
+      "plain_simulate_max_s": 0.059116847813129425,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 25,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.0012132319808006286,
+      "kernel_min_s": 0.0012104320526123047,
+      "kernel_max_s": 0.001219871997833252,
+      "hybrid_median_s": 0.0017070700000000002,
+      "profiled_simulate_median_s": 0.05433252081274986,
+      "plain_simulate_median_s": 0.054087032563984394,
+      "plain_simulate_min_s": 0.05299847200512886,
+      "plain_simulate_max_s": 0.05678661912679672,
+      "plain_speedup_vs_256": 1.0109714234273866,
+      "paired_95pct_speedup_interval": [
+        0.9601819637464457,
+        1.0338810324587568
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.004384799957275391,
+      "kernel_min_s": 0.0043786239624023435,
+      "kernel_max_s": 0.004393887996673584,
+      "hybrid_median_s": 0.00493061,
+      "profiled_simulate_median_s": 0.057718994095921516,
+      "plain_simulate_median_s": 0.05804681405425072,
+      "plain_simulate_min_s": 0.05671185627579689,
+      "plain_simulate_max_s": 0.05938466638326645,
+      "plain_speedup_vs_256": 0.9969190703809175,
+      "paired_95pct_speedup_interval": [
+        0.9770572533589652,
+        1.0128211477066802
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.00434227204322815,
+      "kernel_min_s": 0.004335040092468261,
+      "kernel_max_s": 0.004351136207580567,
+      "hybrid_median_s": 0.004946395,
+      "profiled_simulate_median_s": 0.05748722516000271,
+      "plain_simulate_median_s": 0.05755923129618168,
+      "plain_simulate_min_s": 0.055848632007837296,
+      "plain_simulate_max_s": 0.060643550008535385,
+      "plain_speedup_vs_256": 1.005363946015318,
+      "paired_95pct_speedup_interval": [
+        0.9894145587255528,
+        1.0314082485189187
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.0043214080333709715,
+      "kernel_min_s": 0.00430947208404541,
+      "kernel_max_s": 0.004341184139251709,
+      "hybrid_median_s": 0.0048905665000000004,
+      "profiled_simulate_median_s": 0.05769938323646784,
+      "plain_simulate_median_s": 0.057867975905537605,
+      "plain_simulate_min_s": 0.05611889250576496,
+      "plain_simulate_max_s": 0.0592949204146862,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 50,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.004343775987625122,
+      "kernel_min_s": 0.004342144012451172,
+      "kernel_max_s": 0.004352159976959228,
+      "hybrid_median_s": 0.0048852625,
+      "profiled_simulate_median_s": 0.05771561712026596,
+      "plain_simulate_median_s": 0.05714538134634495,
+      "plain_simulate_min_s": 0.05585327185690403,
+      "plain_simulate_max_s": 0.05879702419042587,
+      "plain_speedup_vs_256": 1.0126448462179853,
+      "paired_95pct_speedup_interval": [
+        0.9933897422419452,
+        1.0274243105137895
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.01707350444793701,
+      "kernel_min_s": 0.01706483268737793,
+      "kernel_max_s": 0.017079999923706055,
+      "hybrid_median_s": 0.0178028865,
+      "profiled_simulate_median_s": 0.07095190603286028,
+      "plain_simulate_median_s": 0.06985237263143063,
+      "plain_simulate_min_s": 0.06924121081829071,
+      "plain_simulate_max_s": 0.07147680595517159,
+      "plain_speedup_vs_256": 1.0039043156088867,
+      "paired_95pct_speedup_interval": [
+        0.9898233107931793,
+        1.017138881791002
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.01687331199645996,
+      "kernel_min_s": 0.016862943649291993,
+      "kernel_max_s": 0.01689811134338379,
+      "hybrid_median_s": 0.017605581000000002,
+      "profiled_simulate_median_s": 0.06999950855970383,
+      "plain_simulate_median_s": 0.07041961420327425,
+      "plain_simulate_min_s": 0.06928247958421707,
+      "plain_simulate_max_s": 0.07233154401183128,
+      "plain_speedup_vs_256": 0.9958177012698366,
+      "paired_95pct_speedup_interval": [
+        0.9869367760940004,
+        1.0085173666544822
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.01687735939025879,
+      "kernel_min_s": 0.016869279861450197,
+      "kernel_max_s": 0.01688835144042969,
+      "hybrid_median_s": 0.0176121885,
+      "profiled_simulate_median_s": 0.06996873579919338,
+      "plain_simulate_median_s": 0.0701250983402133,
+      "plain_simulate_min_s": 0.06907903961837292,
+      "plain_simulate_max_s": 0.07173137739300728,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 5000,
+      "grid": 100,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.017057711601257325,
+      "kernel_min_s": 0.01705251121520996,
+      "kernel_max_s": 0.01706345558166504,
+      "hybrid_median_s": 0.0177614455,
+      "profiled_simulate_median_s": 0.07030305359512568,
+      "plain_simulate_median_s": 0.07024564780294895,
+      "plain_simulate_min_s": 0.069004837423563,
+      "plain_simulate_max_s": 0.07609131559729576,
+      "plain_speedup_vs_256": 0.9982838870947021,
+      "paired_95pct_speedup_interval": [
+        0.9732645787002314,
+        1.0135066571873756
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.002243071913719177,
+      "kernel_min_s": 0.0022405118942260744,
+      "kernel_max_s": 0.002244607925415039,
+      "hybrid_median_s": 0.0034358254999999997,
+      "profiled_simulate_median_s": 0.11493571940809488,
+      "plain_simulate_median_s": 0.1146656358614564,
+      "plain_simulate_min_s": 0.1129413228482008,
+      "plain_simulate_max_s": 0.11702040024101734,
+      "plain_speedup_vs_256": 0.9938770377883227,
+      "paired_95pct_speedup_interval": [
+        0.9867168321626588,
+        1.0075319910109604
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.0022533760070800784,
+      "kernel_min_s": 0.0022517759799957275,
+      "kernel_max_s": 0.0022568960189819336,
+      "hybrid_median_s": 0.0034276395000000003,
+      "profiled_simulate_median_s": 0.11629397980868816,
+      "plain_simulate_median_s": 0.11459056567400694,
+      "plain_simulate_min_s": 0.11321094259619713,
+      "plain_simulate_max_s": 0.11561102606356144,
+      "plain_speedup_vs_256": 0.9945281431833404,
+      "paired_95pct_speedup_interval": [
+        0.9871675674593279,
+        1.0090478563865573
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.00223582398891449,
+      "kernel_min_s": 0.002233344078063965,
+      "kernel_max_s": 0.0022464640140533445,
+      "hybrid_median_s": 0.0034026129999999996,
+      "profiled_simulate_median_s": 0.11368145048618317,
+      "plain_simulate_median_s": 0.11396354250609875,
+      "plain_simulate_min_s": 0.11297916248440742,
+      "plain_simulate_max_s": 0.11726411990821362,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 25,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.0022272480726242064,
+      "kernel_min_s": 0.0022251200675964355,
+      "kernel_max_s": 0.0022302720546722413,
+      "hybrid_median_s": 0.003494006,
+      "profiled_simulate_median_s": 0.11498994845896959,
+      "plain_simulate_median_s": 0.11501044500619173,
+      "plain_simulate_min_s": 0.11359036155045033,
+      "plain_simulate_max_s": 0.1158567313104868,
+      "plain_speedup_vs_256": 0.9908973267598727,
+      "paired_95pct_speedup_interval": [
+        0.9858446551940239,
+        1.0035649114060743
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.007944239854812622,
+      "kernel_min_s": 0.007940959930419923,
+      "kernel_max_s": 0.00796563196182251,
+      "hybrid_median_s": 0.0092184305,
+      "profiled_simulate_median_s": 0.12104560621082783,
+      "plain_simulate_median_s": 0.11970780976116657,
+      "plain_simulate_min_s": 0.11846710182726383,
+      "plain_simulate_max_s": 0.12329832464456558,
+      "plain_speedup_vs_256": 1.0096434845025664,
+      "paired_95pct_speedup_interval": [
+        0.974901093346034,
+        1.0344253197000064
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.007958816051483155,
+      "kernel_min_s": 0.007941215991973878,
+      "kernel_max_s": 0.007968416213989258,
+      "hybrid_median_s": 0.0092135445,
+      "profiled_simulate_median_s": 0.12096387892961502,
+      "plain_simulate_median_s": 0.1211166875436902,
+      "plain_simulate_min_s": 0.11843542009592056,
+      "plain_simulate_max_s": 0.12727208994328976,
+      "plain_speedup_vs_256": 0.9978989074138619,
+      "paired_95pct_speedup_interval": [
+        0.9760774005390722,
+        1.0282579484887449
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.007932271957397461,
+      "kernel_min_s": 0.007924736022949219,
+      "kernel_max_s": 0.007951295852661133,
+      "hybrid_median_s": 0.009186001,
+      "profiled_simulate_median_s": 0.12118219397962093,
+      "plain_simulate_median_s": 0.12086221016943455,
+      "plain_simulate_min_s": 0.11839201673865318,
+      "plain_simulate_max_s": 0.12549038603901863,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 50,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.00796936011314392,
+      "kernel_min_s": 0.0079650559425354,
+      "kernel_max_s": 0.007972479820251465,
+      "hybrid_median_s": 0.009200981,
+      "profiled_simulate_median_s": 0.12173532973974943,
+      "plain_simulate_median_s": 0.12029745336622,
+      "plain_simulate_min_s": 0.11853623203933239,
+      "plain_simulate_max_s": 0.12455879338085651,
+      "plain_speedup_vs_256": 1.004694669649367,
+      "paired_95pct_speedup_interval": [
+        0.9838580949744496,
+        1.017635176680527
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "block_size": 64,
+      "repetitions": 10,
+      "kernel_median_s": 0.03145894432067871,
+      "kernel_min_s": 0.03143747138977051,
+      "kernel_max_s": 0.03146886444091797,
+      "hybrid_median_s": 0.0328407395,
+      "profiled_simulate_median_s": 0.1431101793423295,
+      "plain_simulate_median_s": 0.14550684671849012,
+      "plain_simulate_min_s": 0.14501306414604187,
+      "plain_simulate_max_s": 0.1468859687447548,
+      "plain_speedup_vs_256": 0.9859758892763201,
+      "paired_95pct_speedup_interval": [
+        0.9782731416975747,
+        1.004281100105003
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "block_size": 128,
+      "repetitions": 10,
+      "kernel_median_s": 0.0310328483581543,
+      "kernel_min_s": 0.031025344848632813,
+      "kernel_max_s": 0.031039615631103516,
+      "hybrid_median_s": 0.0324673845,
+      "profiled_simulate_median_s": 0.1426125643774867,
+      "plain_simulate_median_s": 0.14550930820405483,
+      "plain_simulate_min_s": 0.14343595504760742,
+      "plain_simulate_max_s": 0.15246270038187504,
+      "plain_speedup_vs_256": 0.9859592101686495,
+      "paired_95pct_speedup_interval": [
+        0.9703789121783283,
+        1.003865488751633
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "block_size": 256,
+      "repetitions": 10,
+      "kernel_median_s": 0.03105065631866455,
+      "kernel_min_s": 0.03103865623474121,
+      "kernel_max_s": 0.03105891227722168,
+      "hybrid_median_s": 0.032469846,
+      "profiled_simulate_median_s": 0.14428448118269444,
+      "plain_simulate_median_s": 0.1434662425890565,
+      "plain_simulate_min_s": 0.14233305864036083,
+      "plain_simulate_max_s": 0.14782504364848137,
+      "plain_speedup_vs_256": 1.0,
+      "paired_95pct_speedup_interval": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "heliostats": 10000,
+      "grid": 100,
+      "block_size": 512,
+      "repetitions": 10,
+      "kernel_median_s": 0.03132819175720215,
+      "kernel_min_s": 0.03132579231262207,
+      "kernel_max_s": 0.031341567993164066,
+      "hybrid_median_s": 0.032771614000000004,
+      "profiled_simulate_median_s": 0.14717047102749348,
+      "plain_simulate_median_s": 0.1434278842061758,
+      "plain_simulate_min_s": 0.1425266731530428,
+      "plain_simulate_max_s": 0.14846246503293514,
+      "plain_speedup_vs_256": 1.0002674402058775,
+      "paired_95pct_speedup_interval": [
+        0.9871680638708491,
+        1.019086086561282
+      ]
+    }
+  ],
+  "block_geometric_mean_speedups": {
+    "64": 0.9991478300407036,
+    "128": 0.9957860952770922,
+    "256": 1.0,
+    "512": 0.9994353252586251
+  },
+  "next_hotspot": "Flux::imagePlaneIntercept exclusive CPU time",
+  "new_correctness": {
+    "max_abs": 1.1141310096718371e-11,
+    "max_rel": 8.944031410177955e-15,
+    "max_rms": 1.5577509314448033e-12,
+    "max_peak_abs": 3.183231456205249e-12,
+    "max_integrated_abs": 3.4924596548080444e-10
+  }
+}
