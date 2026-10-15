@@ -80,7 +80,8 @@ def call(cp,context,directory,cuda,image,instrumented):
         with patch.dict(os.environ,{'SOLARPILOT_PROFILE_FILE':'','SOLARPILOT_CUDA_TIMING_FILE':'','SOLARPILOT_IMAGE_TIMING_FILE':''}):
             start=time.perf_counter();assert cp.simulate(context,nthreads=1),cp.get_last_backend_error(context)
             return time.perf_counter()-start
-    with patch.dict(os.environ,{'SOLARPILOT_IMAGE_TIMING_FILE':str(image_file) if image else ''}):
+    with patch.dict(os.environ,{'SOLARPILOT_IMAGE_TIMING_FILE':str(image_file) if image else '',
+                               'SOLARPILOT_INTERCEPT_PROFILE':'1'}):
         sample=simulate_once(cp,context,cuda,directory)
     if image:
         rows=list(csv.reader(image_file.read_text().splitlines()));assert len(rows)==1
@@ -99,7 +100,7 @@ def full_case(cp,size,grid,modes,directory,window):
             env={'SOLARPILOT_INTERCEPT_PATH':'legacy' if mode=='legacy' else ('cuda' if image else 'flat'),
                 'SOLARPILOT_FLUX_PATH':'legacy' if mode=='legacy' else 'flat','SOLARPILOT_CUDA_BLOCK_SIZE':'256',
                 'SOLARPILOT_IMAGE_PIPELINE':'v1' if mode=='v1' else 'resident',
-                'SOLARPILOT_IMAGE_COMPARE_FILE':'','SOLARPILOT_INTERCEPT_PROFILE':'1'}
+                'SOLARPILOT_IMAGE_COMPARE_FILE':''}
             with patch.dict(os.environ,env):
                 start=time.perf_counter();assert cp.set_compute_backend(context,'cuda' if cuda else 'cpu')
                 selection=time.perf_counter()-start
