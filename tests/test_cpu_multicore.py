@@ -1,5 +1,6 @@
 """Deterministic CPU single-state threading and lifecycle regression."""
 import os
+import csv
 from pathlib import Path
 import sys
 import tempfile
@@ -46,6 +47,22 @@ class CpuMulticore(unittest.TestCase):
     def test_flat_nondivisible_heliostats_and_rectangular_grid(self):self.run_case(True,7,(9,5))
     def test_one_cylindrical_heliostat(self):self.run_case(False,1,(3,2))
     def test_cylindrical_nondivisible_work(self):self.run_case(False,17,(7,3))
+
+    def test_optical_batch_profile_is_a_caller_wall_scope(self):
+        cp=api();r=cp.data_create()
+        try:
+            configure(cp,r,'small');self.assertTrue(cp.assign_layout(r,layout(7),nthreads=1))
+            with tempfile.TemporaryDirectory() as td:
+                file=Path(td)/'profile.csv'
+                with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat',
+                                           'SOLARPILOT_INTERCEPT_PROFILE':'1','SOLARPILOT_PROFILE_FILE':str(file)}):
+                    self.assertTrue(cp.simulate(r,nthreads=12))
+                if not file.exists():self.skipTest('Core profiling disabled in this build')
+                rows={row[1]:row for row in csv.reader(file.read_text().splitlines())}
+                self.assertEqual(int(rows['CPUImagePlane.batch'][2]),1)
+                self.assertGreater(float(rows['CPUImagePlane.batch'][3]),0)
+                self.assertGreaterEqual(float(rows['PerformanceSimulationPrep'][3]),float(rows['CPUImagePlane.batch'][3]))
+        finally:self.assertTrue(cp.data_free(r))
 
 
 if __name__=='__main__':unittest.main()

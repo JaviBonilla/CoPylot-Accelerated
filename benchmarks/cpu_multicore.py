@@ -263,7 +263,8 @@ def profiles(args):
                         file=Path(td)/'profile.csv'
                         with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
                             simulate(cp,context,n)
-                        with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat','SOLARPILOT_PROFILE_FILE':str(file)}):
+                        with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat',
+                                                  'SOLARPILOT_INTERCEPT_PROFILE':'1','SOLARPILOT_PROFILE_FILE':str(file)}):
                             elapsed=simulate(cp,context,n)
                         import csv
                         values={row[1]:{'calls':int(row[2]),'inclusive_s':float(row[3]),'exclusive_s':float(row[4])}
@@ -316,10 +317,30 @@ def correctness(args):
     result['status']='passed';write(args.output,result)
 
 
+def historical(args):
+    cp=api();plan=json.loads(args.plan.read_text());result={'phase':'4','status':'running','metadata':metadata(),'rows':[]}
+    for case in ('cesa-i-private-restored','ssc-mspt-8790-optical-reference'):
+        for sid,grid,point,context in contexts(cp,case,plan,True):
+            try:
+                with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):simulate(cp,context,1)
+                if case=='cesa-i-private-restored':
+                    path=ROOT/'local-cases/example/phase3c-results/maps'/f'{sid}-level-5.npz';phase='3C'
+                else:path=ROOT/'benchmarks/results/phase3a-grid-maps'/f'{sid}-level-5.npz';phase='3A'
+                with np.load(path) as saved:before=saved['flat']
+                # Historical scientific maps increase vertically from the lower edge.
+                actual=np.asarray(cp.get_fluxmap(context),dtype=np.float64)[::-1,:].copy()
+                require(before.tobytes()==actual.tobytes(),'Historical CONTROL map changed bitwise')
+                result['rows'].append({'case_id':case,'state_id':sid,'grid':grid,'historical_phase':phase,
+                                       'flat_1t_control_map_bitwise':True,'max_abs_kw_m2':0.})
+                write(args.output,result);print(case,sid,'historical CONTROL map bitwise PASS',flush=True)
+            finally:cp.data_free(context)
+    result['status']='passed';write(args.output,result)
+
+
 def main():
     global topology_cache
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile','correctness'],required=True)
+    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile','correctness','historical'],required=True)
     p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--scaling',type=Path)
     args=p.parse_args();require(not args.output.exists(),'Refusing to overwrite benchmark evidence')
@@ -332,6 +353,7 @@ def main():
     if args.stage=='profile':
         require(args.scaling is not None,'Profile requires --scaling');profiles(args)
     elif args.stage=='correctness':correctness(args)
+    elif args.stage=='historical':historical(args)
     else:campaign(args)
 
 

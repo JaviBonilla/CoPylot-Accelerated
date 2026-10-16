@@ -85,6 +85,7 @@ def timing_csv(path,source):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('preexisting','flat','cuda','profile'):p.add_argument('--'+name,type=Path,required=True)
+    for name in ('correctness','pilot','startup','historical'):p.add_argument('--'+name,type=Path)
     p.add_argument('--output-dir',type=Path,required=True);args=p.parse_args();args.output_dir.mkdir(parents=True,exist_ok=True)
     pre=annotate(load(args.preexisting),True);flat=annotate(load(args.flat));gpu=load(args.cuda);profile=load(args.profile)
     if gpu['status']!='passed' or profile['status']!='passed':raise ValueError('Unvalidated GPU/profile evidence')
@@ -93,6 +94,21 @@ def main():
         save(args.output_dir/(stem+'.json'),source);timing_csv(args.output_dir/(stem+'.csv'),source)
     save(args.output_dir/'phase4-cuda-control-timings.json',gpu)
     save(args.output_dir/'phase4-stage-scaling.json',profile)
+    if args.correctness:
+        correctness=load(args.correctness)
+        if correctness['status']!='passed':raise ValueError('Scientific full-optical anchors failed')
+        save(args.output_dir/'phase4-scientific-correctness.json',correctness)
+    if args.startup:save(args.output_dir/'phase4-thread-startup.json',load(args.startup))
+    if args.historical:
+        historical=load(args.historical)
+        if historical['status']!='passed':raise ValueError('Historical CONTROL maps changed')
+        save(args.output_dir/'phase4-historical-control-maps.json',historical)
+    if args.pilot:
+        pilot=load(args.pilot)
+        pilot.update(status='stopped_implementation_evaluation',included_in_final_formal_statistics=False,
+            reason='Cell-first traversal made two-thread CESA-I slower than original 1T; final workers retain heliostat-outer traversal within independent cell ranges',
+            completeness='All 24 completed CESA-I configurations retained; the subsequent incomplete commercial configuration was interrupted and produced no retained timing record')
+        save(args.output_dir/'phase4-initial-traversal-evaluation.json',pilot)
     save(args.output_dir/'phase4-cpu-gpu-summary.json',{
         'phase':'4','status':'passed','cpu_metadata':flat['metadata'],'cuda_metadata':gpu['metadata'],
         'cuda_provenance':'Remeasured final Phase 4 library, unchanged numerical CUDA kernels, same pinned toolchain',
