@@ -173,6 +173,8 @@ def metadata():
             'numerical_source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in numerical},
             'topology':topology_cache, 'frequency_before':frequency(),
             'numerical_threads':'Only independent work within one simulation; BLAS/OMP/MKL pools fixed to one',
+            'numerical_thread_environment':{key:os.environ.get(key) for key in
+                                           ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')},
             'build':'Existing pinned Release CUDA-capable diagnostic/profile-enabled library; files/events OFF during timings',
             'window_policy':'Reject external CPU work >=0.5 average core or increased thermal throttle counts; no system settings changed'}
 
@@ -337,10 +339,33 @@ def historical(args):
     result['status']='passed';write(args.output,result)
 
 
+def observations(args):
+    cp=api();plan=json.loads(args.plan.read_text())
+    result={'phase':'4','status':'running','metadata':metadata(),'rows':[],
+            'interpretation':'Separate untimed worker observations after the proc task-exit race fix; no samples enter formal medians'}
+    for case in ('cesa-i-private-restored','ssc-mspt-8790-optical-reference'):
+        for sid,grid,point,context in contexts(cp,case,plan,False):
+            try:
+                expected=None
+                for n in COUNTS:
+                    os.sched_setaffinity(0,set(topology_cache['affinity_sets'][str(n)]))
+                    with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
+                        observation=observe(cp,context,n);actual=state(cp,context)
+                        if expected is None:expected=actual
+                        else:equal(expected,actual)
+                    result['rows'].append({'case_id':case,'state_id':sid,'requested_threads':n,
+                                           'cpu_affinity':topology_cache['affinity_sets'][str(n)],
+                                           'worker_observation':observation,'bitwise_maps_details_summary':True})
+                    write(args.output,result)
+                    print(case,n,'worker observation PASS',flush=True)
+            finally:cp.data_free(context)
+    result['status']='passed';write(args.output,result)
+
+
 def main():
     global topology_cache
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile','correctness','historical'],required=True)
+    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile','correctness','historical','observe'],required=True)
     p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--scaling',type=Path)
     args=p.parse_args();require(not args.output.exists(),'Refusing to overwrite benchmark evidence')
@@ -354,6 +379,7 @@ def main():
         require(args.scaling is not None,'Profile requires --scaling');profiles(args)
     elif args.stage=='correctness':correctness(args)
     elif args.stage=='historical':historical(args)
+    elif args.stage=='observe':observations(args)
     else:campaign(args)
 
 
