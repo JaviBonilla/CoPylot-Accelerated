@@ -144,11 +144,13 @@ def main():
     if args.prior_flat:
         save(args.output_dir/'phase4-timing-repeatability.json',repeatability(load(args.prior_flat),flat,gpu))
     save(args.output_dir/'phase4-cpu-gpu-summary.json',{
-        'phase':'4','status':'passed','cpu_metadata':flat['metadata'],'cuda_metadata':gpu['metadata'],
+        'phase':'4','status':'passed_with_repeatability_limitation' if args.prior_flat else 'passed',
+        'cpu_metadata':flat['metadata'],'cuda_metadata':gpu['metadata'],
         'cuda_provenance':'Remeasured final Phase 4 library, unchanged numerical CUDA kernels, same pinned toolchain',
         'cases':compare(flat,gpu), 'scope':'Single-state latency on fixed Phase 3 CONTROL grids; no temporal parallelism',
         'limitations':['Thread-count optima are measured sample optima, not confidence intervals',
                        'Existing powersave/turbo policy retained; frequencies may vary with active cores',
+                       *(['A complete earlier same-binary campaign was slower for an unresolved reason; both campaigns and comparisons are retained separately in phase4-timing-repeatability.json'] if args.prior_flat else []),
                        'Sampled runnable threads are supplementary observations; bounded executor defines exact participant count',
                        'Per-stage inclusive wall scopes overlap; worker CPU-time sums are not wall-time components']})
     print('Aggregate scaling, stage profiles and CPU/GPU comparisons published.')
