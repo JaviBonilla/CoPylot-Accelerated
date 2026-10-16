@@ -19,6 +19,7 @@ from commercial_reference import load_manifest, configure
 from project_grid_campaign import prepare, PLAIN, require, frozen_state, assert_frozen
 from image_plane_cuda_performance import distribution, PipelineWindow, wait_idle
 from summarize_project_grid import safe_point
+from receiver_grid_convergence import backend_check
 
 COUNTS = (1, 2, 4, 8, 12, 24)
 
@@ -144,11 +145,26 @@ def contexts(cp, case, plan, all_states):
 def metadata():
     git = lambda *a: subprocess.check_output(['git',*a],text=True).strip()
     library = Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so'
+    cache=library.parent.parent/'CMakeCache.txt'
+    settings={}
+    if cache.exists():
+        allowed={'CMAKE_BUILD_TYPE','CMAKE_CXX_FLAGS','CMAKE_CXX_FLAGS_RELEASE','CMAKE_CUDA_FLAGS',
+                 'CMAKE_CUDA_FLAGS_RELEASE','CMAKE_CUDA_ARCHITECTURES','SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS',
+                 'SOLARPILOT_ENABLE_CORE_PROFILE'}
+        for line in cache.read_text().splitlines():
+            if ':' in line and '=' in line:
+                key=line.split(':',1)[0]
+                if key in allowed:settings[key]=line.split('=',1)[1]
+    numerical=[ROOT/'ssc/solarpilot'/name for name in ('ImagePlaneInterceptKernels.cu','FluxDensityKernels.cu',
+                'ImagePlaneIntercept.cpp','ImagePlaneInterceptNumerics.h','FluxDensityNumerics.h')]
     return {'utc':datetime.now(timezone.utc).isoformat(), 'machine':'canonical-gpu-server',
             'commits':{name:git('-C',name,'rev-parse','HEAD') for name in ('.','ssc','SolarPILOT','SolTrace')},
             'library_sha256':hashlib.sha256(library.read_bytes()).hexdigest(),
             'harness_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'compiler':subprocess.check_output(['g++','--version'],text=True).splitlines()[0],
+            'build_settings':settings,'precision':'double','fast_math':False,
+            'cuda_image_block':64,'cuda_density_block':256,
+            'numerical_source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in numerical},
             'topology':topology_cache, 'frequency_before':frequency(),
             'numerical_threads':'Only independent work within one simulation; BLAS/OMP/MKL pools fixed to one',
             'build':'Existing pinned Release CUDA-capable diagnostic/profile-enabled library; files/events OFF during timings',
@@ -168,6 +184,10 @@ def campaign(args):
                 try:
                     oracle = None
                     for mode in modes:
+                        if mode=='cuda':
+                            cp.set_compute_backend(context,'cpu')
+                            with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):simulate(cp,context,1)
+                            oracle=state(cp,context)
                         cp.set_compute_backend(context,'cuda' if mode=='cuda' else 'cpu')
                         counts = (1,) if mode=='cuda' else COUNTS
                         for n in counts:
@@ -192,6 +212,13 @@ def campaign(args):
                                 actual=state(cp,context)
                                 if oracle is None:oracle=actual
                                 if mode!='cuda':equal(oracle,actual)
+                                else:
+                                    area_grid=grid if 'surface_width_m' in grid else {
+                                        **grid,'surface_width_m':float(cp.data_get_number(context,'receiver.0.rec_diameter'))*np.pi,
+                                        'height_m':float(cp.data_get_number(context,'receiver.0.rec_height'))}
+                                    backend_errors=backend_check(oracle[0],actual[0],area_grid)
+                                    for key in oracle[1]:np.testing.assert_allclose(actual[1][key],oracle[1][key],rtol=1e-9,atol=1e-10)
+                                    for key in oracle[2]:np.testing.assert_allclose(actual[2][key],oracle[2][key],rtol=1e-9,atol=1e-10)
                                 observation=observe(cp,context,n) if mode!='cuda' else None
                                 equal(actual,state(cp,context))
                                 if case=='cesa-i-private-restored':
@@ -205,6 +232,7 @@ def campaign(args):
                                  'first_call_s':first,'warmups_excluded_after_first':warmups,'repetitions':repetitions,
                                  'samples_s':samples,'statistics_s':distribution(samples),'cpu_window':cpu_check,
                                  'worker_observation':observation,'bitwise_maps_details_summary':mode!='cuda'}
+                            if mode=='cuda':row['backend_errors']=backend_errors
                             if window:window.validate()
                             result['rows'].append(row);write(args.output,result)
                             print(case,sid,mode,n,'median ms',round(row['statistics_s']['median']*1000,3),'PASS',flush=True)
