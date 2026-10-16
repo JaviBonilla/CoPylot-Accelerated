@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
 from cpu_repeatability import proc_stat,activity,identity_signature,target_argv
-from summarize_cpu_repeatability import stability
+from summarize_cpu_repeatability import stability,replication_groups
 from timing_counters import turbostat_rows,align_turbostat
 
 class RepeatabilityTooling(unittest.TestCase):
@@ -40,13 +40,28 @@ class RepeatabilityTooling(unittest.TestCase):
         self.assertTrue(stability([.675,.676,.677,.674,.678])['meets_declared_between_campaign_gates'])
         self.assertFalse(stability([.675,.676])['meets_declared_between_campaign_gates'])
 
+    def test_replication_keeps_rejected_campaigns_separate_from_protocol_reference(self):
+        rows=[{'campaign_id':f'L{i}-controlled','case_id':'case','threads':24,
+               'measurement_window_accepted':i!=5,'within_campaign_cv_gate_passed':True,
+               'statistics_s':{'median':.125 if i!=5 else .350}} for i in range(1,7)]
+        result=replication_groups(rows)[0]
+        self.assertEqual(len(result['all_declared_campaign_ids']),6)
+        self.assertNotIn('L5-controlled',result['complete_protocol_campaign_ids'])
+        self.assertTrue(result['complete_protocol_stability']['meets_declared_between_campaign_gates'])
+        self.assertEqual(rows[4]['statistics_s']['median'],.350)
+        rows[0]['within_campaign_cv_gate_passed']=False
+        result=replication_groups(rows)[0]
+        self.assertFalse(result['complete_protocol_stability']['meets_declared_between_campaign_gates'])
+
     def test_turbostat_alignment_excludes_edges_and_uses_affinity(self):
         header='Time_Of_Day_Seconds Core CPU Avg_MHz Busy% Bzy_MHz TSC_MHz IPC'
-        text=header+'\n10.1 - - 3000 100 3000 2100 2.3\n10.5 - - 3000 100 3000 2100 2.3\n10.5 0 0 4000 100 4000 2100 2.3\n10.5 1 1 800 100 800 2100 1.0\n10.9 - - 3000 100 3000 2100 2.3\n'
+        text=header+'\n10.1 - - 3000 100 3000 2100 2.3\n10.5 - - 3000 100 3000 2100 2.3\n10.5 0 0 4000 100 4000 2100 2.3\n10.51 1 1 800 50 800 2100 1.0\n10.9 - - 3000 100 3000 2100 2.3\n'
         result=align_turbostat(turbostat_rows(text),[1,2],9,1)
         self.assertEqual(result['aggregate_intervals'],1)
         self.assertEqual(result['aggregate_medians']['Bzy_MHz'],3000)
         self.assertEqual(result['affinity_busy_weighted_mhz_median'],4000)
+        pair=align_turbostat(turbostat_rows(text),[1,2],9,2)
+        self.assertAlmostEqual(pair['affinity_busy_weighted_mhz_median'],(4000*100+800*50)/150)
 
     def test_identity_uses_library_bytes_and_not_map_address_or_order(self):
         a=[{'name':'libm.so','sha256':'x','mapped_path':'/one'},{'name':'core.so','sha256':'y'}]

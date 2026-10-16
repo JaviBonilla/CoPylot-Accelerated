@@ -3,7 +3,7 @@ import statistics
 
 
 def turbostat_rows(text):
-    header=None;rows=[]
+    header=None;rows=[];interval=-1
     for line in text.splitlines():
         parts=line.split()
         if not parts:continue
@@ -15,7 +15,10 @@ def turbostat_rows(text):
             else:
                 try:row[key]=float(value)
                 except ValueError:pass
-        if 'Time_Of_Day_Seconds' in row:rows.append(row)
+        if 'Time_Of_Day_Seconds' in row:
+            if row.get('CPU')=='-':interval+=1
+            row['interval_index']=interval
+            rows.append(row)
     return rows
 
 
@@ -31,7 +34,8 @@ def align_turbostat(rows,measurement_monotonic,clock_offset,threads,cadence=.2):
         ('Bzy_MHz','Avg_MHz','Busy%','IPC','PkgWatt','CoreThr','SMI','PKG_%') if any(k in r for r in aggregates)}
     if selected:
         by_time={}
-        for r in selected:by_time.setdefault(r['Time_Of_Day_Seconds'],[]).append(r)
+        # Turbostat timestamps each CPU separately within one capture interval.
+        for r in selected:by_time.setdefault(r['interval_index'],[]).append(r)
         weighted=[]
         for group in by_time.values():
             valid=[r for r in group if 'Bzy_MHz' in r and 'Busy%' in r];weight=sum(r['Busy%'] for r in valid)

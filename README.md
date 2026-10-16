@@ -89,3 +89,15 @@ results and exact reconstruction evidence. An earlier complete same-binary CPU
 campaign was slower; both regimes remain public and their cause is unresolved.
 The measured optimum is conditional on the observed faster regime. No new CUDA
 tuning or annual/temporal parallelism is introduced. Phase 5 has not started.
+
+Phase 4R reproduces the CPU timing regimes through controlled C API calling-stack
+placement, with unchanged numerical binaries and bitwise outputs. The exact
+compiled layout supports false sharing between caller scratch and immutable
+parameters read by workers. Five complete independent processes at verified
+callsite phase zero provide conditional high-state references of 124.935 ms
+(CESA-I) and 673.647 ms (commercial), with inter-process CV 1.437% and 0.341%.
+The normal Python API remains placement-sensitive; original Phase 4 GPU/CPU
+ratios remain provisional as stable performance claims. See the
+[Phase 4R report](docs/phase4r-report.md) and
+[retained forensic results](benchmarks/results/phase4r-repeatability.json).
+No core optimization or Phase 5 work was included.
