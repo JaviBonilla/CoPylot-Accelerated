@@ -153,6 +153,11 @@ def benchmark(args):
     save(args.output,result)
 
 
+def target_argv(argv,campaign_id):
+    return (len(argv)>4 and argv[1]==b'benchmarks/cpu_repeatability.py'
+            and argv[2]==b'campaign' and campaign_id.encode() in argv)
+
+
 def host_run(args):
     """Host observer sees external processes and cgroup ancestors outside Docker."""
     output=ROOT/'artifacts/phase4r';output.mkdir(parents=True,exist_ok=True)
@@ -173,7 +178,7 @@ def host_run(args):
                 for p in Path('/proc').glob('[0-9]*'):
                     try:
                         argv=(p/'cmdline').read_bytes().split(b'\0')
-                        if len(argv)>4 and argv[1]==b'benchmarks/cpu_repeatability.py' and args.campaign_id.encode() in argv:
+                        if target_argv(argv,args.campaign_id):
                             if (p/'cwd').stat().st_ino==ROOT.stat().st_ino:pid=int(p.name);cgroup_before=cgroups(pid);break
                     except OSError:pass
             if pid is not None:
