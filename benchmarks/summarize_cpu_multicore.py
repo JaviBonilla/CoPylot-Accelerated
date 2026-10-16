@@ -88,10 +88,32 @@ def timing_csv(path,source):
             writer.writerow(item)
 
 
+def repeatability(prior,reference,gpu):
+    """Retain a complete earlier campaign without pooling incompatible latencies."""
+    prior=annotate(prior)
+    if prior['metadata']['library_sha256']!=reference['metadata']['library_sha256']:
+        raise ValueError('Repeatability comparison requires the same binary')
+    key=lambda r:(r['case_id'],r['state_id'],r['requested_threads'])
+    old={key(r):r for r in prior['rows']};new={key(r):r for r in reference['rows']}
+    if old.keys()!=new.keys():raise ValueError('Repeatability campaign configurations differ')
+    rows=[]
+    for identity,row in new.items():
+        before=old[identity]
+        if before['grid']!=row['grid'] or before['operating_point']!=row['operating_point']:
+            raise ValueError('Repeatability physical workload changed')
+        rows.append({'case_id':identity[0],'state_id':identity[1],'requested_threads':identity[2],
+                     'earlier_median_s':before['statistics_s']['median'],
+                     'reference_median_s':row['statistics_s']['median'],
+                     'earlier_over_reference':before['statistics_s']['median']/row['statistics_s']['median']})
+    return {'phase':'4','status':'observed_unexplained_variability',
+            'interpretation':'Complete campaigns remain separate. The later reference agrees with repeated fixed-count and stage observations; the cause of the earlier slower multicore regime is unresolved. No samples are removed or pooled, and cross-run reproducibility is limited.',
+            'earlier_campaign':prior,'earlier_cpu_gpu_comparisons':compare(prior,gpu),'rows':rows}
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('preexisting','flat','cuda','profile'):p.add_argument('--'+name,type=Path,required=True)
-    for name in ('correctness','pilot','startup','historical'):p.add_argument('--'+name,type=Path)
+    for name in ('correctness','pilot','startup','historical','prior-flat'):p.add_argument('--'+name,type=Path)
     p.add_argument('--output-dir',type=Path,required=True);args=p.parse_args();args.output_dir.mkdir(parents=True,exist_ok=True)
     pre=annotate(load(args.preexisting),True);flat=annotate(load(args.flat));gpu=annotate(load(args.cuda));profile=load(args.profile)
     if gpu['status']!='passed' or profile['status']!='passed':raise ValueError('Unvalidated GPU/profile evidence')
@@ -119,6 +141,8 @@ def main():
             reason='Cell-first traversal made two-thread CESA-I slower than original 1T; final workers retain heliostat-outer traversal within independent cell ranges',
             completeness='All 24 completed CESA-I configurations retained; the subsequent incomplete commercial configuration was interrupted and produced no retained timing record')
         save(args.output_dir/'phase4-initial-traversal-evaluation.json',pilot)
+    if args.prior_flat:
+        save(args.output_dir/'phase4-timing-repeatability.json',repeatability(load(args.prior_flat),flat,gpu))
     save(args.output_dir/'phase4-cpu-gpu-summary.json',{
         'phase':'4','status':'passed','cpu_metadata':flat['metadata'],'cuda_metadata':gpu['metadata'],
         'cuda_provenance':'Remeasured final Phase 4 library, unchanged numerical CUDA kernels, same pinned toolchain',

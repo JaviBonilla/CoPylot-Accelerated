@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
-from summarize_cpu_multicore import annotate,compare
+from summarize_cpu_multicore import annotate,compare,repeatability
 
 
 def campaign():
@@ -48,6 +48,22 @@ class CpuScalingSummary(unittest.TestCase):
             self.assertEqual(state['flat_1t_to_cuda'],60.)
             self.assertEqual(state['best_cpu_to_cuda'],8.)
             self.assertLess(state['smt_gain_t12_over_t24'],1.)
+
+    def test_repeatability_keeps_both_campaigns_and_rejects_changed_binary(self):
+        prior=campaign();reference=campaign()
+        for source in (prior,reference):
+            source['metadata']={'library_sha256':'same'}
+            for row in source['rows']:row.update(grid={'nx':2,'ny':3},operating_point={'id':row['state_id']})
+        for row in prior['rows']:
+            row['samples_s']=[s*2 for s in row['samples_s']]
+            row['statistics_s']['median']*=2
+        gpu={'rows':[{'case_id':'synthetic','state_id':sid,'statistics_s':{'median':.2}} for sid in ('a','b','c','d')]}
+        result=repeatability(prior,annotate(reference),gpu)
+        self.assertEqual(result['earlier_campaign']['rows'][0]['samples_s'],prior['rows'][0]['samples_s'])
+        self.assertTrue(all(r['earlier_over_reference']==2 for r in result['rows']))
+        self.assertEqual(reference['rows'][0]['statistics_s']['median'],12.)
+        prior['metadata']['library_sha256']='different'
+        with self.assertRaisesRegex(ValueError,'same binary'):repeatability(prior,annotate(reference),gpu)
 
 
 if __name__=='__main__':unittest.main()

@@ -119,7 +119,7 @@ def observe(cp, context, n):
                 try:
                     status = (p/'stat').read_text().split(') ',1)[1].split()[0]
                     total += 1; runnable += status == 'R'
-                except FileNotFoundError: pass
+                except (FileNotFoundError, ProcessLookupError): pass
             observed.append((total,runnable)); stop.wait(.005)
     worker = threading.Thread(target=monitor); worker.start(); ready.wait()
     try: simulate(cp,context,n)
