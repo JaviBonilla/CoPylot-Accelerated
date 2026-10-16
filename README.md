@@ -17,6 +17,8 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 4 deterministic CPU multicore and best measured CPU/GPU comparison](docs/phase4-report.md), [threading design](docs/cpu-multicore-design.md), [aggregate summary](benchmarks/results/phase4-cpu-gpu-summary.json), [all CPU samples](benchmarks/results/phase4-flat-multicore-scaling.csv), [separate timing regimes](benchmarks/results/phase4-timing-repeatability.json).
+
 * [Phase 3C CESA-I grid convergence and CPU/GPU characterization](docs/phase3c-report.md), [study design](docs/phase3c-design.md), [approved aggregate results](benchmarks/results/phase3c-cesa1-grid-convergence-summary.json), [timing CSV](benchmarks/results/phase3c-cesa1-grid-performance.csv).
 
 * [Phase 3B physical compatibility and flat receivers](docs/phase3b-report.md), [restoration design](docs/phase3b-design.md), [public-safe validation](benchmarks/results/phase3b-validation.json).
@@ -73,5 +75,17 @@ The conditional 1% CONTROL recommendation is 217x256; the numerical reference is
 At the selected grid, same-server Flat CPU 1T takes about 1.29 s versus 15.4 ms
 CUDA (about 84x). Every timing sample, first call and controlled-window telemetry
 is retained. No independent ENERGY/ANNUAL resolution follows from normalized
-power invariance. Nested core, patches and pins are unchanged. Phase 4 has not
-started; no new CUDA tuning or multicore/annual work is included.
+power invariance. Nested core, patches and pins were unchanged in that phase; it included no new
+CUDA tuning or multicore/annual work.
+
+
+Phase 4 audits the original serial Hermite behavior, preserves Legacy, and adds
+bounded deterministic Flat CPU work over independent heliostat images and receiver
+cell ranges. The caller participates, all workers join, and each cell retains its
+original heliostat addition order. The fixed CESA-I and commercial CONTROL grids
+are retained. The report distinguishes Flat 1T/CUDA from best measured Flat
+multicore/CUDA and publishes every sample, historical control checks, sanitizer
+results and exact reconstruction evidence. An earlier complete same-binary CPU
+campaign was slower; both regimes remain public and their cause is unresolved.
+The measured optimum is conditional on the observed faster regime. No new CUDA
+tuning or annual/temporal parallelism is introduced. Phase 5 has not started.
