@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Phase 4R forensic sampling; numerical code and system policies stay unchanged."""
 import argparse
+import ctypes
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -92,20 +93,31 @@ def activity(before,after,elapsed,exclude):
 
 
 def mapped_identity():
-    paths={Path('/proc/self/exe').resolve()}
+    paths={Path('/proc/self/exe').resolve():None}
     for line in Path('/proc/self/maps').read_text().splitlines():
         fields=line.split(None,5)
         if len(fields)==6 and fields[5].startswith('/') and ('.so' in fields[5] or 'x' in fields[1]):
-            paths.add(Path(fields[5]))
+            paths[Path(fields[5])]=(fields[3],int(fields[4]))
     rows=[]
-    for path in sorted(paths):
-        try:rows.append({'name':path.name,'mapped_path':str(path).replace(str(ROOT),'<workspace>'),
-                         'sha256':digest(path),'bytes':path.stat().st_size})
+    for path,mapping in sorted(paths.items()):
+        try:
+            stat=path.stat();device=f'{os.major(stat.st_dev):02x}:{os.minor(stat.st_dev):02x}'
+            matches=mapping is None or mapping==(device,stat.st_ino)
+            rows.append({'name':path.name,'mapped_path':str(path).replace(str(ROOT),'<workspace>'),
+                         'sha256':digest(path),'bytes':stat.st_size,'mapped_inode_matches_hashed_file':matches})
         except OSError:rows.append({'name':path.name,'unreadable':True})
     return rows
 
 
 def identity_signature(rows):return sorted((r['name'],r.get('sha256')) for r in rows)
+
+
+def fp_environment(probe):
+    if probe is None:return {'available':False}
+    mxcsr=int(probe.phase4r_mxcsr())
+    return {'available':True,'mxcsr':mxcsr,'mxcsr_control':mxcsr & 0xffc0,
+            'flush_to_zero':bool(mxcsr & (1<<15)),'denormals_are_zero':bool(mxcsr & (1<<6)),
+            'x87_control':int(probe.phase4r_x87_control())}
 
 
 def benchmark(args):
@@ -115,6 +127,9 @@ def benchmark(args):
         if key.startswith('SOLARPILOT_'):os.environ.pop(key)
     c.topology_cache=c.topology();os.sched_setaffinity(0,set(c.topology_cache['affinity_sets'][str(args.threads)]))
     cp=c.api();plan=json.loads(args.plan.read_text())
+    probe_path=ROOT/'artifacts/phase4r/libcpu_fp_probe.so';probe=None
+    if probe_path.exists():
+        probe=ctypes.CDLL(str(probe_path));probe.phase4r_mxcsr.restype=ctypes.c_uint32;probe.phase4r_x87_control.restype=ctypes.c_uint16
     result={'phase':'4R','campaign_id':args.campaign_id,'status':'running','threads':args.threads,
             'history':{'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained},
             'utc':utc(),'environment':{k:os.environ.get(k) for k in ENV_KEYS},
@@ -124,7 +139,7 @@ def benchmark(args):
     for name in args.cases.split(','):
         generator=c.contexts(cp,CASES[name],plan,False);sid,grid,point,context=next(generator)
         try:
-            before_identity=mapped_identity()
+            before_identity=mapped_identity();fp_before=fp_environment(probe)
             with patch.dict(os.environ,{**c.PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
                 first=c.simulate(cp,context,args.threads)
                 warm=[c.simulate(cp,context,args.threads) for _ in range(2)]
@@ -136,16 +151,21 @@ def benchmark(args):
                 except RuntimeError as error:window={'accepted':False,'reason':str(error),'before':before,'after':after}
                 expected=c.state(cp,context);c.simulate(cp,context,args.threads);c.equal(expected,c.state(cp,context))
             after_identity=mapped_identity()
+            import numpy as np
+            if name=='cesa':reference=ROOT/'local-cases/example/phase3c-results/maps'/f'{sid}-level-5.npz'
+            else:reference=ROOT/'benchmarks/results/phase3a-grid-maps'/f'{sid}-level-5.npz'
+            with np.load(reference) as saved:historical_equal=expected[0][::-1,:].copy().tobytes()==saved['flat'].tobytes()
+            if not historical_equal:raise RuntimeError('Historical CONTROL map changed')
             loaded_core=[r for r in after_identity if r['name']=='solarpilot.so']
             if len(loaded_core)!=1 or loaded_core[0].get('sha256')!=EXPECTED_LIBRARY:raise RuntimeError('Actually loaded core differs from frozen target')
             result['rows'].append({'case_id':CASES[name],'state_id':sid,'grid':grid,'operating_point':point,
-                    'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
+                    'floating_point_before':fp_before,'floating_point_after':fp_environment(probe),'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
                     'statistics_s':c.distribution(samples),'measurement_monotonic':[measurement_start,measurement_end],'cpu_window':window,'bitwise_repeat':True,
                     'usage':{'user_s':usage_after.ru_utime-usage_before.ru_utime,'system_s':usage_after.ru_stime-usage_before.ru_stime,
                              'voluntary_context_switches':usage_after.ru_nvcsw-usage_before.ru_nvcsw,
                              'involuntary_context_switches':usage_after.ru_nivcsw-usage_before.ru_nivcsw},
                     'loaded_before':before_identity,'loaded_after':after_identity,
-                    'loaded_set_unchanged':identity_signature(before_identity)==identity_signature(after_identity)})
+                    'historical_control_map_bitwise':historical_equal,'loaded_set_unchanged':identity_signature(before_identity)==identity_signature(after_identity)})
             save(args.output,result)
             print(args.campaign_id,name,args.threads,'median ms',round(result['rows'][-1]['statistics_s']['median']*1000,3),flush=True)
         finally:cp.data_free(context)
