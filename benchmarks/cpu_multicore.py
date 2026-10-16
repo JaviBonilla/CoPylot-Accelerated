@@ -18,7 +18,7 @@ from cases import ROOT, api
 from commercial_reference import load_manifest, configure
 from project_grid_campaign import prepare, PLAIN, require, frozen_state, assert_frozen
 from image_plane_cuda_performance import distribution, PipelineWindow, wait_idle
-from summarize_project_grid import safe_point
+from summarize_project_grid import safe_point, safe_errors
 from receiver_grid_convergence import backend_check
 
 COUNTS = (1, 2, 4, 8, 12, 24)
@@ -136,10 +136,15 @@ def contexts(cp, case, plan, all_states):
             yield point['id'], grid, safe_point(point), prepare(cp,Path(plan['project']),point,grid)
     else:
         manifest = load_manifest()
+        span=np.pi*manifest['parameters']['receiver.0.rec_diameter']['value']
+        height=manifest['parameters']['receiver.0.rec_height']['value']
+        grid={'receiver_type':'cylindrical','nx':222,'ny':87,'cells':19314,
+              'surface_width_m':span,'height_m':height,'cell_width_m':span/222,'cell_height_m':height/87,
+              'target_cell_m':None}
         for point in manifest['operating_points'] if all_states else manifest['operating_points'][:1]:
             context = cp.data_create()
             configure(cp,context,manifest,222,87,point)
-            yield point['id'], {'nx':222,'ny':87,'cells':19314}, point, context
+            yield point['id'], grid, point, context
 
 
 def metadata():
@@ -213,10 +218,7 @@ def campaign(args):
                                 if oracle is None:oracle=actual
                                 if mode!='cuda':equal(oracle,actual)
                                 else:
-                                    area_grid=grid if 'surface_width_m' in grid else {
-                                        **grid,'surface_width_m':float(cp.data_get_number(context,'receiver.0.rec_diameter'))*np.pi,
-                                        'height_m':float(cp.data_get_number(context,'receiver.0.rec_height'))}
-                                    backend_errors=backend_check(oracle[0],actual[0],area_grid)
+                                    backend_errors=backend_check(oracle[0],actual[0],grid)
                                     for key in oracle[1]:np.testing.assert_allclose(actual[1][key],oracle[1][key],rtol=1e-9,atol=1e-10)
                                     for key in oracle[2]:np.testing.assert_allclose(actual[2][key],oracle[2][key],rtol=1e-9,atol=1e-10)
                                 observation=observe(cp,context,n) if mode!='cuda' else None
@@ -232,7 +234,7 @@ def campaign(args):
                                  'first_call_s':first,'warmups_excluded_after_first':warmups,'repetitions':repetitions,
                                  'samples_s':samples,'statistics_s':distribution(samples),'cpu_window':cpu_check,
                                  'worker_observation':observation,'bitwise_maps_details_summary':mode!='cuda'}
-                            if mode=='cuda':row['backend_errors']=backend_errors
+                            if mode=='cuda':row['backend_errors']=safe_errors(backend_errors)
                             if window:window.validate()
                             result['rows'].append(row);write(args.output,result)
                             print(case,sid,mode,n,'median ms',round(row['statistics_s']['median']*1000,3),'PASS',flush=True)
