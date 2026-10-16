@@ -24,7 +24,14 @@ Use separate first calls, two warmups, five Flat samples and three Legacy sample
 Observe runnable simulation threads separately from formal measurements. Only
 after that gate may independent Flat numerical work be parallelized.
 
-## Intended implementation if the gate confirms serial Hermite work
+The complete pre-change campaign passes all 24 case/path/count configurations.
+Every diagnostic observation finds one runnable numerical participant. Flat
+latencies are approximately 1.26-1.29 s for CESA-I and 6.52-6.65 s for commercial,
+despite requests up to 24. The archived library SHA256 is
+bb6283a136e3b2bda0c687e637e3a09a2a8fb94f24b35d34027b7659f969b4c8.
+This evidence opens Path B before any core threading change.
+
+## Implemented independent Flat work
 
 Use the existing simulate(data, nthreads=N) API. N is the total participating
 execution count including the caller, bounded by hardware concurrency and work
@@ -68,3 +75,25 @@ Formal Flat uses two warmups/five samples; CUDA uses three/ten in a clean GPU
 window. Keep diagnostic profiles separate and distinguish inclusive stage walls
 from per-worker CPU-time sums. No governor/service changes, temporal parallelism,
 new convergence, SolTrace execution, push or Phase 5 work is authorized here.
+
+## File-level plan and test matrix
+
+| File | Responsibility | Main verification |
+|---|---|---|
+| SSC StaticParallel.h | Bounded static ranges and exception-safe joins | Zero/small/non-divisible ranges, exceptions, recovery, TSan |
+| SSC Flux.h | Per-call CPU count and batch entry point | Count transitions and CPU/CUDA isolation |
+| SSC CoPilot_API.cpp | Scope the Flat count to the current simulate call | 1->12->1 and Legacy compatibility |
+| SSC ImagePlaneInterceptAdapter.cpp | Serial packing/writeback around independent evaluation | All 215 values bitwise |
+| SSC SolarField.cpp | Dispatch CPU batch after tracking and acceptance checks | Flat/cylindrical and Keep existing states |
+| SSC Flux.cpp | Pack once and distribute independent density cell ranges | Full maps/details/summary bitwise |
+| SSC CoreProfile.h/.cpp | Add a caller-thread CPU image-batch wall scope | Stage profiles without summing overlapping scopes |
+| ROOT CMakeLists.txt and tests | CPU-only, diagnostic, production and sanitizer integration | CTest/Python and lifecycle suites |
+| ROOT cpu_multicore.py | Fixed-state campaign, topology, windows and profiling | Preserved pre-change library and all samples |
+| ROOT summarize_cpu_multicore.py | Explicit attribution, optimum and efficiency | Synthetic optimum below 24 threads and sample retention |
+
+The threading audit finds no reusable pool for independent numerical units:
+existing layout and SolTrace workers own other simulation state and have detached
+monitoring lifecycles. Reusing them would introduce unrelated state copying and
+temporal scheduling. Joined bounded per-stage threads are the initial simpler
+choice. Their creation/join cost remains inside steady-state production latency;
+it is not subtracted from the reported results.

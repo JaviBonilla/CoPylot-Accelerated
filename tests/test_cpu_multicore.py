@@ -1,0 +1,51 @@
+"""Deterministic CPU single-state threading and lifecycle regression."""
+import os
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+sys.path[:0]=[str(Path(__file__).resolve().parents[1]/'benchmarks'),str(Path(__file__).parent)]
+from cases import api, configure, layout
+from test_flat_project import configure_flat
+from cpu_multicore import state, equal
+from project_grid_campaign import PLAIN
+
+
+class CpuMulticore(unittest.TestCase):
+    def run_case(self, flat, count, grid):
+        cp=api();r=cp.data_create()
+        try:
+            if flat:
+                configure_flat(cp,r,count=count,hour_day=True)
+                with tempfile.TemporaryDirectory() as td:
+                    file=Path(td)/'initial.spt';self.assertTrue(cp.save_spt(r,file))
+                    self.assertTrue(cp.load_spt(r,file));self.assertTrue(cp.restore_loaded_layout(r))
+            else:
+                configure(cp,r,'small');self.assertTrue(cp.assign_layout(r,layout(count),nthreads=1))
+            for name,value in zip(('x_res','y_res'),grid):self.assertTrue(cp.data_set_number(r,'fluxsim.0.'+name,value))
+            with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
+                self.assertTrue(cp.simulate(r,nthreads=1));expected=state(cp,r)
+                for n in (2,4,8,12,24,1,12,1,12,24,4):
+                    for _ in range(2):
+                        self.assertTrue(cp.simulate(r,nthreads=n));equal(expected,state(cp,r))
+                # Preserve inherited clamping of nonpositive and oversized requests.
+                for n in (0,-3,10000,1):
+                    self.assertTrue(cp.simulate(r,nthreads=n));equal(expected,state(cp,r))
+                with tempfile.TemporaryDirectory() as td:
+                    file=Path(td)/'synthetic.spt';self.assertTrue(cp.save_spt(r,file))
+                    self.assertTrue(cp.load_spt(r,file));self.assertTrue(cp.restore_loaded_layout(r))
+                    self.assertTrue(cp.simulate(r,nthreads=1));expected=state(cp,r)
+                    self.assertTrue(cp.simulate(r,nthreads=12));equal(expected,state(cp,r))
+                # A failed backend selection must not poison subsequent CPU simulation.
+                self.assertFalse(cp.pdll.sp_set_compute_backend(__import__('ctypes').c_void_p(r),-123))
+                self.assertTrue(cp.simulate(r,nthreads=4));equal(expected,state(cp,r))
+        finally:self.assertTrue(cp.data_free(r))
+
+    def test_one_flat_heliostat_and_fewer_cells_than_threads(self):self.run_case(True,1,(2,1))
+    def test_flat_nondivisible_heliostats_and_rectangular_grid(self):self.run_case(True,7,(9,5))
+    def test_one_cylindrical_heliostat(self):self.run_case(False,1,(3,2))
+    def test_cylindrical_nondivisible_work(self):self.run_case(False,17,(7,3))
+
+
+if __name__=='__main__':unittest.main()

@@ -215,18 +215,51 @@ def campaign(args):
         if window:window.stop.set()
 
 
+def profiles(args):
+    cp=api();plan=json.loads(args.plan.read_text());scaling=json.loads(args.scaling.read_text())
+    require(scaling['status']=='passed','Profiling requires validated scaling')
+    result={'phase':'4','status':'running','metadata':metadata(),'rows':[],
+            'interpretation':'Diagnostic caller-thread stage wall scopes; inclusive scopes overlap; excluded from formal statistics'}
+    for case in ('cesa-i-private-restored','ssc-mspt-8790-optical-reference'):
+        candidates=[n for n in COUNTS if n<=topology_cache['physical_cores']]
+        best=min(candidates,key=lambda n:np.median([r['statistics_s']['median'] for r in scaling['rows']
+                                                   if r['case_id']==case and r['requested_threads']==n]))
+        for sid,grid,point,context in contexts(cp,case,plan,False):
+            try:
+                for n in dict.fromkeys((1,best,24)):
+                    os.sched_setaffinity(0,set(topology_cache['affinity_sets'][str(n)]))
+                    with tempfile.TemporaryDirectory(dir=args.output.parent) as td:
+                        file=Path(td)/'profile.csv'
+                        with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
+                            simulate(cp,context,n)
+                        with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat','SOLARPILOT_PROFILE_FILE':str(file)}):
+                            elapsed=simulate(cp,context,n)
+                        import csv
+                        values={row[1]:{'calls':int(row[2]),'inclusive_s':float(row[3]),'exclusive_s':float(row[4])}
+                                for row in csv.reader(file.read_text().splitlines())}
+                    result['rows'].append({'case_id':case,'state_id':sid,'grid':grid,'threads':n,
+                                           'simulate_wall_s':elapsed,'scopes':values})
+                    print(case,'profile',n,'PASS',flush=True)
+            finally:cp.data_free(context)
+    result['status']='passed';write(args.output,result)
+
+
 def main():
     global topology_cache
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['preexisting','flat','cuda'],required=True)
+    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile'],required=True)
     p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--scaling',type=Path)
     args=p.parse_args();require(not args.output.exists(),'Refusing to overwrite benchmark evidence')
     args.output.parent.mkdir(parents=True,exist_ok=True)
     require(args.output.resolve().is_relative_to(ROOT/'artifacts') or args.output.resolve().is_relative_to(ROOT/'local-cases'),
             'Detailed campaign output must remain in ignored directories')
     for key in list(os.environ):
         if key.startswith('SOLARPILOT_'):os.environ.pop(key)
-    topology_cache=topology();campaign(args)
+    topology_cache=topology()
+    if args.stage=='profile':
+        require(args.scaling is not None,'Profile requires --scaling');profiles(args)
+    else:campaign(args)
 
 
 if __name__=='__main__':main()
