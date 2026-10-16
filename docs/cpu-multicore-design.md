@@ -97,3 +97,18 @@ monitoring lifecycles. Reusing them would introduce unrelated state copying and
 temporal scheduling. Joined bounded per-stage threads are the initial simpler
 choice. Their creation/join cost remains inside steady-state production latency;
 it is not subtracted from the reported results.
+
+## Traversal validation
+
+An initial cell-first traversal retained bitwise output but made two-thread
+CESA-I slower than the original 1T loop. Its 24 completed configurations (all
+four CESA-I states) are preserved as an explicitly stopped implementation
+evaluation, outside final formal statistics. No external service was modified.
+The final worker still owns a contiguous cell range, but visits heliostats in
+the outer loop and its cells in the inner loop. This retains the original
+heliostat-only loop invariants and exactly the same addition order per cell.
+It introduces no heliostat reduction, dynamic scheduler or additional stage.
+
+The diagnostic live-context optical bridge compares all 215 values without a
+serialized-project round trip, whose saved precision could otherwise change
+geometry. It is test infrastructure, not another production simulation API.

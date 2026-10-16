@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Single-state CPU scaling on fixed scientific grids; private inputs stay ignored."""
 import argparse
+import ctypes
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -274,10 +275,51 @@ def profiles(args):
     result['status']='passed';write(args.output,result)
 
 
+def correctness(args):
+    cp=api();plan=json.loads(args.plan.read_text())
+    library=Path(os.environ['COPILOT_LIB_DIR']).resolve().parent/'libcpu_optical_state_bridge.so'
+    bridge=ctypes.CDLL(str(library))
+    bridge.phase4_optical_capture.argtypes=[ctypes.c_void_p];bridge.phase4_optical_capture.restype=ctypes.c_void_p
+    bridge.phase4_optical_equal.argtypes=[ctypes.c_void_p,ctypes.c_void_p];bridge.phase4_optical_equal.restype=ctypes.c_bool
+    bridge.phase4_optical_free.argtypes=[ctypes.c_void_p];bridge.phase4_optical_free.restype=None
+    bridge.phase4_optical_size.argtypes=[ctypes.c_void_p];bridge.phase4_optical_size.restype=ctypes.c_size_t
+    result={'phase':'4','status':'running','metadata':metadata(),'rows':[],
+            'scope':'Two representative live scientific contexts; no serialized-roundtrip geometry or optical dump'}
+    for case in ('cesa-i-private-restored','ssc-mspt-8790-optical-reference'):
+        for sid,grid,point,context in contexts(cp,case,plan,False):
+            snapshot=None
+            try:
+                with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
+                    simulate(cp,context,1);expected=state(cp,context);snapshot=bridge.phase4_optical_capture(context)
+                    require(bool(snapshot),'Cannot capture full optical test state')
+                    optical_size=bridge.phase4_optical_size(snapshot);transitions=[]
+                    for n in (2,4,8,12,24,1,12,1,12,24,4):
+                        for _ in range(2):
+                            simulate(cp,context,n);equal(expected,state(cp,context))
+                            require(bridge.phase4_optical_equal(snapshot,context),'Full 215-value optical state differs bitwise')
+                        transitions.append(n)
+                    if case=='cesa-i-private-restored':
+                        prior=json.loads((ROOT/'local-cases/example/phase3c-results/correctness-eight.json').read_text())
+                        with tempfile.TemporaryDirectory(dir=args.output.parent) as td:
+                            assert_frozen(prior['physics_checks'][sid],frozen_state(cp,context,Path(td)))
+                with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'legacy','SOLARPILOT_FLUX_PATH':'legacy'}):
+                    for n in (1,24):
+                        simulate(cp,context,n);equal(expected,state(cp,context))
+                        require(bridge.phase4_optical_equal(snapshot,context),'Legacy full optical anchor differs bitwise')
+                result['rows'].append({'case_id':case,'state_id':sid,'grid':grid,'maps_details_summary_bitwise':True,
+                    'all215_bitwise':True,'optical_values_per_comparison':optical_size,'thread_transitions':transitions,
+                    'repeats_per_transition':2,'legacy_bitwise_counts':[1,24]})
+                write(args.output,result);print(case,'live full-215 and Legacy anchors PASS',flush=True)
+            finally:
+                if snapshot:bridge.phase4_optical_free(snapshot)
+                cp.data_free(context)
+    result['status']='passed';write(args.output,result)
+
+
 def main():
     global topology_cache
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile'],required=True)
+    p.add_argument('--stage',choices=['preexisting','flat','cuda','profile','correctness'],required=True)
     p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--scaling',type=Path)
     args=p.parse_args();require(not args.output.exists(),'Refusing to overwrite benchmark evidence')
@@ -289,6 +331,7 @@ def main():
     topology_cache=topology()
     if args.stage=='profile':
         require(args.scaling is not None,'Profile requires --scaling');profiles(args)
+    elif args.stage=='correctness':correctness(args)
     else:campaign(args)
 
 
