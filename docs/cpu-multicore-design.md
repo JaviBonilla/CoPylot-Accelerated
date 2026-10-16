@@ -36,7 +36,9 @@ This evidence opens Path B before any core threading change.
 Use the existing simulate(data, nthreads=N) API. N is the total participating
 execution count including the caller, bounded by hardware concurrency and work
 size. N=1 always resets the Flat count on every call. Preserve Legacy arithmetic,
-its existing SimControl behavior, and the CUDA numerical configuration.
+its existing SimControl behavior, and the CUDA numerical configuration. CUDA's
+existing guard still rejects every nthreads value other than one before execution;
+it does not silently accept or reinterpret multicore requests as block sizes.
 
 Use bounded static contiguous ranges, N-1 joined std::threads plus the caller.
 No persistent pool is required initially: measure stage-startup overhead before

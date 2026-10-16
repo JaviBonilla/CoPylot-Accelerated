@@ -64,7 +64,7 @@ class CpuMulticore(unittest.TestCase):
                 self.assertGreaterEqual(float(rows['PerformanceSimulationPrep'][3]),float(rows['CPUImagePlane.batch'][3]))
         finally:self.assertTrue(cp.data_free(r))
 
-    def test_cuda_requested_cpu_count_preserves_gpu_results(self):
+    def test_cuda_rejects_multicore_requests_and_recovers_without_stale_results(self):
         cp=api()
         if not cp.cuda_available():self.skipTest('CUDA unavailable')
         r=cp.data_create()
@@ -73,8 +73,11 @@ class CpuMulticore(unittest.TestCase):
             self.assertTrue(cp.set_compute_backend(r,'cuda'))
             with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'cuda'}):
                 self.assertTrue(cp.simulate(r,nthreads=1));expected=state(cp,r)
-                for n in (2,12,24,1):
-                    self.assertTrue(cp.simulate(r,nthreads=n));equal(expected,state(cp,r))
+                for n in (2,12,24):
+                    self.assertFalse(cp.simulate(r,nthreads=n))
+                    self.assertIn('one CPU preparation thread',cp.get_last_backend_error(r))
+                    equal(expected,state(cp,r))
+                    self.assertTrue(cp.simulate(r,nthreads=1));equal(expected,state(cp,r))
         finally:self.assertTrue(cp.data_free(r))
 
 
