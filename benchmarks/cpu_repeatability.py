@@ -146,8 +146,12 @@ def benchmark(args):
     probe_path=ROOT/'artifacts/phase4r/libcpu_fp_probe.so';probe=None
     if probe_path.exists():
         probe=ctypes.CDLL(str(probe_path));probe.phase4r_mxcsr.restype=ctypes.c_uint32;probe.phase4r_x87_control.restype=ctypes.c_uint16
+    allocation_probe=None
+    if os.environ.get('PHASE4R_ALLOCATION_TRACE')=='1':
+        allocation_probe=ctypes.CDLL(None);allocation_probe.phase4r_allocation_count.restype=ctypes.c_uint
+        allocation_probe.phase4r_allocation_value.argtypes=[ctypes.c_uint,ctypes.c_uint];allocation_probe.phase4r_allocation_value.restype=ctypes.c_uint64
     result={'phase':'4R','campaign_id':args.campaign_id,'status':'running','threads':args.threads,
-            'history':{'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained,'idle_seconds_before_measurement':args.idle_seconds,'profile_contrast_after_measurement':args.profile_contrast},
+            'history':{'allocation_trace_enabled':bool(allocation_probe),'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained,'idle_seconds_before_measurement':args.idle_seconds,'profile_contrast_after_measurement':args.profile_contrast},
             'utc':utc(),'environment':{k:os.environ.get(k) for k in ENV_KEYS},
             'metadata':c.metadata(),'forensic_harness_sha256':digest(__file__),'python_executable_sha256':digest('/proc/self/exe'),
             'process_affinity':sorted(os.sched_getaffinity(0)),'math_bindings':math_bindings(cp.pdll),'rows':[]}
@@ -193,6 +197,10 @@ def benchmark(args):
                              'voluntary_context_switches':usage_after.ru_nvcsw-usage_before.ru_nvcsw,
                              'involuntary_context_switches':usage_after.ru_nivcsw-usage_before.ru_nivcsw},
                     'loaded_before':before_identity,'loaded_after':after_identity,
+                    'allocation_layout':([{'bytes':int(allocation_probe.phase4r_allocation_value(i,0)),
+                         'address_mod_4k':int(allocation_probe.phase4r_allocation_value(i,1))%4096,
+                         'address_mod_2m':int(allocation_probe.phase4r_allocation_value(i,1))%(2*1024*1024)}
+                         for i in range(min(4096,allocation_probe.phase4r_allocation_count()))] if allocation_probe else None),
                     'historical_control_map_bitwise':historical_equal,'loaded_set_unchanged':identity_signature(before_identity)==identity_signature(after_identity)})
             save(args.output,result)
             print(args.campaign_id,name,args.threads,'median ms',round(result['rows'][-1]['statistics_s']['median']*1000,3),flush=True)
@@ -213,6 +221,7 @@ def host_run(args):
     if prefix.with_suffix('.json').exists() or Path(str(prefix)+'-host.json').exists():raise RuntimeError('Refusing to overwrite evidence')
     env='export COPILOT_LIB_DIR=/workspace/build/phase4-cuda/lib OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1'
     if args.hash_seed!='inherit':env+=' PYTHONHASHSEED='+args.hash_seed
+    if args.allocation_trace:env+=' PHASE4R_ALLOCATION_TRACE=1 LD_PRELOAD=/workspace/artifacts/phase4r/libcpu_allocation_probe.so'
     # These arguments are validated CLI choices or an alphanumeric identifier.
     command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --idle-seconds {args.idle_seconds} {'--profile-contrast' if args.profile_contrast else ''} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
     result={'phase':'4R','campaign_id':args.campaign_id,'utc':utc(),'uptime_before':read('/proc/uptime'),
@@ -266,6 +275,7 @@ def main():
     p.add_argument('--campaign-id',required=True);p.add_argument('--cases',choices=['cesa','commercial','cesa,commercial','commercial,cesa'],required=True)
     p.add_argument('--threads',type=int,choices=[1,12,24],default=24);p.add_argument('--sustained',type=int,default=0)
     p.add_argument('--sample-interval',type=float,default=.1)
+    p.add_argument('--allocation-trace',action='store_true')
     p.add_argument('--hash-seed',choices=['inherit','0','1','2'],default='inherit')
     p.add_argument('--idle-seconds',type=float,default=0);p.add_argument('--profile-contrast',action='store_true')
     p.add_argument('--repetitions',type=int,default=5);p.add_argument('--plan',type=Path);p.add_argument('--output',type=Path)
