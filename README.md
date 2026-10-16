@@ -86,8 +86,9 @@ original heliostat addition order. The fixed CESA-I and commercial CONTROL grids
 are retained. The report distinguishes Flat 1T/CUDA from best measured Flat
 multicore/CUDA and publishes every sample, historical control checks, sanitizer
 results and exact reconstruction evidence. An earlier complete same-binary CPU
-campaign was slower; both regimes remain public and their cause is unresolved.
-The measured optimum is conditional on the observed faster regime. No new CUDA
+campaign was slower; both regimes remain public. Phase 4R later identifies the
+calling-stack condition, and Phase 4S repairs the shared-data layout. The original
+Phase 4 optimum was conditional on the observed faster regime. No new CUDA
 tuning or annual/temporal parallelism is introduced. Phase 5 has not started.
 
 Phase 4R reproduces the CPU timing regimes through controlled C API calling-stack
@@ -96,11 +97,26 @@ compiled layout supports false sharing between caller scratch and immutable
 parameters read by workers. Five complete independent processes at verified
 callsite phase zero provide conditional high-state references of 124.935 ms
 (CESA-I) and 673.647 ms (commercial), with inter-process CV 1.437% and 0.341%.
-The normal Python API remains placement-sensitive; original Phase 4 GPU/CPU
-ratios remain provisional as stable performance claims. See the
+The then-current Python API remained placement-sensitive; original Phase 4 GPU/CPU
+ratios were retained as provisional performance claims. See the
 [Phase 4R report](docs/phase4r-report.md) and
 [retained forensic results](benchmarks/results/phase4r-repeatability.json).
 The subsequent [perf supplement](benchmarks/results/phase4r-perf-counters.json)
 confirms the IPC drop during the controlled stack intervention; those events
 do not directly attribute cache-coherence stalls.
 No core optimization or Phase 5 work was included.
+
+Phase 4S isolates immutable density parameters in one aligned 64-byte holder,
+preserving numerical order, static ranges and worker lifecycle. Actual old/new
+caller and worker addresses identify the shared line and confirm its removal.
+All four forced stack positions, naturally observed ordinary API offsets, strict
+bitwise comparisons, sanitizers and clean mailbox reconstruction pass. The new
+ordinary API N1/N12/N24 references cover all eight scientific states; every state
+has at least five complete fresh-process references. Final 24T timings are
+125.074–125.537 ms for CESA-I and 672.397–679.758 ms for commercial, with
+inter-process CVs below 0.95%. Fresh unchanged-CUDA measurements supply the
+new stable comparisons under the declared protocol; historical results remain
+intact. See the [Phase 4S report](docs/phase4s-report.md),
+[ordinary CPU baseline](benchmarks/results/phase4s-final-cpu-baseline.json) and
+[CPU/GPU ratios](benchmarks/results/phase4s-cpu-gpu-summary.json).
+No Phase 5 work or push is included.
