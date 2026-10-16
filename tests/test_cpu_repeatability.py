@@ -6,7 +6,7 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
 from cpu_repeatability import proc_stat,activity,identity_signature,target_argv
 from summarize_cpu_repeatability import stability,replication_groups
-from timing_counters import turbostat_rows,align_turbostat
+from timing_counters import turbostat_rows,align_turbostat,perf_rows,perf_origin_bounds,align_perf,PERF_EVENTS
 
 class RepeatabilityTooling(unittest.TestCase):
     def test_proc_name_parentheses_do_not_shift_cpu_fields(self):
@@ -69,5 +69,32 @@ class RepeatabilityTooling(unittest.TestCase):
         self.assertEqual(identity_signature(a),identity_signature(b))
         b[0]['sha256']='changed'
         self.assertNotEqual(identity_signature(a),identity_signature(b))
+
+    def test_perf_decimal_comma_and_complete_interior_intervals(self):
+        lines=[]
+        for end,cycles,instructions,pct in [(.2,100,200,'100,00'),(.4,200,300,'98.50'),(.6,100,50,'100,00')]:
+            for event in PERF_EVENTS:
+                count=cycles if event=='cycles' else instructions if event=='instructions' else 3
+                lines.append(f'{end},{count},,{event},4800000000,{pct},,')
+        rows=perf_rows('\n'.join(lines))
+        self.assertEqual(rows[0]['running_percent']['cycles'],100.)
+        self.assertEqual(rows[1]['running_percent']['cycles'],98.5)
+        result=align_perf(rows,[100.15,100.55],[100.,100.01],margin=0)
+        self.assertEqual(result['fully_interior_intervals'],1)
+        self.assertEqual(result['ipc'],1.5)
+        self.assertEqual(result['events_per_million_instructions']['branch-misses'],10000.)
+        self.assertEqual(result['minimum_running_percent'],98.5)
+        unsupported='\n'.join(lines).replace('0.4,3,,ld_blocks.address_alias','0.4,<not counted>,,ld_blocks.address_alias')
+        missing=perf_rows(unsupported)
+        self.assertFalse(missing[1]['complete'])
+        self.assertEqual(align_perf(missing,[100.15,100.55],[100.,100.01],margin=0)['fully_interior_intervals'],0)
+
+    def test_perf_origin_uses_live_process_and_write_bound(self):
+        clock={'processes':[{'starttime_ticks':1000}],'clk_tck':100,
+               'samples':[{'utc_epoch_s':1012.,'monotonic':12.,'mtime_epoch_s':1012.05,'last_relative_s':2.}]}
+        low,high=perf_origin_bounds(clock)
+        self.assertAlmostEqual(low,9.99);self.assertAlmostEqual(high,10.07)
+        clock['processes'].append({'starttime_ticks':1000})
+        with self.assertRaises(ValueError):perf_origin_bounds(clock)
 
 if __name__=='__main__':unittest.main()

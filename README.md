@@ -100,4 +100,7 @@ The normal Python API remains placement-sensitive; original Phase 4 GPU/CPU
 ratios remain provisional as stable performance claims. See the
 [Phase 4R report](docs/phase4r-report.md) and
 [retained forensic results](benchmarks/results/phase4r-repeatability.json).
+The subsequent [perf supplement](benchmarks/results/phase4r-perf-counters.json)
+confirms the IPC drop during the controlled stack intervention; those events
+do not directly attribute cache-coherence stalls.
 No core optimization or Phase 5 work was included.
