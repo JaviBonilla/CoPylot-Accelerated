@@ -39,7 +39,7 @@ def status_fields(path):
     text=read(path)
     if text is None:return {}
     values=dict(line.split(':',1) for line in text.splitlines() if ':' in line)
-    return {k:values[k].strip() for k in ('Cpus_allowed_list','voluntary_ctxt_switches','nonvoluntary_ctxt_switches') if k in values}
+    return {k:values[k].strip() for k in ('Cpus_allowed_list','voluntary_ctxt_switches','nonvoluntary_ctxt_switches','Speculation_Store_Bypass','SpeculationIndirectBranch','Seccomp','Seccomp_filters') if k in values}
 
 
 def cgroups(pid):
@@ -93,18 +93,21 @@ def activity(before,after,elapsed,exclude):
 
 
 def mapped_identity():
-    paths={Path('/proc/self/exe').resolve():None}
+    paths={Path('/proc/self/exe').resolve():None};bases={}
     for line in Path('/proc/self/maps').read_text().splitlines():
         fields=line.split(None,5)
         if len(fields)==6 and fields[5].startswith('/') and ('.so' in fields[5] or 'x' in fields[1]):
-            paths[Path(fields[5])]=(fields[3],int(fields[4]))
+            path=Path(fields[5]);paths[path]=(fields[3],int(fields[4]))
+            base=int(fields[0].split('-')[0],16)-int(fields[2],16)
+            bases[path]=min(bases.get(path,base),base)
     rows=[]
     for path,mapping in sorted(paths.items()):
         try:
             stat=path.stat();device=f'{os.major(stat.st_dev):02x}:{os.minor(stat.st_dev):02x}'
             matches=mapping is None or mapping==(device,stat.st_ino)
             rows.append({'name':path.name,'mapped_path':str(path).replace(str(ROOT),'<workspace>'),
-                         'sha256':digest(path),'bytes':stat.st_size,'mapped_inode_matches_hashed_file':matches})
+                         'sha256':digest(path),'bytes':stat.st_size,'mapped_inode_matches_hashed_file':matches,
+                         'image_base_mod_2m':bases.get(path,0)%(2*1024*1024)})
         except OSError:rows.append({'name':path.name,'unreadable':True})
     return rows
 
