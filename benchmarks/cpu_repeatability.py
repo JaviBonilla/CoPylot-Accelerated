@@ -218,7 +218,7 @@ def host_run(args):
     result={'phase':'4R','campaign_id':args.campaign_id,'utc':utc(),'uptime_before':read('/proc/uptime'),
             'loadavg_before':read('/proc/loadavg'),'policy_before':policy(),'sensors_before':sensors(),
             'execution_context':'Fresh Python process in fresh pinned Phase 4 Docker container, unchanged limits',
-            'sampling_interval_s':.1,'frames':[]}
+            'sampling_interval_s':args.sample_interval,'frames':[]}
     start=time.monotonic();before_processes=process_ticks();previous_processes=before_processes;previous_scan=start;pid=None;tokens={};cgroup_before=None
     with Path(str(prefix)+'.log').open('w') as log:
         process=subprocess.Popen([str(ROOT/'scripts/remote_container.sh'),'--gpu','bash','-c',command],stdout=log,stderr=subprocess.STDOUT)
@@ -248,7 +248,7 @@ def host_run(args):
                     now=time.monotonic();current=process_ticks()
                     frame['external_process_activity']=activity(previous_processes,current,now-previous_scan,{os.getpid(),pid,process.pid})
                     previous_processes=current;previous_scan=now
-            time.sleep(.1)
+            time.sleep(.1 if pid is None else args.sample_interval)
     result.update(returncode=process.returncode,elapsed_s=time.monotonic()-start,uptime_after=read('/proc/uptime'),
                   loadavg_after=read('/proc/loadavg'),policy_after=policy(),sensors_after=sensors(),cgroup_before=cgroup_before)
     result['external_process_activity']=activity(before_processes,process_ticks(),result['elapsed_s'],{os.getpid(),pid,process.pid})
@@ -265,12 +265,13 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['campaign','host-run'])
     p.add_argument('--campaign-id',required=True);p.add_argument('--cases',choices=['cesa','commercial','cesa,commercial','commercial,cesa'],required=True)
     p.add_argument('--threads',type=int,choices=[1,12,24],default=24);p.add_argument('--sustained',type=int,default=0)
+    p.add_argument('--sample-interval',type=float,default=.1)
     p.add_argument('--hash-seed',choices=['inherit','0','1','2'],default='inherit')
     p.add_argument('--idle-seconds',type=float,default=0);p.add_argument('--profile-contrast',action='store_true')
     p.add_argument('--repetitions',type=int,default=5);p.add_argument('--plan',type=Path);p.add_argument('--output',type=Path)
     args=p.parse_args()
     if not args.campaign_id.replace('-','').isalnum():p.error('Campaign identifier must be alphanumeric with hyphens')
-    if args.sustained<0 or args.idle_seconds<0 or args.repetitions<5:p.error('Require nonnegative history and at least five measured samples')
+    if args.sample_interval<=0 or args.sustained<0 or args.idle_seconds<0 or args.repetitions<5:p.error('Require nonnegative history and at least five measured samples')
     if args.action=='campaign':
         if args.plan is None or args.output is None:p.error('Campaign requires private plan and ignored output')
         if args.output.exists():p.error('Refusing to overwrite evidence')

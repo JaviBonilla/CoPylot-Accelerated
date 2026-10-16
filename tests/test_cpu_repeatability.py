@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
 from cpu_repeatability import proc_stat,activity,identity_signature,target_argv
 from summarize_cpu_repeatability import stability
+from timing_counters import turbostat_rows,align_turbostat
 
 class RepeatabilityTooling(unittest.TestCase):
     def test_proc_name_parentheses_do_not_shift_cpu_fields(self):
@@ -38,6 +39,14 @@ class RepeatabilityTooling(unittest.TestCase):
     def test_stable_fresh_campaigns_require_five_replicates(self):
         self.assertTrue(stability([.675,.676,.677,.674,.678])['meets_declared_between_campaign_gates'])
         self.assertFalse(stability([.675,.676])['meets_declared_between_campaign_gates'])
+
+    def test_turbostat_alignment_excludes_edges_and_uses_affinity(self):
+        header='Time_Of_Day_Seconds Core CPU Avg_MHz Busy% Bzy_MHz TSC_MHz IPC'
+        text=header+'\n10.1 - - 3000 100 3000 2100 2.3\n10.5 - - 3000 100 3000 2100 2.3\n10.5 0 0 4000 100 4000 2100 2.3\n10.5 1 1 800 100 800 2100 1.0\n10.9 - - 3000 100 3000 2100 2.3\n'
+        result=align_turbostat(turbostat_rows(text),[1,2],9,1)
+        self.assertEqual(result['aggregate_intervals'],1)
+        self.assertEqual(result['aggregate_medians']['Bzy_MHz'],3000)
+        self.assertEqual(result['affinity_busy_weighted_mhz_median'],4000)
 
     def test_identity_uses_library_bytes_and_not_map_address_or_order(self):
         a=[{'name':'libm.so','sha256':'x','mapped_path':'/one'},{'name':'core.so','sha256':'y'}]
