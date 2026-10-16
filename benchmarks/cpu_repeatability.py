@@ -148,12 +148,29 @@ def benchmark(args):
         probe=ctypes.CDLL(str(probe_path));probe.phase4r_mxcsr.restype=ctypes.c_uint32;probe.phase4r_x87_control.restype=ctypes.c_uint16;probe.phase4r_stack_mod64.restype=ctypes.c_uint32
         probe.phase4r_call_with_stack_phase.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_int,ctypes.c_uint]
         probe.phase4r_call_with_stack_phase.restype=ctypes.c_bool;probe.phase4r_last_callsite_mod64.restype=ctypes.c_uint32
+    fixed_phases=[]
+    if args.fixed_callsite is not None:
+        if probe is None:raise RuntimeError('Controlled callsite requires probe library')
+        signature=ctypes.CFUNCTYPE(ctypes.c_bool,ctypes.c_void_p,ctypes.c_int,ctypes.c_bool)
+        noop=signature(lambda context,threads,aim:True)
+        real_function=ctypes.cast(cp.pdll.sp_simulate,ctypes.c_void_p)
+        calibration=[]
+        def controlled_simulate(api,context,threads):
+            if not calibration:
+                c.require(probe.phase4r_call_with_stack_phase(noop,None,threads,0),'Callsite calibration failed')
+                calibration.append((int(probe.phase4r_last_callsite_mod64())-args.fixed_callsite)%64)
+            begin=time.perf_counter();ok=probe.phase4r_call_with_stack_phase(real_function,context,threads,calibration[0])
+            elapsed=time.perf_counter()-begin
+            actual=int(probe.phase4r_last_callsite_mod64());fixed_phases.append(actual)
+            c.require(ok and actual==args.fixed_callsite,'Controlled C API callsite mismatch')
+            return elapsed
+        c.simulate=controlled_simulate
     allocation_probe=None
     if os.environ.get('PHASE4R_ALLOCATION_TRACE')=='1':
         allocation_probe=ctypes.CDLL(None);allocation_probe.phase4r_allocation_count.restype=ctypes.c_uint
         allocation_probe.phase4r_allocation_value.argtypes=[ctypes.c_uint,ctypes.c_uint];allocation_probe.phase4r_allocation_value.restype=ctypes.c_uint64
     result={'phase':'4R','campaign_id':args.campaign_id,'status':'running','threads':args.threads,
-            'history':{'stack_phase_contrast':args.stack_sweep,'allocation_trace_enabled':bool(allocation_probe),'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained,'idle_seconds_before_measurement':args.idle_seconds,'profile_contrast_after_measurement':args.profile_contrast},
+            'history':{'fixed_c_api_callsite_mod64':args.fixed_callsite,'stack_phase_contrast':args.stack_sweep,'allocation_trace_enabled':bool(allocation_probe),'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained,'idle_seconds_before_measurement':args.idle_seconds,'profile_contrast_after_measurement':args.profile_contrast},
             'utc':utc(),'environment':{k:os.environ.get(k) for k in ENV_KEYS},
             'metadata':c.metadata(),'forensic_harness_sha256':digest(__file__),'python_executable_sha256':digest('/proc/self/exe'),
             'process_affinity':sorted(os.sched_getaffinity(0)),'math_bindings':math_bindings(cp.pdll),'rows':[]}
@@ -208,7 +225,7 @@ def benchmark(args):
             loaded_core=[r for r in after_identity if r['name']=='solarpilot.so']
             if len(loaded_core)!=1 or loaded_core[0].get('sha256')!=EXPECTED_LIBRARY:raise RuntimeError('Actually loaded core differs from frozen target')
             result['rows'].append({'case_id':CASES[name],'state_id':sid,'grid':grid,'operating_point':point,
-                    'stack_contrasts':stack_contrasts,'profile_contrast':contrast,'floating_point_before':fp_before,'floating_point_after':fp_environment(probe),'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
+                    'observed_fixed_callsite_phases':sorted(set(fixed_phases)),'stack_contrasts':stack_contrasts,'profile_contrast':contrast,'floating_point_before':fp_before,'floating_point_after':fp_environment(probe),'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
                     'statistics_s':c.distribution(samples),'measurement_monotonic':[measurement_start,measurement_end],'cpu_window':window,'bitwise_repeat':True,
                     'usage':{'user_s':usage_after.ru_utime-usage_before.ru_utime,'system_s':usage_after.ru_stime-usage_before.ru_stime,
                              'voluntary_context_switches':usage_after.ru_nvcsw-usage_before.ru_nvcsw,
@@ -240,7 +257,7 @@ def host_run(args):
     if args.hash_seed!='inherit':env+=' PYTHONHASHSEED='+args.hash_seed
     if args.allocation_trace:env+=' PHASE4R_ALLOCATION_TRACE=1 LD_PRELOAD=/workspace/artifacts/phase4r/libcpu_allocation_probe.so'
     # These arguments are validated CLI choices or an alphanumeric identifier.
-    command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --idle-seconds {args.idle_seconds} {'--profile-contrast' if args.profile_contrast else ''} {'--stack-sweep' if args.stack_sweep else ''} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
+    command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --idle-seconds {args.idle_seconds} {'--profile-contrast' if args.profile_contrast else ''} {'--stack-sweep' if args.stack_sweep else ''} {('--fixed-callsite '+str(args.fixed_callsite)) if args.fixed_callsite is not None else ''} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
     result={'phase':'4R','campaign_id':args.campaign_id,'utc':utc(),'uptime_before':read('/proc/uptime'),
             'loadavg_before':read('/proc/loadavg'),'policy_before':policy(),'sensors_before':sensors(),
             'execution_context':'Fresh Python process in fresh pinned Phase 4 Docker container, unchanged limits',
@@ -292,6 +309,7 @@ def main():
     p.add_argument('--campaign-id',required=True);p.add_argument('--cases',choices=['cesa','commercial','cesa,commercial','commercial,cesa'],required=True)
     p.add_argument('--threads',type=int,choices=[1,12,24],default=24);p.add_argument('--sustained',type=int,default=0)
     p.add_argument('--sample-interval',type=float,default=.1)
+    p.add_argument('--fixed-callsite',type=int,choices=[0,16,32,48])
     p.add_argument('--stack-sweep',action='store_true')
     p.add_argument('--allocation-trace',action='store_true')
     p.add_argument('--hash-seed',choices=['inherit','0','1','2'],default='inherit')
