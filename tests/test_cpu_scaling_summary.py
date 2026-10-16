@@ -28,8 +28,15 @@ class CpuScalingSummary(unittest.TestCase):
         self.assertNotIn('scaling_speedup',source['rows'][0])
 
     def test_preexisting_request_does_not_imply_workers(self):
-        result=annotate(campaign(),True)
+        source=campaign()
+        for row in source['rows']:
+            row.update(physical_cores_used=min(row['requested_threads'],12),smt=row['requested_threads']==24)
+        result=annotate(source,True)
         self.assertTrue(all(r['effective_numerical_participants']==1 and r['spawned_numerical_workers']==0 for r in result['rows']))
+        self.assertTrue(all(r['physical_cores_used']==1 and not r['smt'] for r in result['rows']))
+        twentyfour=next(r for r in result['rows'] if r['requested_threads']==24)
+        self.assertEqual(twentyfour['physical_cores_in_affinity'],12)
+        self.assertTrue(twentyfour['affinity_includes_smt'])
 
     def test_best_measured_count_and_gpu_comparison(self):
         flat=annotate(campaign())

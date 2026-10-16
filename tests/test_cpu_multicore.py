@@ -64,5 +64,18 @@ class CpuMulticore(unittest.TestCase):
                 self.assertGreaterEqual(float(rows['PerformanceSimulationPrep'][3]),float(rows['CPUImagePlane.batch'][3]))
         finally:self.assertTrue(cp.data_free(r))
 
+    def test_cuda_requested_cpu_count_preserves_gpu_results(self):
+        cp=api()
+        if not cp.cuda_available():self.skipTest('CUDA unavailable')
+        r=cp.data_create()
+        try:
+            configure(cp,r,'small');self.assertTrue(cp.assign_layout(r,layout(7),nthreads=1))
+            self.assertTrue(cp.set_compute_backend(r,'cuda'))
+            with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'cuda'}):
+                self.assertTrue(cp.simulate(r,nthreads=1));expected=state(cp,r)
+                for n in (2,12,24,1):
+                    self.assertTrue(cp.simulate(r,nthreads=n));equal(expected,state(cp,r))
+        finally:self.assertTrue(cp.data_free(r))
+
 
 if __name__=='__main__':unittest.main()

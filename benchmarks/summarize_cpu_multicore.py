@@ -21,6 +21,11 @@ def annotate(source, preexisting=False):
         row['effective_numerical_participants']=participants
         row['spawned_numerical_workers']=participants-1
         row['caller_participates']=True
+        if 'physical_cores_used' in row:
+            row['physical_cores_in_affinity']=row['physical_cores_used']
+            row['affinity_includes_smt']=row['smt']
+            row['physical_cores_used']=min(participants,row['physical_cores_in_affinity'])
+            row['smt']=participants>row['physical_cores_in_affinity']
         one=next(r for r in result['rows'] if r['case_id']==row['case_id'] and r['state_id']==row['state_id']
                  and r['path']==row['path'] and r['requested_threads']==1)
         row['scaling_speedup']=one['statistics_s']['median']/row['statistics_s']['median']
@@ -65,7 +70,8 @@ def compare(flat,gpu):
 
 def timing_csv(path,source):
     fields=['case_id','state_id','path','requested_threads','effective_numerical_participants','spawned_numerical_workers',
-            'caller_participates','cpu_affinity','physical_cores_used','smt','first_call_s','warmups','repetitions','samples_s',
+            'caller_participates','cpu_affinity','physical_cores_in_affinity','affinity_includes_smt','physical_cores_used','smt',
+            'first_call_s','warmups','repetitions','samples_s',
             'median_s','mean_s','minimum_s','maximum_s','stdev_s','cv','scaling_speedup','parallel_efficiency',
             'root_sha','ssc_sha','solarpilot_sha','soltrace_sha','library_sha256','metadata_json']
     with path.open('w',newline='') as file:
@@ -87,9 +93,13 @@ def main():
     for name in ('preexisting','flat','cuda','profile'):p.add_argument('--'+name,type=Path,required=True)
     for name in ('correctness','pilot','startup','historical'):p.add_argument('--'+name,type=Path)
     p.add_argument('--output-dir',type=Path,required=True);args=p.parse_args();args.output_dir.mkdir(parents=True,exist_ok=True)
-    pre=annotate(load(args.preexisting),True);flat=annotate(load(args.flat));gpu=load(args.cuda);profile=load(args.profile)
+    pre=annotate(load(args.preexisting),True);flat=annotate(load(args.flat));gpu=annotate(load(args.cuda));profile=load(args.profile)
     if gpu['status']!='passed' or profile['status']!='passed':raise ValueError('Unvalidated GPU/profile evidence')
     if flat['metadata']['library_sha256']!=gpu['metadata']['library_sha256']:raise ValueError('CPU/GPU binary differs')
+    if flat['metadata']['library_sha256']!=profile['metadata']['library_sha256']:raise ValueError('Profile binary differs')
+    for name in ('ssc','SolarPILOT','SolTrace'):
+        if flat['metadata']['commits'][name]!=gpu['metadata']['commits'][name] or flat['metadata']['commits'][name]!=profile['metadata']['commits'][name]:
+            raise ValueError('Numerical core changed between final campaigns')
     for stem,source in [('phase4-preexisting-nthreads-scaling',pre),('phase4-flat-multicore-scaling',flat)]:
         save(args.output_dir/(stem+'.json'),source);timing_csv(args.output_dir/(stem+'.csv'),source)
     save(args.output_dir/'phase4-cuda-control-timings.json',gpu)
