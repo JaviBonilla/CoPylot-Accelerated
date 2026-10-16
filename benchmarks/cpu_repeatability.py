@@ -123,6 +123,19 @@ def fp_environment(probe):
             'x87_control':int(probe.phase4r_x87_control())}
 
 
+def math_bindings(library):
+    class DlInfo(ctypes.Structure):
+        _fields_=[('filename',ctypes.c_char_p),('base',ctypes.c_void_p),('symbol',ctypes.c_char_p),('symbol_address',ctypes.c_void_p)]
+    dladdr=ctypes.CDLL(None).dladdr;dladdr.argtypes=[ctypes.c_void_p,ctypes.POINTER(DlInfo)];dladdr.restype=ctypes.c_int
+    result={}
+    for name in ('exp','atan2','acos','sin','cos','sincos'):
+        pointer=ctypes.cast(getattr(library,name),ctypes.c_void_p).value;info=DlInfo()
+        if dladdr(pointer,ctypes.byref(info)):
+            result[name]={'library':Path(info.filename.decode()).name,'offset':pointer-info.base,
+                          'symbol':info.symbol.decode() if info.symbol else None}
+    return result
+
+
 def benchmark(args):
     import cpu_multicore as c
     from unittest.mock import patch
@@ -134,10 +147,10 @@ def benchmark(args):
     if probe_path.exists():
         probe=ctypes.CDLL(str(probe_path));probe.phase4r_mxcsr.restype=ctypes.c_uint32;probe.phase4r_x87_control.restype=ctypes.c_uint16
     result={'phase':'4R','campaign_id':args.campaign_id,'status':'running','threads':args.threads,
-            'history':{'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained},
+            'history':{'order':args.cases.split(','),'sustained_calls_before_measurement':args.sustained,'idle_seconds_before_measurement':args.idle_seconds,'profile_contrast_after_measurement':args.profile_contrast},
             'utc':utc(),'environment':{k:os.environ.get(k) for k in ENV_KEYS},
             'metadata':c.metadata(),'forensic_harness_sha256':digest(__file__),'python_executable_sha256':digest('/proc/self/exe'),
-            'process_affinity':sorted(os.sched_getaffinity(0)),'rows':[]}
+            'process_affinity':sorted(os.sched_getaffinity(0)),'math_bindings':math_bindings(cp.pdll),'rows':[]}
     if result['metadata']['library_sha256']!=EXPECTED_LIBRARY:raise RuntimeError('Frozen Phase 4 library differs')
     for name in args.cases.split(','):
         generator=c.contexts(cp,CASES[name],plan,False);sid,grid,point,context=next(generator)
@@ -147,12 +160,24 @@ def benchmark(args):
                 first=c.simulate(cp,context,args.threads)
                 warm=[c.simulate(cp,context,args.threads) for _ in range(2)]
                 sustained=[c.simulate(cp,context,args.threads) for _ in range(args.sustained)]
+                if args.idle_seconds:time.sleep(args.idle_seconds)
                 before=c.cpu_window();usage_before=resource.getrusage(resource.RUSAGE_SELF);measurement_start=time.monotonic()
                 samples=[c.simulate(cp,context,args.threads) for _ in range(args.repetitions)]
                 measurement_end=time.monotonic();usage_after=resource.getrusage(resource.RUSAGE_SELF);after=c.cpu_window()
                 try:window=c.validate_window(before,after);window['accepted']=True
                 except RuntimeError as error:window={'accepted':False,'reason':str(error),'before':before,'after':after}
                 expected=c.state(cp,context);c.simulate(cp,context,args.threads);c.equal(expected,c.state(cp,context))
+                contrast=None
+                if args.profile_contrast:
+                    file=args.output.parent/f'{args.campaign_id}-{name}-profile.csv'
+                    with patch.dict(os.environ,{'SOLARPILOT_PROFILE_FILE':str(file),'SOLARPILOT_INTERCEPT_PROFILE':'1'}):
+                        profile_wall=c.simulate(cp,context,args.threads)
+                    import csv
+                    scopes={r[1]:{'calls':int(r[2]),'inclusive_s':float(r[3]),'exclusive_s':float(r[4])} for r in csv.reader(file.read_text().splitlines())}
+                    follow=[c.simulate(cp,context,args.threads) for _ in range(5)]
+                    c.equal(expected,c.state(cp,context))
+                    contrast={'profile_wall_s':profile_wall,'scopes':scopes,'unprofiled_followup_samples_s':follow,'bitwise_equal':True}
+
             after_identity=mapped_identity()
             import numpy as np
             if name=='cesa':reference=ROOT/'local-cases/example/phase3c-results/maps'/f'{sid}-level-5.npz'
@@ -162,7 +187,7 @@ def benchmark(args):
             loaded_core=[r for r in after_identity if r['name']=='solarpilot.so']
             if len(loaded_core)!=1 or loaded_core[0].get('sha256')!=EXPECTED_LIBRARY:raise RuntimeError('Actually loaded core differs from frozen target')
             result['rows'].append({'case_id':CASES[name],'state_id':sid,'grid':grid,'operating_point':point,
-                    'floating_point_before':fp_before,'floating_point_after':fp_environment(probe),'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
+                    'profile_contrast':contrast,'floating_point_before':fp_before,'floating_point_after':fp_environment(probe),'first_call_s':first,'warmup_samples_s':warm,'sustained_samples_s':sustained,'samples_s':samples,
                     'statistics_s':c.distribution(samples),'measurement_monotonic':[measurement_start,measurement_end],'cpu_window':window,'bitwise_repeat':True,
                     'usage':{'user_s':usage_after.ru_utime-usage_before.ru_utime,'system_s':usage_after.ru_stime-usage_before.ru_stime,
                              'voluntary_context_switches':usage_after.ru_nvcsw-usage_before.ru_nvcsw,
@@ -188,7 +213,7 @@ def host_run(args):
     if prefix.with_suffix('.json').exists() or Path(str(prefix)+'-host.json').exists():raise RuntimeError('Refusing to overwrite evidence')
     env='export COPILOT_LIB_DIR=/workspace/build/phase4-cuda/lib OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1'
     # These arguments are validated CLI choices or an alphanumeric identifier.
-    command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
+    command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --idle-seconds {args.idle_seconds} {'--profile-contrast' if args.profile_contrast else ''} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
     result={'phase':'4R','campaign_id':args.campaign_id,'utc':utc(),'uptime_before':read('/proc/uptime'),
             'loadavg_before':read('/proc/loadavg'),'policy_before':policy(),'sensors_before':sensors(),
             'execution_context':'Fresh Python process in fresh pinned Phase 4 Docker container, unchanged limits',
@@ -239,10 +264,11 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['campaign','host-run'])
     p.add_argument('--campaign-id',required=True);p.add_argument('--cases',choices=['cesa','commercial','cesa,commercial','commercial,cesa'],required=True)
     p.add_argument('--threads',type=int,choices=[1,12,24],default=24);p.add_argument('--sustained',type=int,default=0)
+    p.add_argument('--idle-seconds',type=float,default=0);p.add_argument('--profile-contrast',action='store_true')
     p.add_argument('--repetitions',type=int,default=5);p.add_argument('--plan',type=Path);p.add_argument('--output',type=Path)
     args=p.parse_args()
     if not args.campaign_id.replace('-','').isalnum():p.error('Campaign identifier must be alphanumeric with hyphens')
-    if args.sustained<0 or args.repetitions<5:p.error('Require nonnegative history and at least five measured samples')
+    if args.sustained<0 or args.idle_seconds<0 or args.repetitions<5:p.error('Require nonnegative history and at least five measured samples')
     if args.action=='campaign':
         if args.plan is None or args.output is None:p.error('Campaign requires private plan and ignored output')
         if args.output.exists():p.error('Refusing to overwrite evidence')
