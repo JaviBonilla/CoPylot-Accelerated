@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
 from cpu_repeatability import proc_stat,activity,identity_signature,target_argv
+from summarize_cpu_repeatability import stability
 
 class RepeatabilityTooling(unittest.TestCase):
     def test_proc_name_parentheses_do_not_shift_cpu_fields(self):
@@ -25,6 +26,18 @@ class RepeatabilityTooling(unittest.TestCase):
         self.assertTrue(target_argv(worker,'A1'))
         self.assertFalse(target_argv(coordinator,'A1'))
         self.assertFalse(target_argv(worker,'A2'))
+
+    def test_independent_campaign_gate_rejects_bimodality_without_trimming(self):
+        values=[.125,.126,.329,.125,.348]
+        result=stability(values)
+        self.assertEqual(result['campaigns'],5)
+        self.assertGreater(result['maximum_over_minimum'],2.7)
+        self.assertFalse(result['meets_declared_between_campaign_gates'])
+        self.assertEqual(values,[.125,.126,.329,.125,.348])
+
+    def test_stable_fresh_campaigns_require_five_replicates(self):
+        self.assertTrue(stability([.675,.676,.677,.674,.678])['meets_declared_between_campaign_gates'])
+        self.assertFalse(stability([.675,.676])['meets_declared_between_campaign_gates'])
 
     def test_identity_uses_library_bytes_and_not_map_address_or_order(self):
         a=[{'name':'libm.so','sha256':'x','mapped_path':'/one'},{'name':'core.so','sha256':'y'}]

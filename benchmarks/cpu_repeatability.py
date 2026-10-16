@@ -212,6 +212,7 @@ def host_run(args):
     prefix=output/args.campaign_id
     if prefix.with_suffix('.json').exists() or Path(str(prefix)+'-host.json').exists():raise RuntimeError('Refusing to overwrite evidence')
     env='export COPILOT_LIB_DIR=/workspace/build/phase4-cuda/lib OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1'
+    if args.hash_seed!='inherit':env+=' PYTHONHASHSEED='+args.hash_seed
     # These arguments are validated CLI choices or an alphanumeric identifier.
     command=f'{env}; exec python benchmarks/cpu_repeatability.py campaign --campaign-id {args.campaign_id} --cases {args.cases} --threads {args.threads} --sustained {args.sustained} --repetitions {args.repetitions} --idle-seconds {args.idle_seconds} {'--profile-contrast' if args.profile_contrast else ''} --plan local-cases/example/phase3c-results/plan.json --output artifacts/phase4r/{args.campaign_id}.json'
     result={'phase':'4R','campaign_id':args.campaign_id,'utc':utc(),'uptime_before':read('/proc/uptime'),
@@ -264,6 +265,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['campaign','host-run'])
     p.add_argument('--campaign-id',required=True);p.add_argument('--cases',choices=['cesa','commercial','cesa,commercial','commercial,cesa'],required=True)
     p.add_argument('--threads',type=int,choices=[1,12,24],default=24);p.add_argument('--sustained',type=int,default=0)
+    p.add_argument('--hash-seed',choices=['inherit','0','1','2'],default='inherit')
     p.add_argument('--idle-seconds',type=float,default=0);p.add_argument('--profile-contrast',action='store_true')
     p.add_argument('--repetitions',type=int,default=5);p.add_argument('--plan',type=Path);p.add_argument('--output',type=Path)
     args=p.parse_args()
