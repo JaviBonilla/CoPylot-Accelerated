@@ -14,6 +14,34 @@ from project_grid_campaign import PLAIN
 
 
 class CpuMulticore(unittest.TestCase):
+    def test_readonly_optical_export_checks_capacity_and_preserves_snapshot(self):
+        import ctypes
+        import math
+        library=Path(os.environ.get('COPILOT_LIB_DIR',Path(__file__).resolve().parents[1]/'build/cpu/lib')).resolve().parent/'libcpu_optical_state_bridge.so'
+        if not library.exists():self.skipTest('Diagnostic optical bridge unavailable')
+        bridge=ctypes.CDLL(str(library))
+        if not hasattr(bridge,'phase4_optical_copy'):self.skipTest('Cross-binary optical export unavailable')
+        bridge.phase4_optical_capture.argtypes=[ctypes.c_void_p];bridge.phase4_optical_capture.restype=ctypes.c_void_p
+        bridge.phase4_optical_size.argtypes=[ctypes.c_void_p];bridge.phase4_optical_size.restype=ctypes.c_size_t
+        bridge.phase4_optical_copy.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];bridge.phase4_optical_copy.restype=ctypes.c_bool
+        bridge.phase4_optical_equal.argtypes=[ctypes.c_void_p,ctypes.c_void_p];bridge.phase4_optical_equal.restype=ctypes.c_bool
+        bridge.phase4_optical_free.argtypes=[ctypes.c_void_p]
+        cp=api();context=cp.data_create();snapshot=None
+        try:
+            configure(cp,context,'small');self.assertTrue(cp.assign_layout(context,layout(7),nthreads=1))
+            with patch.dict(os.environ,{**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'}):
+                self.assertTrue(cp.simulate(context,nthreads=1));snapshot=bridge.phase4_optical_capture(context)
+                self.assertTrue(snapshot);size=bridge.phase4_optical_size(snapshot);self.assertEqual(size,7*215)
+                output=(ctypes.c_double*size)()
+                self.assertFalse(bridge.phase4_optical_copy(snapshot,output,size-1))
+                self.assertFalse(bridge.phase4_optical_copy(None,output,size))
+                self.assertFalse(bridge.phase4_optical_copy(snapshot,None,size))
+                self.assertTrue(bridge.phase4_optical_copy(snapshot,output,size));self.assertTrue(all(math.isfinite(v) for v in output))
+                self.assertTrue(cp.simulate(context,nthreads=12));self.assertTrue(bridge.phase4_optical_equal(snapshot,context))
+        finally:
+            if snapshot:bridge.phase4_optical_free(snapshot)
+            cp.data_free(context)
+
     def run_case(self, flat, count, grid):
         cp=api();r=cp.data_create()
         try:

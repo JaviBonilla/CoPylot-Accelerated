@@ -37,4 +37,12 @@ extern "C" bool phase4_optical_equal(void* snapshot,void* context) {
 extern "C" std::size_t phase4_optical_size(void* snapshot) {
     return snapshot?static_cast<std::vector<double>*>(snapshot)->size():0;
 }
+// Untimed cross-binary regression export; callers keep optical arrays ignored.
+extern "C" bool phase4_optical_copy(void* snapshot,double* output,std::size_t capacity) {
+    if (!snapshot || !output) return false;
+    const auto& values=*static_cast<std::vector<double>*>(snapshot);
+    if (capacity!=values.size()) return false;
+    std::memcpy(output,values.data(),values.size()*sizeof(double));
+    return true;
+}
 extern "C" void phase4_optical_free(void* snapshot) { delete static_cast<std::vector<double>*>(snapshot); }
