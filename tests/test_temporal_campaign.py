@@ -4,11 +4,16 @@ import sys
 import unittest
 import json
 import tempfile
+import queue
+import threading
+import multiprocessing as mp
+from types import SimpleNamespace
 from unittest.mock import patch
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
-from temporal_campaign import partitions, signature, STRATEGIES, payload
+from temporal_campaign import partitions, signature, STRATEGIES, payload, assigned_points, receive_workers, equal_metrics
 from summarize_temporal import summarize
+from verify_temporal_outputs import verify
 
 
 class TemporalContracts(unittest.TestCase):
@@ -73,12 +78,12 @@ class TemporalContracts(unittest.TestCase):
                 directory=source/'correctness'/case;directory.mkdir(parents=True)
                 value={'status':'passed','fresh_serial_states':1,'transition_checks':[{'threads':1,'order':'forward',
                     'bitwise_full_outputs':True,'bitwise_all215':True}], 'immutable_geometry_aim':True,
-                    'zero_dni_probe':True,'private_input':'SECRET-input','reference_rows':[{'site':'SECRET-site'}]}
+                    'zero_dni_probe':True,'private_input':'SECRET-input','reference_rows':[{'site':'SECRET-site','id':0,'metrics':{'peak_kw_m2':0,'incident_power_kw':0,'absorbed_power_kw':0}}]}
                 (directory/'result.json').write_text(json.dumps(value))
                 plan={'grid':{'nx':217,'ny':256},'requested':2,'states':[{'dni':0,'site':'SECRET-site'}],
                       'nighttime':1,'seasonal':[{'date':'SECRET-date'}],'dni_policy':'explicit saved DNI',
                       'aim_method':4,'solar_year':2011,'sun_derivation':'core SOLPOS','output_contract':'full',
-                      'public_weather_asset':{},'diagnostic':[{}],'project':'SECRET-path','input_hash':'SECRET-hash'}
+                      'public_weather_asset':{},'diagnostic':[{'id':0}],'project':'SECRET-path','input_hash':'SECRET-hash'}
                 (source/(case+'-plan.json')).write_text(json.dumps(plan))
             (source/'campaigns').mkdir()
             summarize(source,dest)
@@ -88,6 +93,47 @@ class TemporalContracts(unittest.TestCase):
             value=json.loads((dest/'phase5a-campaign-summary.json').read_text())
             self.assertFalse(value['matrix_complete'])
             self.assertFalse(value['annual_direct_complete'])
+
+    def test_persisted_payload_verification_rejects_changed_map(self):
+        class CP:
+            def data_get_number(self,r,key):return 180. if key.endswith('az') else 20.
+        grid={'nx':3,'ny':2,'surface_width_m':3.,'height_m':2.}
+        point={'id':1,'sun':[180.,20.],'dni':0.}
+        state=(np.zeros((2,3)),{'id':np.arange(4.)},{'Power absorbed by the receiver':0.})
+        with patch('cpu_multicore.state',return_value=state):values,metrics=payload(CP(),None,point,grid)
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp);file=directory/'1.npz';np.savez(file,**values)
+            row={'id':1,'state':point,'metrics':metrics,'signature':signature(values)}
+            (directory/'worker-test.jsonl').write_text(json.dumps(row)+'\n')
+            (directory/'plan.json').write_text(json.dumps({'points':[point]}))
+            (directory/'result.json').write_text(json.dumps({'status':'passed','identifier':'test',
+                'case':'commercial','completed':1,'output_bytes':file.stat().st_size}))
+            result=verify(directory,{'grid':grid})
+            self.assertEqual(result['persisted_full_payloads_verified'],1)
+            self.assertEqual(result['zero_dni_maps_verified_zero'],1)
+            values['map'][0,0]=1.;np.savez(file,**values)
+            with self.assertRaises(AssertionError):verify(directory,{'grid':grid})
+
+    def test_dynamic_dispatch_delivers_every_job_and_honors_cancellation(self):
+        jobs=queue.Queue(maxsize=2);stop=threading.Event()
+        jobs.put({'id':1});jobs.put(None)
+        self.assertEqual(list(assigned_points([],jobs,stop)),[{'id':1}])
+        stop.set()
+        self.assertEqual(list(assigned_points([],jobs,stop)),[])
+        self.assertEqual(list(assigned_points([{'id':2}],None,stop)),[])
+
+    def test_worker_errors_do_not_wait_for_an_earlier_busy_worker(self):
+        first,send_first=mp.Pipe(duplex=False);second,send_second=mp.Pipe(duplex=False)
+        try:
+            send_second.send({'kind':'error','pid':2,'traceback':'test failure'})
+            with self.assertRaises(RuntimeError):receive_workers([first,second],[SimpleNamespace(pid=1),SimpleNamespace(pid=2)],'done')
+        finally:
+            for pipe in (first,send_first,second,send_second):pipe.close()
+
+    def test_derived_metrics_use_the_existing_numerical_tolerance(self):
+        equal_metrics({'peak':1.,'cv':None},{'peak':1.+1e-11,'cv':None})
+        with self.assertRaises(RuntimeError):equal_metrics({'peak':1.},{'peak':1.1})
+        with self.assertRaises(RuntimeError):equal_metrics({'cv':None},{'cv':0.})
 
 
 if __name__=='__main__':unittest.main()

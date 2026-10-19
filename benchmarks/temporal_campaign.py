@@ -7,8 +7,10 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import multiprocessing as mp
+from multiprocessing.connection import wait as wait_connections
 import os
 from pathlib import Path
+import queue
 import resource
 import subprocess
 import threading
@@ -19,13 +21,15 @@ import numpy as np
 import cpu_multicore as cpu
 from cases import ROOT, api
 from commercial_reference import configure, load_manifest
-from project_grid_campaign import prepare, require, read_project_weather, SITE, PLAIN
+from project_grid_campaign import prepare, require, verify_inputs, SITE, PLAIN
 from cpu_hardening_equivalence import arrays as optical_arrays
 
 OUT = ROOT/'artifacts/phase5a'
-LIB_SHA = '545775e26ca3588c9a65c56c93e6f3f93d480446e4a04272497fad27acb5e017'
+CANONICAL_LIB_SHA = '545775e26ca3588c9a65c56c93e6f3f93d480446e4a04272497fad27acb5e017'
+# Explicit identity pin for a separately validated rebuild; canonical by default.
+LIB_SHA = os.environ.get('COPILOT_EXPECTED_LIBRARY_SHA256',CANONICAL_LIB_SHA)
 STRATEGIES = ((1,24),(2,12),(4,6),(6,4),(12,2),(24,1))
-SEASONS = ((3,21),(6,21),(9,21),(12,21))
+PUBLIC_SEASONS = ((3,21),(6,21),(9,21),(12,21))
 CONTRACT = 'full-f64-map+all-heliostat-details+numeric-summary+state-metrics-v1'
 
 
@@ -87,6 +91,8 @@ def sun_function():
 def context(cp, case):
     if case=='cesa':
         plan = json.loads((ROOT/'local-cases/example/phase3c-results/plan.json').read_text())
+        verify_inputs(plan)
+        require((plan['grids'][5]['nx'],plan['grids'][5]['ny'])==(217,256),'CESA CONTROL grid changed')
         r = prepare(cp,Path(plan['project']),grid=plan['grids'][5])
         grid = plan['grids'][5]
     else:
@@ -117,7 +123,7 @@ def build_plan(case):
     try:
         site = [cp.data_get_number(r,k) for k in SITE[:3]]
         if case=='commercial':
-            m=load_manifest()
+            m=load_manifest();dates=PUBLIC_SEASONS
             with (ROOT/m['assets']['weather']['path']).open() as stream:
                 next(stream);next(stream); rows=list(csv.DictReader(stream))
             require(len(rows)==8760,'Expected 8760 public weather records')
@@ -126,7 +132,11 @@ def build_plan(case):
             policy='Pinned public TMY2 hourly DNI, row hour + 0.5 local standard time; zeros retained'
         else:
             dni=cp.data_get_number(r,'fluxsim.0.flux_dni')
-            candidates=[{'month':m,'day':d,'hour':h+.5,'dni':dni} for m,d in SEASONS for h in range(24)]
+            schedule=json.loads((ROOT/'local-cases/example/phase5a-inputs.json').read_text())
+            dates=[tuple(v) for v in schedule['dates']];hours=schedule['hours']
+            require(len(set(dates))==4 and len(set(hours))==24,'Require four private full-day hourly series')
+            require(all(0<=h<24 for h in hours),'Invalid private clock time')
+            candidates=[{'month':m,'day':d,'hour':h,'dni':dni} for m,d in dates for h in hours]
             policy='Unchanged saved project flux_dni; EPW supplies site; four seasonal local-standard-time days'
         sun=sun_function();states=[];night=0
         for i,p in enumerate(candidates):
@@ -134,10 +144,10 @@ def build_plan(case):
             require(np.isfinite(p['dni']) and p['dni']>=0,'Invalid DNI')
             if p['sun'][1] <= 0: night+=1
             else: states.append(p)
-        seasonal=[p for p in states if (p['month'],p['day']) in SEASONS]
+        seasonal=[p for p in states if (p['month'],p['day']) in dates]
         # Morning/noon/afternoon on every season, plus an explicit zero-DNI probe.
         diagnostic=[]
-        for date in SEASONS:
+        for date in dates:
             points=[p for p in seasonal if (p['month'],p['day'])==date]
             require(len(points)>=3,'Insufficient seasonal daylight')
             diagnostic.extend([points[0],points[len(points)//2],points[-1]])
@@ -243,7 +253,8 @@ def correctness(case):
             print(case,'reused context',n,'PASS',flush=True)
         finally:cp.data_free(r)
     write(directory/'result.json',{'status':'passed','case':case,'fresh_serial_states':len(rows),'reference_rows':rows,
-                                 'transition_checks':checks,'immutable_geometry_aim':True,'zero_dni_probe':True})
+                                 'transition_checks':checks,'immutable_geometry_aim':True,'zero_dni_probe':True,
+                                 'library_sha256':LIB_SHA,'harness_sha256':digest(__file__)})
 
 
 def usage():
@@ -281,7 +292,38 @@ def loaded_library():
     return {'sha256':value,'mapped_inode_matches_hashed_file':True,'bytes':stat.st_size}
 
 
-def worker(pipe, start, finish, case, points, mask, threads, directory, references):
+def assigned_points(points, jobs, cancelled):
+    if jobs is None:
+        for point in points:
+            if cancelled.is_set(): return
+            yield point
+    else:
+        while not cancelled.is_set():
+            try: point=jobs.get(timeout=.2)
+            except queue.Empty: continue
+            if point is None: return
+            yield point
+
+
+def receive_workers(pipes, children, kind):
+    pending=list(pipes); values={}
+    while pending:
+        for pipe in wait_connections(pending,timeout=1.):
+            value=pipe.recv()
+            require(value['kind']==kind,str(value))
+            values[value['pid']]=value;pending.remove(pipe)
+    return [values[p.pid] for p in children]
+
+
+def equal_metrics(actual, expected):
+    require(actual.keys()==expected.keys(),'Derived metric schema changed')
+    for key,value in actual.items():
+        if value is None or expected[key] is None:
+            require(value is None and expected[key] is None,'Undefined metric changed')
+        else: require(abs(value-expected[key])<=1e-10+1e-9*abs(expected[key]),'Derived metric differs from serial reference')
+
+
+def worker(pipe, start, finish, cancelled, jobs, case, points, mask, threads, directory, references, reference_metrics):
     cp=None;r=None
     try:
         os.sched_setaffinity(0,set(mask));environment()
@@ -291,12 +333,13 @@ def worker(pipe, start, finish, case, points, mask, threads, directory, referenc
                    'mask':sorted(os.sched_getaffinity(0)),'loaded_library':loaded_library(),'cpu_start':usage()})
         start.wait();rows=[];bytes_written=0
         with (directory/('worker-'+str(os.getpid())+'.jsonl')).open('x') as stream:
-            for point in points:
+            for point in assigned_points(points,jobs,cancelled):
                 begin=time.perf_counter();set_state(cp,r,point)
                 sim=cpu.simulate(cp,r,threads)
                 output_start=time.perf_counter();values,metrics=payload(cp,r,point,grid);sig=signature(values)
                 if str(point['id']) in references:
                     require(sig==references[str(point['id'])],'Strategy output differs from independent serial oracle')
+                    equal_metrics(metrics,reference_metrics[str(point['id'])])
                 file=directory/(str(point['id'])+'.npz')
                 require(not file.exists(),'Duplicate state output')
                 np.savez(file,**values);bytes_written+=file.stat().st_size
@@ -309,6 +352,7 @@ def worker(pipe, start, finish, case, points, mask, threads, directory, referenc
                    'end':time.perf_counter()})
         finish.wait()
     except BaseException:
+        cancelled.set()
         pipe.send({'kind':'error','traceback':traceback.format_exc()})
     finally:
         if cp and r:cp.data_free(r)
@@ -320,25 +364,28 @@ def stats(values):
             'p99':float(np.percentile(values,99)),'min':min(values),'max':max(values)}
 
 
-def campaign(case, workers, threads, series, identifier):
+def campaign(case, workers, threads, series, identifier, scheduler='dynamic',role='formal'):
     environment();plan=json.loads((OUT/(case+'-plan.json')).read_text());points=plan[series]
     reference=OUT/'correctness'/case/'references.json'
     require(reference.is_file(),'Serial correctness must precede campaigns')
     require(json.loads((reference.parent/'result.json').read_text())['status']=='passed','Correctness did not pass')
     references=json.loads(reference.read_text());masks=partitions(cpu.topology_cache,workers,threads)
+    reference_metrics={str(r['id']):r['metrics'] for r in json.loads((reference.parent/'result.json').read_text())['reference_rows']}
     directory=OUT/'campaigns'/identifier;directory.mkdir(parents=True,exist_ok=False)
     write(directory/'plan.json',{'case':case,'series':series,'points':points,'workers':workers,'threads':threads,
-                               'masks':masks,'contract':CONTRACT,'identifier':identifier})
-    ctx=mp.get_context('spawn');start=ctx.Event();finish=ctx.Event();children=[];pipes=[]
+                               'masks':masks,'contract':CONTRACT,'identifier':identifier,'scheduler':scheduler,'role':role})
+    ctx=mp.get_context('spawn');start=ctx.Event();finish=ctx.Event();cancelled=ctx.Event();children=[];pipes=[]
+    jobs=ctx.Queue(maxsize=2*workers) if scheduler=='dynamic' else None
     overall=time.perf_counter();ready=[];done=[];frames=[];monitor_errors=[];stop=threading.Event()
+    feeder=None;observer=None
     frequency_before=cpu.frequency()
     try:
         for i,mask in enumerate(masks):
             parent,child=ctx.Pipe(duplex=False)
-            p=ctx.Process(target=worker,args=(child,start,finish,case,points[i::workers],mask,threads,directory,references))
+            p=ctx.Process(target=worker,args=(child,start,finish,cancelled,jobs,case,
+                          points[i::workers] if jobs is None else [],mask,threads,directory,references,reference_metrics))
             p.start();child.close();children.append(p);pipes.append(parent)
-        for pipe in pipes:
-            value=pipe.recv();require(value['kind']=='ready',str(value));ready.append(value)
+        ready=receive_workers(pipes,children,'ready')
         setup_end=time.perf_counter();pids=[p.pid for p in children]
         require(all(v['mask']==sorted(mask) for v,mask in zip(ready,masks)),'Wrong initial worker masks')
         def observe():
@@ -347,9 +394,17 @@ def campaign(case, workers, threads, series, identifier):
                 except BaseException:monitor_errors.append(traceback.format_exc());break
                 stop.wait(.05)
         observer=threading.Thread(target=observe);observer.start()
+        if jobs is not None:
+            def feed():
+                start.wait()
+                for point in [*points,*([None]*workers)]:
+                    while not cancelled.is_set():
+                        try: jobs.put(point,timeout=.2);break
+                        except queue.Full: continue
+                    if cancelled.is_set(): return
+            feeder=threading.Thread(target=feed);feeder.start()
         before=cpu.cpu_window();parent_cpu_before=usage();evaluation_start=time.perf_counter();start.set()
-        for pipe in pipes:
-            value=pipe.recv();require(value['kind']=='done',str(value));done.append(value)
+        done=receive_workers(pipes,children,'done')
         evaluation_end=time.perf_counter();after=cpu.cpu_window();parent_cpu_after=usage()
         stop.set();observer.join()
         require(not monitor_errors,str(monitor_errors))
@@ -364,10 +419,14 @@ def campaign(case, workers, threads, series, identifier):
         external=max(0.,system_cpu-own_cpu)/elapsed
         thermal=any(after['throttle'].get(k,v)>v for k,v in before['throttle'].items())
         elapsed_eval=evaluation_end-evaluation_start
+        services=[sum(r['state_latency_s'] for r in rows if r['worker_pid']==pid) for pid in pids]
         frequency_after=cpu.frequency()
         policy_unchanged=frequency_policy(frequency_before)==frequency_policy(frequency_after)
         require(digest(Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so')==LIB_SHA,'Library changed during campaign')
         result={'phase':'5A','status':'passed','identifier':identifier,'case':case,'series':series,'contract':CONTRACT,
+                'scheduler':scheduler,'role':role,'queue_capacity':2*workers if jobs is not None else 0,
+                'state_latency_mean_s':sum(services)/len(rows),'worker_service_s':services,
+                'load_balance_efficiency':sum(services)/(workers*elapsed_eval),
                 'states_in_parallel':workers,'threads_per_state':threads,'masks':masks,'completed':len(rows),
                 'evaluation_wall_s':elapsed_eval,'total_wall_s':overall_end-overall,'setup_wall_s':setup_end-overall,
                 'states_per_s':len(rows)/elapsed_eval,'total_states_per_s':len(rows)/(overall_end-overall),
@@ -388,11 +447,14 @@ def campaign(case, workers, threads, series, identifier):
         print(identifier,'completed',len(rows),'states/s',round(result['states_per_s'],4),'total wall',round(result['total_wall_s'],3),
               'clean',result['cpu_window']['accepted'],flush=True)
     finally:
-        stop.set();start.set();finish.set()
+        cancelled.set();stop.set();start.set();finish.set()
+        if observer is not None:observer.join(timeout=2)
+        if feeder is not None:feeder.join(timeout=2)
         for child in children:
-            child.join(timeout=5)
+            child.join(timeout=1)
             if child.is_alive():child.terminate();child.join()
         for pipe in pipes:pipe.close()
+        if jobs is not None:jobs.cancel_join_thread();jobs.close()
 
 
 def main():
@@ -401,9 +463,11 @@ def main():
     a=sub.add_parser('campaign');a.add_argument('--case',choices=['cesa','commercial'],required=True)
     a.add_argument('--workers',type=int,required=True);a.add_argument('--threads',type=int,required=True)
     a.add_argument('--series',choices=['seasonal','states'],default='seasonal');a.add_argument('--id',required=True)
+    a.add_argument('--scheduler',choices=['dynamic','round_robin'],default='dynamic')
+    a.add_argument('--role',choices=['formal','pilot'],default='formal')
     args=p.parse_args();cpu.topology_cache=cpu.topology();environment()
     if args.command=='correctness':correctness(args.case)
-    else:campaign(args.case,args.workers,args.threads,args.series,args.id)
+    else:campaign(args.case,args.workers,args.threads,args.series,args.id,args.scheduler,args.role)
 
 
 if __name__=='__main__':main()
