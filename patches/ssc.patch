@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/29] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/30] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/29] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/30] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/29] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/30] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/29] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/30] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/29] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/30] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/29] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/30] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/29] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/30] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/29] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/30] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/29] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/30] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/29] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/30] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/29] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/30] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/29] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/30] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/29] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/30] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/29] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/30] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/29] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/30] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3302,7 +3302,7 @@ index 53953d37a..3ece02fda 100644
 From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:22:32 +0200
-Subject: [PATCH 16/29] cuda: port the validated flat image-plane formulation
+Subject: [PATCH 16/30] cuda: port the validated flat image-plane formulation
  with independent device buffers
 
 ---
@@ -4734,7 +4734,7 @@ index 000000000..8e112617b
 From 71f2c7b4acf647831ffb8ba9039c9aa078b8c05c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:34:28 +0200
-Subject: [PATCH 17/29] cuda: integrate batched image-plane evaluation and
+Subject: [PATCH 17/30] cuda: integrate batched image-plane evaluation and
  checked context ownership
 
 ---
@@ -5058,7 +5058,7 @@ index 9e72693d0..a9f70da0d 100644
 From 012b1a2ce195f5060867828773a2a339edf67b96 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 14:58:55 +0200
-Subject: [PATCH 18/29] cuda: reject invalid image-plane devices before
+Subject: [PATCH 18/30] cuda: reject invalid image-plane devices before
  constructing resources
 
 ---
@@ -5101,7 +5101,7 @@ index 3a9162505..5434e98a1 100644
 From 5554361cf948681330faabe686696931697116d8 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:39:29 +0200
-Subject: [PATCH 19/29] perf: expose bounded image-plane launch diagnostics
+Subject: [PATCH 19/30] perf: expose bounded image-plane launch diagnostics
  without changing arithmetic
 
 ---
@@ -5217,7 +5217,7 @@ index 5434e98a1..b2bc23fb6 100644
 From 02e47568e72cfc3d369d2d6274808b57b5345df2 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:54:11 +0200
-Subject: [PATCH 20/29] cuda: hand resident image-plane optics to density and
+Subject: [PATCH 20/30] cuda: hand resident image-plane optics to density and
  eagerly complete host state
 
 ---
@@ -5849,7 +5849,7 @@ index b2bc23fb6..30d9e8de0 100644
 From cb3c0371884a2cf69aded43c20dd5081a56cf96d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 16:02:45 +0200
-Subject: [PATCH 21/29] perf: distinguish optical validation from eager object
+Subject: [PATCH 21/30] perf: distinguish optical validation from eager object
  materialization
 
 ---
@@ -5928,7 +5928,7 @@ index 704c43f89..81170365d 100644
 From cafc3bbd7dec00e1871a3c559cd6c6b90694db17 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:55:37 +0200
-Subject: [PATCH 22/29] Restore serialized fields explicitly and extend Hermite
+Subject: [PATCH 22/30] Restore serialized fields explicitly and extend Hermite
  optics to flat rectangles
 
 ---
@@ -6550,7 +6550,7 @@ index 6e87c0d7a..2a969a5c9 100644
 From 61a24c325d7039ef559fd6343556800195164e3d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:58:48 +0200
-Subject: [PATCH 23/29] Handle single-row and blank-line serialized layouts
+Subject: [PATCH 23/30] Handle single-row and blank-line serialized layouts
  consistently
 
 ---
@@ -6680,7 +6680,7 @@ index 3c6c3ae1d..18b4c8ecf 100644
 From c3ccd7db4d112c5787a5cfdea9df868208810893 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 21:05:02 +0200
-Subject: [PATCH 24/29] Validate restored physical dimensions and advertise the
+Subject: [PATCH 24/30] Validate restored physical dimensions and advertise the
  explicit restoration API
 
 ---
@@ -6724,7 +6724,7 @@ index 213774fff..3e8fa1603 100644
 From 3a93e2d21f0b596fab9e5c107144a89b6d6babe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:05:58 +0000
-Subject: [PATCH 25/29] perf: parallelize independent Flat Hermite CPU work
+Subject: [PATCH 25/30] perf: parallelize independent Flat Hermite CPU work
  deterministically
 
 ---
@@ -6991,7 +6991,7 @@ index 000000000..ffa973837
 From 581a006ec4afb0f0d1f34b1d0d8382736e83d865 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:16:35 +0000
-Subject: [PATCH 26/29] perf: preserve heliostat loop invariants within CPU
+Subject: [PATCH 26/30] perf: preserve heliostat loop invariants within CPU
  cell ranges
 
 ---
@@ -7034,7 +7034,7 @@ index 008f628ce..583e39f59 100644
 From 0fd069b30343a08787f76247c4b1bb637e83bbe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 10:35:34 +0200
-Subject: [PATCH 27/29] fix: isolate Flat multicore shared parameters from
+Subject: [PATCH 27/30] fix: isolate Flat multicore shared parameters from
  caller scratch
 
 ---
@@ -7077,7 +7077,7 @@ index 583e39f59..97e03729a 100644
 From 12d39aed2bfa7db645463baa588c39a3ac622345 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Mon, 19 Oct 2026 14:21:17 +0200
-Subject: [PATCH 28/29] Add guarded temporal uploads and bounded independent
+Subject: [PATCH 28/30] Add guarded temporal uploads and bounded independent
  CUDA context batches
 
 ---
@@ -7456,7 +7456,7 @@ index 000000000..a57a930fe
 From bc764c7b5f9c6c138abb6010387235321dea2631 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Mon, 19 Oct 2026 14:31:54 +0200
-Subject: [PATCH 29/29] Invalidate temporal timing snapshots until successful
+Subject: [PATCH 29/30] Invalidate temporal timing snapshots until successful
  CUDA completion
 
 ---
@@ -7515,6 +7515,186 @@ index 80a6c0a6b..46acfdc39 100644
      double temporal_preparation_wall_s=0.; // Inclusive prep/shadow wall, contains image GPU work.
      bool temporal_residency=false; // Explicit internal temporal opt-in; ordinary API remains unchanged.
      std::unique_ptr<ImagePlaneGpuContext> image_plane; // Independent RAII executor; density buffers remain unchanged.
+-- 
+2.43.0
+
+
+From 77ba34bc956281b59094b6068cdb9809dd126726 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Mon, 19 Oct 2026 14:46:32 +0200
+Subject: [PATCH 30/30] Reuse guarded mixed image bases with assignment-only
+ temporal updates
+
+---
+ solarpilot/CoPilot_API.cpp               |  6 ++--
+ solarpilot/ImagePlaneInterceptCuda.h     | 27 ++++++++++++++++-
+ solarpilot/ImagePlaneInterceptKernels.cu | 38 ++++++++++++++++++++----
+ 3 files changed, 62 insertions(+), 9 deletions(-)
+
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index f46f6ae27..1f0f56d44 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -1475,7 +1475,7 @@ SPEXPORT bool sp_set_temporal_timing(sp_data_t p_data,bool enabled)
+ 
+ SPEXPORT bool sp_get_temporal_statistics(sp_data_t p_data,double* output,int capacity)
+ {
+-    if (!p_data || !output || capacity!=24) return false;
++    if (!p_data || !output || capacity!=25) return false;
+     auto& state=static_cast<CopilotObject*>(p_data)->compute;
+     if (state.selected!=solarpilot::ComputeBackend::CUDA || !state.gpu || !state.gpu->image_plane
+         || !state.gpu->temporal_timing || !state.gpu->temporal_statistics_valid) return false;
+@@ -1485,8 +1485,8 @@ SPEXPORT bool sp_get_temporal_statistics(sp_data_t p_data,double* output,int cap
+         im.d2h_ms*.001,im.writeback_s,f.preparation_s,f.h2d_heliostat_ms*.001,f.h2d_cell_ms*.001,
+         f.handoff_ms*.001,f.kernel_ms*.001,f.d2h_ms*.001,f.cpu_postprocessing_s,f.simulate_s,
+         double(im.input_h2d_bytes),double(im.tables_h2d_bytes),double(f.heliostat_h2d_bytes),
+-        double(f.cell_h2d_bytes),double(im.output_d2h_bytes),double(f.allocations),double(im.allocations)};
+-    std::copy(values,values+24,output);return true;
++        double(f.cell_h2d_bytes),double(im.output_d2h_bytes),double(f.allocations),double(im.allocations),im.temporal_input_update_ms*.001};
++    std::copy(values,values+25,output);return true;
+ }
+ 
+ SPEXPORT int sp_get_compute_backend(sp_data_t p_data)
+diff --git a/solarpilot/ImagePlaneInterceptCuda.h b/solarpilot/ImagePlaneInterceptCuda.h
+index ae1695c2b..e807f8876 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.h
++++ b/solarpilot/ImagePlaneInterceptCuda.h
+@@ -4,10 +4,35 @@
+ #include "ImagePlaneIntercept.h"
+ #include <array>
+ #include <memory>
++#include <cstring>
+ namespace solarpilot {
+ constexpr int image_plane_block_size = 64; // Bounded 2D-C sweep: small-field benefit, large-field parity.
+ constexpr std::size_t image_plane_layout_fields = 27;
+ using ImagePlaneLayout = std::array<std::uint64_t,image_plane_layout_fields>;
++// Dynamic fields are never cached. Every other byte is guarded before reuse.
++struct TemporalImageUpdate {
++    image_plane::Vector tracking,tower,sun;
++    double focal_x,focal_y,slant_range,cant_radius,aim_x,aim_y;
++    std::uint8_t visible,reserved[7];
++};
++static_assert(sizeof(TemporalImageUpdate)==128 && offsetof(TemporalImageUpdate,visible)==120,"Temporal update ABI changed");
++inline TemporalImageUpdate temporal_image_update(const image_plane::Input& in) {
++    return {in.tracking,in.tower,in.sun,in.focal_x,in.focal_y,in.slant_range,in.cant_radius,in.aim_x,in.aim_y,in.visible,{}};
++}
++SP_IMAGE_HD inline void apply_temporal_image_update(image_plane::Input& in,const TemporalImageUpdate& update) {
++    in.tracking=update.tracking;in.tower=update.tower;in.sun=update.sun;
++    in.focal_x=update.focal_x;in.focal_y=update.focal_y;in.slant_range=update.slant_range;
++    in.cant_radius=update.cant_radius;in.aim_x=update.aim_x;in.aim_y=update.aim_y;in.visible=update.visible;
++}
++inline bool same_temporal_image_base(const image_plane::Input& a,const image_plane::Input& b) {
++    const auto span=[&](std::size_t offset,std::size_t bytes) {
++        return std::memcmp(reinterpret_cast<const char*>(&a)+offset,reinterpret_cast<const char*>(&b)+offset,bytes)==0;
++    };
++    return span(0,offsetof(image_plane::Input,tracking))
++        && span(offsetof(image_plane::Input,angular),offsetof(image_plane::Input,focal_x)-offsetof(image_plane::Input,angular))
++        && span(offsetof(image_plane::Input,mirror_normalized),offsetof(image_plane::Input,visible)-offsetof(image_plane::Input,mirror_normalized))
++        && span(offsetof(image_plane::Input,flat_rect),sizeof(a)-offsetof(image_plane::Input,flat_rect));
++}
+ struct ImagePlaneRequiredOutput {
+     double intercept;
+     std::uint32_t updated,valid;
+@@ -40,7 +65,7 @@ struct ImagePlaneGpuStatistics {
+     bool timed=false;
+     bool resident=false;
+     double preparation_s=0.,writeback_s=0.,total_s=0.;
+-    double input_h2d_ms=0.,tables_h2d_ms=0.,kernel_ms=0.,d2h_ms=0.;
++    double input_h2d_ms=0.,tables_h2d_ms=0.,kernel_ms=0.,d2h_ms=0.,temporal_input_update_ms=0.;
+     double host_validation_s=0.,validation_kernel_ms=0.,materialize_d2h_ms=0.;
+     double materialize_writeback_s=0.,materialize_total_s=0.;
+     double finite_output_scan_s=0.,object_writeback_s=0.;
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+index 16ccfafb1..bb594c6dc 100644
+--- a/solarpilot/ImagePlaneInterceptKernels.cu
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -141,6 +141,11 @@ void validate(const image_plane::Input& in) {
+     if (in.faceted) for (int i=0;i<in.facets_x*in.facets_y;++i)
+         if (!std::isfinite(in.panel_x[i]) || !std::isfinite(in.panel_y[i])) throw std::runtime_error("Nonfinite CUDA facet center");
+ }
++// Assignment-only state update; no optical arithmetic or cross-state reduction.
++__global__ void temporal_image_update_kernel(image_plane::Input* input,const TemporalImageUpdate* updates,std::size_t count) {
++    const std::size_t h=std::size_t(blockIdx.x)*blockDim.x+threadIdx.x;
++    if (h<count) apply_temporal_image_update(input[h],updates[h]);
++}
+ class ImagePlaneContext final:public ImagePlaneGpuContext {
+     int device_;
+     Buffer<image_plane::Input> inputs_;
+@@ -148,6 +153,10 @@ class ImagePlaneContext final:public ImagePlaneGpuContext {
+     Buffer<image_plane::Tables> tables_;
+     Buffer<ImagePlaneRequiredOutput> required_;
+     TemporalUploadCache<image_plane::Tables> table_cache_;
++    Buffer<TemporalImageUpdate> temporal_updates_;
++    std::vector<TemporalImageUpdate> host_updates_;
++    std::vector<image_plane::Input> input_base_;
++    bool input_base_valid_=false;
+     std::size_t output_count_=0;
+     bool outputs_valid_=false;
+     Event start_,end_;
+@@ -160,7 +169,7 @@ class ImagePlaneContext final:public ImagePlaneGpuContext {
+         statistics.required_capacity=required_.capacity();
+     }
+ public:
+-    explicit ImagePlaneContext(int device):device_(device),inputs_(device),outputs_(device),tables_(device),required_(device),start_(device),end_(device) {}
++    explicit ImagePlaneContext(int device):device_(device),inputs_(device),outputs_(device),tables_(device),required_(device),temporal_updates_(device),start_(device),end_(device) {}
+     ~ImagePlaneContext() override { try { close(); } catch (...) {} }
+     void evaluate(const image_plane::Input* input,std::size_t count,const image_plane::Tables& tables,
+                   image_plane::Output* output,bool timing) override {
+@@ -183,13 +192,27 @@ public:
+         if (resident) allocations_+=required_.reserve(count);
+         snapshot(count,timing);
+         statistics.resident=resident;statistics.host_validation_s=validation;
+-        statistics.input_h2d_bytes=sizeof(image_plane::Input)*count;
++        bool reuse_base=temporal_residency && input_base_valid_ && input_base_.size()==count;
++        for (std::size_t h=0;reuse_base && h<count;++h) reuse_base=same_temporal_image_base(input_base_[h],input[h]);
++        if (reuse_base) {
++            allocations_+=temporal_updates_.reserve(count);
++            host_updates_.resize(count);
++            for (std::size_t h=0;h<count;++h) host_updates_[h]=temporal_image_update(input[h]);
++            statistics.allocations=allocations_;
++        }
++        statistics.input_h2d_bytes=(reuse_base?sizeof(TemporalImageUpdate):sizeof(image_plane::Input))*count;
+         const bool reuse_tables=temporal_residency && table_cache_.matches(&tables,1);
+         statistics.tables_h2d_bytes=reuse_tables?0:sizeof(tables);
+         statistics.output_d2h_bytes=(resident?sizeof(ImagePlaneRequiredOutput):sizeof(image_plane::Output))*count;
+         if (resident) statistics.required_d2h_bytes=statistics.output_d2h_bytes;
+         if (timing) start_.record();
+-        check(cudaMemcpy(inputs_.data(),input,statistics.input_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(image-plane inputs H2D)");
++        if (reuse_base) {
++            check(cudaMemcpy(temporal_updates_.data(),host_updates_.data(),statistics.input_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(temporal image updates H2D)");
++        } else {
++            input_base_valid_=false;
++            check(cudaMemcpy(inputs_.data(),input,statistics.input_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(image-plane inputs H2D)");
++            if (temporal_residency) { input_base_.assign(input,input+count);input_base_valid_=true; }
++        }
+         if (timing) { end_.record();statistics.input_h2d_ms=end_.elapsed_from(start_);start_.record(); }
+         if (!reuse_tables) {
+             table_cache_.invalidate();
+@@ -197,6 +220,11 @@ public:
+             if (temporal_residency) table_cache_.commit(&tables,1);
+         }
+         if (timing) { end_.record();statistics.tables_h2d_ms=end_.elapsed_from(start_);start_.record(); }
++        if (reuse_base) {
++            temporal_image_update_kernel<<<static_cast<unsigned>((count+127)/128),128>>>(inputs_.data(),temporal_updates_.data(),count);
++            check(cudaGetLastError(),"temporal image input update launch");
++            if (timing) { end_.record();statistics.temporal_input_update_ms=end_.elapsed_from(start_);start_.record(); }
++        }
+         const int block=statistics.block_size;
+         image_plane_kernel<<<static_cast<unsigned>((count+block-1)/block),block>>>(inputs_.data(),count,tables_.data(),outputs_.data());
+         check(cudaGetLastError(),"image-plane kernel launch");
+@@ -261,10 +289,10 @@ public:
+         data.release();guard.restore();return result;
+     }
+     void close() override {
+-        outputs_valid_=false;output_count_=0;table_cache_.invalidate();
++        outputs_valid_=false;output_count_=0;table_cache_.invalidate();input_base_valid_=false;
+         DeviceGuard guard(device_);std::string error;
+         auto release=[&](auto& r) { try { r.release(); } catch (const std::exception& e) { if (error.empty()) error=e.what(); } };
+-        release(inputs_);release(outputs_);release(tables_);release(required_);release(start_);release(end_);
++        release(inputs_);release(outputs_);release(tables_);release(required_);release(temporal_updates_);release(start_);release(end_);
+         guard.restore();if (!error.empty()) throw std::runtime_error(error);
+     }
+ };
 -- 
 2.43.0
 

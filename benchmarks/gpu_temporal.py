@@ -21,7 +21,7 @@ STAGE_FIELDS=('preparation_inclusive_s','image_input_preparation_s','image_host_
  'image_host_writeback_s','density_preparation_s','density_metadata_h2d_s','density_cells_h2d_s',
  'density_handoff_s','density_kernel_s','map_d2h_s','density_postprocess_s','api_s',
  'image_input_h2d_bytes','image_tables_h2d_bytes','density_metadata_h2d_bytes','density_cells_h2d_bytes',
- 'image_full_d2h_bytes','density_allocations','image_allocations')
+ 'image_full_d2h_bytes','density_allocations','image_allocations','temporal_input_update_s')
 OUT=ROOT/'artifacts/phase5b'
 REFERENCE=Path(os.environ.get('COPILOT_PHASE5A_REFERENCE','/phase5a-reference'))
 
@@ -139,7 +139,9 @@ def campaign(args):
         require(sorted(p['id'] for p in points)==sorted(r['id'] for r in rows),'Incomplete/duplicate states')
         require(digest(library)==args.library_sha256,'Library changed during campaign')
         result={'phase':'5B','status':'passed','identifier':args.id,'case':args.case,'series':args.series,
-                'mode':args.mode,'static_residency_enabled':args.mode!='sequential' and not args.no_residency,'instrumented':args.instrumented,'batch_size':args.batch_size,'active_states':min(args.batch_size,24),
+                'mode':args.mode,'static_residency_enabled':args.mode!='sequential' and not args.no_residency,'instrumented':args.instrumented,'batch_size':args.batch_size,'active_states':min(args.batch_size,24),'state_slots':min(args.batch_size,len(points)),
+                'maximum_cpu_preparations':min(args.batch_size,len(points),24),
+                'gpu_execution':'Existing default-stream kernels; no fused multi-state kernel or streams',
                 'completed':len(rows),'control_grid':[grid['nx'],grid['ny']],'contract':CONTRACT,
                 'runtime_probe_s':probe,'context_setup_s':setup_rows,'setup_wall_s':setup_end-total_start,
                 'evaluation_wall_s':evaluation_end-eval_start,'total_wall_s':total_end-total_start,

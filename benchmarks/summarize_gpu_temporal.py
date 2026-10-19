@@ -27,9 +27,30 @@ def main():
         row['instrumented']=r.get('instrumented',False)
         row['static_residency_enabled']=r.get('static_residency_enabled',r['mode']!='sequential')
         row['output_cost_includes_jsonl_flush']=r.get('output_cost_includes_jsonl_flush',False)
-        row['validation']=json.loads(validation.read_text()) if validation.exists() else None
+        row['commits']={k:r['commits'][k] for k in ('.','ssc','SolarPILOT','SolTrace')}
+        validation_fields=('passed','persisted_payloads_verified','cpu_agreement_existing_tolerance','maximum_absolute_observable_error','direct_cuda_bitwise_states','stored_bytes','timing_excludes_verification')
+        observed=json.loads(validation.read_text()) if validation.exists() else None
+        row['validation']={k:observed[k] for k in validation_fields} if observed else None
         row['qualified']=r['cpu_window']['accepted'] and bool(row['validation'] and row['validation']['passed'])
         runs.append(row)
+    a.output.mkdir(parents=True,exist_ok=True)
+    for run in runs:
+        if run['case']!='commercial' or run['series']!='states' or not run['qualified']:continue
+        source=OUT/'runs'/run['identifier'];rows=[]
+        for line in (source/'states.jsonl').read_text().splitlines():
+            raw=json.loads(line);point=raw['state']
+            rows.append({'weather_row_id':point['id'],'month':point['month'],'day':point['day'],
+                'hour_local_standard':point['hour'],'dni_w_m2':point['dni'],'solar_azimuth_deg':point['sun'][0],
+                'solar_elevation_deg':point['sun'][1],**raw['metrics'],'batch_slot':raw['slot'],
+                'simulate_batch_s':raw['simulate_batch_s'],'materialize_analysis_s':raw['materialize_analysis_s'],
+                'npz_serialize_write_s':raw.get('npz_serialize_write_s',raw.get('serialize_write_s')),
+                'batch_completion_latency_s':raw['state_batch_completion_latency_s'],'array_payload_sha256':raw['signature']})
+        assert len(rows)==run['completed']==len({r['weather_row_id'] for r in rows})
+        rows.sort(key=lambda r:r['weather_row_id'])
+        name='phase5b-commercial-annual-states-'+run['identifier']+'.csv'
+        with (a.output/name).open('w',newline='') as stream:
+            table=csv.DictWriter(stream,fieldnames=list(rows[0]));table.writeheader();table.writerows(rows)
+        run['public_state_table']=name
     groups=[]
     keys=sorted({(r['case'],r['series'],r['mode'],r['batch_size'],r['static_residency_enabled'],r['library_sha256']) for r in runs if not r['instrumented']})
     for case,series,mode,batch,residency,library in keys:
@@ -64,6 +85,21 @@ def main():
                 'no_temporal_approximation':True,'no_kernel_arithmetic_retuning':True,'no_multi_gpu':True,
                 'raw_private_data_retained_only_on_server':True,'full_output_contract':cpu['output_contract']}
     write(a.output/'phase5b-annual-summary.json',comparison)
+    profiles=OUT/'temporal-gpu-profiles.json'
+    if profiles.exists():
+        values=json.loads(profiles.read_text())
+        allowed={'case','solar_class','mode','call','repeat','api_wall_s','full_getter_optical_check_s','stages','full_outputs_bitwise_equal_direct_cuda'}
+        for row in values['rows']:
+            if row['case']=='cesa':assert set(row)==allowed,'Private profile schema changed'
+        write(a.output/'phase5b-solar-profiles.json',values)
+    environment=[]
+    for library in sorted({r['library_sha256'] for r in runs}):
+        raw=next(json.loads((OUT/'runs'/r['identifier']/'result.json').read_text()) for r in runs if r['library_sha256']==library)
+        environment.append({'library_sha256':library,'measurement_commits':sorted({r['commits']['.'] for r in runs if r['library_sha256']==library}),
+            'gpu':{k:raw['gpu_telemetry'][0][k] for k in ('name','driver_version','memory.total')},
+            'toolchain_image':'sha256:8e6e3752946ff2dde451b313cbaec2ea8e7b52221b21bfbcf53fb68dd4f4c42e',
+            'kernel_image_block':64,'kernel_density_block':256,'precision':'double','fast_math':False})
+    write(a.output/'phase5b-environment.json',{'phase':'5B','libraries':environment})
     print('Public aggregate publication:',len(runs),'attempts;',len(groups),'groups;',len(years),'annual groups')
 
 

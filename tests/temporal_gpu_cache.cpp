@@ -32,6 +32,17 @@ int main() {
       require(std::memcmp(&expected,&actual,sizeof(actual))==0,"Cached table output differs");
       require(cached->statistics.tables_h2d_bytes==(step==1?0:sizeof(tables)),"Table invalidation/transfer counter incorrect");
     }
+    for (int step=0;step<6;++step) {
+      input.aim_x+=.002;input.focal_x*=1.001;input.slant_range+=.25;
+      if (step==1) input.angular[0]+=1.e-7;
+      if (step==2) input.panel_x[0]+=1.e-9;
+      if (step==4) input.visible=0;
+      if (step==5) input.visible=1;
+      direct->evaluate(&input,1,tables,&expected);cached->evaluate(&input,1,tables,&actual);
+      require(std::memcmp(&expected,&actual,sizeof(actual))==0,"Dynamic patch/static fallback output differs");
+      const auto bytes=(step==1 || step==2)?sizeof(input):sizeof(solarpilot::TemporalImageUpdate);
+      require(cached->statistics.input_h2d_bytes==bytes,"Dynamic input transfer/fallback counter incorrect");
+    }
     auto density=solarpilot::make_gpu_context(0),reference=solarpilot::make_gpu_context(0);
     density->temporal_residency=true;
     flux_density::HeliostatData h={};h.direction[1]=1.;h.aim[2]=100.;h.sigma_x=.02;h.sigma_y=.03;h.normalization=.1;h.coefficients[0]=1.;
