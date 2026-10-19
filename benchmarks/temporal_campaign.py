@@ -153,11 +153,17 @@ def build_plan(case):
             diagnostic.extend([points[0],points[len(points)//2],points[-1]])
         probe={**diagnostic[4],'id':len(candidates),'dni':0.,'probe':True}
         diagnostic.append(probe)
-        return {'case':case,'grid':grid,'dni_policy':policy,'requested':len(candidates),'nighttime':night,
+        plan={'case':case,'grid':grid,'dni_policy':policy,'requested':len(candidates),'nighttime':night,
                 'states':states,'seasonal':seasonal,'diagnostic':diagnostic,
                 'solar_year':2011,'sun_derivation':'Existing Ambient Hour/Day SOLPOS, no interval correction',
                 'aim_method':int(cp.data_get_number(r,'fluxsim.0.aim_method')),'output_contract':CONTRACT,
                 'public_weather_asset':load_manifest()['assets']['weather'] if case=='commercial' else None}
+        if case=='commercial':
+            plan['long']=[p for p in states if p['month']==1 and p['day']<=24]
+            plan['long_definition']={'requested':576,'daylight':len(plan['long']),
+                'nighttime':576-len(plan['long']),
+                'public_dates':'January 1-24, core solar year 2011; unchanged pinned TMY2 rows'}
+        return plan
     finally: cp.data_free(r)
 
 
