@@ -1,0 +1,393 @@
+#!/usr/bin/env python3
+"""Direct temporal correctness and independent-process CPU throughput (Phase 5A)."""
+import argparse
+import csv
+import ctypes
+from datetime import datetime, timezone
+import hashlib
+import json
+import multiprocessing as mp
+import os
+from pathlib import Path
+import resource
+import subprocess
+import threading
+import time
+import traceback
+
+import numpy as np
+import cpu_multicore as cpu
+from cases import ROOT, api
+from commercial_reference import configure, load_manifest
+from project_grid_campaign import prepare, require, read_project_weather, SITE, PLAIN
+from cpu_hardening_equivalence import arrays as optical_arrays
+
+OUT = ROOT/'artifacts/phase5a'
+LIB_SHA = '545775e26ca3588c9a65c56c93e6f3f93d480446e4a04272497fad27acb5e017'
+STRATEGIES = ((1,24),(2,12),(4,6),(6,4),(12,2),(24,1))
+SEASONS = ((3,21),(6,21),(9,21),(12,21))
+CONTRACT = 'full-f64-map+all-heliostat-details+numeric-summary+state-metrics-v1'
+
+
+def frequency_policy(values):
+    return {p:{k:v for k,v in row.items() if k!='scaling_cur_freq'} for p,row in values.items()}
+
+
+def write(path, value):
+    path = Path(path); path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix+'.tmp')
+    tmp.write_text(json.dumps(value, indent=2, allow_nan=False)+'\n'); tmp.replace(path)
+
+
+def digest(path):
+    with Path(path).open('rb') as stream: return hashlib.file_digest(stream,'sha256').hexdigest()
+
+
+def environment():
+    for key in list(os.environ):
+        if key.startswith('SOLARPILOT_'): os.environ.pop(key)
+    os.environ.update({**PLAIN,'SOLARPILOT_INTERCEPT_PATH':'flat'})
+    for key in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS'):
+        require(os.environ.get(key)=='1', 'Numerical pools must be fixed before starting Python')
+    require(digest(Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so')==LIB_SHA,'Wrong frozen numerical library')
+
+
+def partitions(topology, workers, threads):
+    """Disjoint whole physical-core groups, then sibling pairs, for full 24-way use."""
+    require((workers,threads) in STRATEGIES, 'Unsupported hardware allocation')
+    groups = {}
+    for row in topology['logical_cpus']:
+        groups.setdefault((row['socket'],row['core']),[]).append(row['cpu'])
+    cores = [sorted(v) for k,v in sorted(groups.items())]
+    require(len(cores)==12 and all(len(v)==2 for v in cores),'Require 12 complete SMT core pairs')
+    if threads == 1: result = [[pair[s]] for s in range(2) for pair in cores]
+    else:
+        count = threads//2
+        result = [sum((cores[j] for j in range(i*count,(i+1)*count)),[]) for i in range(workers)]
+    require(len(result)==workers and all(len(v)==threads for v in result),'Invalid mask sizes')
+    flat = sum(result,[])
+    require(len(set(flat))==24 and len(flat)==24,'Overlapping or missing CPUs')
+    return result
+
+
+def sun_function():
+    bridge = ctypes.CDLL(str(OUT/'libtemporal_sun_bridge.so'))
+    f = bridge.phase5a_sun
+    f.argtypes = [ctypes.c_double]*3+[ctypes.c_int]*2+[ctypes.c_double,ctypes.POINTER(ctypes.c_double)]
+    f.restype = ctypes.c_bool
+    def sun(site, month, day, hour):
+        values = (ctypes.c_double*2)()
+        require(f(*site,month,day,hour,values),'Core sun derivation failed')
+        return list(values)
+    return sun
+
+
+def context(cp, case):
+    if case=='cesa':
+        plan = json.loads((ROOT/'local-cases/example/phase3c-results/plan.json').read_text())
+        r = prepare(cp,Path(plan['project']),grid=plan['grids'][5])
+        grid = plan['grids'][5]
+    else:
+        m = load_manifest(); r = cp.data_create()
+        try: configure(cp,r,m,222,87,m['operating_points'][0])
+        except BaseException: cp.data_free(r); raise
+        width = np.pi*m['parameters']['receiver.0.rec_diameter']['value']
+        height = m['parameters']['receiver.0.rec_height']['value']
+        grid = {'nx':222,'ny':87,'surface_width_m':width,'height_m':height,
+                'cell_width_m':width/222,'cell_height_m':height/87}
+    require(cp.data_set_number(r,'fluxsim.0.flux_time_type',1),'Cannot select Hour/Day')
+    require(cp.set_compute_backend(r,'cpu'),'CPU backend unavailable')
+    return r,grid
+
+
+def set_state(cp, r, point):
+    for name,value in (('flux_month',point['month']),('flux_day',point['day']),
+                       ('flux_hour',point['hour']),('flux_dni',point['dni'])):
+        require(cp.data_set_number(r,'fluxsim.0.'+name,value),'Cannot update temporal state')
+
+
+def resolved(cp, r):
+    return [cp.data_get_number(r,'fluxsim.0.flux_solar_'+name) for name in ('az','el')]
+
+
+def build_plan(case):
+    cp = api(); r,grid = context(cp,case)
+    try:
+        site = [cp.data_get_number(r,k) for k in SITE[:3]]
+        if case=='commercial':
+            m=load_manifest()
+            with (ROOT/m['assets']['weather']['path']).open() as stream:
+                next(stream);next(stream); rows=list(csv.DictReader(stream))
+            require(len(rows)==8760,'Expected 8760 public weather records')
+            candidates=[{'month':int(v['Month']),'day':int(v['Day']),'hour':float(v['Hour'])+.5,
+                         'dni':float(v['DNI'])} for v in rows]
+            policy='Pinned public TMY2 hourly DNI, row hour + 0.5 local standard time; zeros retained'
+        else:
+            dni=cp.data_get_number(r,'fluxsim.0.flux_dni')
+            candidates=[{'month':m,'day':d,'hour':h+.5,'dni':dni} for m,d in SEASONS for h in range(24)]
+            policy='Unchanged saved project flux_dni; EPW supplies site; four seasonal local-standard-time days'
+        sun=sun_function();states=[];night=0
+        for i,p in enumerate(candidates):
+            p={'id':i,**p,'sun':sun(site,p['month'],p['day'],p['hour'])}
+            require(np.isfinite(p['dni']) and p['dni']>=0,'Invalid DNI')
+            if p['sun'][1] <= 0: night+=1
+            else: states.append(p)
+        seasonal=[p for p in states if (p['month'],p['day']) in SEASONS]
+        # Morning/noon/afternoon on every season, plus an explicit zero-DNI probe.
+        diagnostic=[]
+        for date in SEASONS:
+            points=[p for p in seasonal if (p['month'],p['day'])==date]
+            require(len(points)>=3,'Insufficient seasonal daylight')
+            diagnostic.extend([points[0],points[len(points)//2],points[-1]])
+        probe={**diagnostic[4],'id':len(candidates),'dni':0.,'probe':True}
+        diagnostic.append(probe)
+        return {'case':case,'grid':grid,'dni_policy':policy,'requested':len(candidates),'nighttime':night,
+                'states':states,'seasonal':seasonal,'diagnostic':diagnostic,
+                'solar_year':2011,'sun_derivation':'Existing Ambient Hour/Day SOLPOS, no interval correction',
+                'aim_method':int(cp.data_get_number(r,'fluxsim.0.aim_method')),'output_contract':CONTRACT,
+                'public_weather_asset':load_manifest()['assets']['weather'] if case=='commercial' else None}
+    finally: cp.data_free(r)
+
+
+def payload(cp, r, point, grid):
+    actual = cpu.state(cp,r)
+    flux,detail,summary=actual
+    require(flux.shape==(grid['ny'],grid['nx']),'Incorrect CONTROL map shape')
+    require(np.isfinite(flux).all() and all(np.isfinite(v).all() for v in detail.values())
+            and all(np.isfinite(v) for v in summary.values()),'Nonfinite temporal output')
+    require(resolved(cp,r)==point['sun'],'Calendar helper and ordinary API solar position differ')
+    values=optical_arrays(actual,np.empty(0))
+    values.pop('optical')
+    values['resolved_sun']=np.asarray(resolved(cp,r),dtype=np.float64)
+    mean=float(flux.mean()); std=float(flux.std());total=float(flux.sum())
+    metrics={'peak_kw_m2':float(flux.max()),'mean_kw_m2':mean,'std_kw_m2':std,
+             'uniformity_cv':std/mean if mean else None,
+             'incident_power_kw':mean*grid['surface_width_m']*grid['height_m'],
+             'centroid_column':float(np.einsum('ij,j->',flux,np.arange(grid['nx']))/total) if total else None,
+             'centroid_row':float(np.einsum('ij,i->',flux,np.arange(grid['ny']))/total) if total else None,
+             'absorbed_power_kw':summary['Power absorbed by the receiver']}
+    return values,metrics
+
+
+def signature(values):
+    sha=hashlib.sha256()
+    for name,value in sorted(values.items()):
+        sha.update(name.encode());sha.update(value.dtype.str.encode())
+        sha.update(str(value.shape).encode());sha.update(value.tobytes())
+    return sha.hexdigest()
+
+
+def optics_function():
+    bridge=ctypes.CDLL(str(ROOT/'build/phase4s-cuda/libcpu_optical_state_bridge.so'))
+    bridge.phase4_optical_capture.argtypes=[ctypes.c_void_p];bridge.phase4_optical_capture.restype=ctypes.c_void_p
+    bridge.phase4_optical_size.argtypes=[ctypes.c_void_p];bridge.phase4_optical_size.restype=ctypes.c_size_t
+    bridge.phase4_optical_copy.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];bridge.phase4_optical_copy.restype=ctypes.c_bool
+    bridge.phase4_optical_free.argtypes=[ctypes.c_void_p]
+    def capture(r):
+        ptr=bridge.phase4_optical_capture(r);require(bool(ptr),'Cannot capture optical state')
+        try:
+            size=bridge.phase4_optical_size(ptr);value=np.empty(size,dtype=np.float64)
+            require(bridge.phase4_optical_copy(ptr,value.ctypes.data,size),'Cannot export optical state')
+            return value
+        finally: bridge.phase4_optical_free(ptr)
+    return capture
+
+
+def immutable(cp,r):
+    positions=np.asarray(cp.get_layout_info(r,get_optical_details=True,restype='matrix')[0],dtype=np.float64)
+    # id, xyz, template dimensions: ranking/efficiencies excluded.
+    detail=cp.detail_results(r,restype='dictionary')
+    return positions[:,:5].tobytes(),np.asarray([detail[k+'_aimpoint'] for k in 'xyz'],dtype=np.float64).tobytes()
+
+
+def correctness(case):
+    environment();directory=OUT/'correctness'/case;directory.mkdir(parents=True,exist_ok=False)
+    plan=build_plan(case);write(OUT/(case+'-plan.json'),plan)
+    cp=api();capture=optics_function();references={};rows=[]
+    # Every seasonal state is independent and serial, before any throughput run.
+    all_points={p['id']:p for p in plan['seasonal']+plan['diagnostic']}
+    invariant=None
+    for i,point in enumerate(all_points.values()):
+        r,grid=context(cp,case)
+        try:
+            set_state(cp,r,point);elapsed=cpu.simulate(cp,r,1);values,metrics=payload(cp,r,point,grid)
+            references[str(point['id'])]=signature(values)
+            np.savez(directory/(str(point['id'])+'.npz'),**values)
+            if point['id'] in {p['id'] for p in plan['diagnostic']}:
+                np.save(directory/(str(point['id'])+'-optics.npy'),capture(r))
+            current=immutable(cp,r)
+            if invariant is None:invariant=current
+            require(current==invariant,'Layout or invariant aiming changed across fresh states')
+            rows.append({'id':point['id'],'simulate_s':elapsed,'signature':references[str(point['id'])], 'metrics':metrics})
+        finally:cp.data_free(r)
+        print(case,'fresh serial',i+1,'/',len(all_points),flush=True)
+    write(directory/'references.json',references)
+    diag=plan['diagnostic'];checks=[]
+    for n in (1,2,4,6,12,24):
+        os.sched_setaffinity(0,set(cpu.topology_cache['affinity_sets']['24']))
+        r,grid=context(cp,case)
+        try:
+            sequences=[('forward',diag),('reverse',list(reversed(diag))),('repeated',[diag[0],diag[4],diag[0],diag[-1],diag[0]])]
+            # Full forward/reverse/repeated for 1T; all seasonal transitions forward for every API N.
+            if n!=1: sequences=[('forward',diag)]
+            for order,points in sequences:
+                for point in points:
+                    set_state(cp,r,point);cpu.simulate(cp,r,n);values,metrics=payload(cp,r,point,grid)
+                    require(signature(values)==references[str(point['id'])],'Reused context differs from fresh serial reference')
+                    expected=np.load(directory/(str(point['id'])+'-optics.npy'))
+                    require(expected.tobytes()==capture(r).tobytes(),'Reused full optical state differs')
+                    require(immutable(cp,r)==invariant,'Runtime geometry/aiming drift')
+                    checks.append({'id':point['id'],'threads':n,'order':order,'bitwise_full_outputs':True,'bitwise_all215':True})
+            print(case,'reused context',n,'PASS',flush=True)
+        finally:cp.data_free(r)
+    write(directory/'result.json',{'status':'passed','case':case,'fresh_serial_states':len(rows),'reference_rows':rows,
+                                 'transition_checks':checks,'immutable_geometry_aim':True,'zero_dni_probe':True})
+
+
+def usage():
+    v=resource.getrusage(resource.RUSAGE_SELF);return v.ru_utime+v.ru_stime
+
+
+def proc_sample(pids, masks):
+    result={'time':time.perf_counter(),'workers':{}}
+    for pid,mask in zip(pids,masks):
+        tasks=[]
+        for task in Path('/proc',str(pid),'task').glob('[0-9]*'):
+            try:
+                stat=(task/'stat').read_text().split(') ',1)[1].split()
+                allowed=sorted(os.sched_getaffinity(int(task.name)))
+                tasks.append({'tid':int(task.name),'state':stat[0],'last_cpu':int(stat[36]),'allowed':allowed})
+            except (FileNotFoundError,ProcessLookupError): continue
+        if tasks:
+            require(all(set(t['allowed'])==set(mask) for t in tasks),'A task escaped its worker mask')
+            require(len(tasks)<=len(mask),'Worker task count exceeds threads_per_state')
+        result['workers'][str(pid)]=tasks
+    return result
+
+
+def worker(pipe, start, finish, case, points, mask, threads, directory, references):
+    cp=None;r=None
+    try:
+        os.sched_setaffinity(0,set(mask));environment()
+        init=time.perf_counter();cp=api();load_s=time.perf_counter()-init
+        init=time.perf_counter();r,grid=context(cp,case);setup_s=time.perf_counter()-init
+        pipe.send({'kind':'ready','pid':os.getpid(),'load_s':load_s,'setup_s':setup_s,'cpu_start':usage(),
+                   'mask':sorted(os.sched_getaffinity(0))})
+        start.wait();rows=[];bytes_written=0
+        with (directory/('worker-'+str(os.getpid())+'.jsonl')).open('x') as stream:
+            for point in points:
+                begin=time.perf_counter();set_state(cp,r,point)
+                sim=cpu.simulate(cp,r,threads)
+                output_start=time.perf_counter();values,metrics=payload(cp,r,point,grid);sig=signature(values)
+                if str(point['id']) in references:
+                    require(sig==references[str(point['id'])],'Strategy output differs from independent serial oracle')
+                file=directory/(str(point['id'])+'.npz')
+                require(not file.exists(),'Duplicate state output')
+                np.savez(file,**values);bytes_written+=file.stat().st_size
+                end=time.perf_counter()
+                row={'id':point['id'],'state':point,'signature':sig,'metrics':metrics,'simulate_s':sim,
+                     'output_s':end-output_start,'state_latency_s':end-begin,'worker_pid':os.getpid(),
+                     'completed_monotonic':end,'serial_oracle_checked':str(point['id']) in references}
+                stream.write(json.dumps(row,allow_nan=False)+'\n');stream.flush();rows.append(row)
+        pipe.send({'kind':'done','pid':os.getpid(),'cpu_end':usage(),'completed':len(rows),'bytes':bytes_written,
+                   'end':time.perf_counter()})
+        finish.wait()
+    except BaseException:
+        pipe.send({'kind':'error','traceback':traceback.format_exc()})
+    finally:
+        if cp and r:cp.data_free(r)
+        pipe.close()
+
+
+def stats(values):
+    return {'count':len(values),'median':float(np.median(values)), 'p95':float(np.percentile(values,95)),
+            'p99':float(np.percentile(values,99)),'min':min(values),'max':max(values)}
+
+
+def campaign(case, workers, threads, series, identifier):
+    environment();plan=json.loads((OUT/(case+'-plan.json')).read_text());points=plan[series]
+    reference=OUT/'correctness'/case/'references.json'
+    require(reference.is_file(),'Serial correctness must precede campaigns')
+    require(json.loads((reference.parent/'result.json').read_text())['status']=='passed','Correctness did not pass')
+    references=json.loads(reference.read_text());masks=partitions(cpu.topology_cache,workers,threads)
+    directory=OUT/'campaigns'/identifier;directory.mkdir(parents=True,exist_ok=False)
+    write(directory/'plan.json',{'case':case,'series':series,'points':points,'workers':workers,'threads':threads,
+                               'masks':masks,'contract':CONTRACT,'identifier':identifier})
+    ctx=mp.get_context('spawn');start=ctx.Event();finish=ctx.Event();children=[];pipes=[]
+    overall=time.perf_counter();ready=[];done=[];frames=[];monitor_errors=[];stop=threading.Event()
+    frequency_before=cpu.frequency()
+    try:
+        for i,mask in enumerate(masks):
+            parent,child=ctx.Pipe(duplex=False)
+            p=ctx.Process(target=worker,args=(child,start,finish,case,points[i::workers],mask,threads,directory,references))
+            p.start();child.close();children.append(p);pipes.append(parent)
+        for pipe in pipes:
+            value=pipe.recv();require(value['kind']=='ready',str(value));ready.append(value)
+        setup_end=time.perf_counter();pids=[p.pid for p in children]
+        require(all(v['mask']==sorted(mask) for v,mask in zip(ready,masks)),'Wrong initial worker masks')
+        def observe():
+            while not stop.is_set():
+                try:frames.append(proc_sample(pids,masks))
+                except BaseException:monitor_errors.append(traceback.format_exc());break
+                stop.wait(.05)
+        observer=threading.Thread(target=observe);observer.start()
+        before=cpu.cpu_window();parent_cpu_before=usage();evaluation_start=time.perf_counter();start.set()
+        for pipe in pipes:
+            value=pipe.recv();require(value['kind']=='done',str(value));done.append(value)
+        evaluation_end=time.perf_counter();after=cpu.cpu_window();parent_cpu_after=usage()
+        stop.set();observer.join()
+        require(not monitor_errors,str(monitor_errors))
+        finish.set()
+        for child in children:child.join();require(child.exitcode==0,'Worker did not exit cleanly')
+        overall_end=time.perf_counter()
+        rows=[]
+        for file in directory.glob('worker-*.jsonl'):rows.extend(json.loads(line) for line in file.read_text().splitlines())
+        require(sorted(r['id'] for r in rows)==sorted(p['id'] for p in points),'Incomplete or duplicate state coverage')
+        own_cpu=sum(v['cpu_end']-r['cpu_start'] for r,v in zip(ready,done))+parent_cpu_after-parent_cpu_before
+        elapsed=after['wall']-before['wall'];system_cpu=(after['busy_ticks']-before['busy_ticks'])/os.sysconf('SC_CLK_TCK')
+        external=max(0.,system_cpu-own_cpu)/elapsed
+        thermal=any(after['throttle'].get(k,v)>v for k,v in before['throttle'].items())
+        elapsed_eval=evaluation_end-evaluation_start
+        frequency_after=cpu.frequency()
+        policy_unchanged=frequency_policy(frequency_before)==frequency_policy(frequency_after)
+        require(digest(Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so')==LIB_SHA,'Library changed during campaign')
+        result={'phase':'5A','status':'passed','identifier':identifier,'case':case,'series':series,'contract':CONTRACT,
+                'states_in_parallel':workers,'threads_per_state':threads,'masks':masks,'completed':len(rows),
+                'evaluation_wall_s':elapsed_eval,'total_wall_s':overall_end-overall,'setup_wall_s':setup_end-overall,
+                'states_per_s':len(rows)/elapsed_eval,'total_states_per_s':len(rows)/(overall_end-overall),
+                'simulation_latency_s':stats([r['simulate_s'] for r in rows]),
+                'state_latency_s':stats([r['state_latency_s'] for r in rows]),
+                'output_materialization_s':stats([r['output_s'] for r in rows]),
+                'output_total_worker_s':sum(r['output_s'] for r in rows),'output_bytes':sum(d['bytes'] for d in done),
+                'checked_against_serial_oracle':sum(r['serial_oracle_checked'] for r in rows),
+                'workers':ready,'cpu_window':{'accepted':external<.5 and not thermal and policy_unchanged,'frequency_policy_unchanged':policy_unchanged,'external_average_cores':external,
+                'owned_cpu_s':own_cpu,'average_owned_cores':own_cpu/elapsed,'logical_cpu_utilization':own_cpu/(24*elapsed),
+                'system_cpu_s':system_cpu,'thermal_throttle_increased':thermal,'before':before,'after':after},
+                'affinity_observation':{'passed':True,'frames':len(frames),'maximum_tasks':[max((len(f['workers'][str(pid)]) for f in frames),default=0) for pid in pids],
+                                      'maximum_runnable':[max((sum(t['state']=='R' for t in f['workers'][str(pid)]) for f in frames),default=0) for pid in pids]},
+                'frequency_before':frequency_before,'frequency_after':frequency_after,
+                'library_sha256':LIB_SHA,'harness_sha256':digest(__file__),'utc':datetime.now(timezone.utc).isoformat(),
+                'commits':{name:subprocess.check_output(['git','-C',str(ROOT/name),'rev-parse','HEAD'],text=True).strip() for name in ('.','ssc','SolarPILOT','SolTrace')}}
+        write(directory/'task-observations.json',frames);write(directory/'result.json',result)
+        print(identifier,'completed',len(rows),'states/s',round(result['states_per_s'],4),'total wall',round(result['total_wall_s'],3),
+              'clean',result['cpu_window']['accepted'],flush=True)
+    finally:
+        stop.set();start.set();finish.set()
+        for child in children:
+            child.join(timeout=5)
+            if child.is_alive():child.terminate();child.join()
+        for pipe in pipes:pipe.close()
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='command',required=True)
+    a=sub.add_parser('correctness');a.add_argument('--case',choices=['cesa','commercial'],required=True)
+    a=sub.add_parser('campaign');a.add_argument('--case',choices=['cesa','commercial'],required=True)
+    a.add_argument('--workers',type=int,required=True);a.add_argument('--threads',type=int,required=True)
+    a.add_argument('--series',choices=['seasonal','states'],default='seasonal');a.add_argument('--id',required=True)
+    args=p.parse_args();cpu.topology_cache=cpu.topology();environment()
+    if args.command=='correctness':correctness(args.case)
+    else:campaign(args.case,args.workers,args.threads,args.series,args.id)
+
+
+if __name__=='__main__':main()
