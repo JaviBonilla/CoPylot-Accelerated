@@ -17,6 +17,8 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 5A direct temporal workloads and CPU throughput](docs/phase5a-report.md), [state semantics and design](docs/phase5a-design.md), [campaign summary](benchmarks/results/phase5a-campaign-summary.json), [CPU strategy matrix](benchmarks/results/phase5a-cpu-strategy-scaling.csv), [reconstruction and validation](benchmarks/results/phase5a-validation.json).
+
 * [Phase 4 deterministic CPU multicore and best measured CPU/GPU comparison](docs/phase4-report.md), [threading design](docs/cpu-multicore-design.md), [aggregate summary](benchmarks/results/phase4-cpu-gpu-summary.json), [all CPU samples](benchmarks/results/phase4-flat-multicore-scaling.csv), [separate timing regimes](benchmarks/results/phase4-timing-repeatability.json).
 
 * [Phase 3C CESA-I grid convergence and CPU/GPU characterization](docs/phase3c-report.md), [study design](docs/phase3c-design.md), [approved aggregate results](benchmarks/results/phase3c-cesa1-grid-convergence-summary.json), [timing CSV](benchmarks/results/phase3c-cesa1-grid-performance.csv).
@@ -89,7 +91,7 @@ results and exact reconstruction evidence. An earlier complete same-binary CPU
 campaign was slower; both regimes remain public. Phase 4R later identifies the
 calling-stack condition, and Phase 4S repairs the shared-data layout. The original
 Phase 4 optimum was conditional on the observed faster regime. No new CUDA
-tuning or annual/temporal parallelism is introduced. Phase 5 has not started.
+tuning or annual/temporal parallelism was introduced in Phase 4.
 
 Phase 4R reproduces the CPU timing regimes through controlled C API calling-stack
 placement, with unchanged numerical binaries and bitwise outputs. The exact
@@ -119,4 +121,18 @@ new stable comparisons under the declared protocol; historical results remain
 intact. See the [Phase 4S report](docs/phase4s-report.md),
 [ordinary CPU baseline](benchmarks/results/phase4s-final-cpu-baseline.json) and
 [CPU/GPU ratios](benchmarks/results/phase4s-cpu-gpu-summary.json).
-No Phase 5 work or push is included.
+No Phase 5 work or push was included in Phase 4S.
+
+
+Phase 5A preserves the Phase 4S numerical implementation and CONTROL grids while
+adding independent-context temporal CPU scheduling. Fresh-context references and
+forward/reverse/repeated transitions pass bitwise checks. The six allocation
+strategies retain identical full outputs. CESA-I reaches 8.883 states/s with
+12 states x 2 threads; the commercial 48-state series favors 6 x 4, while repeated
+240-state campaigns select 24 x 1. That allocation directly computes all 4403
+commercial daylight states in 2586.207 s total scheduler wall, producing and
+verifying 8,481,358,004 bytes of full scientific payloads. Zero-DNI daylight
+states are retained. These are instantaneous optical workloads, not a validated
+annual plant-energy prediction. All private inputs/raw maps stay ignored on the
+server; public aggregates and commercial scalar results are versioned. No temporal
+approximation, Phase 5B GPU architecture work or push is included.
