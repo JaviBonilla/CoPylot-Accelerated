@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/27] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/28] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/27] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/28] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/27] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/28] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/27] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/28] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/27] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/28] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/27] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/28] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/27] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/28] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/27] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/28] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/27] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/28] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/27] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/28] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/27] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/28] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/27] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/28] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/27] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/28] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/27] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/28] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/27] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/28] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3302,7 +3302,7 @@ index 53953d37a..3ece02fda 100644
 From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:22:32 +0200
-Subject: [PATCH 16/27] cuda: port the validated flat image-plane formulation
+Subject: [PATCH 16/28] cuda: port the validated flat image-plane formulation
  with independent device buffers
 
 ---
@@ -4734,7 +4734,7 @@ index 000000000..8e112617b
 From 71f2c7b4acf647831ffb8ba9039c9aa078b8c05c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:34:28 +0200
-Subject: [PATCH 17/27] cuda: integrate batched image-plane evaluation and
+Subject: [PATCH 17/28] cuda: integrate batched image-plane evaluation and
  checked context ownership
 
 ---
@@ -5058,7 +5058,7 @@ index 9e72693d0..a9f70da0d 100644
 From 012b1a2ce195f5060867828773a2a339edf67b96 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 14:58:55 +0200
-Subject: [PATCH 18/27] cuda: reject invalid image-plane devices before
+Subject: [PATCH 18/28] cuda: reject invalid image-plane devices before
  constructing resources
 
 ---
@@ -5101,7 +5101,7 @@ index 3a9162505..5434e98a1 100644
 From 5554361cf948681330faabe686696931697116d8 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:39:29 +0200
-Subject: [PATCH 19/27] perf: expose bounded image-plane launch diagnostics
+Subject: [PATCH 19/28] perf: expose bounded image-plane launch diagnostics
  without changing arithmetic
 
 ---
@@ -5217,7 +5217,7 @@ index 5434e98a1..b2bc23fb6 100644
 From 02e47568e72cfc3d369d2d6274808b57b5345df2 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:54:11 +0200
-Subject: [PATCH 20/27] cuda: hand resident image-plane optics to density and
+Subject: [PATCH 20/28] cuda: hand resident image-plane optics to density and
  eagerly complete host state
 
 ---
@@ -5849,7 +5849,7 @@ index b2bc23fb6..30d9e8de0 100644
 From cb3c0371884a2cf69aded43c20dd5081a56cf96d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 16:02:45 +0200
-Subject: [PATCH 21/27] perf: distinguish optical validation from eager object
+Subject: [PATCH 21/28] perf: distinguish optical validation from eager object
  materialization
 
 ---
@@ -5928,7 +5928,7 @@ index 704c43f89..81170365d 100644
 From cafc3bbd7dec00e1871a3c559cd6c6b90694db17 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:55:37 +0200
-Subject: [PATCH 22/27] Restore serialized fields explicitly and extend Hermite
+Subject: [PATCH 22/28] Restore serialized fields explicitly and extend Hermite
  optics to flat rectangles
 
 ---
@@ -6550,7 +6550,7 @@ index 6e87c0d7a..2a969a5c9 100644
 From 61a24c325d7039ef559fd6343556800195164e3d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:58:48 +0200
-Subject: [PATCH 23/27] Handle single-row and blank-line serialized layouts
+Subject: [PATCH 23/28] Handle single-row and blank-line serialized layouts
  consistently
 
 ---
@@ -6680,7 +6680,7 @@ index 3c6c3ae1d..18b4c8ecf 100644
 From c3ccd7db4d112c5787a5cfdea9df868208810893 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 21:05:02 +0200
-Subject: [PATCH 24/27] Validate restored physical dimensions and advertise the
+Subject: [PATCH 24/28] Validate restored physical dimensions and advertise the
  explicit restoration API
 
 ---
@@ -6724,7 +6724,7 @@ index 213774fff..3e8fa1603 100644
 From 3a93e2d21f0b596fab9e5c107144a89b6d6babe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:05:58 +0000
-Subject: [PATCH 25/27] perf: parallelize independent Flat Hermite CPU work
+Subject: [PATCH 25/28] perf: parallelize independent Flat Hermite CPU work
  deterministically
 
 ---
@@ -6991,7 +6991,7 @@ index 000000000..ffa973837
 From 581a006ec4afb0f0d1f34b1d0d8382736e83d865 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:16:35 +0000
-Subject: [PATCH 26/27] perf: preserve heliostat loop invariants within CPU
+Subject: [PATCH 26/28] perf: preserve heliostat loop invariants within CPU
  cell ranges
 
 ---
@@ -7034,7 +7034,7 @@ index 008f628ce..583e39f59 100644
 From 0fd069b30343a08787f76247c4b1bb637e83bbe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 10:35:34 +0200
-Subject: [PATCH 27/27] fix: isolate Flat multicore shared parameters from
+Subject: [PATCH 27/28] fix: isolate Flat multicore shared parameters from
  caller scratch
 
 ---
@@ -7070,6 +7070,385 @@ index 583e39f59..97e03729a 100644
                  }
              }
              range_evaluations[range]=local_evaluated;
+-- 
+2.43.0
+
+
+From 12d39aed2bfa7db645463baa588c39a3ac622345 Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Mon, 19 Oct 2026 14:21:17 +0200
+Subject: [PATCH 28/28] Add guarded temporal uploads and bounded independent
+ CUDA context batches
+
+---
+ solarpilot/CoPilot_API.cpp               | 98 +++++++++++++++++++++++-
+ solarpilot/CoPilot_API.h                 |  5 ++
+ solarpilot/ComputeBackend.h              |  3 +
+ solarpilot/FluxDensityCuda.cpp           |  2 +-
+ solarpilot/FluxDensityKernels.cu         | 16 +++-
+ solarpilot/ImagePlaneInterceptCuda.cpp   |  2 +-
+ solarpilot/ImagePlaneInterceptCuda.h     |  1 +
+ solarpilot/ImagePlaneInterceptKernels.cu | 13 +++-
+ solarpilot/TemporalUploadCache.h         | 26 +++++++
+ 9 files changed, 158 insertions(+), 8 deletions(-)
+ create mode 100644 solarpilot/TemporalUploadCache.h
+
+diff --git a/solarpilot/CoPilot_API.cpp b/solarpilot/CoPilot_API.cpp
+index 964996001..517b62144 100644
+--- a/solarpilot/CoPilot_API.cpp
++++ b/solarpilot/CoPilot_API.cpp
+@@ -1,5 +1,11 @@
+ #include "CoreProfile.h"
+ #include "ComputeBackend.h"
++#include "StaticParallel.h"
++#include <atomic>
++#include <set>
++#ifdef __linux__
++#include <sched.h>
++#endif
+ #include "Flux.h"
+ #include <chrono>
+ #include <iomanip>
+@@ -1345,11 +1351,15 @@ static bool simulate_cpu(sp_data_t p_data, int nthreads = 1, bool update_aimpoin
+     //Set up field, update aimpoints, and simulate at the performance sun position
+     Hvector* helios = SF->getHeliostats();
+ 
++    auto* temporal_gpu=SF->getFluxObject()->getGpuContext();
++    const bool temporal_timed=temporal_gpu && temporal_gpu->temporal_timing;
++    const auto temporal_begin=temporal_timed?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point();
+     if (!interop::PerformanceSimulationPrep(*SF, *helios)) return false;
+ 
+     Vect sun = Ambient::calcSunVectorFromAzZen(V->flux.flux_solar_az.Val() * D2R, (90. - V->flux.flux_solar_el.Val())*D2R);
+ 
+     SF->calcHeliostatShadows(sun);
++    if (temporal_timed) temporal_gpu->temporal_preparation_wall_s=std::chrono::duration<double>(std::chrono::steady_clock::now()-temporal_begin).count();
+     if (SF->ErrCheck()) return false;
+ 
+     res->clear();
+@@ -1438,6 +1448,46 @@ SPEXPORT bool sp_set_compute_backend(sp_data_t p_data, int backend)
+     } catch (const std::exception& error) { state.error = error.what(); return false; }
+ }
+ 
++// Explicit temporal path; all ordinary simulate getters/callbacks remain eager.
++SPEXPORT bool sp_set_temporal_residency(sp_data_t p_data,bool enabled)
++{
++    if (!p_data) return false;
++    auto& state=static_cast<CopilotObject*>(p_data)->compute;
++    state.error.clear();
++    if (state.selected!=solarpilot::ComputeBackend::CUDA || !state.gpu) {
++        state.error="Temporal residency requires the CUDA backend";return false;
++    }
++    try {
++        if (!state.gpu->image_plane) state.gpu->image_plane=solarpilot::make_image_plane_gpu_context(state.cuda_device);
++        state.gpu->temporal_residency=enabled;
++        state.gpu->image_plane->temporal_residency=enabled;
++        return true;
++    } catch (const std::exception& e) { state.error=e.what();return false; }
++}
++
++SPEXPORT bool sp_set_temporal_timing(sp_data_t p_data,bool enabled)
++{
++    if (!p_data) return false;
++    auto& state=static_cast<CopilotObject*>(p_data)->compute;
++    if (state.selected!=solarpilot::ComputeBackend::CUDA || !state.gpu) return false;
++    state.gpu->temporal_timing=enabled;return true;
++}
++
++SPEXPORT bool sp_get_temporal_statistics(sp_data_t p_data,double* output,int capacity)
++{
++    if (!p_data || !output || capacity!=24) return false;
++    auto& state=static_cast<CopilotObject*>(p_data)->compute;
++    if (!state.gpu || !state.gpu->image_plane || !state.gpu->temporal_timing) return false;
++    const auto& f=state.gpu->statistics;const auto& im=state.gpu->image_plane->statistics;
++    const double values[]={state.gpu->temporal_preparation_wall_s,im.preparation_s,im.host_validation_s,
++        im.input_h2d_ms*.001,im.tables_h2d_ms*.001,im.kernel_ms*.001,im.validation_kernel_ms*.001,
++        im.d2h_ms*.001,im.writeback_s,f.preparation_s,f.h2d_heliostat_ms*.001,f.h2d_cell_ms*.001,
++        f.handoff_ms*.001,f.kernel_ms*.001,f.d2h_ms*.001,f.cpu_postprocessing_s,f.simulate_s,
++        double(im.input_h2d_bytes),double(im.tables_h2d_bytes),double(f.heliostat_h2d_bytes),
++        double(f.cell_h2d_bytes),double(im.output_d2h_bytes),double(f.allocations),double(im.allocations)};
++    std::copy(values,values+24,output);return true;
++}
++
+ SPEXPORT int sp_get_compute_backend(sp_data_t p_data)
+ {
+     if (!p_data) return -1;
+@@ -1517,24 +1567,70 @@ SPEXPORT bool sp_simulate(sp_data_t p_data, int nthreads, bool update_aimpoints)
+             ~ScopedContext() { flux->setImagePlaneGpuContext(nullptr);flux->setGpuContext(nullptr); }
+         } selected(flux,state.gpu.get(),image_cuda,image_only);
+         const char* path = std::getenv("SOLARPILOT_CUDA_TIMING_FILE");
+-        const bool timed = path && *path;
++        const bool timed = (path && *path) || state.gpu->temporal_timing;
+         const auto begin = std::chrono::steady_clock::now();
+         const bool ok = simulate_cpu(p_data, 1, update_aimpoints); // Existing CPU preparation/writeback/postprocessing; selected numerical stages run on CUDA.
+         if (!ok) { state.error = "CPU preparation failed before completing CUDA Hermite simulation."; return false; }
+         if (timed) {
+             auto& stats = state.gpu->statistics;
+             stats.simulate_s = std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count();
++            if (path && *path) {
+             std::ofstream out(path, std::ios::app);
+             if (!out) throw std::runtime_error("Unable to write CUDA flux timing file.");
+             out << std::setprecision(17) << stats.heliostats << ',' << stats.cells << ',' << stats.preparation_s << ','
+                 << stats.h2d_heliostat_ms << ',' << stats.h2d_cell_ms << ',' << stats.kernel_ms << ',' << stats.d2h_ms << ','
+                 << stats.cpu_postprocessing_s << ',' << stats.hybrid_s << ',' << stats.simulate_s << '\n';
+             if (!out) throw std::runtime_error("Unable to finish CUDA flux timing file.");
++            }
+         }
+         return true;
+     } catch (const std::exception& error) { state.error = error.what(); return false; }
+ }
+ 
++// Bounded host-submission batch of independent CUDA states. Each ordinary call
++// still eagerly materializes its complete state. Existing CUDA kernels/default
++// stream ordering are preserved; this is not a fused multi-state kernel.
++SPEXPORT bool sp_simulate_batch(sp_data_t* contexts,int count,int requested_workers)
++{
++    if (!contexts || count<1 || count>32 || requested_workers<1 || requested_workers>24) return false;
++    std::set<sp_data_t> unique;
++    int device=-1;
++    auto fail=[&](const char* why) { if (contexts[0]) static_cast<CopilotObject*>(contexts[0])->compute.error=why;return false; };
++    for (int i=0;i<count;++i) {
++        if (!contexts[i] || !unique.insert(contexts[i]).second) return fail("Batch requires distinct non-null contexts");
++        const auto& c=static_cast<CopilotObject*>(contexts[i])->compute;
++        if (c.selected!=solarpilot::ComputeBackend::CUDA) return fail("Batch requires CUDA contexts");
++        if (device<0) device=c.cuda_device;
++        if (device!=c.cuda_device) return fail("Batch is restricted to one CUDA device");
++    }
++    try {
++#ifdef __linux__
++        cpu_set_t allowed;
++        if (sched_getaffinity(0,sizeof(allowed),&allowed)!=0) throw std::runtime_error("Cannot read batch affinity");
++        std::vector<int> cpus;
++        for (int i=0;i<CPU_SETSIZE;++i) if (CPU_ISSET(i,&allowed)) cpus.push_back(i);
++        if (requested_workers>int(cpus.size())) return fail("Batch workers exceed the caller CPU budget");
++#endif
++        std::atomic<int> next{0};std::atomic<bool> ok{true};
++        solarpilot::static_parallel(std::size_t(count),requested_workers,[&](std::size_t,std::size_t,std::size_t slot) {
++#ifdef __linux__
++            struct Affinity {
++                cpu_set_t previous;
++                explicit Affinity(int cpu) {
++                    if (sched_getaffinity(0,sizeof(previous),&previous)!=0) throw std::runtime_error("Cannot save batch affinity");
++                    cpu_set_t mask;CPU_ZERO(&mask);CPU_SET(cpu,&mask);
++                    if (sched_setaffinity(0,sizeof(mask),&mask)!=0) throw std::runtime_error("Cannot set batch affinity");
++                }
++                ~Affinity() { sched_setaffinity(0,sizeof(previous),&previous); }
++            } affinity(cpus.at(slot));
++#endif
++            for (int i=next.fetch_add(1);i<count;i=next.fetch_add(1))
++                if (!sp_simulate(contexts[i],1,true)) ok.store(false);
++        });
++        return ok.load();
++    } catch (const std::exception& e) { return fail(e.what()); }
++}
++
+ SPEXPORT const char *sp_summary_results(sp_data_t p_data)
+ {
+     /*
+diff --git a/solarpilot/CoPilot_API.h b/solarpilot/CoPilot_API.h
+index fb3fd342f..687eb1a2f 100644
+--- a/solarpilot/CoPilot_API.h
++++ b/solarpilot/CoPilot_API.h
+@@ -62,6 +62,11 @@ extern "C" {
+     SPEXPORT const char* sp_cuda_last_error(); // thread-local, valid until next probe
+     SPEXPORT bool sp_set_compute_backend(sp_data_t p_data, int backend);
+     SPEXPORT int sp_get_compute_backend(sp_data_t p_data);
++    // Additive temporal operations; every ordinary observable remains eager.
++    SPEXPORT bool sp_set_temporal_residency(sp_data_t p_data,bool enabled);
++    SPEXPORT bool sp_set_temporal_timing(sp_data_t p_data,bool enabled);
++    SPEXPORT bool sp_get_temporal_statistics(sp_data_t p_data,double* output,int capacity);
++    SPEXPORT bool sp_simulate_batch(sp_data_t* contexts,int count,int requested_workers);
+     SPEXPORT bool sp_set_cuda_device(sp_data_t p_data, int device);
+     SPEXPORT const char* sp_get_last_backend_error(sp_data_t p_data);
+ 
+diff --git a/solarpilot/ComputeBackend.h b/solarpilot/ComputeBackend.h
+index 934abc86b..80a6c0a6b 100644
+--- a/solarpilot/ComputeBackend.h
++++ b/solarpilot/ComputeBackend.h
+@@ -26,6 +26,9 @@ struct FluxGpuStatistics {
+ class GpuContext {
+ public:
+     FluxGpuStatistics statistics;
++    bool temporal_timing=false;
++    double temporal_preparation_wall_s=0.; // Inclusive prep/shadow wall, contains image GPU work.
++    bool temporal_residency=false; // Explicit internal temporal opt-in; ordinary API remains unchanged.
+     std::unique_ptr<ImagePlaneGpuContext> image_plane; // Independent RAII executor; density buffers remain unchanged.
+     virtual ~GpuContext() = default;
+     virtual void evaluate_flux(const flux_density::HeliostatData*, std::size_t,
+diff --git a/solarpilot/FluxDensityCuda.cpp b/solarpilot/FluxDensityCuda.cpp
+index db9d4f71c..8c7027342 100644
+--- a/solarpilot/FluxDensityCuda.cpp
++++ b/solarpilot/FluxDensityCuda.cpp
+@@ -33,7 +33,7 @@ struct ErrorSummary {
+ void Flux::fluxDensityCuda(simulation_info* siminfo, FluxSurface& surface, Hvector& helios, double tht, bool progress) {
+     using Clock = std::chrono::steady_clock;
+     const char* timing_path = std::getenv("SOLARPILOT_CUDA_TIMING_FILE");
+-    const bool timing = timing_path && *timing_path;
++    const bool timing = (timing_path && *timing_path) || _gpu_context->temporal_timing;
+     const auto begin = timing ? Clock::now() : Clock::time_point();
+     const int nx = surface.getFluxNX(), ny = surface.getFluxNY();
+     var_receiver* variables = surface.getParent()->getVarMap();
+diff --git a/solarpilot/FluxDensityKernels.cu b/solarpilot/FluxDensityKernels.cu
+index 39bca8929..d960cd7cb 100644
+--- a/solarpilot/FluxDensityKernels.cu
++++ b/solarpilot/FluxDensityKernels.cu
+@@ -1,6 +1,7 @@
+ // BSD-3-Clause; shared numerical formulation is in FluxDensityNumerics.h.
+ #include "ComputeBackend.h"
+ #include <cuda_runtime.h>
++#include "TemporalUploadCache.h"
+ #include <chrono>
+ #include <limits>
+ #include <stdexcept>
+@@ -129,6 +130,16 @@ class FluxGpuContext final : public GpuContext {
+     Event start_, end_;
+     std::vector<double> packed_;
+     std::size_t allocations_ = 0;
++    TemporalUploadCache<flux_density::CellData> cell_cache_;
++    void upload_cells(const flux_density::CellData* cells,std::size_t count) {
++        const bool reuse=temporal_residency && cell_cache_.matches(cells,count);
++        statistics.cell_h2d_bytes=reuse?0:sizeof(flux_density::CellData)*count;
++        if (!reuse) {
++            cell_cache_.invalidate();
++            check(cudaMemcpy(cells_.data(),cells,sizeof(flux_density::CellData)*count,cudaMemcpyHostToDevice),"cudaMemcpy(flux cells H2D)");
++            if (temporal_residency) cell_cache_.commit(cells,count);
++        }
++    }
+     void prepare(const flux_density::HeliostatData* h, std::size_t count,
+                  const flux_density::CellData* cells, std::size_t cell_count, bool timing) {
+         if ((count && !h) || !cells || !cell_count) throw std::runtime_error("Invalid CUDA flux input arrays");
+@@ -154,7 +165,7 @@ class FluxGpuContext final : public GpuContext {
+         if (timing) start_.record();
+         if (count) check(cudaMemcpy(heliostats_.data(), packed_.data(), 200*count, cudaMemcpyHostToDevice), "cudaMemcpy(flux heliostats H2D)");
+         if (timing) { end_.record(); statistics.h2d_heliostat_ms = end_.elapsed_from(start_); start_.record(); }
+-        check(cudaMemcpy(cells_.data(), cells, sizeof(flux_density::CellData)*cell_count, cudaMemcpyHostToDevice), "cudaMemcpy(flux cells H2D)");
++        upload_cells(cells,cell_count);
+         if (timing) { end_.record(); statistics.h2d_cell_ms = end_.elapsed_from(start_); }
+     }
+     void download(double* output, std::size_t count, bool timing) {
+@@ -211,7 +222,7 @@ public:
+         if (timing) start_.record();
+         if (count) check(cudaMemcpy(metadata_.data(),metadata,statistics.heliostat_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(resident density metadata H2D)");
+         if (timing) { end_.record();statistics.h2d_heliostat_ms=end_.elapsed_from(start_);start_.record(); }
+-        check(cudaMemcpy(cells_.data(),cells,statistics.cell_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(resident density cells H2D)");
++        upload_cells(cells,cell_count);
+         if (timing) { end_.record();statistics.h2d_cell_ms=end_.elapsed_from(start_);start_.record(); }
+         if (count) {
+             resident_density_input_kernel<<<static_cast<unsigned>((count+127)/128),128>>>(optics,metadata_.data(),count,heliostats_.data());
+@@ -222,6 +233,7 @@ public:
+         download(output,cell_count,timing);device.restore();
+     }
+     void close() override {
++        cell_cache_.invalidate();
+         DeviceGuard device(device_);
+         // Attempt all releases; report the first failure on normal teardown.
+         std::string error;
+diff --git a/solarpilot/ImagePlaneInterceptCuda.cpp b/solarpilot/ImagePlaneInterceptCuda.cpp
+index e9b39dbca..b77804362 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.cpp
++++ b/solarpilot/ImagePlaneInterceptCuda.cpp
+@@ -18,7 +18,7 @@ void Flux::imagePlaneInterceptCudaBatch(var_map& variables,Hvector& heliostats,V
+     if (!_image_gpu_context || !_image_gpu_context->image_plane)
+         throw std::runtime_error("CUDA image-plane executor is not initialized");
+     const char* timing_file=std::getenv("SOLARPILOT_IMAGE_TIMING_FILE");
+-    timing=timing || (timing_file && *timing_file);
++    timing=timing || (timing_file && *timing_file) || _image_gpu_context->temporal_timing;
+     bool verify=false;
+     const char* comparison_file=nullptr;
+ #ifdef SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS
+diff --git a/solarpilot/ImagePlaneInterceptCuda.h b/solarpilot/ImagePlaneInterceptCuda.h
+index eceb2176c..ae1695c2b 100644
+--- a/solarpilot/ImagePlaneInterceptCuda.h
++++ b/solarpilot/ImagePlaneInterceptCuda.h
+@@ -56,6 +56,7 @@ struct ImagePlaneGpuResources {
+ class ImagePlaneGpuContext {
+ public:
+     ImagePlaneGpuStatistics statistics;
++    bool temporal_residency=false; // Guarded content reuse, never address-based invariance.
+     virtual ~ImagePlaneGpuContext() = default;
+     virtual void evaluate(const image_plane::Input*,std::size_t,const image_plane::Tables&,
+                           image_plane::Output*,bool timing=false)=0;
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+index 9939072b9..16ccfafb1 100644
+--- a/solarpilot/ImagePlaneInterceptKernels.cu
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -3,6 +3,7 @@
+ #include "ImagePlaneInterceptNumerics.h"
+ #include "ComputeBackend.h"
+ #include <cuda_runtime.h>
++#include "TemporalUploadCache.h"
+ #include <climits>
+ #include <chrono>
+ #include <cmath>
+@@ -146,6 +147,7 @@ class ImagePlaneContext final:public ImagePlaneGpuContext {
+     Buffer<image_plane::Output> outputs_;
+     Buffer<image_plane::Tables> tables_;
+     Buffer<ImagePlaneRequiredOutput> required_;
++    TemporalUploadCache<image_plane::Tables> table_cache_;
+     std::size_t output_count_=0;
+     bool outputs_valid_=false;
+     Event start_,end_;
+@@ -182,13 +184,18 @@ public:
+         snapshot(count,timing);
+         statistics.resident=resident;statistics.host_validation_s=validation;
+         statistics.input_h2d_bytes=sizeof(image_plane::Input)*count;
+-        statistics.tables_h2d_bytes=sizeof(tables);
++        const bool reuse_tables=temporal_residency && table_cache_.matches(&tables,1);
++        statistics.tables_h2d_bytes=reuse_tables?0:sizeof(tables);
+         statistics.output_d2h_bytes=(resident?sizeof(ImagePlaneRequiredOutput):sizeof(image_plane::Output))*count;
+         if (resident) statistics.required_d2h_bytes=statistics.output_d2h_bytes;
+         if (timing) start_.record();
+         check(cudaMemcpy(inputs_.data(),input,statistics.input_h2d_bytes,cudaMemcpyHostToDevice),"cudaMemcpy(image-plane inputs H2D)");
+         if (timing) { end_.record();statistics.input_h2d_ms=end_.elapsed_from(start_);start_.record(); }
+-        check(cudaMemcpy(tables_.data(),&tables,sizeof(tables),cudaMemcpyHostToDevice),"cudaMemcpy(image-plane tables H2D)");
++        if (!reuse_tables) {
++            table_cache_.invalidate();
++            check(cudaMemcpy(tables_.data(),&tables,sizeof(tables),cudaMemcpyHostToDevice),"cudaMemcpy(image-plane tables H2D)");
++            if (temporal_residency) table_cache_.commit(&tables,1);
++        }
+         if (timing) { end_.record();statistics.tables_h2d_ms=end_.elapsed_from(start_);start_.record(); }
+         const int block=statistics.block_size;
+         image_plane_kernel<<<static_cast<unsigned>((count+block-1)/block),block>>>(inputs_.data(),count,tables_.data(),outputs_.data());
+@@ -254,7 +261,7 @@ public:
+         data.release();guard.restore();return result;
+     }
+     void close() override {
+-        outputs_valid_=false;output_count_=0;
++        outputs_valid_=false;output_count_=0;table_cache_.invalidate();
+         DeviceGuard guard(device_);std::string error;
+         auto release=[&](auto& r) { try { r.release(); } catch (const std::exception& e) { if (error.empty()) error=e.what(); } };
+         release(inputs_);release(outputs_);release(tables_);release(required_);release(start_);release(end_);
+diff --git a/solarpilot/TemporalUploadCache.h b/solarpilot/TemporalUploadCache.h
+new file mode 100644
+index 000000000..a57a930fe
+--- /dev/null
++++ b/solarpilot/TemporalUploadCache.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++#ifndef SOLARPILOT_TEMPORAL_UPLOAD_CACHE_H
++#define SOLARPILOT_TEMPORAL_UPLOAD_CACHE_H
++#include <cstring>
++#include <type_traits>
++#include <vector>
++namespace solarpilot {
++// Host snapshot of successfully uploaded POD bytes, owned by one device executor.
++// Address/shape equality alone never establishes invariance. Commit only after
++// successful H2D; invalidate before any upload which might partially fail.
++template<class T> class TemporalUploadCache {
++    static_assert(std::is_trivially_copyable<T>::value,"Upload cache requires POD bytes");
++    std::vector<T> snapshot_;
++    bool valid_=false;
++public:
++    bool matches(const T* data,std::size_t count) const {
++        return valid_ && snapshot_.size()==count && (!count || std::memcmp(snapshot_.data(),data,count*sizeof(T))==0);
++    }
++    void invalidate() { valid_=false; }
++    void commit(const T* data,std::size_t count) {
++        if (count) snapshot_.assign(data,data+count);else snapshot_.clear();
++        valid_=true;
++    }
++};
++}
++#endif
 -- 
 2.43.0
 

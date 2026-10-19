@@ -16,6 +16,12 @@ from temporal_campaign import ROOT,CONTRACT,write,digest,require,set_state,paylo
 from image_plane_cuda_performance import PipelineWindow,wait_idle
 from cpu_multicore import cpu_window,frequency
 
+STAGE_FIELDS=('preparation_inclusive_s','image_input_preparation_s','image_host_validation_s',
+ 'image_input_h2d_s','image_tables_h2d_s','image_kernel_s','image_health_s','image_full_d2h_s',
+ 'image_host_writeback_s','density_preparation_s','density_metadata_h2d_s','density_cells_h2d_s',
+ 'density_handoff_s','density_kernel_s','map_d2h_s','density_postprocess_s','api_s',
+ 'image_input_h2d_bytes','image_tables_h2d_bytes','density_metadata_h2d_bytes','density_cells_h2d_bytes',
+ 'image_full_d2h_bytes','density_allocations','image_allocations')
 OUT=ROOT/'artifacts/phase5b'
 REFERENCE=Path(os.environ.get('COPILOT_PHASE5A_REFERENCE','/phase5a-reference'))
 
@@ -83,7 +89,10 @@ def campaign(args):
     freq_before=frequency();before=None
     try:
         for _ in range(min(args.batch_size,len(points))):
-            begin=time.perf_counter();r,grid=open_context(cp,args.case,args.mode);contexts.append(r);setup_rows.append(time.perf_counter()-begin)
+            begin=time.perf_counter();r,grid=open_context(cp,args.case,'sequential' if args.no_residency else args.mode);contexts.append(r);setup_rows.append(time.perf_counter()-begin)
+            if args.instrumented:
+                f=cp.pdll.sp_set_temporal_timing;f.argtypes=[ctypes.c_void_p,ctypes.c_bool];f.restype=ctypes.c_bool
+                require(f(r,True),'Cannot enable separate stage diagnostics')
         setup_end=time.perf_counter()
         # All contexts use the one process's verified CUDA primary context.
         temporal.loaded_library()
@@ -106,7 +115,12 @@ def campaign(args):
                     materialize=time.perf_counter()-begin
                     begin=time.perf_counter();file=directory/(str(point['id'])+'.npz');np.savez(file,**values)
                     write_elapsed=time.perf_counter()-begin
-                    row={'id':point['id'],'state':point,'signature':sig,'metrics':metrics,'slot':slot,
+                    stages=None
+                    if args.instrumented:
+                        f=cp.pdll.sp_get_temporal_statistics;f.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_double),ctypes.c_int];f.restype=ctypes.c_bool
+                        measured=(ctypes.c_double*len(STAGE_FIELDS))();require(f(r,measured,len(measured)),'Missing stage diagnostics')
+                        stages=dict(zip(STAGE_FIELDS,measured))
+                    row={'stages':stages,'id':point['id'],'state':point,'signature':sig,'metrics':metrics,'slot':slot,
                          'simulate_batch_s':sim_elapsed,'materialize_analysis_s':materialize,'serialize_write_s':write_elapsed,
                          'state_batch_completion_latency_s':time.perf_counter()-batch_start,'output_bytes':file.stat().st_size}
                     log.write(json.dumps(row,allow_nan=False)+'\n');log.flush();rows.append(row)
@@ -114,6 +128,7 @@ def campaign(args):
                 if len(rows)%96==0 or len(rows)==len(points):print(args.id,'completed',len(rows),'/',len(points),flush=True)
                 if window.failure:raise RuntimeError(window.failure)
         evaluation_end=time.perf_counter();usage_after=resource.getrusage(resource.RUSAGE_SELF);after=cpu_window()
+        window.sample() # Observe live persistent allocations before freeing them.
         for r in contexts:require(cp.data_free(r),'Context teardown failed')
         contexts=[];total_end=time.perf_counter();window.close();freq_after=frequency()
         own=(usage_after.ru_utime+usage_after.ru_stime)-(usage_before.ru_utime+usage_before.ru_stime)
@@ -123,7 +138,7 @@ def campaign(args):
         require(sorted(p['id'] for p in points)==sorted(r['id'] for r in rows),'Incomplete/duplicate states')
         require(digest(library)==args.library_sha256,'Library changed during campaign')
         result={'phase':'5B','status':'passed','identifier':args.id,'case':args.case,'series':args.series,
-                'mode':args.mode,'batch_size':args.batch_size,'active_states':min(args.batch_size,24),
+                'mode':args.mode,'static_residency_enabled':args.mode!='sequential' and not args.no_residency,'instrumented':args.instrumented,'batch_size':args.batch_size,'active_states':min(args.batch_size,24),
                 'completed':len(rows),'control_grid':[grid['nx'],grid['ny']],'contract':CONTRACT,
                 'runtime_probe_s':probe,'context_setup_s':setup_rows,'setup_wall_s':setup_end-total_start,
                 'evaluation_wall_s':evaluation_end-eval_start,'total_wall_s':total_end-total_start,
@@ -177,7 +192,7 @@ def main():
     a=sub.add_parser('campaign');a.add_argument('--case',choices=['cesa','commercial'],required=True)
     a.add_argument('--series',choices=['seasonal','long','states'],default='seasonal')
     a.add_argument('--mode',choices=['sequential','resident','batch'],default='sequential');a.add_argument('--batch-size',type=int,default=1)
-    a.add_argument('--library-sha256',required=True);a.add_argument('--id',required=True)
+    a.add_argument('--no-residency',action='store_true',help='Batch control with ordinary static uploads');a.add_argument('--instrumented',action='store_true',help='Separate CUDA-event diagnostics, excluded from plain timing groups');a.add_argument('--library-sha256',required=True);a.add_argument('--id',required=True)
     a=sub.add_parser('verify');a.add_argument('--id',required=True);a.add_argument('--direct-reference')
     args=p.parse_args()
     require(args.id.isalnum() or all(c.isalnum() or c in '-_' for c in args.id),'Invalid campaign ID')
