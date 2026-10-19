@@ -52,7 +52,7 @@ def summarize(source, destination):
         storage=file.parent/'storage-validation.json'
         if storage.exists():item['storage_validation']=json.loads(storage.read_text())
         campaigns.append(item)
-    primary_scheduler='dynamic' if any(r['scheduler']=='dynamic' and r['role']=='formal' and r['series']=='seasonal' for r in campaigns) else 'round_robin'
+    primary_scheduler='dynamic_lpt' if any(r['scheduler']=='dynamic_lpt' and r['role']=='formal' and r['series']=='seasonal' for r in campaigns) else 'round_robin'
     groups=[]
     for case in ('cesa','commercial'):
         for workers,threads in STRATEGIES:
@@ -115,7 +115,7 @@ def summarize(source, destination):
             for line in file.read_text().splitlines():
                 value=json.loads(line);point=value['state'];metrics=value['metrics']
                 rows.append({'weather_row_id':point['id'],'month':point['month'],'day':point['day'],
-                    'hour_local_standard':point['hour'],'dni_w_m2':point['dni'],
+                    'dispatch_index':point.get('dispatch_index'),'hour_local_standard':point['hour'],'dni_w_m2':point['dni'],
                     'solar_azimuth_deg':point['sun'][0],'solar_elevation_deg':point['sun'][1],
                     **metrics,'simulate_s':value['simulate_s'],'output_s':value['output_s'],
                     'state_latency_s':value['state_latency_s'],'array_payload_sha256':value['signature']})

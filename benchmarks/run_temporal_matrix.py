@@ -5,7 +5,7 @@ from cases import ROOT
 from temporal_campaign import OUT
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--prefix',required=True,help='Unique immutable campaign family, e.g. R1')
-p.add_argument('--scheduler',choices=['dynamic','round_robin'],default='dynamic')
+p.add_argument('--scheduler',choices=['dynamic_lpt','dynamic','round_robin'],default='dynamic_lpt')
 p.add_argument('--skip-controls',action='store_true',help='Reuse the retained long serial/physical-core controls')
 a=p.parse_args()
 if not a.prefix.isalnum():p.error('prefix must be alphanumeric')

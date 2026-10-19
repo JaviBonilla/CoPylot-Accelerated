@@ -364,18 +364,23 @@ def stats(values):
             'p99':float(np.percentile(values,99)),'min':min(values),'max':max(values)}
 
 
-def campaign(case, workers, threads, series, identifier, scheduler='dynamic',role='formal'):
+def campaign(case, workers, threads, series, identifier, scheduler='dynamic_lpt',role='formal'):
     environment();plan=json.loads((OUT/(case+'-plan.json')).read_text());points=plan[series]
     reference=OUT/'correctness'/case/'references.json'
     require(reference.is_file(),'Serial correctness must precede campaigns')
     require(json.loads((reference.parent/'result.json').read_text())['status']=='passed','Correctness did not pass')
     references=json.loads(reference.read_text());masks=partitions(cpu.topology_cache,workers,threads)
-    reference_metrics={str(r['id']):r['metrics'] for r in json.loads((reference.parent/'result.json').read_text())['reference_rows']}
+    reference_rows=json.loads((reference.parent/'result.json').read_text())['reference_rows']
+    reference_metrics={str(r['id']):r['metrics'] for r in reference_rows}
+    costs={str(r['id']):r['simulate_s'] for r in reference_rows}
+    ordered=sorted(points,key=lambda p:(-costs.get(str(p['id']),0.),p['id'])) if scheduler=='dynamic_lpt' else points
+    dispatched=[{**p,'dispatch_index':i} for i,p in enumerate(ordered)]
     directory=OUT/'campaigns'/identifier;directory.mkdir(parents=True,exist_ok=False)
     write(directory/'plan.json',{'case':case,'series':series,'points':points,'workers':workers,'threads':threads,
-                               'masks':masks,'contract':CONTRACT,'identifier':identifier,'scheduler':scheduler,'role':role})
+                               'masks':masks,'contract':CONTRACT,'identifier':identifier,'scheduler':scheduler,'role':role,
+                               'dispatch_order_ids':[p['id'] for p in dispatched]})
     ctx=mp.get_context('spawn');start=ctx.Event();finish=ctx.Event();cancelled=ctx.Event();children=[];pipes=[]
-    jobs=ctx.Queue(maxsize=2*workers) if scheduler=='dynamic' else None
+    jobs=ctx.Queue(maxsize=2*workers) if scheduler!='round_robin' else None
     overall=time.perf_counter();ready=[];done=[];frames=[];monitor_errors=[];stop=threading.Event()
     feeder=None;observer=None
     frequency_before=cpu.frequency()
@@ -397,7 +402,7 @@ def campaign(case, workers, threads, series, identifier, scheduler='dynamic',rol
         if jobs is not None:
             def feed():
                 start.wait()
-                for point in [*points,*([None]*workers)]:
+                for point in [*dispatched,*([None]*workers)]:
                     while not cancelled.is_set():
                         try: jobs.put(point,timeout=.2);break
                         except queue.Full: continue
@@ -463,7 +468,7 @@ def main():
     a=sub.add_parser('campaign');a.add_argument('--case',choices=['cesa','commercial'],required=True)
     a.add_argument('--workers',type=int,required=True);a.add_argument('--threads',type=int,required=True)
     a.add_argument('--series',choices=['seasonal','states'],default='seasonal');a.add_argument('--id',required=True)
-    a.add_argument('--scheduler',choices=['dynamic','round_robin'],default='dynamic')
+    a.add_argument('--scheduler',choices=['dynamic_lpt','dynamic','round_robin'],default='dynamic_lpt')
     a.add_argument('--role',choices=['formal','pilot'],default='formal')
     args=p.parse_args();cpu.topology_cache=cpu.topology();environment()
     if args.command=='correctness':correctness(args.case)
