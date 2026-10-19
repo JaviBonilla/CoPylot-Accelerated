@@ -323,7 +323,7 @@ def equal_metrics(actual, expected):
         else: require(abs(value-expected[key])<=1e-10+1e-9*abs(expected[key]),'Derived metric differs from serial reference')
 
 
-def worker(pipe, start, finish, cancelled, jobs, case, points, mask, threads, directory, references, reference_metrics):
+def worker(pipe, start, finish, cancelled, jobs, case, points, mask, threads, directory, references, reference_metrics, fresh_reference_ids):
     cp=None;r=None
     try:
         os.sched_setaffinity(0,set(mask));environment()
@@ -346,7 +346,8 @@ def worker(pipe, start, finish, cancelled, jobs, case, points, mask, threads, di
                 end=time.perf_counter()
                 row={'id':point['id'],'state':point,'signature':sig,'metrics':metrics,'simulate_s':sim,
                      'output_s':end-output_start,'state_latency_s':end-begin,'worker_pid':os.getpid(),
-                     'completed_monotonic':end,'serial_oracle_checked':str(point['id']) in references}
+                     'completed_monotonic':end,'serial_oracle_checked':str(point['id']) in fresh_reference_ids,
+                     'ordinary_api_reference_checked':str(point['id']) in references}
                 stream.write(json.dumps(row,allow_nan=False)+'\n');stream.flush();rows.append(row)
         pipe.send({'kind':'done','pid':os.getpid(),'cpu_end':usage(),'completed':len(rows),'bytes':bytes_written,
                    'end':time.perf_counter()})
@@ -364,15 +365,33 @@ def stats(values):
             'p99':float(np.percentile(values,99)),'min':min(values),'max':max(values)}
 
 
+def load_references(reference,case):
+    references=json.loads(reference.read_text());fresh_reference_ids=set(references)
+    reference_rows=json.loads((reference.parent/'result.json').read_text())['reference_rows']
+    reference_metrics={str(r['id']):r['metrics'] for r in reference_rows}
+    costs={str(r['id']):r['simulate_s'] for r in reference_rows}
+    extra=reference.parent/'extra-references.json'
+    if extra.exists():
+        observed=json.loads(extra.read_text())
+        require(observed['library_sha256']==LIB_SHA,'Additional reference has another numerical binary')
+        require(observed['case']==case,'Additional reference has another case')
+        for row in observed['rows']:
+            key=str(row['id'])
+            if key in references:
+                require(references[key]==row['signature'],'Independent reference bundles disagree')
+                equal_metrics(reference_metrics[key],row['metrics'])
+            else:
+                references[key]=row['signature'];reference_metrics[key]=row['metrics'];costs[key]=row['simulate_s']
+    return references,reference_metrics,costs,fresh_reference_ids
+
+
 def campaign(case, workers, threads, series, identifier, scheduler='dynamic_lpt',role='formal'):
     environment();plan=json.loads((OUT/(case+'-plan.json')).read_text());points=plan[series]
     reference=OUT/'correctness'/case/'references.json'
     require(reference.is_file(),'Serial correctness must precede campaigns')
     require(json.loads((reference.parent/'result.json').read_text())['status']=='passed','Correctness did not pass')
-    references=json.loads(reference.read_text());masks=partitions(cpu.topology_cache,workers,threads)
-    reference_rows=json.loads((reference.parent/'result.json').read_text())['reference_rows']
-    reference_metrics={str(r['id']):r['metrics'] for r in reference_rows}
-    costs={str(r['id']):r['simulate_s'] for r in reference_rows}
+    references,reference_metrics,costs,fresh_reference_ids=load_references(reference,case)
+    masks=partitions(cpu.topology_cache,workers,threads)
     ordered=sorted(points,key=lambda p:(-costs.get(str(p['id']),0.),p['id'])) if scheduler=='dynamic_lpt' else points
     dispatched=[{**p,'dispatch_index':i} for i,p in enumerate(ordered)]
     directory=OUT/'campaigns'/identifier;directory.mkdir(parents=True,exist_ok=False)
@@ -388,7 +407,7 @@ def campaign(case, workers, threads, series, identifier, scheduler='dynamic_lpt'
         for i,mask in enumerate(masks):
             parent,child=ctx.Pipe(duplex=False)
             p=ctx.Process(target=worker,args=(child,start,finish,cancelled,jobs,case,
-                          points[i::workers] if jobs is None else [],mask,threads,directory,references,reference_metrics))
+                          points[i::workers] if jobs is None else [],mask,threads,directory,references,reference_metrics,fresh_reference_ids))
             p.start();child.close();children.append(p);pipes.append(parent)
         ready=receive_workers(pipes,children,'ready')
         setup_end=time.perf_counter();pids=[p.pid for p in children]
@@ -440,6 +459,7 @@ def campaign(case, workers, threads, series, identifier, scheduler='dynamic_lpt'
                 'output_materialization_s':stats([r['output_s'] for r in rows]),
                 'output_total_worker_s':sum(r['output_s'] for r in rows),'output_bytes':sum(d['bytes'] for d in done),
                 'checked_against_serial_oracle':sum(r['serial_oracle_checked'] for r in rows),
+                'checked_against_ordinary_api_reference':sum(r['ordinary_api_reference_checked'] for r in rows),
                 'workers':ready,'cpu_window':{'accepted':external<.5 and not thermal and policy_unchanged,'frequency_policy_unchanged':policy_unchanged,'external_average_cores':external,
                 'owned_cpu_s':own_cpu,'average_owned_cores':own_cpu/elapsed,'logical_cpu_utilization':own_cpu/(24*elapsed),
                 'system_cpu_s':system_cpu,'thermal_throttle_increased':thermal,'before':before,'after':after},
@@ -467,7 +487,7 @@ def main():
     a=sub.add_parser('correctness');a.add_argument('--case',choices=['cesa','commercial'],required=True)
     a=sub.add_parser('campaign');a.add_argument('--case',choices=['cesa','commercial'],required=True)
     a.add_argument('--workers',type=int,required=True);a.add_argument('--threads',type=int,required=True)
-    a.add_argument('--series',choices=['seasonal','states'],default='seasonal');a.add_argument('--id',required=True)
+    a.add_argument('--series',choices=['seasonal','long','states'],default='seasonal');a.add_argument('--id',required=True)
     a.add_argument('--scheduler',choices=['dynamic_lpt','dynamic','round_robin'],default='dynamic_lpt')
     a.add_argument('--role',choices=['formal','pilot'],default='formal')
     args=p.parse_args();cpu.topology_cache=cpu.topology();environment()

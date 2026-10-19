@@ -37,6 +37,7 @@ def summarize(source, destination):
         item={k:raw[k] for k in selected}
         item['scheduler']=raw.get('scheduler','round_robin')
         item['role']=raw.get('role','formal')
+        item['checked_against_ordinary_api_reference']=raw.get('checked_against_ordinary_api_reference',raw['checked_against_serial_oracle'])
         service={str(w['pid']):0. for w in raw['workers']}
         for trace in file.parent.glob('worker-*.jsonl'):
             for line in trace.read_text().splitlines():

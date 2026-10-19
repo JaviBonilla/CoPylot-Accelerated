@@ -11,7 +11,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
-from temporal_campaign import partitions, signature, STRATEGIES, payload, assigned_points, receive_workers, equal_metrics
+from temporal_campaign import partitions, signature, STRATEGIES, payload, assigned_points, receive_workers, equal_metrics, load_references, LIB_SHA
 from summarize_temporal import summarize
 from verify_temporal_outputs import verify
 
@@ -134,6 +134,23 @@ class TemporalContracts(unittest.TestCase):
         equal_metrics({'peak':1.,'cv':None},{'peak':1.+1e-11,'cv':None})
         with self.assertRaises(RuntimeError):equal_metrics({'peak':1.},{'peak':1.1})
         with self.assertRaises(RuntimeError):equal_metrics({'cv':None},{'cv':0.})
+
+    def test_cross_dispatch_observations_are_not_labeled_fresh_references(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp);reference=directory/'references.json'
+            reference.write_text(json.dumps({'1':'fresh-hash'}))
+            (directory/'result.json').write_text(json.dumps({'reference_rows':[{'id':1,'metrics':{'peak':1.},'simulate_s':2.}]}))
+            extra={'case':'commercial','library_sha256':LIB_SHA,'rows':[
+                {'id':1,'signature':'fresh-hash','metrics':{'peak':1.},'simulate_s':3.},
+                {'id':2,'signature':'observed-hash','metrics':{'peak':2.},'simulate_s':4.}]}
+            (directory/'extra-references.json').write_text(json.dumps(extra))
+            refs,metrics,costs,fresh=load_references(reference,'commercial')
+            self.assertEqual(fresh,{'1'})
+            self.assertEqual(set(refs),{'1','2'})
+            self.assertEqual(costs['1'],2.)
+            extra['rows'][0]['signature']='conflicting-hash'
+            (directory/'extra-references.json').write_text(json.dumps(extra))
+            with self.assertRaises(RuntimeError):load_references(reference,'commercial')
 
 
 if __name__=='__main__':unittest.main()
