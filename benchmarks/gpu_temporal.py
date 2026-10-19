@@ -85,7 +85,7 @@ def campaign(args):
     points=plan[args.series]
     write(directory/'plan.json',{'case':args.case,'points':points,'grid':plan['grid'],'output_contract':CONTRACT})
     wait_idle();cp=temporal.api();window=PipelineWindow(cpus[-1]);probe=window.initialize(cp)
-    contexts=[];rows=[];total_start=time.perf_counter();sim_walls=[];batch_walls=[];setup_rows=[]
+    contexts=[];rows=[];total_start=time.perf_counter();sim_walls=[];batch_walls=[];setup_rows=[];jsonl_costs=[]
     freq_before=frequency();before=None
     try:
         for _ in range(min(args.batch_size,len(points))):
@@ -121,9 +121,9 @@ def campaign(args):
                         measured=(ctypes.c_double*len(STAGE_FIELDS))();require(f(r,measured,len(measured)),'Missing stage diagnostics')
                         stages=dict(zip(STAGE_FIELDS,measured))
                     row={'stages':stages,'id':point['id'],'state':point,'signature':sig,'metrics':metrics,'slot':slot,
-                         'simulate_batch_s':sim_elapsed,'materialize_analysis_s':materialize,'serialize_write_s':write_elapsed,
+                         'simulate_batch_s':sim_elapsed,'materialize_analysis_s':materialize,'npz_serialize_write_s':write_elapsed,
                          'state_batch_completion_latency_s':time.perf_counter()-batch_start,'output_bytes':file.stat().st_size}
-                    log.write(json.dumps(row,allow_nan=False)+'\n');log.flush();rows.append(row)
+                    write_begin=time.perf_counter();log.write(json.dumps(row,allow_nan=False)+'\n');log.flush();jsonl_costs.append(time.perf_counter()-write_begin);rows.append(row)
                 batch_walls.append(time.perf_counter()-batch_start)
                 if len(rows)%96==0 or len(rows)==len(points):print(args.id,'completed',len(rows),'/',len(points),flush=True)
                 if window.failure:raise RuntimeError(window.failure)
@@ -146,7 +146,8 @@ def campaign(args):
                 'simulate_batch_wall_s':stats(sim_walls),'batch_complete_wall_s':stats(batch_walls),
                 'simulation_only_states_per_s':len(rows)/sum(sim_walls),
                 'materialize_analysis_s':sum(r['materialize_analysis_s'] for r in rows),
-                'serialize_write_s':sum(r['serialize_write_s'] for r in rows),
+                'npz_serialize_write_s':sum(r['npz_serialize_write_s'] for r in rows),'jsonl_serialize_flush_s':sum(jsonl_costs),
+                'serialize_write_s':sum(r['npz_serialize_write_s'] for r in rows)+sum(jsonl_costs),'output_cost_includes_jsonl_flush':True,
                 'output_bytes':sum(r['output_bytes'] for r in rows),'first_batch_wall_s':batch_walls[0],
                 'first_simulate_batch_s':sim_walls[0],'first_call_included':True,'warmups_excluded':0,
                 'state_batch_completion_latency_s':stats([r['state_batch_completion_latency_s'] for r in rows]),

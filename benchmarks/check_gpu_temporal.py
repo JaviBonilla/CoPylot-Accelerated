@@ -69,7 +69,7 @@ def main():
     result={'phase':'5B','case':a.case,'mode':a.mode,'batch_size':a.batch_size,'checked':checked,
             'all215_optical_and_full_outputs_bitwise':True,'library_sha256':t.digest(Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so'),
             'fresh_context_reference':a.mode=='reference'}
-    file=folder/(a.mode+'-'+str(a.batch_size)+'.json');require(not file.exists(),'Refuse correctness evidence overwrite');write(file,result)
+    file=folder/(a.mode+'-'+result['library_sha256'][:12]+'-'+str(a.batch_size)+'.json');require(not file.exists(),'Refuse correctness evidence overwrite');write(file,result)
     print(a.case,a.mode,a.batch_size,checked,'full-state bitwise checks passed',flush=True)
 
 
