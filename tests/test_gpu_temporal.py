@@ -4,7 +4,12 @@ import sys,unittest
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'benchmarks'))
 from gpu_temporal import compare
+from gpu_temporal_pipeline import union_duration
 class GpuTemporalContracts(unittest.TestCase):
+    def test_overlapping_api_intervals_are_not_double_counted(self):
+        self.assertEqual(union_duration([(1.,4.),(2.,3.),(4.,6.)]),5.)
+        self.assertEqual(union_duration([(2.,3.),(0.,1.)]),2.)
+
     def test_original_tolerance_and_zero_values(self):
         ref={'map':np.array([0.,1.]),'schema':np.array(['map'])}
         compare(ref,{'map':np.array([1e-11,1.+1e-10]),'schema':ref['schema']})

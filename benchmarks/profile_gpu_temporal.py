@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Separate first/steady CUDA-event profiles; never used as throughput samples."""
-import argparse,ctypes,json,os,time
+import argparse,ctypes,csv,json,os,time
 from pathlib import Path
 import numpy as np
 import gpu_temporal as g
@@ -30,8 +30,12 @@ def main():
                     try:
                         f=cp.pdll.sp_set_temporal_timing;f.argtypes=[ctypes.c_void_p,ctypes.c_bool];f.restype=ctypes.c_bool
                         t.require(f(r,True),'Cannot enable event diagnostics');t.set_state(cp,r,point);initial=None
-                        for repeat in range(3):
+                        for repeat in range(4):
+                            profile=g.OUT/'profiles'/(case+'-'+label+'-'+mode+'-'+str(repeat)+'.csv')
+                            profile.parent.mkdir(parents=True,exist_ok=True);t.require(not profile.exists(),'Refuse profile CSV overwrite')
+                            os.environ['SOLARPILOT_PROFILE_FILE']=str(profile);os.environ['SOLARPILOT_INTERCEPT_PROFILE']='1'
                             begin=time.perf_counter();t.require(cp.simulate(r,nthreads=1),cp.get_last_backend_error(r));elapsed=time.perf_counter()-begin
+                            os.environ['SOLARPILOT_PROFILE_FILE']=''
                             f=cp.pdll.sp_get_temporal_statistics;f.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_double),ctypes.c_int];f.restype=ctypes.c_bool
                             measured=(ctypes.c_double*len(g.STAGE_FIELDS))();t.require(f(r,measured,len(measured)),'No stage metrics')
                             begin=time.perf_counter();v,_=t.payload(cp,r,point,grid);optics=capture(r);materialize=time.perf_counter()-begin
@@ -41,7 +45,9 @@ def main():
                             else:g.compare(direct_anchor,v,bitwise=True)
                             if initial is None:initial=v
                             else:g.compare(initial,v,bitwise=True)
-                            row={'case':case,'solar_class':label,'mode':mode,'call':'first' if not repeat else 'steady',
+                            scopes={r[1]:{'calls':int(r[2]),'inclusive_s':float(r[3]),'exclusive_s':float(r[4])} for r in csv.reader(profile.read_text().splitlines())}
+                            t.require('ShadingBlockingNeighbors' in scopes,'Missing preparation profile')
+                            row={'host_scopes':scopes,'case':case,'solar_class':label,'mode':mode,'call':'first' if not repeat else ('first_repeat' if repeat==1 else 'steady'),
                                  'repeat':repeat,'api_wall_s':elapsed,'full_getter_optical_check_s':materialize,
                                  'stages':dict(zip(g.STAGE_FIELDS,measured)),'full_outputs_bitwise_equal_direct_cuda':True}
                             if case=='commercial':row['public_state']=point
@@ -52,7 +58,8 @@ def main():
     finally:window.stop.set()
     t.write(output,{'phase':'5B','diagnostic_only':True,'rows':rows,'library_sha256':t.digest(Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so'),
                     'selection':'Commercial low-sun anchor is the slowest measured ordinary CUDA annual API state; high/moderate anchors use the complete public calendar',
-                    'interpretation':'Inclusive prep wall contains image GPU work; do not sum nested/overlapping scopes. First and two steady instrumented calls are separate from plain throughput.'})
+                    'profile_script_sha256':t.digest(__file__),
+                    'interpretation':'First-repeat can allocate the dynamic update buffer; two later steady diagnostics are separate. Inclusive prep wall contains image GPU work; do not sum nested/overlapping scopes. First and two steady instrumented calls are separate from plain throughput.'})
     print('High/moderate/horizon profiles and full observable checks passed:',len(rows),flush=True)
 
 

@@ -24,6 +24,10 @@ def main():
                 'gpu_utilization_percent_sampled_mean','cpu_affinity','library_sha256','harness_sha256','commits','utc')
         row={k:r[k] for k in fields}
         row['cpu_window']={k:r['cpu_window'][k] for k in ('accepted','average_owned_cores','external_average_cores','thermal_throttle_increased','frequency_policy_unchanged')}
+        row['state_slots']=r.get('state_slots',min(r['batch_size'],r['completed']))
+        row['maximum_cpu_preparations']=r.get('maximum_cpu_preparations',r['active_states'])
+        row['loaded_library']=r.get('loaded_library')
+        row['gpu_execution']=r.get('gpu_execution','Ordinary sequential default-stream CUDA')
         row['instrumented']=r.get('instrumented',False)
         row['static_residency_enabled']=r.get('static_residency_enabled',r['mode']!='sequential')
         row['output_cost_includes_jsonl_flush']=r.get('output_cost_includes_jsonl_flush',False)
@@ -52,14 +56,14 @@ def main():
             table=csv.DictWriter(stream,fieldnames=list(rows[0]));table.writeheader();table.writerows(rows)
         run['public_state_table']=name
     groups=[]
-    keys=sorted({(r['case'],r['series'],r['mode'],r['batch_size'],r['static_residency_enabled'],r['library_sha256']) for r in runs if not r['instrumented']})
-    for case,series,mode,batch,residency,library in keys:
-        rows=[r for r in runs if (r['case'],r['series'],r['mode'],r['batch_size'],r['static_residency_enabled'],r['library_sha256'])==(case,series,mode,batch,residency,library) and not r['instrumented'] and r['qualified']]
+    keys=sorted({(r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256']) for r in runs if not r['instrumented']})
+    for case,series,mode,batch,active,residency,library in keys:
+        rows=[r for r in runs if (r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256'])==(case,series,mode,batch,active,residency,library) and not r['instrumented'] and r['qualified']]
         if not rows:continue
         rates=[r['states_per_s'] for r in rows]
-        groups.append({'case':case,'series':series,'mode':mode,'batch_size':batch,'static_residency_enabled':residency,'library_sha256':library,
+        groups.append({'case':case,'series':series,'mode':mode,'batch_size':batch,'active_states':active,'static_residency_enabled':residency,'library_sha256':library,
             'clean_repetitions':len(rows),'campaign_ids':[r['identifier'] for r in rows],'completed':rows[0]['completed'],
-            **{k:median(rows,k) for k in ('states_per_s','total_states_per_s','total_wall_s','evaluation_wall_s','setup_wall_s','simulation_only_states_per_s','materialize_analysis_s','serialize_write_s','peak_device_used_mib_sampled')},
+            **{k:median(rows,k) for k in ('states_per_s','total_states_per_s','total_wall_s','evaluation_wall_s','setup_wall_s','materialize_analysis_s','serialize_write_s','peak_device_used_mib_sampled')},
             'throughput_cv':statistics.stdev(rates)/statistics.mean(rates) if len(rows)>1 else None,
             'all_outputs_verified':True,'output_bytes':rows[0]['output_bytes']})
     a.output.mkdir(parents=True,exist_ok=True)
@@ -68,7 +72,7 @@ def main():
     write(a.output/'phase5b-residency.json',{'phase':'5B','groups':[r for r in groups if r['mode'] in ('sequential','resident')],
           'note':'Sequential already reuses allocations; residency opt-in checks actual table/cell bytes before skipping uploads',
           'attempts':[r for r in runs if r['mode']=='resident']})
-    batches=[r for r in groups if r['mode']=='batch']
+    batches=[r for r in groups if r['mode'] in ('batch','pipeline')]
     if batches:
         with (a.output/'phase5b-batch-scaling.csv').open('w',newline='') as stream:
             table=csv.DictWriter(stream,fieldnames=list(batches[0]));table.writeheader();table.writerows(batches)
@@ -88,7 +92,7 @@ def main():
     profiles=OUT/'temporal-gpu-profiles.json'
     if profiles.exists():
         values=json.loads(profiles.read_text())
-        allowed={'case','solar_class','mode','call','repeat','api_wall_s','full_getter_optical_check_s','stages','full_outputs_bitwise_equal_direct_cuda'}
+        allowed={'case','solar_class','mode','call','repeat','api_wall_s','full_getter_optical_check_s','stages','host_scopes','full_outputs_bitwise_equal_direct_cuda'}
         for row in values['rows']:
             if row['case']=='cesa':assert set(row)==allowed,'Private profile schema changed'
         write(a.output/'phase5b-solar-profiles.json',values)
