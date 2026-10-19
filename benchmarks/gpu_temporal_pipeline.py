@@ -35,7 +35,8 @@ def check(args):
     plan=json.loads((t.OUT/(args.case+'-plan.json')).read_text());points=plan['diagnostic'];positive=[p for p in points if not p.get('probe')]
     high=max(positive,key=lambda p:p['sun'][1]);low=min(positive,key=lambda p:p['sun'][1]);moderate=min(positive,key=lambda p:abs(p['sun'][1]-30.))
     seq=[high,moderate,low,high,points[-1],high,low,moderate,high]
-    pool=instances(args.case,args.workers,args.residency);errors=queue.Queue();counts=[];threads=[]
+    t.LIB_SHA=args.library_sha256
+    pool=instances(args.case,args.workers,args.residency);mapped=t.loaded_library();errors=queue.Queue();counts=[];threads=[]
     def run(slot,owned):
         cp,r,grid=owned
         try:
@@ -51,7 +52,7 @@ def check(args):
         for th in threads:th.join()
         t.require(errors.empty(),'Rolling full-state check failed: '+('' if errors.empty() else errors.get()))
         value={'case':args.case,'mode':'pipeline','workers':args.workers,'static_residency_enabled':args.residency,
-               'library_sha256':t.digest(library),'harness_sha256':t.digest(__file__),'checked':sum(counts),'all215_and_full_outputs_bitwise_direct_cuda':True,
+               'loaded_library':mapped,'library_sha256':t.digest(library),'harness_sha256':t.digest(__file__),'checked':sum(counts),'all215_and_full_outputs_bitwise_direct_cuda':True,
                'every_context_reused_across_high_moderate_low_zero_and_repeated_states':True}
         file=g.OUT/'correctness'/args.case/('pipeline-'+str(args.workers)+'-'+str(int(args.residency))+'.json')
         t.require(not file.exists(),'Refuse correctness overwrite');t.write(file,value);print('Rolling correctness',args.case,args.workers,sum(counts),'bitwise checks passed',flush=True)
