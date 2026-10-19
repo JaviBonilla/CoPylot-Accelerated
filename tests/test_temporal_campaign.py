@@ -30,6 +30,10 @@ class TemporalContracts(unittest.TestCase):
                 self.assertEqual({c%12 for c in mask if c<12},{c%12 for c in mask if c>=12})
         self.assertEqual(partitions(self.topology(),24,1),[[i] for i in range(24)])
 
+    def test_serial_and_physical_core_controls_use_one_sibling(self):
+        self.assertEqual(partitions(self.topology(),1,1),[[0]])
+        self.assertEqual(partitions(self.topology(),1,12),[list(range(12))])
+
     def test_incomplete_topology_and_oversubscription_fail(self):
         top=self.topology();top['logical_cpus'].pop()
         with self.assertRaises(RuntimeError):partitions(top,2,12)
@@ -74,7 +78,7 @@ class TemporalContracts(unittest.TestCase):
                 plan={'grid':{'nx':217,'ny':256},'requested':2,'states':[{'dni':0,'site':'SECRET-site'}],
                       'nighttime':1,'seasonal':[{'date':'SECRET-date'}],'dni_policy':'explicit saved DNI',
                       'aim_method':4,'solar_year':2011,'sun_derivation':'core SOLPOS','output_contract':'full',
-                      'public_weather_asset':{},'project':'SECRET-path','input_hash':'SECRET-hash'}
+                      'public_weather_asset':{},'diagnostic':[{}],'project':'SECRET-path','input_hash':'SECRET-hash'}
                 (source/(case+'-plan.json')).write_text(json.dumps(plan))
             (source/'campaigns').mkdir()
             summarize(source,dest)

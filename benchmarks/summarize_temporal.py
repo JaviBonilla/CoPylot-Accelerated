@@ -39,7 +39,7 @@ def summarize(source, destination):
     groups=[]
     for case in ('cesa','commercial'):
         for workers,threads in STRATEGIES:
-            all_rows=[r for r in campaigns if r['case']==case and r['series']=='seasonal' and r['states_in_parallel']==workers]
+            all_rows=[r for r in campaigns if r['case']==case and r['series']=='seasonal' and r['states_in_parallel']==workers and r['threads_per_state']==threads]
             rows=[r for r in all_rows if r['cpu_window']['accepted']]
             if not rows:continue
             assert all(r['checked_against_serial_oracle']==r['completed'] for r in rows)
@@ -58,6 +58,10 @@ def summarize(source, destination):
                 'average_owned_cores':statistics.median(r['cpu_window']['average_owned_cores'] for r in rows),
                 'output_bytes':rows[0]['output_bytes']})
     best={}
+    serial_baselines={}
+    for case in ('cesa','commercial'):
+        serial=[r for r in campaigns if r['case']==case and r['series']=='seasonal' and r['states_in_parallel']==1 and r['threads_per_state']==1 and r['cpu_window']['accepted']]
+        if serial:serial_baselines[case]=statistics.median(r['states_per_s'] for r in serial)
     for case in ('cesa','commercial'):
         rows=[r for r in groups if r['case']==case]
         if len(rows)!=6:continue
@@ -65,7 +69,10 @@ def summarize(source, destination):
         winner=max(rows,key=lambda r:r['states_per_s'])
         for row in rows:
             row['throughput_relative_to_1x24']=row['states_per_s']/baseline['states_per_s']
-            row['equal_machine_budget_efficiency']=row['throughput_relative_to_1x24']
+            row['equal_machine_budget_relative_throughput']=row['throughput_relative_to_1x24']
+            row['speedup_vs_1x1']=row['states_per_s']/serial_baselines[case] if case in serial_baselines else None
+            row['efficiency_vs_24_ideal_logical_cpus']=row['speedup_vs_1x1']/24 if case in serial_baselines else None
+            row['efficiency_vs_12_ideal_physical_cores']=row['speedup_vs_1x1']/12 if case in serial_baselines else None
         best[case]={k:winner[k] for k in ('states_in_parallel','threads_per_state','states_per_s','throughput_relative_to_1x24','campaign_ids')}
     fields=list(groups[0]) if groups else []
     if groups:
@@ -76,7 +83,7 @@ def summarize(source, destination):
         plan=json.loads((source/(case+'-plan.json')).read_text())
         public={'requested':plan['requested'],'daylight':len(plan['states']),'nighttime_skipped':plan['nighttime'],
                 'daylight_zero_dni':sum(p['dni']==0 for p in plan['states']),'seasonal_daylight':len(plan['seasonal']),
-                'seasonal_days':4,'dni_policy':plan['dni_policy'],'aim_method':plan['aim_method'],
+                'seasonal_days':4,'diagnostic_states':len(plan['diagnostic']),'seasonal_requested':96,'seasonal_nighttime_skipped':96-len(plan['seasonal']),'dni_policy':plan['dni_policy'],'aim_method':plan['aim_method'],
                 'solar_year':plan['solar_year'],'sun_derivation':plan['sun_derivation'],'output_contract':plan['output_contract']}
         if case=='commercial':
             public.update(weather_asset=plan['public_weather_asset'],seasonal_dates=[[3,21],[6,21],[9,21],[12,21]],
@@ -85,11 +92,11 @@ def summarize(source, destination):
     annual=[r for r in campaigns if r['case']=='commercial' and r['series']=='states']
     complete=len(groups)==12 and len(best)==2
     write(destination/'phase5a-campaign-summary.json',{'phase':'5A','matrix_complete':complete,
-        'campaigns':plans,'best':best,'strategy_groups':groups,'raw_attempts':campaigns,'annual':annual,
+        'campaigns':plans,'serial_cpu_states_per_s':serial_baselines,'best':best,'strategy_groups':groups,'raw_attempts':campaigns,'annual':annual,
         'annual_direct_complete':any(r['completed']==plans['commercial']['daylight'] and r['cpu_window']['accepted'] for r in annual),
         'no_interpolation':True,'gpu_architecture_changes':False,'numerical_changes':False,
         'output_contract':CONTRACT,'private_inputs_and_raw_maps':'ignored; no private filenames, paths, sites, dates or input hashes published',
-        'efficiency_definition':'throughput / 1x24 throughput at the same total 24-logical-CPU budget; not per-worker strong scaling'})
+        'efficiency_definition':'Full-output throughput / measured 1x1 throughput / 24 logical CPUs (or / 12 physical cores). SMT siblings do not promise ideal independent-core speedup. Equal-budget gain is separately relative to 1x24.'})
     print('Published',len(campaigns),'attempts;',len(groups),'strategy groups; annual',len(annual),flush=True)
 
 

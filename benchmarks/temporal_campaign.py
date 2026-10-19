@@ -54,12 +54,14 @@ def environment():
 
 def partitions(topology, workers, threads):
     """Disjoint whole physical-core groups, then sibling pairs, for full 24-way use."""
-    require((workers,threads) in STRATEGIES, 'Unsupported hardware allocation')
+    require((workers,threads) in STRATEGIES+((1,1),(1,12)), 'Unsupported hardware allocation')
     groups = {}
     for row in topology['logical_cpus']:
         groups.setdefault((row['socket'],row['core']),[]).append(row['cpu'])
     cores = [sorted(v) for k,v in sorted(groups.items())]
     require(len(cores)==12 and all(len(v)==2 for v in cores),'Require 12 complete SMT core pairs')
+    if workers==1 and threads in (1,12):
+        return [[pair[0] for pair in cores[:threads]]]
     if threads == 1: result = [[pair[s]] for s in range(2) for pair in cores]
     else:
         count = threads//2
