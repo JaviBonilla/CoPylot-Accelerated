@@ -22,7 +22,9 @@ def main():
                 'first_batch_wall_s','first_simulate_batch_s','first_call_included','warmups_excluded',
                 'state_batch_completion_latency_s','cpu_window','peak_device_used_mib_sampled',
                 'gpu_utilization_percent_sampled_mean','cpu_affinity','library_sha256','harness_sha256','commits','utc')
-        row={k:r[k] for k in fields};row['instrumented']=r.get('instrumented',False)
+        row={k:r[k] for k in fields}
+        row['cpu_window']={k:r['cpu_window'][k] for k in ('accepted','average_owned_cores','external_average_cores','thermal_throttle_increased','frequency_policy_unchanged')}
+        row['instrumented']=r.get('instrumented',False)
         row['static_residency_enabled']=r.get('static_residency_enabled',r['mode']!='sequential')
         row['output_cost_includes_jsonl_flush']=r.get('output_cost_includes_jsonl_flush',False)
         row['validation']=json.loads(validation.read_text()) if validation.exists() else None

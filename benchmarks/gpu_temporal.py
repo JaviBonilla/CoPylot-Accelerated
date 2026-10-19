@@ -77,6 +77,7 @@ def campaign(args):
     configure_environment();cpus=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{cpus[0]})
     require(args.batch_size>=1 and args.batch_size<=32,'Bound batch size to 1..32')
     require(args.mode=='batch' or args.batch_size==1,'Sequential/resident mode is one state at a time')
+    require(not args.no_residency or args.mode=='batch','No-residency is an explicit batch control')
     directory=OUT/'runs'/args.id;directory.mkdir(parents=True,exist_ok=False)
     library=Path(os.environ['COPILOT_LIB_DIR'])/'solarpilot.so'
     require(digest(library)==args.library_sha256,'Numerical binary identity differs')
@@ -196,7 +197,7 @@ def main():
     a.add_argument('--no-residency',action='store_true',help='Batch control with ordinary static uploads');a.add_argument('--instrumented',action='store_true',help='Separate CUDA-event diagnostics, excluded from plain timing groups');a.add_argument('--library-sha256',required=True);a.add_argument('--id',required=True)
     a=sub.add_parser('verify');a.add_argument('--id',required=True);a.add_argument('--direct-reference')
     args=p.parse_args()
-    require(args.id.isalnum() or all(c.isalnum() or c in '-_' for c in args.id),'Invalid campaign ID')
+    require(bool(args.id) and all(c.isalnum() or c in '-_' for c in args.id),'Invalid campaign ID')
     if args.command=='campaign':campaign(args)
     else:verify_run(args)
 

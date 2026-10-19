@@ -39,6 +39,12 @@ class TemporalApi(unittest.TestCase):
         for i,c in enumerate([r,q]):
             self.assertTrue(self.cp.data_set_number(c,'fluxsim.0.flux_solar_el_in',25.+i*30.))
             self.assertTrue(self.cp.simulate(c,nthreads=1));refs.append(state(self.cp,c));self.assertTrue(self.resident(c,True))
+        timing=self.cp.pdll.sp_set_temporal_timing;timing.argtypes=[ctypes.c_void_p,ctypes.c_bool];timing.restype=ctypes.c_bool
+        metrics=self.cp.pdll.sp_get_temporal_statistics;metrics.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_double),ctypes.c_int];metrics.restype=ctypes.c_bool
+        values=(ctypes.c_double*24)()
+        self.assertFalse(metrics(r,values,24));self.assertTrue(timing(r,True));self.assertFalse(metrics(r,values,24))
+        self.assertTrue(self.cp.simulate(r,nthreads=1));self.assertTrue(metrics(r,values,24));self.assertTrue(np.isfinite(values).all())
+        self.assertFalse(metrics(r,values,23));self.assertTrue(timing(r,False));self.assertFalse(metrics(r,values,24))
         self.assertFalse(self.batch((ctypes.c_void_p*2)(r,r),2,1))
         self.assertFalse(self.batch((ctypes.c_void_p*2)(r,None),2,1))
         for workers in [1,min(2,len(self.affinity)),1]:
