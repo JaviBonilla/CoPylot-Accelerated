@@ -265,14 +265,28 @@ def proc_sample(pids, masks):
     return result
 
 
+def loaded_library():
+    mappings=[]
+    for line in Path('/proc/self/maps').read_text().splitlines():
+        fields=line.split(None,5)
+        if len(fields)==6 and Path(fields[5]).name=='solarpilot.so':mappings.append(fields)
+    paths={v[5] for v in mappings}
+    require(len(paths)==1,'Expected one actually mapped numerical library')
+    path=Path(next(iter(paths)));stat=path.stat()
+    device=f'{os.major(stat.st_dev):02x}:{os.minor(stat.st_dev):02x}'
+    require(all((v[3],int(v[4]))==(device,stat.st_ino) for v in mappings),'Mapped inode differs from hashed file')
+    value=digest(path);require(value==LIB_SHA,'Actually mapped binary is not the accepted Phase 4S library')
+    return {'sha256':value,'mapped_inode_matches_hashed_file':True,'bytes':stat.st_size}
+
+
 def worker(pipe, start, finish, case, points, mask, threads, directory, references):
     cp=None;r=None
     try:
         os.sched_setaffinity(0,set(mask));environment()
         init=time.perf_counter();cp=api();load_s=time.perf_counter()-init
         init=time.perf_counter();r,grid=context(cp,case);setup_s=time.perf_counter()-init
-        pipe.send({'kind':'ready','pid':os.getpid(),'load_s':load_s,'setup_s':setup_s,'cpu_start':usage(),
-                   'mask':sorted(os.sched_getaffinity(0))})
+        pipe.send({'kind':'ready','pid':os.getpid(),'load_s':load_s,'setup_s':setup_s,
+                   'mask':sorted(os.sched_getaffinity(0)),'loaded_library':loaded_library(),'cpu_start':usage()})
         start.wait();rows=[];bytes_written=0
         with (directory/('worker-'+str(os.getpid())+'.jsonl')).open('x') as stream:
             for point in points:
