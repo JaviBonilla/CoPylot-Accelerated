@@ -44,6 +44,7 @@ def main():
             for _ in range(a.batch_size):
                 r,grid=g.open_context(cp,a.case,mode);contexts.append(r)
             sequences=[('forward',points),('reverse',list(reversed(points))),('repeated',[points[0],points[4],points[0],points[-1],points[0]])]
+            if mode=='batch':sequences.append(('full_batch',[points[i%len(points)] for i in range(a.batch_size)]))
             for order,seq in sequences:
                 for first in range(0,len(seq),a.batch_size):
                     selected=seq[first:first+a.batch_size]

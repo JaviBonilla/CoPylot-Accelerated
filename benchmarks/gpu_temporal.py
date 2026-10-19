@@ -96,7 +96,7 @@ def campaign(args):
                 require(f(r,True),'Cannot enable separate stage diagnostics')
         setup_end=time.perf_counter()
         # All contexts use the one process's verified CUDA primary context.
-        temporal.loaded_library()
+        mapped_library=temporal.loaded_library()
         if args.mode=='batch':
             os.sched_setaffinity(0,set(cpus))
             batch=cp.pdll.sp_simulate_batch;batch.argtypes=[ctypes.POINTER(ctypes.c_void_p),ctypes.c_int,ctypes.c_int];batch.restype=ctypes.c_bool
@@ -156,7 +156,7 @@ def campaign(args):
                               'thermal_throttle_increased':thermal,'frequency_policy_unchanged':temporal.frequency_policy(freq_before)==temporal.frequency_policy(freq_after)},
                 'gpu_telemetry':window.samples,'peak_device_used_mib_sampled':max(float(r['memory.used']) for r in window.samples),
                 'gpu_utilization_percent_sampled_mean':statistics.mean(float(r['utilization.gpu']) for r in window.samples),
-                'cpu_affinity':sorted(os.sched_getaffinity(0)),'library_sha256':args.library_sha256,'harness_sha256':digest(__file__),
+                'loaded_library':mapped_library,'cpu_affinity':sorted(os.sched_getaffinity(0)),'library_sha256':args.library_sha256,'harness_sha256':digest(__file__),
                 'commits':{k:subprocess.check_output(['git','-C',str(ROOT/k),'rev-parse','HEAD'],text=True).strip() for k in ('.','ssc','SolarPILOT','SolTrace')},
                 'utc':datetime.now(timezone.utc).isoformat(),'validation_outside_timing':True}
         write(directory/'result.json',result)
