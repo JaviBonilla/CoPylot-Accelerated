@@ -93,6 +93,34 @@ def summarize(source, destination):
             row['efficiency_vs_24_ideal_logical_cpus']=row['speedup_vs_1x1']/24 if case in serial_baselines else None
             row['efficiency_vs_12_ideal_physical_cores']=row['speedup_vs_1x1']/12 if case in serial_baselines else None
         best[case]={k:winner[k] for k in ('states_in_parallel','threads_per_state','states_per_s','throughput_relative_to_1x24','campaign_ids')}
+    long_groups=[]
+    for workers,threads in STRATEGIES:
+        rows=[r for r in campaigns if r['case']=='commercial' and r['series']=='long' and
+              r['states_in_parallel']==workers and r['threads_per_state']==threads and
+              r['scheduler']==primary_scheduler and r['role']=='formal' and r['cpu_window']['accepted']]
+        if not rows:continue
+        values=[r['states_per_s'] for r in rows]
+        long_groups.append({'case':'commercial','scheduler':primary_scheduler,'states_in_parallel':workers,
+            'threads_per_state':threads,'clean_repetitions':len(rows),'daylight_states':rows[0]['completed'],
+            'campaign_ids':[r['identifier'] for r in rows],'states_per_s':statistics.median(values),
+            'states_per_s_cv':statistics.stdev(values)/statistics.mean(values) if len(values)>1 else None,
+            'evaluation_wall_s':statistics.median(r['evaluation_wall_s'] for r in rows),
+            'total_wall_s':statistics.median(r['total_wall_s'] for r in rows),
+            'state_latency_median_s':statistics.median(r['state_latency_s']['median'] for r in rows),
+            'state_latency_p95_s':statistics.median(r['state_latency_s']['p95'] for r in rows),
+            'state_latency_p99_s':statistics.median(r['state_latency_s']['p99'] for r in rows),
+            'load_balance_efficiency':statistics.median(r['load_balance_efficiency'] for r in rows),
+            'average_owned_cores':statistics.median(r['cpu_window']['average_owned_cores'] for r in rows),
+            'all_outputs_match_ordinary_api_observations':all(r['checked_against_ordinary_api_reference']==r['completed'] for r in rows)})
+    best_bulk={}
+    if len(long_groups)==6:
+        base=next(r for r in long_groups if r['states_in_parallel']==1)
+        for row in long_groups:row['relative_to_long_1x24']=row['states_per_s']/base['states_per_s']
+        winner=max(long_groups,key=lambda r:r['states_per_s'])
+        best_bulk={k:winner[k] for k in ('states_in_parallel','threads_per_state','states_per_s','campaign_ids')}
+    if long_groups:
+        with (destination/'phase5a-commercial-long-scaling.csv').open('w',newline='') as stream:
+            table=csv.DictWriter(stream,fieldnames=list(long_groups[0]));table.writeheader();table.writerows(long_groups)
     fields=list(groups[0]) if groups else []
     if groups:
         with (destination/'phase5a-cpu-strategy-scaling.csv').open('w',newline='') as f:
@@ -107,6 +135,7 @@ def summarize(source, destination):
         if case=='commercial':
             public.update(weather_asset=plan['public_weather_asset'],seasonal_dates=[[3,21],[6,21],[9,21],[12,21]],
                           hour_policy='Each pinned hourly row evaluated at Hour + 0.5 local standard time')
+            if 'long_definition' in plan:public['long_campaign']=plan['long_definition']
         plans[case]=public
     annual=[r for r in campaigns if r['case']=='commercial' and r['series']=='states']
     for run in annual:
@@ -130,10 +159,20 @@ def summarize(source, destination):
             'incident_power_range_kw':[min(r['incident_power_kw'] for r in rows),max(r['incident_power_kw'] for r in rows)],
             'daylight_zero_dni_simulated':sum(r['dni_w_m2']==0 for r in rows)}
     complete=len(groups)==12 and len(best)==2 and all(r['clean_repetitions']>=3 for r in groups) and len(serial_baselines)==2
+    for raw_name,public_name in [('temporal-profiles.json','phase5a-cpu-profiles.json'),('annual-dispatch-equivalence.json','phase5a-annual-dispatch-equivalence.json')]:
+        if (source/raw_name).exists():write(destination/public_name,json.loads((source/raw_name).read_text()))
     if (source/'environment.json').exists():
-        write(destination/'phase5a-environment.json',json.loads((source/'environment.json').read_text()))
+        environment=json.loads((source/'environment.json').read_text())
+        environment['metadata_provider']='cpu_multicore.py; original harness_sha256 identifies that provider'
+        environment['measurement_harness_sha256']=sorted({r['harness_sha256'] for r in campaigns})
+        environment['measurement_root_commits']=sorted({r['commits']['.'] for r in campaigns})
+        environment['toolchain_container_image']='sha256:8e6e3752946ff2dde451b313cbaec2ea8e7b52221b21bfbcf53fb68dd4f4c42e'
+        environment['python_runtime']=sys.version
+        write(destination/'phase5a-environment.json',environment)
     write(destination/'phase5a-campaign-summary.json',{'phase':'5A','matrix_complete':complete,'primary_scheduler':primary_scheduler,
-        'campaigns':plans,'serial_cpu_states_per_s':serial_baselines,'best':best,'strategy_groups':groups,'raw_attempts':campaigns,'annual':annual,
+        'campaigns':plans,'serial_cpu_states_per_s':serial_baselines,'best':best,'strategy_groups':groups,'commercial_long_groups':long_groups,'best_commercial_bulk':best_bulk,'raw_attempts':campaigns,'annual':annual,
+        'annual_selection':json.loads((source/'annual-selection.json').read_text()) if (source/'annual-selection.json').exists() else None,
+        'long_reference_validation':json.loads((source/'long-reference-validation.json').read_text()) if (source/'long-reference-validation.json').exists() else None,
         'interrupted_attempts':[json.loads(p.read_text()) for p in sorted((source/'campaigns').glob('*/interruption.json'))],
         'annual_direct_complete':any(r['completed']==plans['commercial']['daylight'] and r['cpu_window']['accepted'] and r.get('storage_validation',{}).get('persisted_full_payloads_verified')==r['completed'] for r in annual),
         'no_interpolation':True,'gpu_architecture_changes':False,'numerical_changes':False,
