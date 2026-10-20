@@ -32,7 +32,7 @@ def main():
         row['measurement_role']='pilot' if r['identifier'].startswith('PP-') else 'formal'
         row['static_residency_enabled']=r.get('static_residency_enabled',r['mode']!='sequential')
         row['output_cost_includes_jsonl_flush']=r.get('output_cost_includes_jsonl_flush',False)
-        for key in ('output_cost_scope','simulation_only_note','api_active_union_wall_s','summed_worker_api_s','states_jsonl_is_posttiming_index'):
+        for key in ('output_cost_scope','simulation_only_note','api_active_union_wall_s','summed_worker_api_s','states_jsonl_is_posttiming_index','first_calls_api_s','first_calls_service_s'):
             if key in r:row[key]=r[key]
         row['commits']={k:r['commits'][k] for k in ('.','ssc','SolarPILOT','SolTrace')}
         validation_fields=('passed','persisted_payloads_verified','cpu_agreement_existing_tolerance','maximum_absolute_observable_error','direct_cuda_bitwise_states','stored_bytes','timing_excludes_verification')
