@@ -29,8 +29,11 @@ def main():
         row['loaded_library']=r.get('loaded_library')
         row['gpu_execution']=r.get('gpu_execution','Ordinary sequential default-stream CUDA')
         row['instrumented']=r.get('instrumented',False)
+        row['measurement_role']='pilot' if r['identifier'].startswith('PP-') else 'formal'
         row['static_residency_enabled']=r.get('static_residency_enabled',r['mode']!='sequential')
         row['output_cost_includes_jsonl_flush']=r.get('output_cost_includes_jsonl_flush',False)
+        for key in ('output_cost_scope','simulation_only_note','api_active_union_wall_s','summed_worker_api_s','states_jsonl_is_posttiming_index'):
+            if key in r:row[key]=r[key]
         row['commits']={k:r['commits'][k] for k in ('.','ssc','SolarPILOT','SolTrace')}
         validation_fields=('passed','persisted_payloads_verified','cpu_agreement_existing_tolerance','maximum_absolute_observable_error','direct_cuda_bitwise_states','stored_bytes','timing_excludes_verification')
         observed=json.loads(validation.read_text()) if validation.exists() else None
@@ -56,14 +59,14 @@ def main():
             table=csv.DictWriter(stream,fieldnames=list(rows[0]));table.writeheader();table.writerows(rows)
         run['public_state_table']=name
     groups=[]
-    keys=sorted({(r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256']) for r in runs if not r['instrumented']})
+    keys=sorted({(r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256']) for r in runs if not r['instrumented'] and r['measurement_role']=='formal'})
     for case,series,mode,batch,active,residency,library in keys:
-        rows=[r for r in runs if (r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256'])==(case,series,mode,batch,active,residency,library) and not r['instrumented'] and r['qualified']]
+        rows=[r for r in runs if (r['case'],r['series'],r['mode'],r['batch_size'],r['active_states'],r['static_residency_enabled'],r['library_sha256'])==(case,series,mode,batch,active,residency,library) and not r['instrumented'] and r['measurement_role']=='formal' and r['qualified']]
         if not rows:continue
         rates=[r['states_per_s'] for r in rows]
         groups.append({'case':case,'series':series,'mode':mode,'batch_size':batch,'active_states':active,'static_residency_enabled':residency,'library_sha256':library,
             'clean_repetitions':len(rows),'campaign_ids':[r['identifier'] for r in rows],'completed':rows[0]['completed'],
-            **{k:median(rows,k) for k in ('states_per_s','total_states_per_s','total_wall_s','evaluation_wall_s','setup_wall_s','materialize_analysis_s','serialize_write_s','peak_device_used_mib_sampled')},
+            **{k:median(rows,k) for k in ('states_per_s','total_states_per_s','total_wall_s','evaluation_wall_s','simulation_only_states_per_s','setup_wall_s','materialize_analysis_s','serialize_write_s','peak_device_used_mib_sampled')},
             'throughput_cv':statistics.stdev(rates)/statistics.mean(rates) if len(rows)>1 else None,
             'all_outputs_verified':True,'output_bytes':rows[0]['output_bytes']})
     a.output.mkdir(parents=True,exist_ok=True)

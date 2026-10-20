@@ -29,9 +29,14 @@ class PublicGpuEvidence(unittest.TestCase):
                         'maximum_absolute_observable_error':0.,'direct_cuda_bitwise_states':48,'stored_bytes':100,
                         'timing_excludes_verification':True,'private_details':'SECRET-private-details'}
             (run/'validation.json').write_text(json.dumps(validation))
+            pilot=raw/'runs/PP-fixture';pilot.mkdir()
+            (pilot/'result.json').write_text(json.dumps({**value,'identifier':'PP-fixture'}))
+            (pilot/'validation.json').write_text(json.dumps(validation))
             with patch.object(publication,'OUT',raw),patch.object(sys,'argv',['publish','--output',str(dest)]):publication.main()
             for file in dest.iterdir():self.assertNotIn('SECRET',file.read_text())
             result=json.loads((dest/'phase5b-annual-summary.json').read_text())
             self.assertIsNone(result['best_measured_annual']);self.assertEqual(len(result['all_groups']),1)
             self.assertTrue(result['all_attempts'][0]['qualified'])
+            self.assertEqual(len(result['all_groups'][0]['campaign_ids']),1)
+            self.assertEqual(sum(r['measurement_role']=='pilot' for r in result['all_attempts']),1)
 if __name__=='__main__':unittest.main()
