@@ -17,6 +17,8 @@ Library: `build/cpu/lib/solarpilot.so`. The build uses SSC solarpilot-develop an
 
 Documentation:
 
+* [Phase 5B single-GPU temporal execution](docs/phase5b-report.md), [residency and scheduling design](docs/phase5b-design.md), [CPU/GPU annual comparison](benchmarks/results/phase5b-annual-summary.json), [batch and rolling scaling](benchmarks/results/phase5b-batch-scaling.csv), [validation and reconstruction](benchmarks/results/phase5b-validation.json).
+
 * [Phase 5A direct temporal workloads and CPU throughput](docs/phase5a-report.md), [state semantics and design](docs/phase5a-design.md), [campaign summary](benchmarks/results/phase5a-campaign-summary.json), [CPU strategy matrix](benchmarks/results/phase5a-cpu-strategy-scaling.csv), [reconstruction and validation](benchmarks/results/phase5a-validation.json).
 
 * [Phase 4 deterministic CPU multicore and best measured CPU/GPU comparison](docs/phase4-report.md), [threading design](docs/cpu-multicore-design.md), [aggregate summary](benchmarks/results/phase4-cpu-gpu-summary.json), [all CPU samples](benchmarks/results/phase4-flat-multicore-scaling.csv), [separate timing regimes](benchmarks/results/phase4-timing-repeatability.json).
