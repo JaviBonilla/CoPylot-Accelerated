@@ -1,7 +1,7 @@
 From 7e93b482d8547847a799b7d060c0daedad7a2c14 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:02:07 +0200
-Subject: [PATCH 01/30] build: use valid preprocessor constant for legacy
+Subject: [PATCH 01/31] build: use valid preprocessor constant for legacy
  intercept flag
 
 ---
@@ -28,7 +28,7 @@ index e6dae1b4d..ba9c55dea 100644
 From d9e1f0397ba7d44c95ba68cf610f3e1504fc125c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:09:09 +0200
-Subject: [PATCH 02/30] perf: add optional inclusive and exclusive core
+Subject: [PATCH 02/31] perf: add optional inclusive and exclusive core
  profiling scopes
 
 ---
@@ -273,7 +273,7 @@ index ba9c55dea..43c348b53 100644
 From d970875890d33beb1908e1cfe916fc26931b30b3 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 03/30] perf: measure the actual shading and blocking neighbor
+Subject: [PATCH 03/31] perf: measure the actual shading and blocking neighbor
  loop
 
 ---
@@ -337,7 +337,7 @@ index 1c374a9d0..6e9d76295 100644
 From e6e522b8f8cfc8bd345447024df73ccd21338c5e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:13:23 +0200
-Subject: [PATCH 04/30] refactor: introduce per-context compute backend and
+Subject: [PATCH 04/31] refactor: introduce per-context compute backend and
  preserve CPU dispatch
 
 ---
@@ -543,7 +543,7 @@ index 000000000..6e214b4b6
 From 89570eaf50a1809a63ce76ba5dbea4888c08454c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:15:45 +0200
-Subject: [PATCH 05/30] build: add RAII CUDA device probe and trivial
+Subject: [PATCH 05/31] build: add RAII CUDA device probe and trivial
  verification kernel
 
 ---
@@ -645,7 +645,7 @@ index 000000000..cd8f06b83
 From 9ce2c8c6424bbc8e91718734404266c8137170ae Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 09:19:42 +0200
-Subject: [PATCH 06/30] fix: remove sanitizer detected overflow and
+Subject: [PATCH 06/31] fix: remove sanitizer detected overflow and
  uninitialized optical tree state
 
 ---
@@ -693,7 +693,7 @@ index d789ab14e..fccce34cb 100644
 From 5945ac11d63cf9c816bf494dc754b39300cb1c2d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:50:02 +0200
-Subject: [PATCH 07/30] refactor: extract flat flux contribution with preserved
+Subject: [PATCH 07/31] refactor: extract flat flux contribution with preserved
  legacy oracle
 
 ---
@@ -946,7 +946,7 @@ index 000000000..394c5a6ce
 From c73d4d5ea40e633b5bfe993ac9ca9761d1bca83d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 11:56:14 +0200
-Subject: [PATCH 08/30] fix: retain legacy path when Hermite packing is
+Subject: [PATCH 08/31] fix: retain legacy path when Hermite packing is
  unavailable
 
 ---
@@ -1020,7 +1020,7 @@ index 394c5a6ce..d2cad8f0e 100644
 From ca23d10fa02c51280ddd53ff00a708aa9ce825f9 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 09/30] cuda: add reusable flux buffers and shared double
+Subject: [PATCH 09/31] cuda: add reusable flux buffers and shared double
  reduction kernel
 
 ---
@@ -1360,7 +1360,7 @@ index d2cad8f0e..e1bfc6d72 100644
 From a553d244d8bc9ed68a81d7c62467cc20ee97855e Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 12:55:49 +0200
-Subject: [PATCH 10/30] cuda: integrate hybrid cylindrical Hermite flux density
+Subject: [PATCH 10/31] cuda: integrate hybrid cylindrical Hermite flux density
  with explicit errors
 
 ---
@@ -1739,7 +1739,7 @@ index 6e9d76295..9e72693d0 100644
 From caa2fe3d659ba63338b31685a8ec81ba99f43b75 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:37:52 +0200
-Subject: [PATCH 11/30] fix: report SPT I/O failures and validate project XML
+Subject: [PATCH 11/31] fix: report SPT I/O failures and validate project XML
  safely
 
 ---
@@ -1919,7 +1919,7 @@ index 2ed331058..1f778a899 100644
 From 5343ddbef451549ac573ccd020f692c26ee0e222 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Wed, 14 Oct 2026 14:48:16 +0200
-Subject: [PATCH 12/30] fix: reject simulation before preparing a loaded SPT
+Subject: [PATCH 12/31] fix: reject simulation before preparing a loaded SPT
  field
 
 ---
@@ -1972,7 +1972,7 @@ index 88c62741e..d6568b0d5 100644
 From a400a6c5b939cfac29582eefec0184603dd71237 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:30:15 +0200
-Subject: [PATCH 13/30] perf: add opt-in image-plane stage profiling before
+Subject: [PATCH 13/31] perf: add opt-in image-plane stage profiling before
  extraction
 
 ---
@@ -2173,7 +2173,7 @@ index 9eb6cc33e..6634b4bb6 100644
 From bb247d4f8e8f6ab78a5177c7cf035c1b44be3092 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:38:06 +0200
-Subject: [PATCH 14/30] refactor: extract a fixed image-plane CPU numerical
+Subject: [PATCH 14/31] refactor: extract a fixed image-plane CPU numerical
  core with legacy verification
 
 ---
@@ -2965,7 +2965,7 @@ index 000000000..8442e0495
 From a0d23d62e120a4f2438a3d4a3f04b9231bb2f0e4 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 11:43:49 +0200
-Subject: [PATCH 15/30] style: remove trailing whitespace from the extracted
+Subject: [PATCH 15/31] style: remove trailing whitespace from the extracted
  image-plane core
 
 ---
@@ -3302,7 +3302,7 @@ index 53953d37a..3ece02fda 100644
 From 57409f22a7515931e51f23cd8f24aa853c0b5eed Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:22:32 +0200
-Subject: [PATCH 16/30] cuda: port the validated flat image-plane formulation
+Subject: [PATCH 16/31] cuda: port the validated flat image-plane formulation
  with independent device buffers
 
 ---
@@ -4734,7 +4734,7 @@ index 000000000..8e112617b
 From 71f2c7b4acf647831ffb8ba9039c9aa078b8c05c Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 12:34:28 +0200
-Subject: [PATCH 17/30] cuda: integrate batched image-plane evaluation and
+Subject: [PATCH 17/31] cuda: integrate batched image-plane evaluation and
  checked context ownership
 
 ---
@@ -5058,7 +5058,7 @@ index 9e72693d0..a9f70da0d 100644
 From 012b1a2ce195f5060867828773a2a339edf67b96 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 14:58:55 +0200
-Subject: [PATCH 18/30] cuda: reject invalid image-plane devices before
+Subject: [PATCH 18/31] cuda: reject invalid image-plane devices before
  constructing resources
 
 ---
@@ -5101,7 +5101,7 @@ index 3a9162505..5434e98a1 100644
 From 5554361cf948681330faabe686696931697116d8 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:39:29 +0200
-Subject: [PATCH 19/30] perf: expose bounded image-plane launch diagnostics
+Subject: [PATCH 19/31] perf: expose bounded image-plane launch diagnostics
  without changing arithmetic
 
 ---
@@ -5217,7 +5217,7 @@ index 5434e98a1..b2bc23fb6 100644
 From 02e47568e72cfc3d369d2d6274808b57b5345df2 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 15:54:11 +0200
-Subject: [PATCH 20/30] cuda: hand resident image-plane optics to density and
+Subject: [PATCH 20/31] cuda: hand resident image-plane optics to density and
  eagerly complete host state
 
 ---
@@ -5849,7 +5849,7 @@ index b2bc23fb6..30d9e8de0 100644
 From cb3c0371884a2cf69aded43c20dd5081a56cf96d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 16:02:45 +0200
-Subject: [PATCH 21/30] perf: distinguish optical validation from eager object
+Subject: [PATCH 21/31] perf: distinguish optical validation from eager object
  materialization
 
 ---
@@ -5928,7 +5928,7 @@ index 704c43f89..81170365d 100644
 From cafc3bbd7dec00e1871a3c559cd6c6b90694db17 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:55:37 +0200
-Subject: [PATCH 22/30] Restore serialized fields explicitly and extend Hermite
+Subject: [PATCH 22/31] Restore serialized fields explicitly and extend Hermite
  optics to flat rectangles
 
 ---
@@ -6550,7 +6550,7 @@ index 6e87c0d7a..2a969a5c9 100644
 From 61a24c325d7039ef559fd6343556800195164e3d Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 20:58:48 +0200
-Subject: [PATCH 23/30] Handle single-row and blank-line serialized layouts
+Subject: [PATCH 23/31] Handle single-row and blank-line serialized layouts
  consistently
 
 ---
@@ -6680,7 +6680,7 @@ index 3c6c3ae1d..18b4c8ecf 100644
 From c3ccd7db4d112c5787a5cfdea9df868208810893 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Thu, 15 Oct 2026 21:05:02 +0200
-Subject: [PATCH 24/30] Validate restored physical dimensions and advertise the
+Subject: [PATCH 24/31] Validate restored physical dimensions and advertise the
  explicit restoration API
 
 ---
@@ -6724,7 +6724,7 @@ index 213774fff..3e8fa1603 100644
 From 3a93e2d21f0b596fab9e5c107144a89b6d6babe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:05:58 +0000
-Subject: [PATCH 25/30] perf: parallelize independent Flat Hermite CPU work
+Subject: [PATCH 25/31] perf: parallelize independent Flat Hermite CPU work
  deterministically
 
 ---
@@ -6991,7 +6991,7 @@ index 000000000..ffa973837
 From 581a006ec4afb0f0d1f34b1d0d8382736e83d865 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 00:16:35 +0000
-Subject: [PATCH 26/30] perf: preserve heliostat loop invariants within CPU
+Subject: [PATCH 26/31] perf: preserve heliostat loop invariants within CPU
  cell ranges
 
 ---
@@ -7034,7 +7034,7 @@ index 008f628ce..583e39f59 100644
 From 0fd069b30343a08787f76247c4b1bb637e83bbe0 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Fri, 16 Oct 2026 10:35:34 +0200
-Subject: [PATCH 27/30] fix: isolate Flat multicore shared parameters from
+Subject: [PATCH 27/31] fix: isolate Flat multicore shared parameters from
  caller scratch
 
 ---
@@ -7077,7 +7077,7 @@ index 583e39f59..97e03729a 100644
 From 12d39aed2bfa7db645463baa588c39a3ac622345 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Mon, 19 Oct 2026 14:21:17 +0200
-Subject: [PATCH 28/30] Add guarded temporal uploads and bounded independent
+Subject: [PATCH 28/31] Add guarded temporal uploads and bounded independent
  CUDA context batches
 
 ---
@@ -7456,7 +7456,7 @@ index 000000000..a57a930fe
 From bc764c7b5f9c6c138abb6010387235321dea2631 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Mon, 19 Oct 2026 14:31:54 +0200
-Subject: [PATCH 29/30] Invalidate temporal timing snapshots until successful
+Subject: [PATCH 29/31] Invalidate temporal timing snapshots until successful
  CUDA completion
 
 ---
@@ -7522,7 +7522,7 @@ index 80a6c0a6b..46acfdc39 100644
 From 77ba34bc956281b59094b6068cdb9809dd126726 Mon Sep 17 00:00:00 2001
 From: Javier Bonilla <javier.bonilla@psa.es>
 Date: Mon, 19 Oct 2026 14:46:32 +0200
-Subject: [PATCH 30/30] Reuse guarded mixed image bases with assignment-only
+Subject: [PATCH 30/31] Reuse guarded mixed image bases with assignment-only
  temporal updates
 
 ---
@@ -7695,6 +7695,58 @@ index 16ccfafb1..bb594c6dc 100644
          guard.restore();if (!error.empty()) throw std::runtime_error(error);
      }
  };
+-- 
+2.43.0
+
+
+From 1233c8eb99f2650071b4386e918844d67709178b Mon Sep 17 00:00:00 2001
+From: Javier Bonilla <javier.bonilla@psa.es>
+Date: Tue, 20 Oct 2026 10:11:05 +0200
+Subject: [PATCH 31/31] Invalidate temporal content caches immediately after
+ device buffer growth
+
+---
+ solarpilot/FluxDensityKernels.cu         | 5 +++--
+ solarpilot/ImagePlaneInterceptKernels.cu | 3 ++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/solarpilot/FluxDensityKernels.cu b/solarpilot/FluxDensityKernels.cu
+index d960cd7cb..e09bb8732 100644
+--- a/solarpilot/FluxDensityKernels.cu
++++ b/solarpilot/FluxDensityKernels.cu
+@@ -155,7 +155,7 @@ class FluxGpuContext final : public GpuContext {
+         statistics.timed = timing;
+         if (timing) statistics.soa_preparation_s = std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count();
+         allocations_ += heliostats_.reserve(25*count);
+-        allocations_ += cells_.reserve(cell_count);
++        if (cells_.reserve(cell_count)) { ++allocations_;cell_cache_.invalidate(); }
+         allocations_ += output_.reserve(cell_count);
+         statistics.heliostats = count; statistics.cells = cell_count;
+         statistics.heliostat_h2d_bytes=200*count;statistics.cell_h2d_bytes=sizeof(flux_density::CellData)*cell_count;
+@@ -213,7 +213,8 @@ public:
+             throw std::runtime_error("Invalid CUDA resident density arrays or missing image-plane executor");
+         DeviceGuard device(device_);
+         const auto* optics=image_plane->resident_outputs(count,device_);
+-        allocations_+=heliostats_.reserve(25*count);allocations_+=cells_.reserve(cell_count);
++        allocations_+=heliostats_.reserve(25*count);
++        if (cells_.reserve(cell_count)) { ++allocations_;cell_cache_.invalidate(); }
+         allocations_+=output_.reserve(cell_count);allocations_+=metadata_.reserve(count);
+         statistics=FluxGpuStatistics();statistics.heliostats=count;statistics.cells=cell_count;
+         statistics.timed=timing;statistics.resident_handoff=true;statistics.allocations=allocations_;
+diff --git a/solarpilot/ImagePlaneInterceptKernels.cu b/solarpilot/ImagePlaneInterceptKernels.cu
+index bb594c6dc..7f71b75fa 100644
+--- a/solarpilot/ImagePlaneInterceptKernels.cu
++++ b/solarpilot/ImagePlaneInterceptKernels.cu
+@@ -188,7 +188,8 @@ public:
+         const double validation=timing?std::chrono::duration<double>(std::chrono::steady_clock::now()-begin).count():0.;
+         DeviceGuard guard(device_);
+         if (!count) { snapshot(0,timing);statistics.resident=resident;outputs_valid_=true;guard.restore();return; }
+-        allocations_+=inputs_.reserve(count);allocations_+=outputs_.reserve(count);allocations_+=tables_.reserve(1);
++        if (inputs_.reserve(count)) { ++allocations_;input_base_valid_=false; }
++        allocations_+=outputs_.reserve(count);allocations_+=tables_.reserve(1);
+         if (resident) allocations_+=required_.reserve(count);
+         snapshot(count,timing);
+         statistics.resident=resident;statistics.host_validation_s=validation;
 -- 
 2.43.0
 

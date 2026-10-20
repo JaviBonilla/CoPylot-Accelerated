@@ -54,7 +54,7 @@ def check(args):
         value={'case':args.case,'mode':'pipeline','workers':args.workers,'static_residency_enabled':args.residency,
                'loaded_library':mapped,'library_sha256':t.digest(library),'harness_sha256':t.digest(__file__),'checked':sum(counts),'all215_and_full_outputs_bitwise_direct_cuda':True,
                'every_context_reused_across_high_moderate_low_zero_and_repeated_states':True}
-        file=g.OUT/'correctness'/args.case/('pipeline-'+str(args.workers)+'-'+str(int(args.residency))+'.json')
+        file=g.OUT/'correctness'/args.case/('pipeline-'+args.library_sha256[:12]+'-'+str(args.workers)+'-'+str(int(args.residency))+'.json')
         t.require(not file.exists(),'Refuse correctness overwrite');t.write(file,value);print('Rolling correctness',args.case,args.workers,sum(counts),'bitwise checks passed',flush=True)
     finally:
         for th in threads:th.join()

@@ -9,7 +9,8 @@ def median(rows,key):return statistics.median(r[key] for r in rows)
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,default=ROOT/'benchmarks/results');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,default=ROOT/'benchmarks/results')
+    p.add_argument('--annual-library-sha256',help='Select annual results from the final validated library; retain earlier libraries as historical groups');a=p.parse_args()
     runs=[];incomplete=[]
     for directory in sorted((OUT/'runs').iterdir()):
         if not (directory/'result.json').exists():incomplete.append(directory.name);continue
@@ -82,10 +83,14 @@ def main():
     cpu=json.loads((ROOT/'benchmarks/results/phase5a-campaign-summary.json').read_text())
     cpu_year=next(r for r in cpu['annual'] if r['completed']==4403 and r['cpu_window']['accepted'])
     years=[r for r in groups if r['case']=='commercial' and r['series']=='states']
-    best=max(years,key=lambda r:r['total_states_per_s']) if years else None
+    eligible=[r for r in years if not a.annual_library_sha256 or r['library_sha256']==a.annual_library_sha256]
+    if a.annual_library_sha256:assert eligible,'No qualified annual run for the final library'
+    best=max(eligible,key=lambda r:r['total_states_per_s']) if eligible else None
     comparison={'phase':'5B','all_groups':groups,'all_attempts':runs,'incomplete_attempt_ids_retained':incomplete,
                 'cpu_annual':{k:cpu_year[k] for k in ('completed','states_in_parallel','threads_per_state','states_per_s','total_wall_s','output_bytes')},
                 'gpu_annual_groups':years,'best_measured_annual':best,
+                'annual_selection_library_sha256':a.annual_library_sha256,
+                'annual_selection_note':'Maximum measured end-to-end rate among final-library annual runs; pre-hardening measurements remain separate historical groups' if a.annual_library_sha256 else 'Maximum measured end-to-end rate among available annual groups',
                 'annual_gpu_over_cpu_evaluation_throughput':best['states_per_s']/cpu_year['states_per_s'] if best else None,
                 'annual_total_wall_speedup':cpu_year['total_wall_s']/best['total_wall_s'] if best else None,
                 'annual_wall_reduction_fraction':1-best['total_wall_s']/cpu_year['total_wall_s'] if best else None,
