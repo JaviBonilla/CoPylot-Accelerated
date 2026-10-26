@@ -22,4 +22,21 @@ class AnnualWorkload(unittest.TestCase):
   points=[{'month':1,'day':1,'hour':v,'dni':0.} for v in range(4)]
   selected,night=retained(points,lambda site,m,d,h:[42.,h-1],[])
   self.assertEqual(night,2);self.assertEqual([p['id'] for p in selected],[2,3]);self.assertEqual([p['dni'] for p in selected],[0.,0.])
+
+class PublicationContracts(unittest.TestCase):
+ def test_speedups_use_unrounded_total_and_evaluation_values(self):
+  from summarize_annual_matrix import ratios
+  rows=[{'execution_mode':mode,'wall':v} for mode,v in [('original',10.123456789),('refactored',5.2),('cpu',2.3),('gpu',.7)]]
+  r=ratios(rows,'wall');self.assertEqual(len(r),6);self.assertEqual(r['original_over_gpu'],10.123456789/.7)
+  with self.assertRaises(AssertionError):ratios(rows[:-1],'wall')
+ def test_publication_whitelist_excludes_private_calendar_path_and_arrays(self):
+  from summarize_annual_matrix import public_row
+  import json
+  result={'status':'passed','cpu_window':{'accepted':True,'private':'SECRET'},'completed':1,'states_in_parallel':1,'threads_per_state':1,'scheduler':'dynamic_lpt','states_per_s':.5,'total_states_per_s':.25,'evaluation_wall_s':2.,'total_wall_s':4.,'output_bytes':123,'identifier':'safe-id','library_sha256':'a'*64,'commits':{'ssc':'b'*40},'harness_sha256':'c'*64,'private_path':'SECRET'}
+  validation={'passed':True,'persisted_payloads_verified':1};plan={'requested':2,'nighttime':1,'grid':{'nx':217,'ny':256,'private':'SECRET'},'states':[{'id':0,'dni':0.,'month':'SECRET','sun':['SECRET']}]}
+  r=public_row('cesa','original',result,validation,plan,reused=False,source_reference='safe/result.json',source_sha256='a'*64,metadata_bytes=7)
+  self.assertNotIn('SECRET',json.dumps(r));self.assertEqual(r['complete_standard_output_bytes'],130)
+  result['completed']=0
+  with self.assertRaises(AssertionError):public_row('cesa','original',result,validation,plan,reused=False,source_reference='safe',source_sha256='a'*64,metadata_bytes=7)
+
 if __name__=='__main__':unittest.main()
