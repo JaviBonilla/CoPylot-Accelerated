@@ -126,7 +126,8 @@ It contains no compiled development objects, benchmark data, stored weather,
 or field files. Build metadata identifies the source and dependency revisions,
 compiler, toolchain, architecture, and options. A dirty checkout is labelled
 in the archive name and metadata. Use separate build directories for each
-variant and a clean checkout for reproducibility.
+variant and a clean checkout for reproducibility. CPack source archiving
+is disabled to prevent copying the working directory into an archive.
 
 - The Alliance licenses require binary notices, a distinct non-confusing
   designation for a modified distribution, and attribution to the underlying

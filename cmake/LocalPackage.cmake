@@ -109,7 +109,14 @@ set(CPACK_PACKAGE_FILE_NAME "hermite-optics-local-${package_revision_short}-${pa
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 set(CPACK_VERBATIM_VARIABLES ON)
+# CPack selects source generators automatically when this list is empty.
+# Disable them and remove the default whole-checkout input even if -G is supplied.
 set(CPACK_SOURCE_GENERATOR "")
+foreach(generator IN ITEMS 7Z CYGWIN RPM TBZ2 TGZ TXZ TZ ZIP)
+  set(CPACK_SOURCE_${generator} OFF)
+endforeach()
+set(CPACK_SOURCE_INSTALLED_DIRECTORIES "")
+set(CPACK_SOURCE_INSTALL_CMAKE_PROJECTS "")
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};local_runtime;/")
 if(WIN32)
   set(CPACK_GENERATOR ZIP)
@@ -117,3 +124,5 @@ else()
   set(CPACK_GENERATOR TGZ)
 endif()
 include(CPack)
+file(APPEND "${CPACK_SOURCE_OUTPUT_CONFIG_FILE}"
+  "\nmessage(FATAL_ERROR \"Source archives are disabled for local binary packaging\")\n")
