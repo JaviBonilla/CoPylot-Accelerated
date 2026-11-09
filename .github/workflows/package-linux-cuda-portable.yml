@@ -1,0 +1,69 @@
+name: Check portable Linux CUDA package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-cuda-portable:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Build the package without GPU access
+        run: |
+          docker build --platform linux/amd64 -t copilot-linux-portable - < packaging/linux-portable.Dockerfile
+          docker build --platform linux/amd64 -t copilot-linux-cuda-portable \
+            -f packaging/linux-cuda-portable.Dockerfile packaging
+          docker run --rm --platform linux/amd64 --user "$(id -u):$(id -g)" \
+            --volume "$PWD:/workspace" --env HOME=/tmp copilot-linux-cuda-portable bash -ec '
+              python3 -m venv /tmp/verify-python
+              . /tmp/verify-python/bin/activate
+              python3 -m pip install --only-binary=:all: -r requirements.txt
+              scripts/package_linux_cuda_portable.sh
+            '
+      - name: Verify the same archive with only the external CUDA runtime
+        run: |
+          revision="$(git rev-parse --short=12 HEAD)"
+          directory="$PWD/build/package-linux-cuda-portable/packages"
+          archive="hermite-optics-local-$revision-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz"
+          (cd "$directory" && sha256sum -c "$archive.sha256")
+          runtime="$RUNNER_TEMP/cuda-runtime-13.0.88"
+          packaging/install_cuda_linux.sh "$runtime" --runtime-only
+          images=(
+            ubuntu:22.04@sha256:8a2321a92b438238f93b4346fff61bc4259c99fdd4d9b52ee86f153fee0c344f
+            debian:12-slim@sha256:c67e92c8099ba22853ab4cfda7cfb494d253d6012ca82dee98ba8976772af018
+            ubuntu:24.04@sha256:78d4744ead1f5b19b04d0df558ab182a5300903900755e515b2ca4d10eb2044d
+            almalinux:9@sha256:465a5007813f19b5ac8a88cd161f3d8dcc6b1958e0c03c31f7c9a1b079d0a7da
+          )
+          for image in "${images[@]}"; do
+            echo "$image"
+            docker run --rm --platform linux/amd64 \
+              --volume "$directory:/packages:ro" \
+              --volume "$runtime:/cuda-runtime:ro" \
+              --volume "$PWD/scripts/verify_package.py:/verify/verify_package.py:ro" \
+              "$image" bash -ec '
+                cat /etc/os-release
+                if command -v dnf >/dev/null; then
+                  dnf -y --setopt=install_weak_deps=False install \
+                    python3.12 python3.12-pip libstdc++ libgcc binutils tar gzip
+                  python=python3.12
+                else
+                  export DEBIAN_FRONTEND=noninteractive
+                  apt-get update
+                  apt-get install -y --no-install-recommends \
+                    ca-certificates python3 python3-venv libstdc++6 libgcc-s1 binutils
+                  python=python3
+                fi
+                tar -xzf "/packages/$1" -C /tmp
+                "$python" -m venv /tmp/verify-python
+                /tmp/verify-python/bin/python -m pip install --only-binary=:all: \
+                  -r "/tmp/${1%.tar.gz}/requirements.txt"
+                /tmp/verify-python/bin/python /verify/verify_package.py --runtime-only \
+                  --cuda-runtime-dir /cuda-runtime/lib "/packages/$1"
+              ' -- "$archive"
+          done

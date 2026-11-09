@@ -13,7 +13,7 @@ clearance is pending.
 | --- | --- |
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
-| Linux x86-64 CUDA | Build and CPU-side archive workflow prepared for CUDA 13.0 and Ada SM 89. No package or CUDA smoke test was run. |
+| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1 for Ada SM 89. Host loading and three CPU modes passed on four distributions. GPU execution is unverified for this archive. |
 | Windows x64 CPU | Native MSVC 2022 workflow prepared. DLL exports, C runtime linkage and the extracted smoke test still need native verification. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
 | Intel macOS CPU | Native workflow prepared. The pinned dependencies use Intel flags, and the SSC copy step expects `.so`, so the opt-in package keeps that suffix for a Mach-O library. The build and loader remain unverified. |
@@ -106,6 +106,93 @@ bundle.
 The manual [portable Linux workflow](../.github/workflows/package-linux-portable.yml)
 uses one CPack archive for all four runtime environments. It verifies the
 archive inside each runner and has no upload or publication step.
+
+## Portable Linux x86-64 CUDA
+
+The CUDA recipe reuses the AlmaLinux 9 CPU builder and adds the
+[checksum-pinned NVIDIA toolkit components](../packaging/install_cuda_linux.sh).
+It uses CUDA 13.0 Update 1 (`nvcc` and `libcudart` 13.0.88), GCC/G++ 11.5,
+CMake 3.30.5 and the same generic x86-64 host target as the CPU package.
+The native build takes a configurable CUDA architecture. The portable
+archive contains SM 89 (Ada) cubins and PTX targeting compute capability
+8.9, inspected with `cuobjdump`. Only this toolkit and target were built
+for the portable CUDA package. Other toolkit versions and GPU targets are
+unverified. See the [archived Ada execution record](build.md#verified-environments)
+for the earlier native build.
+
+From the repository root on an x86-64 Linux Docker host:
+
+```sh
+docker build --platform linux/amd64 -t copilot-linux-portable - < packaging/linux-portable.Dockerfile
+docker build --platform linux/amd64 -t copilot-linux-cuda-portable \
+  -f packaging/linux-cuda-portable.Dockerfile packaging
+docker run --rm --platform linux/amd64 --user "$(id -u):$(id -g)" \
+  --volume "$PWD:/workspace" --env HOME=/tmp copilot-linux-cuda-portable bash -ec '
+    python3 -m venv /tmp/verify-python
+    . /tmp/verify-python/bin/activate
+    python3 -m pip install --only-binary=:all: -r requirements.txt
+    scripts/package_linux_cuda_portable.sh
+  '
+```
+
+The script builds and checks the package without device access by default.
+It checks the host optical paths, the ELF ABI and the device code embedded
+in the library. CPack places the archive and SHA-256 sidecar under
+`build/package-linux-cuda-portable/packages/`. The archive name ends in
+`linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz`. The
+[manual workflow](../.github/workflows/package-linux-cuda-portable.yml)
+also verifies the same archive across four fresh Linux images without
+mounting GPU devices or uploading the package.
+
+### Runtime and driver
+
+The archive has one ELF, `lib/hermite_optics.so`. It requires
+`GLIBC_2.34`, `GLIBCXX_3.4.29` and `CXXABI_1.3.13`, with the same
+system libraries as the portable CPU archive and one additional ELF
+dependency, `libcudart.so.13`. Install NVIDIA CUDA Runtime 13.0.88
+externally for the tested configuration. The vendor library itself
+imports glibc symbols up to `GLIBC_2.17`. It uses host libc, libdl,
+libpthread, librt and the dynamic loader. The archive carries the usual
+project and upstream notices and has no NVIDIA driver, CUDA runtime,
+compiler binaries or Python wheels. Review the [CUDA Toolkit terms][cuda-eula]
+for any future public distribution of embedded toolkit components or
+proposed runtime bundling.
+
+Use a driver matching [NVIDIA's toolkit guidance][cuda-driver] for device
+execution. NVIDIA lists Linux driver **580.82.07 or newer** for CUDA 13.0
+Update 1. This is the toolkit pairing, and the packaged build has not
+been exercised on a GPU. The driver supplies `libcuda.so.1` when CUDA
+initializes. A driver and GPU are unnecessary for CPU-mode execution from
+the CUDA archive, but `libcudart.so.13` is needed even for loading it.
+
+With Python requirements installed from the extracted archive, provide the
+runtime through the system linker configuration or an explicit directory.
+The following commands use a fresh, external runtime directory under the
+user's home. The installer checks NVIDIA's checksum and preserves the
+vendor's license with the separately installed files.
+
+```sh
+runtime="$HOME/.local/cuda-runtime-13.0.88"
+packaging/install_cuda_linux.sh "$runtime" --runtime-only
+python scripts/verify_package.py --runtime-only --cuda-runtime-dir "$runtime/lib" /path/to/package.tar.gz
+```
+
+Ubuntu 22.04.5 (glibc 2.35), Debian 12 (2.36), Ubuntu 24.04.5 (2.39) and
+AlmaLinux 9.8 (2.34) all loaded the same archive with only the external
+CUDA runtime and the documented host prerequisites. Original, Refactored
+and Multicore agreed bitwise, and the receiver map matched the portable
+CPU archive's synthetic result. These are host checks. The tests did not
+use an NVIDIA GPU.
+
+On a machine with a compatible idle GPU and driver, append `--cuda` to the
+verifier command to exercise CUDA and compare receiver flux against the
+CPU using `rtol=1e-9` and `atol=1e-10`. Alternatively run the builder's
+`scripts/package_linux_cuda_portable.sh --gpu` on a GPU-enabled host or
+container to run the full native and Python suites as well. Select an
+available device before invoking either GPU check.
+
+[cuda-driver]: https://docs.nvidia.com/cuda/archive/13.0.1/cuda-toolkit-release-notes/index.html#cuda-driver
+[cuda-eula]: https://docs.nvidia.com/cuda/archive/13.0.1/eula/index.html
 
 ## Native Linux and Intel macOS
 
@@ -257,7 +344,7 @@ requirements are resolved.
 | Target | Proposed asset |
 | --- | --- |
 | Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu-glibc2.34.tar.gz` |
-| Linux CUDA | `hermite-optics-<version>-linux-x86_64-cuda13.0-sm89.tar.gz` |
+| Linux portable CUDA | `hermite-optics-<version>-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz` |
 | Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
 | Windows CUDA | `hermite-optics-<version>-windows-x86_64-cuda13.0-sm89.zip` |
 | Intel macOS CPU | `hermite-optics-<version>-macos-x86_64-cpu.tar.gz` |

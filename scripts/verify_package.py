@@ -16,7 +16,9 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-PORTABLE_VARIANT = "cpu-glibc2.34"
+PORTABLE_CPU = "cpu-glibc2.34"
+PORTABLE_CUDA = "cuda13.0-sm89-glibc2.34"
+CUDART_SONAME = "libcudart.so.13"
 PORTABLE_MAX = {"GLIBC": (2, 34), "GLIBCXX": (3, 4, 29), "CXXABI": (1, 3, 13)}
 PORTABLE_NEEDED = {"libc.so.6", "libm.so.6", "libstdc++.so.6", "libgcc_s.so.1",
                    "ld-linux-x86-64.so.2", "libpthread.so.0", "libdl.so.2", "librt.so.1"}
@@ -124,9 +126,11 @@ def version_tuple(value):
     return tuple(map(int, value.split(".")))
 
 
-def linux_dependencies(library, portable):
+def linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir):
     environment = {key: value for key, value in os.environ.items() if not key.startswith("LD_")}
     environment["LC_ALL"] = "C"
+    if cuda_runtime_dir:
+        environment["LD_LIBRARY_PATH"] = str(cuda_runtime_dir)
 
     def readelf(flag):
         return subprocess.check_output(["readelf", flag, str(library)], text=True, env=environment)
@@ -147,7 +151,9 @@ def linux_dependencies(library, portable):
             and re.search(r"Type:\s+DYN", header), "Expected an x86-64 ELF shared object")
     isa = re.findall(r"x86 ISA needed:\s*([^\n]+)", readelf("-n"))
     if portable:
-        require(set(needed) <= PORTABLE_NEEDED, f"Unexpected portable ELF dependencies: {needed}")
+        allowed = PORTABLE_NEEDED | ({CUDART_SONAME} if portable_cuda else set())
+        require(set(needed) <= allowed, f"Unexpected portable ELF dependencies: {needed}")
+        require((CUDART_SONAME in needed) == portable_cuda, "Unexpected portable CUDA runtime SONAME")
         require(all(re.fullmatch(r"[0-9.]+", value) and version_tuple(value) <= PORTABLE_MAX[family]
                     for family, value in imports), f"Portable ELF ABI ceiling exceeded: {imports}")
         require(set(symbols) == set(PORTABLE_MAX), "Incomplete portable ELF version requirements")
@@ -155,13 +161,17 @@ def linux_dependencies(library, portable):
         resolved = subprocess.check_output(["ldd", "-r", str(library)], text=True,
                                            stderr=subprocess.STDOUT, env=environment)
         require(not re.search(r"not found|undefined symbol", resolved), resolved)
+        if cuda_runtime_dir:
+            match = re.search(r"^\s*libcudart\.so\.13 => (.+?) \(0x", resolved, flags=re.M)
+            require(match and Path(match[1]).resolve() == (cuda_runtime_dir / CUDART_SONAME).resolve(),
+                    "CUDA runtime did not resolve to the requested external library")
         print(resolved, end="")
     return {"needed": needed, "symbols": symbols, "elf": "ELF64 x86-64 DYN", "isa_notes": isa}
 
 
-def runtime_dependencies(library, os_name, portable):
+def runtime_dependencies(library, os_name, portable, portable_cuda, cuda_runtime_dir):
     if os_name == "linux":
-        return linux_dependencies(library, portable)
+        return linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir)
     if os_name == "windows":
         output = subprocess.check_output(["dumpbin", "/DEPENDENTS", str(library)],
                                          text=True, errors="replace")
@@ -173,21 +183,45 @@ def runtime_dependencies(library, os_name, portable):
     return {"needed": needed}
 
 
+def cuda_images(library, cuobjdump, architecture):
+    images = {}
+    for kind, flag, suffix in (("cubin", "--list-elf", "cubin"), ("ptx", "--list-ptx", "ptx")):
+        output = subprocess.check_output([str(cuobjdump), flag, str(library)], text=True)
+        targets = sorted(set(re.findall(rf"sm_(\d+)\.{suffix}\b", output)))
+        require(targets == [architecture], f"Unexpected {kind} targets: {output}")
+        images[kind] = targets
+    return images
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
     parser.add_argument("--cuda", action="store_true", help="Also run one CUDA/CPU check on an available GPU")
     parser.add_argument("--runtime-only", action="store_true",
                         help="Validate a trusted archive on a host without the pinned source checkout")
+    parser.add_argument("--cuda-runtime-dir", type=Path,
+                        help="Use this external libcudart directory for a portable CUDA archive")
+    parser.add_argument("--cuobjdump", type=Path,
+                        help="Verify CUDA cubin and PTX targets using this toolkit tool")
     args = parser.parse_args()
     files, info = inspect(args.archive, runtime_only=args.runtime_only)
-    portable = info["variant"] == PORTABLE_VARIANT
+    portable_cuda = info["variant"] == PORTABLE_CUDA
+    portable = portable_cuda or info["variant"] == PORTABLE_CPU
     if portable:
-        require(info["os"] == "linux" and info["diagnostics"] and not info["cuda_architecture"]
-                and not info["cuda_toolkit"], "Portable profile requires Linux CPU and Original diagnostics")
+        require(info["os"] == "linux" and info["diagnostics"],
+                "Portable profiles require Linux and Original diagnostics")
+        expected = ("89", "13.0.88") if portable_cuda else ("", "")
+        require((info["cuda_architecture"], info["cuda_toolkit"]) == expected,
+                "Portable profile and CUDA metadata differ")
         require([name for name, data in files.items() if data.startswith(b"\x7fELF")] == [info["library"]],
                 "Expected exactly one bundled ELF")
     require(not args.cuda or info["cuda_architecture"], "--cuda needs a CUDA build")
+    require(not args.cuobjdump or portable_cuda, "--cuobjdump needs a portable CUDA build")
+    runtime_dir = args.cuda_runtime_dir
+    if runtime_dir:
+        runtime_dir = runtime_dir.resolve()
+        require(portable_cuda and (runtime_dir / CUDART_SONAME).is_file(),
+                f"--cuda-runtime-dir needs a portable CUDA build and {CUDART_SONAME}")
 
     with TemporaryDirectory() as temp:
         root = Path(temp) / "extracted"
@@ -195,7 +229,10 @@ def main():
             destination = root / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(content)
-        dependencies = runtime_dependencies(root / info["library"], info["os"], portable)
+        library = root / info["library"]
+        dependencies = runtime_dependencies(library, info["os"], portable, portable_cuda, runtime_dir)
+        if args.cuobjdump:
+            dependencies["cuda_images"] = cuda_images(library, args.cuobjdump.resolve(), info["cuda_architecture"])
         require(dependencies["needed"], "No dynamic runtime dependencies reported")
         links_cuda = any("cudart" in name.lower() for name in dependencies["needed"])
         require(links_cuda == bool(info["cuda_architecture"]),
@@ -204,6 +241,15 @@ def main():
                        if not k.startswith("SOLARPILOT_") and k not in {"PYTHONPATH", "PYTHONHOME"}}
         if portable:
             environment = {k: v for k, v in environment.items() if not k.startswith("LD_")}
+        if runtime_dir:
+            environment["LD_LIBRARY_PATH"] = str(runtime_dir)
+        if portable_cuda:
+            if args.cuda and os.environ.get("LD_LIBRARY_PATH"):
+                # GPU containers may expose the driver through their search path.
+                paths = (environment.get("LD_LIBRARY_PATH"), os.environ["LD_LIBRARY_PATH"])
+                environment["LD_LIBRARY_PATH"] = ":".join(path for path in paths if path)
+            elif not args.cuda:
+                environment["CUDA_VISIBLE_DEVICES"] = "-1"
         environment.update(PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1")
         modes = ["refactored", "multicore"]
         if info["diagnostics"]:

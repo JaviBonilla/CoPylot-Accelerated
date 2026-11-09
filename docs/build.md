@@ -61,6 +61,10 @@ The example and benchmark loader use `build/cpu/lib` by default.
 
 ## Linux CUDA
 
+For a CUDA archive with the same host ABI baseline as the portable CPU
+archive, use the [portable CUDA packaging recipe](packaging.md#portable-linux-x86-64-cuda).
+The commands below are for native development builds.
+
 Use a compatible NVIDIA driver and device, the CUDA toolkit with `nvcc`, and a
 host compiler supported by that toolkit. For the verified Ada configuration,
 use a separate build tree and set the architecture explicitly.

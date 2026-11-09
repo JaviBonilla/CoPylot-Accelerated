@@ -59,6 +59,11 @@
   ],
   "files": [
     {
+      "path": ".github/workflows/package-linux-cuda-portable.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": ".github/workflows/package-linux-portable.yml",
       "classification": "Original code or build configuration",
       "license": "MIT"
@@ -1232,6 +1237,16 @@
       "license": "CC-BY-4.0"
     },
     {
+      "path": "packaging/install_cuda_linux.sh",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "packaging/linux-cuda-portable.Dockerfile",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": "packaging/linux-portable.Dockerfile",
       "classification": "Original code or build configuration",
       "license": "MIT"
@@ -1303,6 +1318,11 @@
     },
     {
       "path": "scripts/export_patches.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/package_linux_cuda_portable.sh",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },

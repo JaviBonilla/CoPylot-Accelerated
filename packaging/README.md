@@ -48,9 +48,14 @@ coretrace API library. The bundle is for headless optical simulation.
 - Intel macOS uses system libraries. The Mach-O library keeps the `.so`
   suffix used by the pinned build's post-build copy step.
 - CUDA builds use the host NVIDIA driver and the matching CUDA runtime
-  shared library. On Linux use the system linker configuration or
-  `LD_LIBRARY_PATH`. On Windows set `CUDA_PATH` to the matching toolkit
-  installation so the loader can find its `bin` directory. The compiled
+  shared library. For the portable Linux CUDA archive, provide external
+  `libcudart.so.13` from NVIDIA CUDA Runtime 13.0.88, even when using CPU
+  modes. Make it visible via the system linker configuration or
+  `LD_LIBRARY_PATH`. GPU execution additionally requires an Ada SM 89
+  device and a compatible NVIDIA driver. NVIDIA lists 580.82.07 or newer
+  for CUDA 13.0 Update 1. This archive was verified in CPU modes, and GPU
+  execution is unverified. On Windows set `CUDA_PATH` to the matching
+  toolkit installation so the loader can find its `bin` directory. The compiled
   architecture and toolkit version are in `BUILD.json`.
 
 Runtime libraries and Python wheels are installed separately. Each extracted
