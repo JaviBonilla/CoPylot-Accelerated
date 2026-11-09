@@ -80,6 +80,16 @@ add_subdirectory(SolTrace/coretrace EXCLUDE_FROM_ALL)
 # SSC's solarpilot-develop superbuild contains only shared/core/nlopt/lpsolve.
 set(ENV{CORETRACEDIR} "${CMAKE_CURRENT_SOURCE_DIR}/SolTrace/coretrace")
 add_subdirectory(ssc EXCLUDE_FROM_ALL)
+if(APPLE AND COPILOT_LOCAL_PACKAGE)
+  # These pinned targets add an Intel-only -arch pair. Use CMake's native
+  # CMAKE_OSX_ARCHITECTURES setting for packaged macOS builds.
+  foreach(target IN ITEMS solarpilot shared nlopt lpsolve coretrace)
+    get_target_property(options ${target} COMPILE_OPTIONS)
+    list(REMOVE_ITEM options -arch x86_64)
+    set_property(TARGET ${target} PROPERTY COMPILE_OPTIONS "${options}")
+  endforeach()
+  target_compile_definitions(solarpilot PRIVATE SP_STANDALONE)
+endif()
 if(UNIX)
   # Bundled NLopt expects an Autoconf-generated header on Linux/macOS.
   set(nlopt_config_dir "${CMAKE_BINARY_DIR}/nlopt-config")
@@ -97,6 +107,13 @@ if(UNIX)
     endif()
   endif()
   target_include_directories(nlopt PRIVATE "${nlopt_config_dir}")
+  if(COPILOT_LOCAL_PACKAGE AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+    # The bundled Windows sys/time.h shadows the real gettimeofday declaration.
+    # NLopt's own headers are quoted and found relative to each source file.
+    get_target_property(nlopt_includes nlopt INCLUDE_DIRECTORIES)
+    list(REMOVE_ITEM nlopt_includes "${CMAKE_CURRENT_SOURCE_DIR}/ssc/nlopt/.")
+    set_property(TARGET nlopt PROPERTY INCLUDE_DIRECTORIES "${nlopt_includes}")
+  endif()
 endif()
 # CoPylot uses weather parsing and util only, not SSC's PV/battery/MPFIT code.
 set_property(TARGET shared PROPERTY SOURCES

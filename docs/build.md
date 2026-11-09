@@ -19,7 +19,7 @@ Python versions of NumPy, pandas and their dependencies are pinned in
 CUDA toolkit. The formal affinity and timing harnesses also need Linux
 `/proc`, `/sys` and `lscpu`.
 
-Native Windows and Intel macOS verification recipes are in the
+Native Windows and macOS verification recipes are in the
 [packaging guide](packaging.md). Those platform builds remain unverified.
 
 ## Reconstruct the dependencies

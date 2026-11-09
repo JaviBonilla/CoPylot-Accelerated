@@ -12,7 +12,7 @@ this documentation under the included CC BY 4.0 license.
 
 ## Run from the extracted directory
 
-Use a matching OS and x86-64 Python 3.12 environment. Portable Linux
+Use Python 3.12 on the matching OS and CPU architecture. Portable Linux
 (`variant: cpu-glibc2.34` in `BUILD.json`) was also tested with distro Python
 3.10 and 3.11. Install the Python requirements and run the example. It generates a small field and synthetic
 weather in a temporary directory.
@@ -45,7 +45,7 @@ coretrace API library. The bundle is for headless optical simulation.
   `libgcc` on EL9, if absent. Ubuntu 22.04 and 24.04, Debian 12 and
   AlmaLinux 9 were verified with the same portable archive.
 - Windows uses the x64 Visual C++ runtime and Windows system libraries.
-- Intel macOS uses system libraries. The Mach-O library keeps the `.so`
+- macOS uses system libraries. The Mach-O library keeps the `.so`
   suffix used by the pinned build's post-build copy step.
 - CUDA builds use the host NVIDIA driver and the matching CUDA runtime
   shared library. For the portable Linux CUDA archive, provide external

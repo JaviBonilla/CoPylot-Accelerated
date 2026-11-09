@@ -1,25 +1,28 @@
 # Explicit opt-in for local verification. No release or source archive target.
-if(CMAKE_CROSSCOMPILING OR NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
-  message(FATAL_ERROR "Use a native x86-64 build to create a local package")
+if(CMAKE_CROSSCOMPILING)
+  message(FATAL_ERROR "Use a native build to create a local package")
 endif()
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
   message(FATAL_ERROR "Configure a Release build for local packaging")
 endif()
 
 set(package_arch x86_64)
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
   set(package_os linux)
   set(package_suffix .so)
-elseif(WIN32 AND MSVC)
+elseif(WIN32 AND MSVC AND CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "x64")
   set(package_os windows)
   set(package_suffix .dll)
-elseif(APPLE AND (NOT CMAKE_OSX_ARCHITECTURES OR CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64"))
+elseif(APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|arm64)$"
+    AND (NOT CMAKE_OSX_ARCHITECTURES OR CMAKE_OSX_ARCHITECTURES STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR))
   set(package_os macos)
-  # SSC's pinned post-build copy expects .so on non-MSVC builds. Keep that
-  # suffix for the Intel Mach-O library in the opt-in configuration only.
+  set(package_arch "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+  # The pinned SSC copy step expects the .so suffix on macOS.
   set(package_suffix .so)
+  set_target_properties(solarpilot PROPERTIES
+    MACOSX_RPATH TRUE BUILD_WITH_INSTALL_NAME_DIR TRUE INSTALL_NAME_DIR "@rpath")
 else()
-  message(FATAL_ERROR "No local package recipe for this OS/compiler/architecture")
+  message(FATAL_ERROR "No native package recipe for this OS/compiler/architecture")
 endif()
 
 set_target_properties(solarpilot PROPERTIES
@@ -115,7 +118,7 @@ set(CPACK_PACKAGE_FILE_NAME "hermite-optics-local-${package_revision_short}-${pa
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 set(CPACK_VERBATIM_VARIABLES ON)
-if(COPILOT_PORTABLE_LINUX_CPU OR COPILOT_PORTABLE_LINUX_CUDA)
+if(WIN32 OR APPLE OR COPILOT_PORTABLE_LINUX_CPU OR COPILOT_PORTABLE_LINUX_CUDA)
   set(CPACK_PACKAGE_CHECKSUM SHA256)
 endif()
 # CPack selects source generators automatically when this list is empty.

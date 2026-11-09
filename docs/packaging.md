@@ -14,20 +14,18 @@ clearance is pending.
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
 | Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. GPU execution passed on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
-| Windows x64 CPU | Native MSVC 2022 workflow prepared. DLL exports, C runtime linkage and the extracted smoke test still need native verification. |
+| Windows x64 CPU | Native MSVC 2022 build and artifact validation prepared. Runner results are pending. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
-| Intel macOS CPU | Native workflow prepared. The pinned dependencies use Intel flags, and the SSC copy step expects `.so`, so the opt-in package keeps that suffix for a Mach-O library. The build and loader remain unverified. |
-| Apple silicon CPU | Blocked on a native port and verification of the pinned SSC and SolTrace architecture settings. |
+| Intel macOS CPU | Native build and artifact validation prepared on `macos-15-intel`. Runner results are pending. |
+| Apple Silicon macOS CPU | Native arm64 build and artifact validation prepared on `macos-15`. Runner results are pending. |
 | macOS CUDA | Outside the packaging targets. |
 | SolarPILOT desktop executable | Blocked on a separately pinned and tested GUI build. Upstream uses a distinct CMake entry point, wxWidgets, LK, WEX, RapidJSON and other platform dependencies and resources. The headless CUDA dispatch does not establish GUI CUDA support. |
 
-The manual [CPU workflow](../.github/workflows/package-check.yml) targets
-Ubuntu 24.04, Windows Server 2022 and Intel macOS 15. The manual
-[CUDA workflow](../.github/workflows/package-cuda-check.yml) requires an
+The manual [native CUDA workflow](../.github/workflows/package-cuda-check.yml) requires an
 isolated, disposable x86-64 Linux runner labelled `cuda-13-0` with a compatible
 host compiler and the toolkit preinstalled. It builds and verifies the archive
-using CPU modes. Use that runner only for trusted refs. The workflows have
-no upload or release steps and have not been run.
+using CPU modes. Use that runner only for trusted refs. It has no upload or
+release step.
 
 ## Portable Linux x86-64 CPU
 
@@ -216,13 +214,66 @@ available device before invoking either GPU check.
 [cuda-driver]: https://docs.nvidia.com/cuda/archive/13.0.1/cuda-toolkit-release-notes/index.html#cuda-driver
 [cuda-eula]: https://docs.nvidia.com/cuda/archive/13.0.1/eula/index.html
 
-## Native Linux and Intel macOS
+## Windows and macOS CPU workflows
+
+1. Dispatch **Build Windows and macOS CPU packages**
+   ([package-check.yml](../.github/workflows/package-check.yml)). Each job
+   reconstructs the pinned sources, builds the CPU library and checks the
+   archive structure, PE or Mach-O architecture and license bytes. It
+   uploads the CPack archive, its SHA-256 sidecar and `artifact.json`.
+2. After the build succeeds, dispatch **Validate Windows and macOS CPU
+   package artifacts** ([package-validate.yml](../.github/workflows/package-validate.yml)).
+   Supply the numeric `build_run_id` from the build run URL. The latest attempt
+   must have completed successfully. Validation checks out that commit
+   and selects its per-platform artifact by name. If a partial rerun left
+   some platforms in a different attempt, rerun all jobs or dispatch a new
+   build so all three artifacts come from the same attempt.
+
+| Runner | Actions artifact name | Archive inside it |
+| --- | --- | --- |
+| `windows-2022` | `hermite-optics-cpu-windows-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-windows-x86_64-cpu.zip` |
+| `macos-15-intel` | `hermite-optics-cpu-macos-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-x86_64-cpu.tar.gz` |
+| `macos-15` | `hermite-optics-cpu-macos-arm64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-arm64-cpu.tar.gz` |
+
+The validation workflow uses the downloaded bytes. It checks the archive
+checksum, run and attempt, source revision, host architecture, archive
+contents and license inventory. It checks native imports and uses the
+packaged Python loader to run the synthetic case in Original, Refactored and
+Multicore modes. The receiver map, receiver summary and per-heliostat details
+must match bitwise. Validation reports missing DLLs and dyld or loader errors.
+The jobs install Python requirements from the matching checkout.
+
+To validate a downloaded artifact manually on a matching host, check out
+the build's full source revision and run:
+
+```sh
+python -m pip install --only-binary=:all: -r requirements.txt
+python scripts/native_package.py validate --directory ./downloaded-artifact \
+  --platform PLATFORM --revision FULL_SHA --run-id BUILD_RUN_ID --run-attempt ATTEMPT
+```
+
+Use `windows-x86_64`, `macos-x86_64` or `macos-arm64` for `PLATFORM`.
+Windows validation expects the x64 Visual C++ runtime and MSVC 2022
+`dumpbin`. macOS validation expects Xcode's `otool`. macOS packages target
+macOS 15.0 and retain the `.so` suffix used by the pinned SSC copy step.
+They contain a native, single-architecture Mach-O dylib. Both macOS jobs
+take the architecture from CMake after removing the pinned Intel-only
+flags on the packaged targets. Signing, notarization and testing on earlier
+macOS releases are outside these checks.
+
+These workflows have not run on the hosted runners yet. The packages are
+validation artifacts subject to the redistribution requirements below.
+Use access-controlled runs while redistribution clearance is pending.
+
+## Native Linux and macOS
 
 From a clean checkout use Git, Python 3.12, a native C/C++ toolchain, GNU Make
 for the dependency configuration, and Ninja. Linux also needs binutils
-(`readelf`), and Intel macOS needs the Xcode command-line tools. Pin CMake to
+(`readelf`), and macOS needs the Xcode command-line tools. Pin CMake to
 3.30.5 to avoid CMake 4's compatibility changes for the older upstream builds.
-On Intel macOS append `-DCMAKE_OSX_ARCHITECTURES=x86_64` to the configure command.
+On macOS append `-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0` and use
+`-DCMAKE_OSX_ARCHITECTURES=x86_64` on Intel or `-DCMAKE_OSX_ARCHITECTURES=arm64`
+on Apple Silicon.
 
 ```sh
 python3.12 -m venv .venv
@@ -370,3 +421,4 @@ requirements are resolved.
 | Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
 | Windows CUDA | `hermite-optics-<version>-windows-x86_64-cuda13.0-sm89.zip` |
 | Intel macOS CPU | `hermite-optics-<version>-macos-x86_64-cpu.tar.gz` |
+| Apple Silicon macOS CPU | `hermite-optics-<version>-macos-arm64-cpu.tar.gz` |

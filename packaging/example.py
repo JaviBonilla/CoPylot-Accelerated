@@ -82,7 +82,22 @@ def simulate(weather, mode):
             api.data_free(context)
     if flux.shape != (25, 25) or not np.isfinite(flux).all() or flux.max() <= 0:
         raise RuntimeError("Invalid receiver flux")
-    return flux, summary
+    return flux, summary, details
+
+
+def compare_bits(actual, reference, label):
+    actual = np.asarray(actual, dtype="<f8")
+    reference = np.asarray(reference, dtype="<f8")
+    if (actual.shape != reference.shape or not np.isfinite(actual).all()
+            or actual.tobytes() != reference.tobytes()):
+        raise RuntimeError(f"CPU {label} differs bitwise from the refactored run")
+
+
+def compare_outputs(actual, reference, label):
+    if actual.keys() != reference.keys():
+        raise RuntimeError(f"CPU {label} schema differs from the refactored run")
+    for key, values in actual.items():
+        compare_bits(values, reference[key], f"{label}.{key}")
 
 
 def main():
@@ -90,7 +105,7 @@ def main():
     parser.add_argument("--mode", choices=("original", "refactored", "multicore", "cuda"),
                         default="refactored")
     parser.add_argument("--compare", action="store_true",
-                        help="Compare flux against a fresh refactored CPU run")
+                        help="Compare outputs against a fresh refactored CPU run")
     args = parser.parse_args()
     info = build_info()
     if args.mode == "original" and not info["diagnostics"]:
@@ -101,17 +116,23 @@ def main():
     with TemporaryDirectory() as temp:
         weather = Path(temp) / "synthetic.csv"
         synthetic_weather(weather)
-        flux, summary = simulate(weather, args.mode)
+        flux, summary, details = simulate(weather, args.mode)
         result = {"mode": args.mode, "flux_shape": list(flux.shape),
                   "peak_incident_flux_kw_m2": float(flux.max()),
                   "flux_sha256": hashlib.sha256(flux.astype("<f8", copy=False).tobytes()).hexdigest(),
                   "summary": summary}
         if args.compare:
-            reference, _ = simulate(weather, "refactored")
+            reference, reference_summary, reference_details = simulate(weather, "refactored")
             if args.mode == "cuda":
                 np.testing.assert_allclose(flux, reference, rtol=1e-9, atol=1e-10)
-            elif flux.tobytes() != reference.tobytes():
-                raise RuntimeError("CPU receiver map differs bitwise from refactored")
+            else:
+                compare_bits(flux, reference, "receiver map")
+                compare_outputs(details, reference_details, "heliostat details")
+                if summary.keys() != reference_summary.keys():
+                    raise RuntimeError("CPU receiver summary schema differs from the refactored run")
+                for receiver, values in summary.items():
+                    compare_outputs(values, reference_summary[receiver], f"summary.{receiver}")
+                result["cpu_outputs_bitwise"] = True
             result["max_abs_flux_difference_kw_m2"] = float(np.max(np.abs(flux - reference)))
         print(json.dumps(result, indent=2, allow_nan=False))
 
