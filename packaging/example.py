@@ -4,6 +4,7 @@
 import argparse
 import csv
 from datetime import datetime, timedelta
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -102,7 +103,9 @@ def main():
         synthetic_weather(weather)
         flux, summary = simulate(weather, args.mode)
         result = {"mode": args.mode, "flux_shape": list(flux.shape),
-                  "peak_incident_flux_kw_m2": float(flux.max()), "summary": summary}
+                  "peak_incident_flux_kw_m2": float(flux.max()),
+                  "flux_sha256": hashlib.sha256(flux.astype("<f8", copy=False).tobytes()).hexdigest(),
+                  "summary": summary}
         if args.compare:
             reference, _ = simulate(weather, "refactored")
             if args.mode == "cuda":

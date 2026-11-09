@@ -12,8 +12,9 @@ this documentation under the included CC BY 4.0 license.
 
 ## Run from the extracted directory
 
-Use a matching OS and x86-64 Python 3.12 environment. Install the Python
-requirements and run the example. It generates a small field and synthetic
+Use a matching OS and x86-64 Python 3.12 environment. Portable Linux
+(`variant: cpu-glibc2.34` in `BUILD.json`) was also tested with distro Python
+3.10 and 3.11. Install the Python requirements and run the example. It generates a small field and synthetic
 weather in a temporary directory.
 
 ```sh
@@ -38,8 +39,11 @@ coretrace API library. The bundle is for headless optical simulation.
 ## Runtime prerequisites
 
 - Linux uses the host glibc, libstdc++ and GCC runtime. Start with the OS
-  generation used to build the bundle. Check the reported ELF symbol versions
-  before targeting an older distribution.
+  generation used to build a native bundle. The portable Linux variant
+  requires `GLIBC_2.34`, `GLIBCXX_3.4.29` and `CXXABI_1.3.13`. Install
+  `libstdc++6` and `libgcc-s1` on Ubuntu or Debian, or `libstdc++` and
+  `libgcc` on EL9, if absent. Ubuntu 22.04 and 24.04, Debian 12 and
+  AlmaLinux 9 were verified with the same portable archive.
 - Windows uses the x64 Visual C++ runtime and Windows system libraries.
 - Intel macOS uses system libraries. The Mach-O library keeps the `.so`
   suffix used by the pinned build's post-build copy step.

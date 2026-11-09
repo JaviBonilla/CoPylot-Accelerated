@@ -26,6 +26,9 @@ set_target_properties(solarpilot PROPERTIES
   OUTPUT_NAME hermite_optics SUFFIX "${package_suffix}" SKIP_BUILD_RPATH TRUE)
 set(package_library "hermite_optics${package_suffix}")
 set(package_variant cpu)
+if(COPILOT_PORTABLE_LINUX_CPU)
+  set(package_variant cpu-glibc2.34)
+endif()
 set(package_cuda_version "")
 set(package_cuda_arch "")
 if(SOLARPILOT_ENABLE_CUDA)
@@ -109,6 +112,9 @@ set(CPACK_PACKAGE_FILE_NAME "hermite-optics-local-${package_revision_short}-${pa
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 set(CPACK_VERBATIM_VARIABLES ON)
+if(COPILOT_PORTABLE_LINUX_CPU)
+  set(CPACK_PACKAGE_CHECKSUM SHA256)
+endif()
 # CPack selects source generators automatically when this list is empty.
 # Disable them and remove the default whole-checkout input even if -G is supplied.
 set(CPACK_SOURCE_GENERATOR "")

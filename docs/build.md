@@ -38,6 +38,10 @@ root repository.
 
 ## Linux CPU
 
+For distribution across Linux versions, use the separate
+[portable CPack recipe](packaging.md#portable-linux-x86-64-cpu). The commands
+below build against the current development host.
+
 ```sh
 scripts/build_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
 scripts/test_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON

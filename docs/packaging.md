@@ -11,7 +11,8 @@ clearance is pending.
 
 | Target | Build and validation |
 | --- | --- |
-| Linux x86-64 CPU | Built and tested with GCC 13.3, CMake 3.30.5 and Python 3.12. The extracted package loaded and passed all three CPU modes. |
+| Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
+| Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
 | Linux x86-64 CUDA | Build and CPU-side archive workflow prepared for CUDA 13.0 and Ada SM 89. No package or CUDA smoke test was run. |
 | Windows x64 CPU | Native MSVC 2022 workflow prepared. DLL exports, C runtime linkage and the extracted smoke test still need native verification. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
@@ -28,7 +29,85 @@ host compiler and the toolkit preinstalled. It builds and verifies the archive
 using CPU modes. Use that runner only for trusted refs. The workflows have
 no upload or release steps and have not been run.
 
-## Linux and Intel macOS
+## Portable Linux x86-64 CPU
+
+Use the `cpu-glibc2.34` variant for cross-distribution testing. The
+[builder Dockerfile](../packaging/linux-portable.Dockerfile) pins the official
+AlmaLinux 9 amd64 base image and uses EL9's system GCC 11 and glibc 2.34.
+It pins CMake 3.30.5 and the Ninja 1.11.1.4 wheel. DNF applies EL9 repository
+updates, so the recipe targets a stable ABI across updates. It does not pin
+the entire RPM transaction or guarantee identical binaries across updates.
+
+From the repository root on an x86-64 Linux Docker host:
+
+```sh
+docker build --platform linux/amd64 -t copilot-linux-portable - < packaging/linux-portable.Dockerfile
+docker run --rm --platform linux/amd64 --user "$(id -u):$(id -g)" \
+  --volume "$PWD:/workspace" --env HOME=/tmp copilot-linux-portable bash -ec '
+    python3 -m venv /tmp/verify-python
+    . /tmp/verify-python/bin/activate
+    python3 -m pip install --only-binary=:all: -r requirements.txt
+    scripts/package_linux_portable.sh
+  '
+```
+
+The script reconstructs the pinned checkouts, enables Original diagnostics,
+builds and tests the same shared library that CPack puts in
+`build/package-linux-portable/packages/`. It uses GCC's `-march=x86-64
+-mtune=generic` and keeps the standard project build separate. The final
+archive is named
+`hermite-optics-local-<revision>-linux-x86_64-cpu-glibc2.34.tar.gz`.
+CPack writes a SHA-256 sidecar alongside it.
+
+The verified binary requires up to `GLIBC_2.34`, `GLIBCXX_3.4.29` and
+`CXXABI_1.3.13`. It uses host glibc (including libm and the loader),
+libstdc++ and libgcc_s. On Ubuntu and Debian the latter two are
+`libstdc++6` and `libgcc-s1`. On EL9 they are `libstdc++` and `libgcc`.
+No native runtime is bundled. GNU binutils is only needed for the verifier.
+The previous host build reached `GLIBC_2.38` through `__isoc23_sscanf`,
+`__isoc23_strtol` and `fmod`, and `GLIBCXX_3.4.32` through GCC 13's
+libstdc++ iostream initializer.
+
+| Fresh image tested | glibc | Distro Python | Extracted Original, Refactored and Multicore |
+| --- | --- | --- | --- |
+| Ubuntu 22.04.5 | 2.35 | 3.10.12 | Passed, bitwise equal |
+| Debian 12 | 2.36 | 3.11.2 | Passed, bitwise equal |
+| Ubuntu 24.04.5 | 2.39 | 3.12.3 | Passed, bitwise equal |
+| AlmaLinux 9.8 | 2.34 | 3.12.15 | Passed, bitwise equal |
+
+These checks used the four official amd64 image filesystems and one host
+kernel and CPU. RHEL and Rocky Linux 9 are ABI targets that were not tested
+separately. The library targets baseline x86-64. The tested EL9 userspace has
+its own x86-64-v2 requirement, and older physical CPUs were not tested.
+Installed Python and its NumPy and pandas wheels have their own runtime
+requirements. The synthetic map digest matched across the four environments
+and matched the earlier GCC 13 archive when both ran on the same host.
+
+For a local runtime check on a host without the source dependencies, first
+install the Python requirements from the extracted archive in a virtual
+environment. Then run the example for each mode or use the verifier with
+`--runtime-only` and the original archive. Use the verifier only with a trusted
+archive, since it loads and executes packaged code. The runtime check verifies
+the allowed files, the ELF ABI and relocations, then runs the packaged example.
+The example also prints a SHA-256 of the receiver map to compare across hosts.
+The full verification in the build checks the exact pinned sources and notices.
+
+```sh
+python /path/to/verify_package.py --runtime-only /path/to/package.tar.gz
+```
+
+lp_solve embeds optional loader entry points for external factorization,
+language-interface and BLAS modules. The built-in routes need none of those
+modules. They are outside the package verification. The Python requirements
+are installed separately, and the optical example exercises their used
+native extensions. The separate SolTrace ray-tracing API is outside the
+bundle.
+
+The manual [portable Linux workflow](../.github/workflows/package-linux-portable.yml)
+uses one CPack archive for all four runtime environments. It verifies the
+archive inside each runner and has no upload or publication step.
+
+## Native Linux and Intel macOS
 
 From a clean checkout use Git, Python 3.12, a native C/C++ toolchain, GNU Make
 for the dependency configuration, and Ninja. Linux also needs binutils
@@ -102,15 +181,16 @@ when explicitly requested.
 Extract the archive to a user directory. From the extracted top level run
 `python -m pip install -r requirements.txt` in a Python 3.12 virtual
 environment, then run `python example.py --mode refactored --compare`.
+The portable Linux variant was also verified with distro Python 3.10 and 3.11.
 Use `--mode original` or `--mode multicore` to select the other CPU paths.
 The example creates synthetic weather and a 12-heliostat field and evaluates
 one optical state. The two comparison modes check the receiver map bitwise
 against Refactored. For other programs, add the extracted `python/` directory
 to `PYTHONPATH` and use `from hermite_optics import CoPylot`.
 
-The Linux reference binary requires glibc symbols up to `GLIBC_2.38` and
-libstdc++ symbols up to `GLIBCXX_3.4.32`. Start with an OS providing those
-versions. Older distributions have not been verified. Windows expects a
+The host-built Linux reference binary requires glibc symbols up to
+`GLIBC_2.38` and libstdc++ symbols up to `GLIBCXX_3.4.32`. For the older
+runtime baseline use the portable variant described above. Windows expects a
 compatible x64 Visual C++ runtime. macOS expects system libraries. CUDA
 expects a compatible installed driver and the shared CUDA runtime from the
 matching toolkit. On Linux make the runtime visible to the system linker.
@@ -176,7 +256,7 @@ requirements are resolved.
 
 | Target | Proposed asset |
 | --- | --- |
-| Linux CPU | `hermite-optics-<version>-linux-x86_64-cpu.tar.gz` |
+| Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu-glibc2.34.tar.gz` |
 | Linux CUDA | `hermite-optics-<version>-linux-x86_64-cuda13.0-sm89.tar.gz` |
 | Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
 | Windows CUDA | `hermite-optics-<version>-windows-x86_64-cuda13.0-sm89.zip` |

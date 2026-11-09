@@ -59,6 +59,11 @@
   ],
   "files": [
     {
+      "path": ".github/workflows/package-linux-portable.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": ".gitattributes",
       "classification": "Original code or build configuration",
       "license": "MIT"
@@ -1227,6 +1232,11 @@
       "license": "CC-BY-4.0"
     },
     {
+      "path": "packaging/linux-portable.Dockerfile",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": "packaging/example.py",
       "classification": "Original code or build configuration",
       "license": "MIT"
@@ -1293,6 +1303,11 @@
     },
     {
       "path": "scripts/export_patches.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/package_linux_portable.sh",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },

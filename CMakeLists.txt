@@ -7,6 +7,15 @@ option(SOLARPILOT_ENABLE_CUDA "Enable hybrid CUDA Hermite flux density and devic
 option(SOLARPILOT_ENABLE_SANITIZERS "Enable CPU Address/Undefined sanitizers" OFF)
 option(SOLARPILOT_ENABLE_THREAD_SANITIZER "Enable CPU ThreadSanitizer" OFF)
 option(COPILOT_LOCAL_PACKAGE "Build a local binary package for validation only" OFF)
+option(COPILOT_PORTABLE_LINUX_CPU "Target the Linux x86-64 CPU package ABI baseline" OFF)
+if(COPILOT_PORTABLE_LINUX_CPU)
+  if(NOT COPILOT_LOCAL_PACKAGE OR SOLARPILOT_ENABLE_CUDA OR
+     NOT CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR
+     NOT CMAKE_C_COMPILER_ID STREQUAL "GNU" OR NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(FATAL_ERROR "Portable Linux CPU packaging requires a native x86-64 Linux GCC CPU package build")
+  endif()
+  add_compile_options(-march=x86-64 -mtune=generic)
+endif()
 if(COPILOT_LOCAL_PACKAGE)
   if(NOT BUILD_COPILOT_API OR SOLARPILOT_ENABLE_SANITIZERS OR SOLARPILOT_ENABLE_THREAD_SANITIZER)
     message(FATAL_ERROR "Local packaging requires the headless library without sanitizers")

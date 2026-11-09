@@ -16,6 +16,10 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+PORTABLE_VARIANT = "cpu-glibc2.34"
+PORTABLE_MAX = {"GLIBC": (2, 34), "GLIBCXX": (3, 4, 29), "CXXABI": (1, 3, 13)}
+PORTABLE_NEEDED = {"libc.so.6", "libm.so.6", "libstdc++.so.6", "libgcc_s.so.1",
+                   "ld-linux-x86-64.so.2", "libpthread.so.0", "libdl.so.2", "librt.so.1"}
 LICENSES = {
     "licenses/SSC-LICENSE.txt", "licenses/SolarPILOT-LICENSE.md",
     "licenses/SolTrace-LICENSE.md", "licenses/NLopt-LICENSE.htm",
@@ -54,7 +58,7 @@ def archive_files(path):
         raise ValueError("Expected a CPack .zip or .tar.gz archive")
 
 
-def inspect(path):
+def inspect(path, runtime_only=False):
     prefix = path.name.removesuffix(".tar.gz").removesuffix(".zip")
     files = {}
     for name, content in archive_files(path):
@@ -83,6 +87,21 @@ def inspect(path):
     require(info["library"] == library, "Unexpected library path")
     require(set(files) == set(SOURCES) | {"BUILD.json", "python/copylot.py", library},
             "Archive differs from the package allowlist")
+    private = re.compile(rb"/(?:home|tmp|Users|workspace|Volumes|_work)/"
+                         rb"|[A-Za-z]:[\\/]+(?:Users|repositories|a|_work)[\\/]", re.I)
+    for name, content in files.items():
+        require(not private.search(content), f"Local path in archive member: {name}")
+    if not runtime_only:
+        verify_sources(files, info)
+    return files, info
+
+
+def verify_sources(files, info):
+    checkout = str(ROOT).encode()
+    checkout_windows = str(ROOT).replace("/", "\\").encode()
+    for name, content in files.items():
+        require(checkout not in content and checkout_windows not in content,
+                f"Checkout path in archive member: {name}")
     for target, source in SOURCES.items():
         require(files[target] == (ROOT / source).read_bytes(), f"Altered package file: {target}")
     inventory = json.loads((ROOT / "docs/licensing-inventory.json").read_text(encoding="utf-8"))
@@ -99,27 +118,50 @@ def inspect(path):
     lock = json.loads((ROOT / "repos.lock.json").read_text())
     require(info["dependencies"] == {name: pin["patched_sha"] for name, pin in lock.items()},
             "Dependency metadata differs from the pins")
-    private = re.compile(rb"/(?:home|tmp|Users|workspace|Volumes|_work)/"
-                         rb"|[A-Za-z]:[\\/]+(?:Users|repositories|a|_work)[\\/]", re.I)
-    checkout = str(ROOT).encode()
-    checkout_windows = str(ROOT).replace("/", "\\").encode()
-    for name, content in files.items():
-        require(not private.search(content) and checkout not in content
-                and checkout_windows not in content, f"Local path in archive member: {name}")
-    return files, info
 
 
-def runtime_dependencies(library, os_name):
+def version_tuple(value):
+    return tuple(map(int, value.split(".")))
+
+
+def linux_dependencies(library, portable):
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("LD_")}
+    environment["LC_ALL"] = "C"
+
+    def readelf(flag):
+        return subprocess.check_output(["readelf", flag, str(library)], text=True, env=environment)
+
+    dynamic = readelf("-d")
+    require("(RPATH)" not in dynamic and "(RUNPATH)" not in dynamic, "Unexpected ELF search path")
+    needed = re.findall(r"\(NEEDED\).*?\[([^]]+)\]", dynamic)
+    versions = readelf("--version-info").partition("Version needs section")[2]
+    imports = re.findall(r"Name: (GLIBCXX|GLIBC|CXXABI)_(\S+)", versions)
+    symbols = {}
+    for family in PORTABLE_MAX:
+        values = {value for name, value in imports if name == family and re.fullmatch(r"[0-9.]+", value)}
+        if values:
+            symbols[family] = max(values, key=version_tuple)
+    header = readelf("-h")
+    require(re.search(r"Class:\s+ELF64", header)
+            and re.search(r"Machine:\s+Advanced Micro Devices X86-64", header)
+            and re.search(r"Type:\s+DYN", header), "Expected an x86-64 ELF shared object")
+    isa = re.findall(r"x86 ISA needed:\s*([^\n]+)", readelf("-n"))
+    if portable:
+        require(set(needed) <= PORTABLE_NEEDED, f"Unexpected portable ELF dependencies: {needed}")
+        require(all(re.fullmatch(r"[0-9.]+", value) and version_tuple(value) <= PORTABLE_MAX[family]
+                    for family, value in imports), f"Portable ELF ABI ceiling exceeded: {imports}")
+        require(set(symbols) == set(PORTABLE_MAX), "Incomplete portable ELF version requirements")
+        require(all(level.strip() == "x86-64-baseline" for level in isa), f"Unexpected x86 ISA: {isa}")
+        resolved = subprocess.check_output(["ldd", "-r", str(library)], text=True,
+                                           stderr=subprocess.STDOUT, env=environment)
+        require(not re.search(r"not found|undefined symbol", resolved), resolved)
+        print(resolved, end="")
+    return {"needed": needed, "symbols": symbols, "elf": "ELF64 x86-64 DYN", "isa_notes": isa}
+
+
+def runtime_dependencies(library, os_name, portable):
     if os_name == "linux":
-        dynamic = subprocess.check_output(["readelf", "-d", str(library)], text=True)
-        require("(RPATH)" not in dynamic and "(RUNPATH)" not in dynamic, "Unexpected ELF search path")
-        versions = subprocess.check_output(["readelf", "--version-info", str(library)], text=True)
-        requirements = {}
-        for family in ("GLIBC", "GLIBCXX", "CXXABI"):
-            matches = set(re.findall(rf"\b{family}_([\d.]+)\b", versions))
-            if matches:
-                requirements[family] = max(matches, key=lambda v: tuple(map(int, v.split("."))))
-        return {"needed": re.findall(r"\(NEEDED\).*?\[([^]]+)\]", dynamic), "symbols": requirements}
+        return linux_dependencies(library, portable)
     if os_name == "windows":
         output = subprocess.check_output(["dumpbin", "/DEPENDENTS", str(library)],
                                          text=True, errors="replace")
@@ -135,8 +177,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
     parser.add_argument("--cuda", action="store_true", help="Also run one CUDA/CPU check on an available GPU")
+    parser.add_argument("--runtime-only", action="store_true",
+                        help="Validate a trusted archive on a host without the pinned source checkout")
     args = parser.parse_args()
-    files, info = inspect(args.archive)
+    files, info = inspect(args.archive, runtime_only=args.runtime_only)
+    portable = info["variant"] == PORTABLE_VARIANT
+    if portable:
+        require(info["os"] == "linux" and info["diagnostics"] and not info["cuda_architecture"]
+                and not info["cuda_toolkit"], "Portable profile requires Linux CPU and Original diagnostics")
+        require([name for name, data in files.items() if data.startswith(b"\x7fELF")] == [info["library"]],
+                "Expected exactly one bundled ELF")
     require(not args.cuda or info["cuda_architecture"], "--cuda needs a CUDA build")
 
     with TemporaryDirectory() as temp:
@@ -145,13 +195,15 @@ def main():
             destination = root / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(content)
-        dependencies = runtime_dependencies(root / info["library"], info["os"])
+        dependencies = runtime_dependencies(root / info["library"], info["os"], portable)
         require(dependencies["needed"], "No dynamic runtime dependencies reported")
         links_cuda = any("cudart" in name.lower() for name in dependencies["needed"])
         require(links_cuda == bool(info["cuda_architecture"]),
                 "CUDA runtime linkage differs from build metadata")
         environment = {k: v for k, v in os.environ.items()
                        if not k.startswith("SOLARPILOT_") and k not in {"PYTHONPATH", "PYTHONHOME"}}
+        if portable:
+            environment = {k: v for k, v in environment.items() if not k.startswith("LD_")}
         environment.update(PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1")
         modes = ["refactored", "multicore"]
         if info["diagnostics"]:
