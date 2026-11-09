@@ -56,9 +56,10 @@ removed. These utilities entered the candidate as reviewed new files.
 
 ## Remaining decisions and practical limits
 
-The root license and ownership of original code/data need an explicit decision;
-see `THIRD_PARTY_NOTICES`. Review upstream naming/distribution conditions and any
-future binary or raw input-asset redistribution. No remote or upload is authorized
+The [README licensing section](../README.md#licensing) records the grants for
+original code, data and documentation. The [third-party notices](../THIRD_PARTY_NOTICES)
+record the upstream naming, source-availability and redistribution conditions for
+future packages or raw input assets. No remote or upload is authorized
 by this local export. CPU tests, asset reconstruction and exact commercial plan
 regeneration can be checked locally. CUDA execution requires a suitable toolkit
 and device; no fresh GPU or complete annual timing campaign is claimed here.

@@ -2,7 +2,15 @@
 
 This local publication candidate preserves the software development of the retained SolarPILOT Hermite execution path, refactored CPU implementation, multicore CPU and CUDA implementation. It contains source patches, tests, public commercial-case reconstruction and reviewed computational evidence.
 
-**The root license is pending an explicit decision.** See `THIRD_PARTY_NOTICES` and `docs/licensing-inventory.json`. Existing upstream terms and copyright headers remain applicable. No repository-wide license is implied.
+## Licensing
+
+- [MIT](LICENSE) covers eligible original project code, including the build and benchmark tooling.
+- [CC0 1.0](benchmarks/results/LICENSE) covers eligible original benchmark results and datasets, including the generated receiver maps and the synthetic baselines in `tests/baselines/`.
+- [CC BY 4.0](docs/LICENSE) covers original project documentation, including this README. When sharing, credit Javier Bonilla and CoPylot-GPU, link to the license, and indicate any changes.
+
+The root MIT grant is limited to original project code. Existing notices and terms continue to govern upstream-derived patches, separately marked files, and reconstructed dependencies. Copied external inputs and excerpts retain their source terms, including where they appear in results or case metadata. Public availability alone does not establish redistribution rights.
+
+See [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) and the [licensing inventory](docs/licensing-inventory.json) for the file-level exceptions, data provenance, and upstream terms.
 
 ## Build and test
 

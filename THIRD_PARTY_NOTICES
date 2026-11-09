@@ -1,40 +1,91 @@
-DRAFT THIRD-PARTY NOTICES — ROOT LICENSE NOT SELECTED
+THIRD-PARTY NOTICES
 
-This inventory does not grant a new repository-wide license or replace upstream
-terms. The original project contributions and generated scientific evidence await
-an explicit licensing/ownership decision. Existing upstream headers are preserved.
+The root MIT grant covers eligible original project code. Original benchmark data
+and documentation have separate grants described in README.md. Existing
+third-party licenses, source headers and notices govern upstream material,
+including material reproduced or adapted in patches.
 
-SSC
-  Pinned source: repos.lock.json; local changes: patches/ssc.patch.
-  License: licenses/SSC-LICENSE.txt (BSD 3-Clause).
-  Individual source-file notices also apply, including separately licensed vendors.
+Pinned upstream sources
 
-SolarPILOT / CoPylot
-  Pinned source: repos.lock.json; Python API changes: patches/SolarPILOT.patch.
-  License: licenses/SolarPILOT-LICENSE.md.
-  This text includes government-rights notices, research-entity corresponding-source
-  conditions and modified-version designation/reference conditions. Do not replace
-  it with a generic BSD label. Review project naming and distribution terms.
+The bootstrap script reconstructs SSC, SolarPILOT and SolTrace in separate
+checkouts from the revisions in repos.lock.json. The root Git tree distributes
+patch mailboxes and license copies. The upstream source trees, installed
+dependencies and compiled libraries are fetched or built separately.
 
-SolTrace
-  Pinned source: repos.lock.json; portability patch: patches/SolTrace.patch.
-  License: licenses/SolTrace-LICENSE.md; analogous additional conditions appear there.
+- SSC and its native CoPilot_API: Alliance for Sustainable Energy, LLC.
+  See licenses/SSC-LICENSE.txt (BSD-3-Clause) and individual source headers.
+  patches/ssc.patch retains these terms for upstream-derived code and keeps
+  existing SPDX markings on additions.
+- SolarPILOT and the CoPylot Python API in deploy/api/copylot.py: see
+  licenses/SolarPILOT-LICENSE.md, including the Alliance copyright and
+  government-rights notice. patches/SolarPILOT.patch carries the API changes.
+- SolTrace/coretrace: see licenses/SolTrace-LICENSE.md, including the Alliance
+  copyright and government-rights notice, and retain file-level notices.
+  patches/SolTrace.patch changes coretrace/treemesh.cpp.
 
-Included third-party components
-  NLopt: ssc/nlopt/LICENSE.htm -> licenses/NLopt-LICENSE.htm.
-  lp_solve: ssc/lpsolve/LICENSE.htm -> licenses/lp_solve-LICENSE.htm.
-  These texts include LGPL 2.1 provisions. Review individual components and any
-  future binary distribution separately.
-  RapidXML: SolarPILOT/rapidxml/license.txt -> licenses/RapidXML-license.txt
-  (Boost/MIT alternatives in the upstream text).
+Three files in the root tree carry BSD-3-Clause SPDX identifiers and remain
+under those terms: tests/temporal_image_partition.cpp,
+tests/temporal_gpu_cache.cpp and tests/temporal_gpu_allocation_failure.cpp.
+See licenses/SSC-LICENSE.txt for the BSD-3-Clause text.
+
+Components within the pinned dependencies
+
+- NLopt and lp_solve are built as static libraries from ssc/nlopt and
+  ssc/lpsolve. Preserve their upstream LGPL 2.1 license files
+  (licenses/NLopt-LICENSE.htm and licenses/lp_solve-LICENSE.htm) and individual
+  source notices. For example, NLopt's optimize.c carries a permissive MIT
+  notice from Massachusetts Institute of Technology, and its slsqp.c records
+  the BSD release of Dieter Kraft's SLSQP by ACM. The lp_solve tree includes
+  COLAMD/SYMAMD by Stefan I. Larimore and Timothy A. Davis, copyright
+  1998-2001 University of Florida, used by permission. Its colamd.c records
+  attribution, modification and availability conditions. It also includes
+  LUSOL routines credited to the Stanford Optimization Laboratory in lusol.c.
+- RapidXML 1.13, copyright Marcin Kalicinski, appears in
+  SolarPILOT/rapidxml and ssc/solarpilot/rapidxml*.hpp. Keep the source notices
+  and the upstream Boost/MIT alternatives in licenses/RapidXML-license.txt.
+- SolTrace/coretrace/mtrand.h also carries separate BSD-style notices for
+  the Mersenne Twister code by Makoto Matsumoto, Takuji Nishimura and
+  Richard J. Wagner. Keep these alongside the SolTrace notice.
+- The Python packages in requirements.txt are installed separately.
+  docs/licensing-inventory.json records the license locations for NumPy,
+  pandas, python-dateutil, pytz, tzdata and six. CUDA builds use an external
+  NVIDIA toolkit and runtime. A package that ships these components needs
+  their applicable distribution terms and notices.
 
 Data and generated evidence
-  The commercial case manifest identifies layout/weather assets from pinned public
-  upstream repositories. Raw assets are reconstructed, not copied into root Git.
-  Their online availability is not a statement about redistribution permission.
-  The committed commercial receiver maps are generated study outputs, not copied
-  upstream inputs; no private receiver maps are included. The license for original
-  study outputs still requires a decision along with other original contributions.
 
-See docs/licensing-inventory.json for the per-file contribution classification and
-patch path inventory. No final legal-compliance determination is made here.
+The commercial case uses the pinned SSC 8790-heliostat coordinate table and
+the SolarPILOT Daggett TMY2 weather file. Their paths, revisions and provenance
+are in cases/commercial-reference/case_manifest.json. The raw layout and
+weather files stay in the dependency checkouts. Source terms also continue
+to apply to imported parameters in the case manifest, upstream receiver
+settings in benchmarks/results/phase3a-reference-inventory.json, and
+imported geometry and input settings in the Phase 3A commercial case and
+grid reports. CC0 covers the project's own measurements, simulations and
+derived statistics. It excludes third-party input material and reproduced
+notices or excerpts, wherever they occur. Check the asset terms before
+redistributing any raw inputs. A public download alone does not grant
+permission to redistribute it.
+
+Conditions to check before binary distribution
+
+- SolarPILOT and SolTrace license clauses 1 and 2 require their notices,
+  conditions and disclaimer to travel with source and binary redistributions
+  in the form specified by each license. Clause 3 requires a redistributing
+  research entity to make the entire corresponding source publicly available
+  under that license for as long as the redistribution is available.
+- Under clause 4, a modified distribution covered by the SolarPILOT license
+  must use a distinct, non-confusing designation and identify the underlying
+  Alliance software as SolarPILOT(TM). Other uses of a restricted designation
+  for the modified version require prior written consent from Alliance.
+  SolTrace has the analogous requirement for its designation. Before packaging,
+  review the product name, archive name, Python API branding and library
+  filename (including solarpilot.so) against the components actually distributed.
+  The SSC native code's BSD-3-Clause notices remain separately applicable.
+- Verify the linked components and applicable file-level terms. In particular,
+  check LGPL 2.1 section 6 requirements for corresponding library source and a
+  compliant way to relink where the LGPL applies to the statically linked
+  libraries. Account for any redistributed CUDA runtime and Python packages.
+
+See docs/licensing-inventory.json for the pinned components, license copies,
+patch paths, file scopes and data exceptions.
