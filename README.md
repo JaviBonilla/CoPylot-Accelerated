@@ -38,6 +38,12 @@ state, prints the receiver summary and writes the incident flux map. See
 [mode selection and comparison](docs/build.md#run-the-example) for the other
 execution approaches.
 
+## Binary packaging
+
+The [packaging guide](docs/packaging.md) covers the verified Linux CPU
+validation bundle, other platform recipes and the upstream redistribution
+requirements.
+
 ## Benchmarks and reproducibility
 
 - [Reproducibility workflow](docs/public-reproducibility.md) covers numerical checks, the public commercial case, short and temporal measurements, and optional annual campaigns.

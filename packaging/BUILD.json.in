@@ -1,0 +1,22 @@
+{
+  "distribution": "local-validation-only",
+  "redistribution": "blocked-pending-review",
+  "version": "0.0.0+g@package_revision_short@",
+  "source_revision": "@package_revision@",
+  "source_dirty_at_configure": @package_dirty@,
+  "os": "@package_os@",
+  "architecture": "@package_arch@",
+  "variant": "@package_variant@",
+  "build_type": "Release",
+  "library": "lib/@package_library@",
+  "compiler": "@CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@",
+  "cmake": "@CMAKE_VERSION@",
+  "diagnostics": @package_diagnostics@,
+  "cuda_toolkit": "@package_cuda_version@",
+  "cuda_architecture": "@package_cuda_arch@",
+  "dependencies": {
+    "SolarPILOT": "@package_SolarPILOT_revision@",
+    "ssc": "@package_ssc_revision@",
+    "SolTrace": "@package_SolTrace_revision@"
+  }
+}

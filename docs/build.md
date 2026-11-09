@@ -18,8 +18,8 @@ Python versions of NumPy, pandas and their dependencies are pinned in
 CUDA toolkit. The formal affinity and timing harnesses also need Linux
 `/proc`, `/sys` and `lscpu`.
 
-Windows and macOS build branches exist upstream. This public checkout has no
-verified installation, test or binary distribution procedure for those platforms.
+Native Windows and Intel macOS verification recipes are in the
+[packaging guide](packaging.md). Those platform builds remain unverified.
 
 ## Reconstruct the dependencies
 
@@ -72,8 +72,8 @@ If CMake cannot find the intended toolkit compiler, set `CUDACXX` before the
 first configure in a new build directory. For validation on an available device,
 use `scripts/test_cpu.sh` with the same `BUILD_DIR` and flags. Schedule those
 tests when the device is available for your run. The build checks and examples
-here use the library in place. Binary packaging is a separate step covered by
-the [upstream notices](../THIRD_PARTY_NOTICES).
+here use the library in place. See the [packaging guide](packaging.md) for
+local binary archives and redistribution requirements.
 
 ## Run the example
 

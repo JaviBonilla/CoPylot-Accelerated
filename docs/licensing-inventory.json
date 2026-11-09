@@ -64,6 +64,16 @@
       "license": "MIT"
     },
     {
+      "path": ".github/workflows/package-check.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/package-cuda-check.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": ".gitignore",
       "classification": "Original code or build configuration",
       "license": "MIT"
@@ -969,6 +979,11 @@
       "scope_note": "MIT covers original configuration only. Imported upstream parameters retain their source terms."
     },
     {
+      "path": "cmake/LocalPackage.cmake",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": "docs/LICENSE",
       "classification": "License text"
     },
@@ -1059,6 +1074,11 @@
     },
     {
       "path": "docs/licensing-inventory.json",
+      "classification": "Original documentation",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "docs/packaging.md",
       "classification": "Original documentation",
       "license": "CC-BY-4.0"
     },
@@ -1197,6 +1217,26 @@
       "classification": "License text"
     },
     {
+      "path": "packaging/BUILD.json.in",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "packaging/README.md",
+      "classification": "Original documentation",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "packaging/example.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "packaging/hermite_optics.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
       "path": "patches/SolTrace.patch",
       "classification": "Upstream-derived patch",
       "scope_note": "Alliance SolTrace terms for the upstream coretrace code."
@@ -1273,6 +1313,11 @@
     },
     {
       "path": "scripts/validate_cuda_api.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/verify_package.py",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },
