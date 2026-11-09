@@ -13,7 +13,7 @@ clearance is pending.
 | --- | --- |
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
-| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1 for Ada SM 89. Host loading and three CPU modes passed on four distributions. GPU execution is unverified for this archive. |
+| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. GPU execution passed on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
 | Windows x64 CPU | Native MSVC 2022 workflow prepared. DLL exports, C runtime linkage and the extracted smoke test still need native verification. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
 | Intel macOS CPU | Native workflow prepared. The pinned dependencies use Intel flags, and the SSC copy step expects `.so`, so the opt-in package keeps that suffix for a Mach-O library. The build and loader remain unverified. |
@@ -160,9 +160,8 @@ proposed runtime bundling.
 
 Use a driver matching [NVIDIA's toolkit guidance][cuda-driver] for device
 execution. NVIDIA lists Linux driver **580.82.07 or newer** for CUDA 13.0
-Update 1. This is the toolkit pairing, and the packaged build has not
-been exercised on a GPU. The driver supplies `libcuda.so.1` when CUDA
-initializes. A driver and GPU are unnecessary for CPU-mode execution from
+Update 1. The reference archive passed device tests on driver 580.159.03.
+The driver supplies `libcuda.so.1` when CUDA initializes. A driver and GPU are unnecessary for CPU-mode execution from
 the CUDA archive, but `libcudart.so.13` is needed even for loading it.
 
 With Python requirements installed from the extracted archive, provide the
@@ -183,6 +182,29 @@ CUDA runtime and the documented host prerequisites. Original, Refactored
 and Multicore agreed bitwise, and the receiver map matched the portable
 CPU archive's synthetic result. These are host checks. The tests did not
 use an NVIDIA GPU.
+
+### GPU execution of the reference archive
+
+The archive built at `7c7ce27` was tested on an NVIDIA RTX 6000 Ada
+Generation (SM 89) under Ubuntu 24.04.4 with driver 580.159.03 and external
+CUDA Runtime 13.0.88. Its SHA-256 is
+`57c74d4b75d51a16446ab3070a7a56c69a6b5f7e953a80fe8fb15463a78fd640`.
+The tests loaded the extracted library and ran with
+`CUDA_DISABLE_PTX_JIT=1`, exercising the embedded SM 89 cubins.
+
+Original, Refactored and Multicore were bitwise identical across all
+625 flux cells, 29 receiver summary values and 25 detail columns for
+each of 12 synthetic heliostats. CUDA matched the CPU summary and
+details exactly. Its maximum flux difference was
+`1.0658141036401503e-14 kW/m²`, within `rtol=1e-9` and `atol=1e-10`.
+
+Seven native CUDA checks and 15 Python checks passed. One Python timing
+instrumentation check was omitted. The canonical optical-state test checked
+215 values per heliostat for 257 heliostats across three CUDA runs. Full
+and resident CUDA paths materialized the same state bitwise. Switching
+back to CPU reproduced the initial CPU state bitwise. This GPU result
+applies to the recorded archive, driver, device and Ubuntu environment.
+The four-distribution checks above cover loading and CPU modes.
 
 On a machine with a compatible idle GPU and driver, append `--cuda` to the
 verifier command to exercise CUDA and compare receiver flux against the

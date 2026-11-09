@@ -10,6 +10,7 @@ from the reconstructed SolarPILOT checkout.
 | --- | --- |
 | CPU | x86-64 Linux, GCC/G++ 13.3, CMake 3.30.5, Ninja 1.11.1 and Python 3.12 |
 | CUDA | Archived x86-64 Linux validation with GCC 13.3, CUDA 13.0 (nvcc 13.0.88), driver 580.159.03 and RTX 6000 Ada (compute capability 8.9). See the [CUDA validation record](phase2dc-report.md). |
+| Portable CUDA archive | GPU execution verified on Ubuntu 24.04.4 with RTX 6000 Ada, driver 580.159.03 and CUDA Runtime 13.0.88. See the [archive validation](packaging.md#gpu-execution-of-the-reference-archive). |
 
 Install Git, Bash, a C/C++ build toolchain (including GNU Make for dependency
 configuration), CMake 3.24 or later, Ninja, and Python 3.12 with venv and pip. The
