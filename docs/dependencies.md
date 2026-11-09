@@ -10,4 +10,4 @@ Exact base SHAs/URLs are in `repos.lock.json`. All working checkouts use `featur
 
 No submodules are declared in these pinned versions. SSC vendors nlopt/lpsolve/rapidxml. No wxWidgets, WEX, LK, RapidJSON, OR-Tools, GUI, network FetchContent or CUDA dependency is needed for our superbuild. CORETRACEDIR is assigned locally by CMake. The root builds only legacy SolTrace/coretrace and SSC solarpilot-develop, then selects SSC's two support source files used by CoPylot (weather/util), avoiding unrelated MPFIT/PV/battery compilation. `--no-undefined` validates the resulting dependency closure on Linux.
 
-The root's `.git` is a read-only desktop placeholder. Workspace commits therefore use `.workspace-git` through `scripts/workspace_git.sh`; upstream checkouts have normal independent Git metadata. Local changes will be exported as patches for reproduction without publishing branches.
+The public root uses conventional Git metadata. Dependency checkouts remain ignored and independent; committed mailboxes preserve their local development history.

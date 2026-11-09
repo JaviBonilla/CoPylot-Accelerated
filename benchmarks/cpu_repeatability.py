@@ -264,7 +264,7 @@ def host_run(args):
             'sampling_interval_s':args.sample_interval,'frames':[]}
     start=time.monotonic();before_processes=process_ticks();previous_processes=before_processes;previous_scan=start;pid=None;tokens={};cgroup_before=None
     with Path(str(prefix)+'.log').open('w') as log:
-        process=subprocess.Popen([str(ROOT/'scripts/remote_container.sh'),'--gpu','bash','-c',command],stdout=log,stderr=subprocess.STDOUT)
+        process=subprocess.Popen([str(ROOT/'scripts/annual_container.sh'),'--gpu','bash','-c',command],stdout=log,stderr=subprocess.STDOUT)
         while process.poll() is None:
             if pid is None:
                 for p in Path('/proc').glob('[0-9]*'):

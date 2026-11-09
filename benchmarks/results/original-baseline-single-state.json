@@ -1,0 +1,1903 @@
+{
+  "scope": "Eight scientific ordinary single-state APIs; no annual Original campaign",
+  "passed": true,
+  "terminology": "retained original/legacy SolarPILOT Hermite execution path (with documented safety and project-restoration fixes)",
+  "source_audit": {
+    "upstream_ssc_base": "e9469f34d4703cd71ec5eb77aa6b7a96eea8dcec",
+    "phase4s_ssc": "0fd069b30343a08787f76247c4b1bb637e83bbe0",
+    "current_root": "a9f5098f0bda9ffaeec0db08c2b497e9b28792a6",
+    "current_nested": {
+      "ssc": "1233c8eb99f2650071b4386e918844d67709178b",
+      "SolarPILOT": "84f00a1a9212900aba09806bdf9878a0dd47b505",
+      "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+    },
+    "legacy_body_checks": [
+      {
+        "upstream_function": "imagePlaneIntercept",
+        "retained_function": "imagePlaneInterceptLegacy",
+        "normalized_body_sha256": "ace795aa53410aa8b89e7c44146a552dfc7a418a89a154a879a446c5b3bfa4d0",
+        "body_identical_after_removing_comments_whitespace_profile_macros": true
+      },
+      {
+        "upstream_function": "fluxDensity",
+        "retained_function": "fluxDensityLegacy",
+        "normalized_body_sha256": "c19b851dab6c38f56c8100ef5a60074d392111f9624d47c51dcc6cb401978f87",
+        "body_identical_after_removing_comments_whitespace_profile_macros": true
+      },
+      {
+        "upstream_function": "hermiteIntEval",
+        "retained_function": "hermiteIntEval",
+        "normalized_body_sha256": "05eb597a55a39860cb510d479b0d97f7664ef548f5b849d761eddd9c1d227246",
+        "body_identical_after_removing_comments_whitespace_profile_macros": true
+      },
+      {
+        "upstream_function": "hermiteIntegralSetup",
+        "retained_function": "hermiteIntegralSetup",
+        "normalized_body_sha256": "46c86ed48ac7c1ab640ef0f2c289b733992a8cba9b0df47e10747daa1888bf35",
+        "body_identical_after_removing_comments_whitespace_profile_macros": true
+      },
+      {
+        "upstream_function": "hermiteIntegral",
+        "retained_function": "hermiteIntegral",
+        "normalized_body_sha256": "7f67754a7e004065d7bd0195902014386348fd3c7f9add065b830096b5646b7b",
+        "body_identical_after_removing_comments_whitespace_profile_macros": true
+      }
+    ],
+    "current_and_phase4s_shared_source_files_byte_identical": [
+      "Flux.cpp",
+      "ImagePlaneInterceptAdapter.cpp",
+      "SolarField.cpp",
+      "interop.cpp",
+      "Toolbox.cpp",
+      "OpticalMesh.h"
+    ],
+    "recommended_label": "retained original/legacy SolarPILOT Hermite execution path (with documented safety and project-restoration fixes)",
+    "untouched_historical_upstream_binary_equivalence_demonstrated": false,
+    "safety_caveat": "factorial_d formerly converted an overflowing int factorial at 13!; the retained fix computes double factorials. This is not asserted universally numerically neutral to undefined upstream behavior. OpticalMesh pointers/terminal are initialized; SPT/XML error handling and explicit geometry restoration are retained."
+  },
+  "measured_library_sha256": "545775e26ca3588c9a65c56c93e6f3f93d480446e4a04272497fad27acb5e017",
+  "measured_ssc_source": "0fd069b30343a08787f76247c4b1bb637e83bbe0",
+  "measurement_root_revisions": [
+    "a9f5098f0bda9ffaeec0db08c2b497e9b28792a6"
+  ],
+  "harness_sha256": "2ddac8254aee6c9db338269c40a7cf1fe66d0a873760426f7ba7259700d5d677",
+  "toolchain_image": "sha256:8e6e3752946ff2dde451b313cbaec2ea8e7b52221b21bfbcf53fb68dd4f4c42e",
+  "protocol": {
+    "api": "CoPylot.simulate(nthreads=1)",
+    "backend": "cpu",
+    "intercept_path": "legacy",
+    "flux_path": "legacy",
+    "affinity": [
+      0
+    ],
+    "first_call_separate": true,
+    "warmups": 2,
+    "samples_per_process": 5,
+    "minimum_qualified_processes": 5,
+    "within_process_cv_max": 0.05,
+    "inter_process_median_cv_max": 0.03,
+    "process_median_max_over_min": 1.1,
+    "no_trim": true,
+    "getters_verification_outside_timing": true
+  },
+  "accepted_phase4s_reuse": {
+    "directly_comparable": true,
+    "same_binary": true,
+    "same_machine_topology_compiler": true,
+    "same_states_grids_physics_and_output_oracles": true,
+    "same_ordinary_api_timing_boundary": true,
+    "flat_or_cuda_performance_rerun": false,
+    "source_file": "phase4s-cpu-gpu-summary.json",
+    "source_sha256": "663c7e77e30e85f5ca480db499ae704d9b00ccca43c0f28bd0eed670c7de9ef5",
+    "scientific_reference_file": "phase4s-final-cpu-baseline.json",
+    "scientific_reference_sha256": "138ab6cb14376bcfca3b2fa02ec83a935bf157fdaab8720b1a0c22e1eb06dca1",
+    "cuda_original_protocol": "10 samples, separate first and3warmups; retained unchanged, not repackaged as five independent GPU processes"
+  },
+  "rows": [
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "grid_nx": 217,
+      "grid_ny": 256,
+      "original_median_s": 2.456123039126396,
+      "flat_1t_median_s": 1.2997760493308306,
+      "flat_24t_median_s": 0.12532333470880985,
+      "cuda_median_s": 0.01450976263731718,
+      "original_over_flat1t": 1.8896509443999163,
+      "original_over_flat24t": 19.59828985426557,
+      "original_over_cuda": 169.27382621749953,
+      "flat1t_over_flat24t": 10.371380975066412,
+      "flat24t_over_cuda": 8.637173318500393,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.0018247587607047079,
+      "process_median_max_over_min": 1.0050170207994844,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "grid_nx": 217,
+      "grid_ny": 256,
+      "original_median_s": 2.453993795439601,
+      "flat_1t_median_s": 1.2996075991541147,
+      "flat_24t_median_s": 0.1250993562862277,
+      "cuda_median_s": 0.014515381306409836,
+      "original_over_flat1t": 1.8882574994458714,
+      "original_over_flat24t": 19.61635829544043,
+      "original_over_cuda": 169.06161427229912,
+      "flat1t_over_flat24t": 10.38860340880259,
+      "flat24t_over_cuda": 8.6183995890611,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.0017747895299714466,
+      "process_median_max_over_min": 1.004524970041619,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "grid_nx": 217,
+      "grid_ny": 256,
+      "original_median_s": 2.4539838526397943,
+      "flat_1t_median_s": 1.2997881956398487,
+      "flat_24t_median_s": 0.12553711608052254,
+      "cuda_median_s": 0.014541278593242168,
+      "original_over_flat1t": 1.8879874897092506,
+      "original_over_flat24t": 19.547874997110416,
+      "original_over_cuda": 168.75984026468242,
+      "flat1t_over_flat24t": 10.353815956757627,
+      "flat24t_over_cuda": 8.633155281053755,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.0035574434052504118,
+      "process_median_max_over_min": 1.0092229245533428,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "grid_nx": 217,
+      "grid_ny": 256,
+      "original_median_s": 2.4539107140153646,
+      "flat_1t_median_s": 1.2978095095604658,
+      "flat_24t_median_s": 0.1250736154615879,
+      "cuda_median_s": 0.014513889327645302,
+      "original_over_flat1t": 1.8908096264808847,
+      "original_over_flat24t": 19.619731187582083,
+      "original_over_cuda": 169.07326896459676,
+      "flat1t_over_flat24t": 10.376365189179678,
+      "flat24t_over_cuda": 8.617512000959948,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.0019764319225827423,
+      "process_median_max_over_min": 1.0043223372790813,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "grid_nx": 222,
+      "grid_ny": 87,
+      "original_median_s": 15.960383802652359,
+      "flat_1t_median_s": 6.7949626836925745,
+      "flat_24t_median_s": 0.6723967865109444,
+      "cuda_median_s": 0.13619982637465,
+      "original_over_flat1t": 2.3488552543424763,
+      "original_over_flat24t": 23.736555740354625,
+      "original_over_cuda": 117.18358405795269,
+      "flat1t_over_flat24t": 10.105584708326049,
+      "flat24t_over_cuda": 4.936840261905747,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.008247350948521,
+      "process_median_max_over_min": 1.0222464388624073,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "grid_nx": 222,
+      "grid_ny": 87,
+      "original_median_s": 16.008190704509616,
+      "flat_1t_median_s": 6.809899875894189,
+      "flat_24t_median_s": 0.6758070327341557,
+      "cuda_median_s": 0.13679999485611916,
+      "original_over_flat1t": 2.3507233580886715,
+      "original_over_flat24t": 23.687517189254834,
+      "original_over_cuda": 117.01894229854614,
+      "flat1t_over_flat24t": 10.076692822125485,
+      "flat24t_over_cuda": 4.940110074162963,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.007373695731557443,
+      "process_median_max_over_min": 1.0193187422059966,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "grid_nx": 222,
+      "grid_ny": 87,
+      "original_median_s": 16.083927929401398,
+      "flat_1t_median_s": 6.814951283857226,
+      "flat_24t_median_s": 0.6797582926228642,
+      "cuda_median_s": 0.13993795309215784,
+      "original_over_flat1t": 2.36009433662422,
+      "original_over_flat24t": 23.661245627973383,
+      "original_over_cuda": 114.93613829558541,
+      "flat1t_over_flat24t": 10.025550784473063,
+      "flat24t_over_cuda": 4.857569212658135,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.005321785556733822,
+      "process_median_max_over_min": 1.0146680919045277,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "grid_nx": 222,
+      "grid_ny": 87,
+      "original_median_s": 16.00695827230811,
+      "flat_1t_median_s": 6.810384981334209,
+      "flat_24t_median_s": 0.6739261094480753,
+      "cuda_median_s": 0.13731958251446486,
+      "original_over_flat1t": 2.3503749518095844,
+      "original_over_flat24t": 23.75180015716755,
+      "original_over_cuda": 116.56719296114947,
+      "flat1t_over_flat24t": 10.10553662464822,
+      "flat24t_over_cuda": 4.907720349186802,
+      "qualified_processes": 5,
+      "inter_process_cv": 0.006668924141078823,
+      "process_median_max_over_min": 1.0158829379492578,
+      "correctness_bitwise_full_original_flat": true,
+      "samples_trimmed": 0
+    }
+  ],
+  "groups": [
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "all_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.456123039126396,
+        "minimum_median_s": 2.4519975166767836,
+        "maximum_median_s": 2.464299239218235,
+        "inter_campaign_median_cv": 0.0018247587607047079,
+        "maximum_over_minimum": 1.0050170207994844,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.456123039126396,
+        "minimum_median_s": 2.4519975166767836,
+        "maximum_median_s": 2.464299239218235,
+        "inter_campaign_median_cv": 0.0018247587607047079,
+        "maximum_over_minimum": 1.0050170207994844,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4567141495645046,
+        "minimum_s": 2.4417248591780663,
+        "maximum_s": 2.5422491803765297,
+        "cv": 0.008584881051571467
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4567141495645046,
+        "minimum_s": 2.4417248591780663,
+        "maximum_s": 2.5422491803765297,
+        "cv": 0.008584881051571467
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "all_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.453993795439601,
+        "minimum_median_s": 2.451947972178459,
+        "maximum_median_s": 2.463042963296175,
+        "inter_campaign_median_cv": 0.0017747895299714466,
+        "maximum_over_minimum": 1.004524970041619,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.453993795439601,
+        "minimum_median_s": 2.451947972178459,
+        "maximum_median_s": 2.463042963296175,
+        "inter_campaign_median_cv": 0.0017747895299714466,
+        "maximum_over_minimum": 1.004524970041619,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4541869685053825,
+        "minimum_s": 2.43735315464437,
+        "maximum_s": 2.469328358769417,
+        "cv": 0.0030197218713175697
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4541869685053825,
+        "minimum_s": 2.43735315464437,
+        "maximum_s": 2.469328358769417,
+        "cv": 0.0030197218713175697
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "all_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.4539838526397943,
+        "minimum_median_s": 2.4464611280709505,
+        "maximum_median_s": 2.4690246544778347,
+        "inter_campaign_median_cv": 0.0035574434052504118,
+        "maximum_over_minimum": 1.0092229245533428,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.4539838526397943,
+        "minimum_median_s": 2.4464611280709505,
+        "maximum_median_s": 2.4690246544778347,
+        "inter_campaign_median_cv": 0.0035574434052504118,
+        "maximum_over_minimum": 1.0092229245533428,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.453088564798236,
+        "minimum_s": 2.4407202396541834,
+        "maximum_s": 2.4913190118968487,
+        "cv": 0.0047332791653357685
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.453088564798236,
+        "minimum_s": 2.4407202396541834,
+        "maximum_s": 2.4913190118968487,
+        "cv": 0.0047332791653357685
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "all_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-cesa-01",
+        "O-cesa-02",
+        "O-cesa-03",
+        "O-cesa-04",
+        "O-cesa-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.4539107140153646,
+        "minimum_median_s": 2.44794830493629,
+        "maximum_median_s": 2.4585291631519794,
+        "inter_campaign_median_cv": 0.0019764319225827423,
+        "maximum_over_minimum": 1.0043223372790813,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 2.4539107140153646,
+        "minimum_median_s": 2.44794830493629,
+        "maximum_median_s": 2.4585291631519794,
+        "inter_campaign_median_cv": 0.0019764319225827423,
+        "maximum_over_minimum": 1.0043223372790813,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4533013571053743,
+        "minimum_s": 2.43761040084064,
+        "maximum_s": 2.5304577331990004,
+        "cv": 0.00745042086211546
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 2.4533013571053743,
+        "minimum_s": 2.43761040084064,
+        "maximum_s": 2.5304577331990004,
+        "cv": 0.00745042086211546
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "all_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 15.960383802652359,
+        "minimum_median_s": 15.848166290670633,
+        "maximum_median_s": 16.200731553137302,
+        "inter_campaign_median_cv": 0.008247350948521,
+        "maximum_over_minimum": 1.0222464388624073,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 15.960383802652359,
+        "minimum_median_s": 15.848166290670633,
+        "maximum_median_s": 16.200731553137302,
+        "inter_campaign_median_cv": 0.008247350948521,
+        "maximum_over_minimum": 1.0222464388624073,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 15.960383802652359,
+        "minimum_s": 15.827154213562608,
+        "maximum_s": 16.241237562149763,
+        "cv": 0.00763372667242575
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 15.960383802652359,
+        "minimum_s": 15.827154213562608,
+        "maximum_s": 16.241237562149763,
+        "cv": 0.00763372667242575
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "all_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.008190704509616,
+        "minimum_median_s": 15.926825005561113,
+        "maximum_median_s": 16.23451123200357,
+        "inter_campaign_median_cv": 0.007373695731557443,
+        "maximum_over_minimum": 1.0193187422059966,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.008190704509616,
+        "minimum_median_s": 15.926825005561113,
+        "maximum_median_s": 16.23451123200357,
+        "inter_campaign_median_cv": 0.007373695731557443,
+        "maximum_over_minimum": 1.0193187422059966,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.008190704509616,
+        "minimum_s": 15.901693888008595,
+        "maximum_s": 16.311617895960808,
+        "cv": 0.007372593939817192
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.008190704509616,
+        "minimum_s": 15.901693888008595,
+        "maximum_s": 16.311617895960808,
+        "cv": 0.007372593939817192
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "all_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.083927929401398,
+        "minimum_median_s": 16.004033964127302,
+        "maximum_median_s": 16.238782605156302,
+        "inter_campaign_median_cv": 0.005321785556733822,
+        "maximum_over_minimum": 1.0146680919045277,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.083927929401398,
+        "minimum_median_s": 16.004033964127302,
+        "maximum_median_s": 16.238782605156302,
+        "inter_campaign_median_cv": 0.005321785556733822,
+        "maximum_over_minimum": 1.0146680919045277,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.09054259955883,
+        "minimum_s": 15.961878910660744,
+        "maximum_s": 16.78900583460927,
+        "cv": 0.009774649912719877
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.09054259955883,
+        "minimum_s": 15.961878910660744,
+        "maximum_s": 16.78900583460927,
+        "cv": 0.009774649912719877
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "all_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "complete_protocol_campaign_ids": [
+        "O-commercial-01",
+        "O-commercial-02",
+        "O-commercial-03",
+        "O-commercial-04",
+        "O-commercial-05"
+      ],
+      "window_accepted_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.00695827230811,
+        "minimum_median_s": 15.993047788739204,
+        "maximum_median_s": 16.247064374387264,
+        "inter_campaign_median_cv": 0.006668924141078823,
+        "maximum_over_minimum": 1.0158829379492578,
+        "meets_declared_between_campaign_gates": true
+      },
+      "reference_stability": {
+        "campaigns": 5,
+        "median_of_medians_s": 16.00695827230811,
+        "minimum_median_s": 15.993047788739204,
+        "maximum_median_s": 16.247064374387264,
+        "inter_campaign_median_cv": 0.006668924141078823,
+        "maximum_over_minimum": 1.0158829379492578,
+        "meets_declared_between_campaign_gates": true
+      },
+      "all_retained_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.043389037251472,
+        "minimum_s": 15.945597290992737,
+        "maximum_s": 16.271913157775998,
+        "cv": 0.006667212530556755
+      },
+      "window_accepted_sample_distribution": {
+        "samples": 25,
+        "median_s": 16.043389037251472,
+        "minimum_s": 15.945597290992737,
+        "maximum_s": 16.271913157775998,
+        "cv": 0.006667212530556755
+      },
+      "all_within_process_cv_gates_passed": true,
+      "within_process_cv_failures": [],
+      "passed": true
+    }
+  ],
+  "attempts": [
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "campaign_id": "O-cesa-01",
+      "first_call_s": 2.4585504084825516,
+      "warmup_samples_s": [
+        2.4548620395362377,
+        2.452993592247367
+      ],
+      "samples_s": [
+        2.4464948046952486,
+        2.456123039126396,
+        2.4485847633332014,
+        2.482788600027561,
+        2.5022682677954435
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.456123039126396,
+        "minimum": 2.4464948046952486,
+        "maximum": 2.5022682677954435,
+        "mean": 2.46725189499557,
+        "stdev": 0.024344946100287267,
+        "coefficient_of_variation": 0.00986723169598821
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "campaign_id": "O-cesa-01",
+      "first_call_s": 2.4573000576347113,
+      "warmup_samples_s": [
+        2.4634286984801292,
+        2.4571319203823805
+      ],
+      "samples_s": [
+        2.453993795439601,
+        2.4531244449317455,
+        2.4547787606716156,
+        2.443733923137188,
+        2.4630588069558144
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.453993795439601,
+        "minimum": 2.443733923137188,
+        "maximum": 2.4630588069558144,
+        "mean": 2.453737946227193,
+        "stdev": 0.006864474853811364,
+        "coefficient_of_variation": 0.002797558257745499
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "campaign_id": "O-cesa-01",
+      "first_call_s": 2.4554809723049402,
+      "warmup_samples_s": [
+        2.4490437787026167,
+        2.454354699701071
+      ],
+      "samples_s": [
+        2.4578213170170784,
+        2.4498965702950954,
+        2.4690246544778347,
+        2.4913190118968487,
+        2.4823654796928167
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4690246544778347,
+        "minimum": 2.4498965702950954,
+        "maximum": 2.4913190118968487,
+        "mean": 2.470085406675935,
+        "stdev": 0.017035172355865075,
+        "coefficient_of_variation": 0.006896592445679762
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "campaign_id": "O-cesa-01",
+      "first_call_s": 2.487445065751672,
+      "warmup_samples_s": [
+        2.46043686196208,
+        2.4517191629856825
+      ],
+      "samples_s": [
+        2.4584794119000435,
+        2.448522288352251,
+        2.4591176882386208,
+        2.447872092947364,
+        2.457793252542615
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.457793252542615,
+        "minimum": 2.447872092947364,
+        "maximum": 2.4591176882386208,
+        "mean": 2.454356946796179,
+        "stdev": 0.005647214875386447,
+        "coefficient_of_variation": 0.002300893878845984
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "campaign_id": "O-cesa-02",
+      "first_call_s": 2.4575581327080727,
+      "warmup_samples_s": [
+        2.454558027908206,
+        2.4514530673623085
+      ],
+      "samples_s": [
+        2.452760523185134,
+        2.5422491803765297,
+        2.4507285244762897,
+        2.464796544983983,
+        2.4567141495645046
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4567141495645046,
+        "minimum": 2.4507285244762897,
+        "maximum": 2.5422491803765297,
+        "mean": 2.473449784517288,
+        "stdev": 0.03883496522018221,
+        "coefficient_of_variation": 0.015700729185315215
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "campaign_id": "O-cesa-02",
+      "first_call_s": 2.446579435840249,
+      "warmup_samples_s": [
+        2.4566966220736504,
+        2.4583744164556265
+      ],
+      "samples_s": [
+        2.453408246859908,
+        2.454908261075616,
+        2.4560872241854668,
+        2.450126748532057,
+        2.453606117516756
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.453606117516756,
+        "minimum": 2.450126748532057,
+        "maximum": 2.4560872241854668,
+        "mean": 2.4536273196339606,
+        "stdev": 0.002235753890137486,
+        "coefficient_of_variation": 0.0009112035361878112
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "campaign_id": "O-cesa-02",
+      "first_call_s": 2.4572580344974995,
+      "warmup_samples_s": [
+        2.4570808988064528,
+        2.4595486354082823
+      ],
+      "samples_s": [
+        2.4570184592157602,
+        2.4528529066592455,
+        2.442737691104412,
+        2.4407202396541834,
+        2.4464611280709505
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4464611280709505,
+        "minimum": 2.4407202396541834,
+        "maximum": 2.4570184592157602,
+        "mean": 2.44795808494091,
+        "stdev": 0.0068543682737344895,
+        "coefficient_of_variation": 0.0028000349825842478
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "campaign_id": "O-cesa-02",
+      "first_call_s": 2.467131530866027,
+      "warmup_samples_s": [
+        2.4614298790693283,
+        2.4515795167535543
+      ],
+      "samples_s": [
+        2.4534578379243612,
+        2.4852172788232565,
+        2.5304577331990004,
+        2.4533013571053743,
+        2.4585291631519794
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4585291631519794,
+        "minimum": 2.4533013571053743,
+        "maximum": 2.5304577331990004,
+        "mean": 2.4761926740407945,
+        "stdev": 0.03308710065161889,
+        "coefficient_of_variation": 0.013362086479977121
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "campaign_id": "O-cesa-03",
+      "first_call_s": 2.474242327734828,
+      "warmup_samples_s": [
+        2.470007747411728,
+        2.45090932585299
+      ],
+      "samples_s": [
+        2.465191697701812,
+        2.466047478839755,
+        2.4639787320047617,
+        2.464299239218235,
+        2.456887921318412
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.464299239218235,
+        "minimum": 2.456887921318412,
+        "maximum": 2.466047478839755,
+        "mean": 2.4632810138165953,
+        "stdev": 0.0036639891840234964,
+        "coefficient_of_variation": 0.0014874426277278572
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "campaign_id": "O-cesa-03",
+      "first_call_s": 2.4490854777395725,
+      "warmup_samples_s": [
+        2.4581524562090635,
+        2.4484236873686314
+      ],
+      "samples_s": [
+        2.4567273929715157,
+        2.451947972178459,
+        2.444635460153222,
+        2.456343788653612,
+        2.451674045994878
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.451947972178459,
+        "minimum": 2.444635460153222,
+        "maximum": 2.4567273929715157,
+        "mean": 2.4522657319903374,
+        "stdev": 0.004878756931416829,
+        "coefficient_of_variation": 0.0019894895026148223
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "campaign_id": "O-cesa-03",
+      "first_call_s": 2.4545051362365484,
+      "warmup_samples_s": [
+        2.4667415637522936,
+        2.452938409522176
+      ],
+      "samples_s": [
+        2.467900287359953,
+        2.4626741744577885,
+        2.453088564798236,
+        2.457647889852524,
+        2.449818503111601
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.457647889852524,
+        "minimum": 2.449818503111601,
+        "maximum": 2.467900287359953,
+        "mean": 2.4582258839160205,
+        "stdev": 0.007259331022654053,
+        "coefficient_of_variation": 0.0029530772864085793
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "campaign_id": "O-cesa-03",
+      "first_call_s": 2.4499921184033155,
+      "warmup_samples_s": [
+        2.4634636640548706,
+        2.455396244302392
+      ],
+      "samples_s": [
+        2.472561903297901,
+        2.4586458522826433,
+        2.4433168955147266,
+        2.44139982201159,
+        2.4491011779755354
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4491011779755354,
+        "minimum": 2.44139982201159,
+        "maximum": 2.472561903297901,
+        "mean": 2.4530051302164795,
+        "stdev": 0.012826447599123289,
+        "coefficient_of_variation": 0.005228871085969293
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "campaign_id": "O-cesa-04",
+      "first_call_s": 2.4942904002964497,
+      "warmup_samples_s": [
+        2.4952007681131363,
+        2.4460049271583557
+      ],
+      "samples_s": [
+        2.4519975166767836,
+        2.4417248591780663,
+        2.454835841432214,
+        2.4747335258871317,
+        2.4425328969955444
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4519975166767836,
+        "minimum": 2.4417248591780663,
+        "maximum": 2.4747335258871317,
+        "mean": 2.453164928033948,
+        "stdev": 0.013353599455227353,
+        "coefficient_of_variation": 0.005443416911201887
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "campaign_id": "O-cesa-04",
+      "first_call_s": 2.456485977396369,
+      "warmup_samples_s": [
+        2.460224837064743,
+        2.4456630777567625
+      ],
+      "samples_s": [
+        2.469328358769417,
+        2.441687321290374,
+        2.4562370907515287,
+        2.454722488299012,
+        2.453794052824378
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.454722488299012,
+        "minimum": 2.441687321290374,
+        "maximum": 2.469328358769417,
+        "mean": 2.455153862386942,
+        "stdev": 0.009816728402863842,
+        "coefficient_of_variation": 0.003998416780820349
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "campaign_id": "O-cesa-04",
+      "first_call_s": 2.4664494208991528,
+      "warmup_samples_s": [
+        2.4649283960461617,
+        2.4491758830845356
+      ],
+      "samples_s": [
+        2.4657262582331896,
+        2.451145362108946,
+        2.449690194800496,
+        2.4469057209789753,
+        2.4491714350879192
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.449690194800496,
+        "minimum": 2.4469057209789753,
+        "maximum": 2.4657262582331896,
+        "mean": 2.452527794241905,
+        "stdev": 0.007533846883658622,
+        "coefficient_of_variation": 0.0030718701338866543
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "campaign_id": "O-cesa-04",
+      "first_call_s": 2.450874423608184,
+      "warmup_samples_s": [
+        2.4522830471396446,
+        2.4399760086089373
+      ],
+      "samples_s": [
+        2.449670035392046,
+        2.44757173769176,
+        2.44794830493629,
+        2.451445050537586,
+        2.4468900058418512
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.44794830493629,
+        "minimum": 2.4468900058418512,
+        "maximum": 2.451445050537586,
+        "mean": 2.4487050268799067,
+        "stdev": 0.0018432474688474436,
+        "coefficient_of_variation": 0.0007527437762465308
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "campaign_id": "O-cesa-05",
+      "first_call_s": 2.4654712677001953,
+      "warmup_samples_s": [
+        2.4649818670004606,
+        2.446331148967147
+      ],
+      "samples_s": [
+        2.4567854050546885,
+        2.4480240754783154,
+        2.455881781876087,
+        2.4521567802876234,
+        2.4592349268496037
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.455881781876087,
+        "minimum": 2.4480240754783154,
+        "maximum": 2.4592349268496037,
+        "mean": 2.4544165939092637,
+        "stdev": 0.004385927035398083,
+        "coefficient_of_variation": 0.0017869529754166195
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "campaign_id": "O-cesa-05",
+      "first_call_s": 2.459650933742523,
+      "warmup_samples_s": [
+        2.459448218345642,
+        2.4515077713876963
+      ],
+      "samples_s": [
+        2.43735315464437,
+        2.464173089712858,
+        2.466128710657358,
+        2.4541869685053825,
+        2.463042963296175
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.463042963296175,
+        "minimum": 2.43735315464437,
+        "maximum": 2.466128710657358,
+        "mean": 2.4569769773632286,
+        "stdev": 0.011887104442442262,
+        "coefficient_of_variation": 0.004838101680219743
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "campaign_id": "O-cesa-05",
+      "first_call_s": 2.4567655082792044,
+      "warmup_samples_s": [
+        2.442169727757573,
+        2.4644155837595463
+      ],
+      "samples_s": [
+        2.4611495323479176,
+        2.4539838526397943,
+        2.4589130859822035,
+        2.4516845382750034,
+        2.4516225811094046
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4539838526397943,
+        "minimum": 2.4516225811094046,
+        "maximum": 2.4611495323479176,
+        "mean": 2.4554707180708646,
+        "stdev": 0.004343181804884814,
+        "coefficient_of_variation": 0.0017687776819823066
+      }
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "campaign_id": "O-cesa-05",
+      "first_call_s": 2.455058330669999,
+      "warmup_samples_s": [
+        2.4543357957154512,
+        2.4623054433614016
+      ],
+      "samples_s": [
+        2.4539107140153646,
+        2.4551055897027254,
+        2.455227617174387,
+        2.43761040084064,
+        2.443588161841035
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 2.4539107140153646,
+        "minimum": 2.43761040084064,
+        "maximum": 2.455227617174387,
+        "mean": 2.4490884967148303,
+        "stdev": 0.008049042743651097,
+        "coefficient_of_variation": 0.003286546302613384
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "campaign_id": "O-commercial-01",
+      "first_call_s": 15.882092535495758,
+      "warmup_samples_s": [
+        15.880756115540862,
+        15.84353675879538
+      ],
+      "samples_s": [
+        15.83835612051189,
+        15.848166290670633,
+        15.827154213562608,
+        15.926799075677991,
+        15.880320008844137
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.848166290670633,
+        "minimum": 15.827154213562608,
+        "maximum": 15.926799075677991,
+        "mean": 15.864159141853452,
+        "stdev": 0.04023638542585763,
+        "coefficient_of_variation": 0.002536307475616808
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "campaign_id": "O-commercial-01",
+      "first_call_s": 16.018449187278748,
+      "warmup_samples_s": [
+        15.956179169937968,
+        15.96919472515583
+      ],
+      "samples_s": [
+        15.922433495521545,
+        15.986716587096453,
+        15.943354085087776,
+        15.994596811011434,
+        15.982046026736498
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.982046026736498,
+        "minimum": 15.922433495521545,
+        "maximum": 15.994596811011434,
+        "mean": 15.96582940109074,
+        "stdev": 0.03128562693043185,
+        "coefficient_of_variation": 0.001959536591834966
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "campaign_id": "O-commercial-01",
+      "first_call_s": 16.129681311547756,
+      "warmup_samples_s": [
+        16.01026201620698,
+        15.998164884746075
+      ],
+      "samples_s": [
+        16.033236376941204,
+        16.14058410935104,
+        16.081412591040134,
+        16.03664550743997,
+        16.076547469943762
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.076547469943762,
+        "minimum": 16.033236376941204,
+        "maximum": 16.14058410935104,
+        "mean": 16.07368521094322,
+        "stdev": 0.04344944000116483,
+        "coefficient_of_variation": 0.0027031411546857816
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "campaign_id": "O-commercial-01",
+      "first_call_s": 16.036462374031544,
+      "warmup_samples_s": [
+        16.07270567305386,
+        15.979011395946145
+      ],
+      "samples_s": [
+        15.96190763451159,
+        16.255556397140026,
+        15.945597290992737,
+        16.06218109279871,
+        16.000331735238433
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.000331735238433,
+        "minimum": 15.945597290992737,
+        "maximum": 16.255556397140026,
+        "mean": 16.0451148301363,
+        "stdev": 0.12590632830977647,
+        "coefficient_of_variation": 0.007847019459985187
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "campaign_id": "O-commercial-02",
+      "first_call_s": 15.955761387944221,
+      "warmup_samples_s": [
+        15.90388847887516,
+        16.096158232539892
+      ],
+      "samples_s": [
+        15.960383802652359,
+        15.99021914973855,
+        15.953939087688923,
+        15.96482777968049,
+        15.941543390974402
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.960383802652359,
+        "minimum": 15.941543390974402,
+        "maximum": 15.99021914973855,
+        "mean": 15.962182642146946,
+        "stdev": 0.01795976902063655,
+        "coefficient_of_variation": 0.0011251449393402582
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "campaign_id": "O-commercial-02",
+      "first_call_s": 16.0338578466326,
+      "warmup_samples_s": [
+        15.921657506376505,
+        15.903708387166262
+      ],
+      "samples_s": [
+        15.926825005561113,
+        15.929622756317258,
+        15.92247324064374,
+        15.9321513697505,
+        15.901693888008595
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.926825005561113,
+        "minimum": 15.901693888008595,
+        "maximum": 15.9321513697505,
+        "mean": 15.922553252056241,
+        "stdev": 0.012201117797912461,
+        "coefficient_of_variation": 0.0007662789757878063
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "campaign_id": "O-commercial-02",
+      "first_call_s": 16.05124570429325,
+      "warmup_samples_s": [
+        16.210389217361808,
+        16.080114850774407
+      ],
+      "samples_s": [
+        16.13518027216196,
+        16.064626967534423,
+        16.134550651535392,
+        16.09054259955883,
+        16.075441913679242
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.09054259955883,
+        "minimum": 16.064626967534423,
+        "maximum": 16.13518027216196,
+        "mean": 16.10006848089397,
+        "stdev": 0.033072530427073095,
+        "coefficient_of_variation": 0.002054185699043481
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "campaign_id": "O-commercial-02",
+      "first_call_s": 16.071673315018415,
+      "warmup_samples_s": [
+        16.040760301053524,
+        16.167262075468898
+      ],
+      "samples_s": [
+        16.019455462694168,
+        16.043389037251472,
+        15.993047788739204,
+        15.992706276476383,
+        15.987601097673178
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.993047788739204,
+        "minimum": 15.987601097673178,
+        "maximum": 16.043389037251472,
+        "mean": 16.007239932566883,
+        "stdev": 0.02373976035869292,
+        "coefficient_of_variation": 0.0014830639422349229
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "campaign_id": "O-commercial-03",
+      "first_call_s": 16.04332749173045,
+      "warmup_samples_s": [
+        15.968291917815804,
+        16.106532422825694
+      ],
+      "samples_s": [
+        16.03599244914949,
+        16.08107360638678,
+        15.9783732611686,
+        16.007111560553312,
+        16.018802111968398
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.018802111968398,
+        "minimum": 15.9783732611686,
+        "maximum": 16.08107360638678,
+        "mean": 16.024270597845316,
+        "stdev": 0.038062074266746126,
+        "coefficient_of_variation": 0.002375276555293824
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "campaign_id": "O-commercial-03",
+      "first_call_s": 16.023406071588397,
+      "warmup_samples_s": [
+        16.018375243991613,
+        16.143185092136264
+      ],
+      "samples_s": [
+        16.07155640795827,
+        16.073134809732437,
+        16.132296845316887,
+        16.093931743875146,
+        16.061910869553685
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.073134809732437,
+        "minimum": 16.061910869553685,
+        "maximum": 16.132296845316887,
+        "mean": 16.086566135287285,
+        "stdev": 0.028103045114040753,
+        "coefficient_of_variation": 0.0017469884422626576
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "campaign_id": "O-commercial-03",
+      "first_call_s": 16.051630914211273,
+      "warmup_samples_s": [
+        16.04268741980195,
+        16.047035355120897
+      ],
+      "samples_s": [
+        16.11637813039124,
+        16.150399081408978,
+        16.0776195731014,
+        16.07280949316919,
+        16.083927929401398
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.083927929401398,
+        "minimum": 16.07280949316919,
+        "maximum": 16.150399081408978,
+        "mean": 16.10022684149444,
+        "stdev": 0.03281223818893488,
+        "coefficient_of_variation": 0.0020379985022552153
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "campaign_id": "O-commercial-03",
+      "first_call_s": 16.028702726587653,
+      "warmup_samples_s": [
+        16.04926659539342,
+        16.044043209403753
+      ],
+      "samples_s": [
+        16.045801267027855,
+        16.064358193427324,
+        16.04802311398089,
+        16.053946636617184,
+        16.18364705517888
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.053946636617184,
+        "minimum": 16.045801267027855,
+        "maximum": 16.18364705517888,
+        "mean": 16.079155253246427,
+        "stdev": 0.05885291516709034,
+        "coefficient_of_variation": 0.0036601994470578775
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "campaign_id": "O-commercial-04",
+      "first_call_s": 15.95141290128231,
+      "warmup_samples_s": [
+        15.91374158859253,
+        15.918939463794231
+      ],
+      "samples_s": [
+        15.931943951174617,
+        15.94794012233615,
+        15.920323960483074,
+        15.939322097226977,
+        15.913827998563647
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 15.931943951174617,
+        "minimum": 15.913827998563647,
+        "maximum": 15.94794012233615,
+        "mean": 15.930671625956894,
+        "stdev": 0.013833224464808952,
+        "coefficient_of_variation": 0.0008683390625081724
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "campaign_id": "O-commercial-04",
+      "first_call_s": 15.96131207421422,
+      "warmup_samples_s": [
+        15.954582341015339,
+        16.098689498379827
+      ],
+      "samples_s": [
+        16.0091885458678,
+        16.008190704509616,
+        15.995305826887488,
+        15.960099896416068,
+        16.038392536342144
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.008190704509616,
+        "minimum": 15.960099896416068,
+        "maximum": 16.038392536342144,
+        "mean": 16.002235502004623,
+        "stdev": 0.028348589221805713,
+        "coefficient_of_variation": 0.0017715393088830898
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "campaign_id": "O-commercial-04",
+      "first_call_s": 15.983375281095505,
+      "warmup_samples_s": [
+        16.029694505035877,
+        15.989633113145828
+      ],
+      "samples_s": [
+        15.983832007274032,
+        15.961878910660744,
+        16.78900583460927,
+        16.106508642435074,
+        16.004033964127302
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.004033964127302,
+        "minimum": 15.961878910660744,
+        "maximum": 16.78900583460927,
+        "mean": 16.169051871821285,
+        "stdev": 0.3509674185153134,
+        "coefficient_of_variation": 0.021706122368681618
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "campaign_id": "O-commercial-04",
+      "first_call_s": 15.99456455744803,
+      "warmup_samples_s": [
+        15.979295684024692,
+        16.01135907135904
+      ],
+      "samples_s": [
+        16.00553618185222,
+        16.013509567826986,
+        16.00695827230811,
+        16.010358180850744,
+        15.993499645963311
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.00695827230811,
+        "minimum": 15.993499645963311,
+        "maximum": 16.013509567826986,
+        "mean": 16.005972369760276,
+        "stdev": 0.007628495858595405,
+        "coefficient_of_variation": 0.00047660308804529434
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "campaign_id": "O-commercial-05",
+      "first_call_s": 16.327365027740598,
+      "warmup_samples_s": [
+        16.275260858237743,
+        16.244026746600866
+      ],
+      "samples_s": [
+        16.172372752800584,
+        16.186810774728656,
+        16.200731553137302,
+        16.23291976377368,
+        16.241237562149763
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.200731553137302,
+        "minimum": 16.172372752800584,
+        "maximum": 16.241237562149763,
+        "mean": 16.206814481318,
+        "stdev": 0.029537337481027347,
+        "coefficient_of_variation": 0.0018225257971007057
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "campaign_id": "O-commercial-05",
+      "first_call_s": 16.251327050849795,
+      "warmup_samples_s": [
+        16.223085448145866,
+        16.185210505500436
+      ],
+      "samples_s": [
+        16.19104490429163,
+        16.311617895960808,
+        16.241016749292612,
+        16.23451123200357,
+        16.229666087776423
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.23451123200357,
+        "minimum": 16.19104490429163,
+        "maximum": 16.311617895960808,
+        "mean": 16.241571373865007,
+        "stdev": 0.04373593612133474,
+        "coefficient_of_variation": 0.0026928389571782485
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "campaign_id": "O-commercial-05",
+      "first_call_s": 16.188348174095154,
+      "warmup_samples_s": [
+        16.202247474342585,
+        16.18355181068182
+      ],
+      "samples_s": [
+        16.252705430611968,
+        16.254166612401605,
+        16.238782605156302,
+        16.2116288151592,
+        16.216435516253114
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.238782605156302,
+        "minimum": 16.2116288151592,
+        "maximum": 16.254166612401605,
+        "mean": 16.234743795916437,
+        "stdev": 0.01991025829105467,
+        "coefficient_of_variation": 0.0012263980597009942
+      }
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "campaign_id": "O-commercial-05",
+      "first_call_s": 16.250541303306818,
+      "warmup_samples_s": [
+        16.271180164068937,
+        16.22675801254809
+      ],
+      "samples_s": [
+        16.247064374387264,
+        16.22229996137321,
+        16.2487839628011,
+        16.231223771348596,
+        16.271913157775998
+      ],
+      "source_valid": true,
+      "placement_verified": true,
+      "policy_unchanged": true,
+      "all215_map_detail_summary_bitwise": true,
+      "statistics_s": {
+        "median": 16.247064374387264,
+        "minimum": 16.22229996137321,
+        "maximum": 16.271913157775998,
+        "mean": 16.244257045537232,
+        "stdev": 0.019007987797314784,
+        "coefficient_of_variation": 0.0011701358667269323
+      }
+    }
+  ],
+  "annual_original_executed": false
+}

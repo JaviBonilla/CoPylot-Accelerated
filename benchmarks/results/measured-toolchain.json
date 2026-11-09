@@ -1,0 +1,27 @@
+{
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "build_settings": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_CUDA_ARCHITECTURES": "89",
+    "CMAKE_CUDA_FLAGS": "",
+    "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+    "CMAKE_CXX_FLAGS": "",
+    "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+    "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+    "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+  },
+  "precision": "double",
+  "fast_math": false,
+  "numerical_thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "hardware": {
+    "machine": "canonical-gpu-server",
+    "cpu": "Intel Xeon w5-3423",
+    "physical_cores": 12,
+    "logical_cpus": 24,
+    "gpu": "NVIDIA RTX 6000 Ada Generation"
+  }
+}

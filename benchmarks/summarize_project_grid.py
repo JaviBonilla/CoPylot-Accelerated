@@ -10,14 +10,12 @@ ERROR_KEYS={'count','max_abs','max_rel','max_rel_nonzero','rms','zero_reference_
 
 
 def safe_point(point):
-    return {'id':point['id'],'solar_azimuth_deg':point['resolved']['fluxsim.0.flux_solar_az'],
-            'solar_elevation_deg':point['resolved']['fluxsim.0.flux_solar_el'],
-            'dni_w_m2':point['inputs']['fluxsim.0.flux_dni'],
-            'epw_contribution':'site metadata; punctual DNI retained from saved project',
-            'time_mode':'Hour/Day','aiming_mode':'Keep existing'}
+    # Public evidence contains opaque state labels only. Private solar/weather
+    # metadata belongs to local input plans, never aggregate publication files.
+    return {'id':point['id']}
 
 
-METADATA_KEYS={'utc','machine','commits','branches','cpu_model','cpu_affinity','monitor_cpu','cpu_governor','cpu_threads',
+METADATA_KEYS={'commits','cpu_model','cpu_affinity','monitor_cpu','cpu_governor','cpu_threads',
  'precision','fma','fast_math','nvcc','compiler','cmake','build_settings','kernel_source_sha256','library_sha256',
  'rtol','atol','ncu_available','first_call_definition','monitoring','simulate_wall_definition'}
 

@@ -1,0 +1,525 @@
+{
+  "schema": "reviewed-public-results-sha256-v1",
+  "files": [
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.csv",
+      "bytes": 7076,
+      "sha256": "5b872790a6470c11f5bd1879333d20e52285aee82bb06f8bc9328de9aaccfad6"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.json",
+      "bytes": 21827,
+      "sha256": "5da000f3904eaa642029d866daf3ab33c0622766bbf2dc1fcf9b839acb2a3747"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-validation.json",
+      "bytes": 1227,
+      "sha256": "22efd74aeaff0a81631c48f09bf5ef2c2ea96dcd947c1705908ec659c25f61f7"
+    },
+    {
+      "path": "benchmarks/results/cpu-final.json",
+      "bytes": 19777,
+      "sha256": "693e7e99f67c1e08c5e5e6825f325612a5433795e42e86e61e0c70c9fa3f6be7"
+    },
+    {
+      "path": "benchmarks/results/cpu-original.json",
+      "bytes": 4769,
+      "sha256": "84fef5b2d7878468a6744be2660ce3a8cdb94b7d2457d18a8303ddf684501beb"
+    },
+    {
+      "path": "benchmarks/results/export-overhead.json",
+      "bytes": 3141,
+      "sha256": "39098e655fc213582bb8666ab21dcb369f4f62c701ee0a38dd531bd6a6c91039"
+    },
+    {
+      "path": "benchmarks/results/large-timings.json",
+      "bytes": 12925,
+      "sha256": "17427e2935aa0033e0c0081bdff2b0c910e71448b6693c4ea477a1675bdb5cf6"
+    },
+    {
+      "path": "benchmarks/results/large.csv",
+      "bytes": 5461,
+      "sha256": "279b34a9b55174d4cc50d42eedd34be3cdaded0ea3e3829c65fc219a5fec2852"
+    },
+    {
+      "path": "benchmarks/results/measured-toolchain.json",
+      "bytes": 768,
+      "sha256": "8ab50f09da22d55f2d45b10774ca3bea8a7766d03595a53b7ce7dcc1bf66abd0"
+    },
+    {
+      "path": "benchmarks/results/medium-timings.json",
+      "bytes": 12925,
+      "sha256": "cfb342048778b30842c14a37866144637fa61f08caf0bf27df419c7b4d3be06a"
+    },
+    {
+      "path": "benchmarks/results/medium.csv",
+      "bytes": 5426,
+      "sha256": "470adb29247abe441803aa05010734f39c2fc54a934f90bcafa0fb71eea2ab84"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-single-state.csv",
+      "bytes": 2419,
+      "sha256": "e6a1da96921344984b939a66d94209e9563b136ac9970f7d3547f40c790eee3c"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-single-state.json",
+      "bytes": 60240,
+      "sha256": "a91d58442a8e5824d857fafe41393275db016928084fdffa11d9026ad9589420"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-validation.json",
+      "bytes": 573,
+      "sha256": "8edd92bb55338210eda0ffec59a83ab3f5cb9ed49c2aac6868c85239391a99d3"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-flat-extraction.json",
+      "bytes": 14624,
+      "sha256": "bd88ba9ed0df1959332a2ffbff83857780850550f5c6270b34674f0d16885d15"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-flat.json",
+      "bytes": 14636,
+      "sha256": "12563a4e2ecc93d4d4742574f43df6e30dd5430807b37d3c419610c8194d8445"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy-before.json",
+      "bytes": 9911,
+      "sha256": "6488d48d584adb3a1c25dd74bbf604cd470e08e3c34a962315e0132643e3cc0f"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy-extraction.json",
+      "bytes": 14642,
+      "sha256": "e090d45cbbe951b41c308388ce317fb974e86ac5b0f223cbe8edb28aefe3ecdc"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy.json",
+      "bytes": 14636,
+      "sha256": "33f8116587685045be0ef0390e8246c1fd6ad5b9559844440c463353115906bf"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-verify-extraction.json",
+      "bytes": 22009,
+      "sha256": "e3805d8c3be74e886f50531fd057580d4500e10cf1c037928238b63e2f00047a"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-verify.json",
+      "bytes": 16257,
+      "sha256": "73ce066b896260e2173047900c6008f0b704b9acddc9dfeca128f0f990a26538"
+    },
+    {
+      "path": "benchmarks/results/phase2b-cuda-correctness.json",
+      "bytes": 31927,
+      "sha256": "21576bb834cc1b8902e8b9e2a9a27eee9498e0689dea6f6a62b69c0435ed8b5c"
+    },
+    {
+      "path": "benchmarks/results/phase2c-baseline.json",
+      "bytes": 1040446,
+      "sha256": "b271769cc117bba12c3a7c8dc624563852918d21b4e90bd9de8a6353b9a2db32"
+    },
+    {
+      "path": "benchmarks/results/phase2c-block-sweep.csv",
+      "bytes": 8406,
+      "sha256": "35f4100f52aa7e23610208546e5d8a6e93088b7a30e10a9daab943e7d8bb865e"
+    },
+    {
+      "path": "benchmarks/results/phase2c-block-sweep.json",
+      "bytes": 1451524,
+      "sha256": "9c6612b44e3088322004bd0770e192b58cab50561beb9fd5e8538667b4c12ee8"
+    },
+    {
+      "path": "benchmarks/results/phase2c-correctness.json",
+      "bytes": 31438,
+      "sha256": "2153122fd068a6399f94f283537d55ccf4d7390dc921c94f618ce464319fb2fb"
+    },
+    {
+      "path": "benchmarks/results/phase2c-end-to-end.json",
+      "bytes": 213298,
+      "sha256": "748425378728ac0a67157b76870fd4da021ecc61d78ad47efe10d534340fa849"
+    },
+    {
+      "path": "benchmarks/results/phase2c-final.json",
+      "bytes": 394621,
+      "sha256": "c1b461058e7929348b4abe58cdb347e5d56aeb0f734e4f45501d139e28b141f8"
+    },
+    {
+      "path": "benchmarks/results/phase2c-kernel-resources.json",
+      "bytes": 2606,
+      "sha256": "6cf8e2ae1249c1c9a7bb161428688ac90e7730ab93a3555b607a2857b179baa4"
+    },
+    {
+      "path": "benchmarks/results/phase2c-summary.json",
+      "bytes": 59264,
+      "sha256": "119f5d27458578ea480fba41268a18bb3a8446d7086c21d32bd39ad3d51247fc"
+    },
+    {
+      "path": "benchmarks/results/phase2da-call-counts.json",
+      "bytes": 5051,
+      "sha256": "3bd8916f4ba511e442c22439d776b65152c3028de27958bf7762df22abf34311"
+    },
+    {
+      "path": "benchmarks/results/phase2da-correctness.json",
+      "bytes": 248751,
+      "sha256": "e35d6cdc8ea577d6bf6f92f371f8a0585678bc7a2a6344a4232d325854ac2537"
+    },
+    {
+      "path": "benchmarks/results/phase2da-cpu-performance.json",
+      "bytes": 214906,
+      "sha256": "8b1fb5a474fba582607d8043a2b7ac855667094a4e956ea61f10ccdf596bf4f0"
+    },
+    {
+      "path": "benchmarks/results/phase2da-cuda-correctness.json",
+      "bytes": 31479,
+      "sha256": "a95e0112b92f9e041cbfb98ffc6de60ced13bda9f6c1344fb9211b0737265c51"
+    },
+    {
+      "path": "benchmarks/results/phase2da-direct-tests.json",
+      "bytes": 167,
+      "sha256": "141ecd2c3382c90d6734d7ee432565db4a881ca73e662f62d80d94cafd65db88"
+    },
+    {
+      "path": "benchmarks/results/phase2da-end-to-end.json",
+      "bytes": 5076,
+      "sha256": "b535b8bd9c523e9d6abceb25039aea6a106f1dd916d768ba6c6708ae2d3b1334"
+    },
+    {
+      "path": "benchmarks/results/phase2da-legacy-profile.json",
+      "bytes": 103947,
+      "sha256": "0e99211a91ace0137e71866aefc93e5d19f0f87109854f370f512b16555439f6"
+    },
+    {
+      "path": "benchmarks/results/phase2da-summary.json",
+      "bytes": 7660,
+      "sha256": "eb8a631a74864f63326541524545b7be4636808c96c56a5804a0d066c5fcd79c"
+    },
+    {
+      "path": "benchmarks/results/phase2da-validation.json",
+      "bytes": 3473,
+      "sha256": "409922216001da1774158339e5a95b8d613a1951a52cd57db7501dfa68c9fdfd"
+    },
+    {
+      "path": "benchmarks/results/phase2db-cpu-optics-regression.json",
+      "bytes": 14699,
+      "sha256": "5081f559e7e29ed6268940d500082aa5e221c4ba882348f2edaf95defad55db1"
+    },
+    {
+      "path": "benchmarks/results/phase2db-density-regression.json",
+      "bytes": 31405,
+      "sha256": "38dfa3a8eb55f6cff48e256b92119a4cf8c5d792ffdeeace172db0efdc433ab9"
+    },
+    {
+      "path": "benchmarks/results/phase2db-downstream-correctness.json",
+      "bytes": 691739,
+      "sha256": "fe3a8dc6ca60b1bccab793c81f2b842f5d21fd171165ca3735c91c888dcd603e"
+    },
+    {
+      "path": "benchmarks/results/phase2db-imageplane-correctness.json",
+      "bytes": 25266,
+      "sha256": "8514bc40e6e049e1891fc6b4fe85216c1d525dac4e8ab50d0efce5494b2cbeff"
+    },
+    {
+      "path": "benchmarks/results/phase2db-preliminary-timing.json",
+      "bytes": 31447,
+      "sha256": "aef5cdb4a45381714c1aa9a874906bea5dcace598284c3ba99cea26ba41f74bc"
+    },
+    {
+      "path": "benchmarks/results/phase2db-resource-usage.json",
+      "bytes": 6459,
+      "sha256": "cb760a8610532f837709c4e34cb8b5d8c12ffc48ccf722a6865bc604d270c38f"
+    },
+    {
+      "path": "benchmarks/results/phase2db-validation.json",
+      "bytes": 7296,
+      "sha256": "a59f7b8c97b2d9a6e83e4347b006dbe24a1a8a085ffab5d51ac8f543c7377373"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-block-sweep.csv",
+      "bytes": 3756,
+      "sha256": "fc51d448b3b60c72ab82a88631aa05522bf24da7333a0995ad068a7188586065"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-block-sweep.json",
+      "bytes": 2289343,
+      "sha256": "eda88bed6e3ddec84e6d519631f5cc223fca970585f93e0a9000fb61d73cb2e1"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-correctness.json",
+      "bytes": 904284,
+      "sha256": "270337428a01b9b7d8aa29f995ecd2cd30febfbe0e450f34bfdafd91413192ee"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-cpu-optics-regression.json",
+      "bytes": 14296,
+      "sha256": "8a9ae8ac6f1d99cd7abd1d6a4ddf5f72ad5319b6b4924e0c3007c497f9a5f043"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-density-regression.json",
+      "bytes": 31356,
+      "sha256": "44120b0a61a3f8332fe81478c634a1af9959ce9e19525fc6f5234c47d521d6fe"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-final-performance.json",
+      "bytes": 3883813,
+      "sha256": "0762341006c7d22a2f1903950326e6331e8fe3b7f42b31f79b089ad6b197d94f"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-final-profile.json",
+      "bytes": 188461,
+      "sha256": "e65339334c409f2aade8ab392c1a2e1192117405a992fe006f561a4846a49e69"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-handoff-analysis.json",
+      "bytes": 11209,
+      "sha256": "0b980a33bfb9780135993be424efe83ba7d25159e01403a821ada5420d42f2ba"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-profile-calibration.json",
+      "bytes": 879798,
+      "sha256": "43d1f2b03f9e298cf097e4713d9df1747e314718a11ef7819cdab3d906449e34"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-resource-usage.json",
+      "bytes": 6660,
+      "sha256": "2f6cd0cc7b92c3b7b7c9ef8446ee05734156d8055294ec1f703c4e89d013fb59"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-summary.json",
+      "bytes": 12775,
+      "sha256": "e6caa275868a93e40e2a5fdcbe4039f7ce951f4c0d656239782b859ccbf213dd"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-v1-baseline.json",
+      "bytes": 2645067,
+      "sha256": "d8223640ebc1aaabb39b5100ce1c8aa3795e3081fef92235124df84e5c163a38"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-validation.json",
+      "bytes": 2801,
+      "sha256": "841f304ec178905385e439b4a3fbc891ac8c4673cd02eccd11327c06cb67f61c"
+    },
+    {
+      "path": "benchmarks/results/phase3a-commercial-case.json",
+      "bytes": 4229,
+      "sha256": "2599faddaf2d7729531689b248a243f47e2ca76a980c5042755e0c5353d40d55"
+    },
+    {
+      "path": "benchmarks/results/phase3a-cpu-gpu-resolution-performance.csv",
+      "bytes": 9603,
+      "sha256": "3a717facf1ccafca77e54888f2f8cd28c73103dcc10e4dadd6d44fc4f9a0413e"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence-capture.json",
+      "bytes": 429195,
+      "sha256": "28013e2f61219624e645237f65579b7417497a627ee6fea6a813e45a7b171f83"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence-summary.json",
+      "bytes": 34359,
+      "sha256": "e9c1004f6a7cbbbde01938160c76329220fecfa47a93872d56601e43819ae51b"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence.csv",
+      "bytes": 34265,
+      "sha256": "2012c50529ba0289694e3fa997cbcd8e486da4e56217434adf6961896254018a"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence.json",
+      "bytes": 429374,
+      "sha256": "4df0a326c3516d2421f94f04d72000244f50068947694ab470d0ba481012152a"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-0.npz",
+      "bytes": 737,
+      "sha256": "123fdab0c337d0f74c3102454471ad8dd82a8a010e5458d48a16953e9f03c914"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-1.npz",
+      "bytes": 1764,
+      "sha256": "c9c05701d719cbe7a08461d1fceec2ca2c0dd6e0f21b8aa4686035e77e9ebd9f"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-2.npz",
+      "bytes": 5145,
+      "sha256": "3ebb1469e6292e0520f924fdb70ede85b108166f042052d3205abcb8e9bd2371"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-3.npz",
+      "bytes": 19043,
+      "sha256": "a0fc65a5c5da27a44bf48766ea91a5855ae2095eb45743fca021f56dcde17665"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-4.npz",
+      "bytes": 74166,
+      "sha256": "a42ac448466ef04fc7917975eb23d9f660c7ef28f9242e14808a0b2e976fa65f"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-5.npz",
+      "bytes": 290591,
+      "sha256": "defc6df75be0b5facb4103a2ae9ad69e92054dd3ffc56e80db9eeb9fe0a39850"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-6.npz",
+      "bytes": 1149701,
+      "sha256": "276bc9b6afc5e573c16e105000dc0fa129facd794282274fa58cc23c3de4987d"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-0.npz",
+      "bytes": 736,
+      "sha256": "840765e1a0eb377dca67f504940221d8da3d9332be4ea1f8ed4063e85765ede4"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-1.npz",
+      "bytes": 1761,
+      "sha256": "1f42468d80894be125589bfda2959079bd48063679382bc6de6f32aa3e215c55"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-2.npz",
+      "bytes": 5133,
+      "sha256": "00e70e7af2b8d548bf8ec5acb9ee4f26845bb6758b1ac657ccbcce284102e28e"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-3.npz",
+      "bytes": 19057,
+      "sha256": "bc425673548e990baaf3c3fb5191d143723bea678746d3dd14001f5043e03f8d"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-4.npz",
+      "bytes": 74147,
+      "sha256": "c777ec7dcd230492dbcb820266d1793a11f0eadc7db81f3985f8663fd322c0c9"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-5.npz",
+      "bytes": 289890,
+      "sha256": "1389e0b29c8efb073c2b71aace30ed795299567106af0d82b158313a8b9f2f67"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-6.npz",
+      "bytes": 1146874,
+      "sha256": "ae510cc438f45caada5025ff94c2777af40938ecc2c4f1cce2984c2233205d9b"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-0.npz",
+      "bytes": 740,
+      "sha256": "d90ca114a25f55f9139406c3efe9f06e8facefbc59dea56f830fb7fe09ba4654"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-1.npz",
+      "bytes": 1758,
+      "sha256": "0c3dde0db19fdb4d974ed2c062477b48394061841b987fb1955a7ec4d98b1bda"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-2.npz",
+      "bytes": 5136,
+      "sha256": "b0312e8f53a56cc9b4377f12b876365d56d5ab6dc475f652e727b5b8f47b4f30"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-3.npz",
+      "bytes": 19036,
+      "sha256": "d6618b302897b632e3a9e8e972e4bc9c85d64aaeb92398582cb34916ec949807"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-4.npz",
+      "bytes": 74196,
+      "sha256": "b914f4c495c3f20e89bda45f2561e3c39bef471442e149388c391014ffe42d64"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-5.npz",
+      "bytes": 290838,
+      "sha256": "c611060e3e6861fac761e076b3d666d9558f8b8c9fd04732944f71ab6ec83651"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-6.npz",
+      "bytes": 1150175,
+      "sha256": "ed11fe412f0c44ed148814052186b5b1c1c46b74d33a39a8e9d744f85be1f418"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-0.npz",
+      "bytes": 737,
+      "sha256": "8c014f742c172df883a6892149a9cfccc8e2940d8b9d87eb9c1279fff0be523a"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-1.npz",
+      "bytes": 1757,
+      "sha256": "b3722ddedd7733fbbfb076959bdf0fc5e76bad46982af6f4cd39efce62bf9063"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-2.npz",
+      "bytes": 5122,
+      "sha256": "0e05f19b6494b665edab74b3beb521fe21faaaf7ec41dd379a2723d0d5d6fd33"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-3.npz",
+      "bytes": 19023,
+      "sha256": "2dd2a5df4333805bd4412ced4d401039b2c2cef6484917838f9a3793b85b82c4"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-4.npz",
+      "bytes": 74198,
+      "sha256": "111f9a3ccd3b10b0bc18a71ba4f1c56b12c0beffbec5586a3842b0c890f26512"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-5.npz",
+      "bytes": 290955,
+      "sha256": "b48d195123a566256f90f5ae2dd373720470901625fef49ef8f16a613396d827"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-6.npz",
+      "bytes": 1150942,
+      "sha256": "1b1436d4531d7acbc8a4fc1de37df4997b9e0571a7823b0ea17b61f895932759"
+    },
+    {
+      "path": "benchmarks/results/phase3a-reference-inventory.json",
+      "bytes": 4372,
+      "sha256": "b0be9ec563f221827f3c78bbf117030d9b86db5b82f76c99a2b909adbcdbe73f"
+    },
+    {
+      "path": "benchmarks/results/phase3a-validation.json",
+      "bytes": 1364,
+      "sha256": "92aa07df9bb0ce31de38318f75f3ae27025727f50b9b776e2ba7b0f999f9f0d9"
+    },
+    {
+      "path": "benchmarks/results/phase3c-cesa1-grid-convergence-summary.json",
+      "bytes": 157278,
+      "sha256": "80ee4774487c68b8332367ca2b7d30890ee75bd3d825b9d509df55b67b3d1bc6"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cpu-gpu-summary.json",
+      "bytes": 14361,
+      "sha256": "70b9df03a9e60e2aa73e03d4d7e108ce1eed02ed04f518c0e98e21cf241f51bd"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cuda-control-timings.json",
+      "bytes": 8787,
+      "sha256": "315bd9dc41264df8e76d656225c37d22227c2008a4e6cb692d44123275feb601"
+    },
+    {
+      "path": "benchmarks/results/phase4s-final-cpu-baseline.json",
+      "bytes": 333023,
+      "sha256": "fa8101e49ddd12be001480df841526b5ad6125af964aecdd4da141d01c9831d5"
+    },
+    {
+      "path": "benchmarks/results/phase5a-campaign-summary.json",
+      "bytes": 214457,
+      "sha256": "3dfda70416ffbf484d85efba42a6bf079eafd4353940efc2a3969660b1d1f942"
+    },
+    {
+      "path": "benchmarks/results/phase5b-annual-summary.json",
+      "bytes": 285820,
+      "sha256": "8a9427f2c6fabcc6b2ae280a069c3fdaecb66b7971e48d4700153d6f6ac9b012"
+    },
+    {
+      "path": "benchmarks/results/public-evidence-manifest.json",
+      "bytes": 4401,
+      "sha256": "a8797e1dcd8da97a29907ba22640a9a41e7c6aa1da87387ed3921dfcf7fcfb20"
+    },
+    {
+      "path": "benchmarks/results/small-timings.json",
+      "bytes": 12931,
+      "sha256": "e31b8e657f0bf6f5b4740f9fae4da79a6fd8d9af89d41c5a0b9e7f00e0e048ed"
+    },
+    {
+      "path": "benchmarks/results/small.csv",
+      "bytes": 5607,
+      "sha256": "140d71f2510a478355c747ea212565e4088e52450ee0d5bb34e5b493d3dfb9bc"
+    }
+  ]
+}

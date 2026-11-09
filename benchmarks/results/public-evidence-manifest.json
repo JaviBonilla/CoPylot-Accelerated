@@ -1,0 +1,82 @@
+{
+  "source_private_commit": "564b3627583d6a9c154419959dae79ecdfe22eda",
+  "policy": "Explicit aggregate projections; CESA optical-state identifiers anonymized; no private calendar, coordinates, aimpoints or raw maps; no new measurements.",
+  "files": [
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.json",
+      "source_sha256": "08a0a4a446f73cebef727a9f9756d0338707108a74395966237d34dd30b06c01",
+      "public_sha256": "5da000f3904eaa642029d866daf3ab33c0622766bbf2dc1fcf9b839acb2a3747",
+      "numerical_leaves_checked": 233,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.csv",
+      "source_sha256": "5b872790a6470c11f5bd1879333d20e52285aee82bb06f8bc9328de9aaccfad6",
+      "public_sha256": "5b872790a6470c11f5bd1879333d20e52285aee82bb06f8bc9328de9aaccfad6",
+      "review": "all decoded CSV fields identical"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-validation.json",
+      "source_sha256": "ab2054e41c441a7ab0bc9bf14b3918f382ee039256992a49e92bbf68145f11b8",
+      "public_sha256": "22efd74aeaff0a81631c48f09bf5ef2c2ea96dcd947c1705908ec659c25f61f7",
+      "numerical_leaves_checked": 18,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-single-state.json",
+      "source_sha256": "fa11632c0914c1b822e47fa06738be043f4be6c6f0be9a55138e44bf938f0590",
+      "public_sha256": "a91d58442a8e5824d857fafe41393275db016928084fdffa11d9026ad9589420",
+      "numerical_leaves_checked": 1080,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-validation.json",
+      "source_sha256": "fcc60db5e2670bf666e7c46b1d5ba3eb67cacc3bfe098fed867874b35d3090dc",
+      "public_sha256": "8edd92bb55338210eda0ffec59a83ab3f5cb9ed49c2aac6868c85239391a99d3",
+      "numerical_leaves_checked": 14,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cpu-gpu-summary.json",
+      "source_sha256": "663c7e77e30e85f5ca480db499ae704d9b00ccca43c0f28bd0eed670c7de9ef5",
+      "public_sha256": "70b9df03a9e60e2aa73e03d4d7e108ce1eed02ed04f518c0e98e21cf241f51bd",
+      "numerical_leaves_checked": 319,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase4s-final-cpu-baseline.json",
+      "source_sha256": "138ab6cb14376bcfca3b2fa02ec83a935bf157fdaab8720b1a0c22e1eb06dca1",
+      "public_sha256": "fa8101e49ddd12be001480df841526b5ad6125af964aecdd4da141d01c9831d5",
+      "numerical_leaves_checked": 6319,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cuda-control-timings.json",
+      "source_sha256": "17aa2f36bc17f87b38ff4d8a0af1a60a3fb87faec4db91c2112f88338e26e277",
+      "public_sha256": "315bd9dc41264df8e76d656225c37d22227c2008a4e6cb692d44123275feb601",
+      "numerical_leaves_checked": 204,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase3c-cesa1-grid-convergence-summary.json",
+      "source_sha256": "5dad2e7539e0c95976ed83eb36b058b96a1bfb041ee710f29f86b4af8ae6e0ff",
+      "public_sha256": "80ee4774487c68b8332367ca2b7d30890ee75bd3d825b9d509df55b67b3d1bc6",
+      "numerical_leaves_checked": 3360,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase5a-campaign-summary.json",
+      "source_sha256": "f8b5f4cfefc380f0bf5bae54496c95fd3bdac6d9764a1d71446f723224bd93cf",
+      "public_sha256": "3dfda70416ffbf484d85efba42a6bf079eafd4353940efc2a3969660b1d1f942",
+      "numerical_leaves_checked": 3445,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    },
+    {
+      "path": "benchmarks/results/phase5b-annual-summary.json",
+      "source_sha256": "246fb13fe42dbb09d3742a9837c5aa0a9415c483a6052219ee69b2fc109d6bc6",
+      "public_sha256": "8a9427f2c6fabcc6b2ae280a069c3fdaecb66b7971e48d4700153d6f6ac9b012",
+      "numerical_leaves_checked": 4883,
+      "review": "explicit field projection; retained numeric scalars unchanged"
+    }
+  ]
+}

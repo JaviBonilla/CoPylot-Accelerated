@@ -1,0 +1,550 @@
+{
+  "phase": "4S",
+  "stable_claims_promotable": true,
+  "rows": [
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-01",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 1.2978095095604658,
+      "best_cpu_mt_median_s": 0.1250736154615879,
+      "cuda_median_s": 0.014513889327645302,
+      "flat_1t_over_best_cpu_mt": 10.376365189179678,
+      "flat_1t_over_cuda": 89.41845154409891,
+      "best_cpu_mt_over_cuda": 8.617512000959948,
+      "cpu_complete_processes": 7,
+      "cpu_inter_process_cv": 0.0006972574747882233,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.014562232419848442,
+        0.014519408345222473,
+        0.014523616060614586,
+        0.014508770778775215,
+        0.014509070664644241,
+        0.014516869559884071,
+        0.014520293101668358,
+        0.014510493725538254,
+        0.014510909095406532,
+        0.014500347897410393
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-02",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 1.2997760493308306,
+      "best_cpu_mt_median_s": 0.12532333470880985,
+      "cuda_median_s": 0.01450976263731718,
+      "flat_1t_over_best_cpu_mt": 10.371380975066412,
+      "flat_1t_over_cuda": 89.5794150338462,
+      "best_cpu_mt_over_cuda": 8.637173318500393,
+      "cpu_complete_processes": 7,
+      "cpu_inter_process_cv": 0.005501634827054399,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.014552196487784386,
+        0.014512063935399055,
+        0.014507461339235306,
+        0.01455429382622242,
+        0.014616003260016441,
+        0.01451689749956131,
+        0.014500239863991737,
+        0.014501208439469337,
+        0.014491293579339981,
+        0.014493191614747047
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-03",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 1.2996075991541147,
+      "best_cpu_mt_median_s": 0.1250993562862277,
+      "cuda_median_s": 0.014515381306409836,
+      "flat_1t_over_best_cpu_mt": 10.38860340880259,
+      "flat_1t_over_cuda": 89.53313534934298,
+      "best_cpu_mt_over_cuda": 8.6183995890611,
+      "cpu_complete_processes": 8,
+      "cpu_inter_process_cv": 0.002431865115870909,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.01452971063554287,
+        0.014498306438326836,
+        0.014512129127979279,
+        0.014703791588544846,
+        0.01450062170624733,
+        0.014485318213701248,
+        0.014578402042388916,
+        0.01471155695617199,
+        0.014481054618954659,
+        0.014518633484840393
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "cesa-i-private-restored",
+      "state_id": "state-04",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 1.2997881956398487,
+      "best_cpu_mt_median_s": 0.12553711608052254,
+      "cuda_median_s": 0.014541278593242168,
+      "flat_1t_over_best_cpu_mt": 10.353815956757627,
+      "flat_1t_over_cuda": 89.38610090614074,
+      "best_cpu_mt_over_cuda": 8.633155281053755,
+      "cpu_complete_processes": 5,
+      "cpu_inter_process_cv": 0.009448585257140868,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.014804190024733543,
+        0.014838304370641708,
+        0.014760157093405724,
+        0.014788782224059105,
+        0.014527557417750359,
+        0.014520328491926193,
+        0.014547033235430717,
+        0.014523247256875038,
+        0.014535022899508476,
+        0.01453552395105362
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "afternoon",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 6.810384981334209,
+      "best_cpu_mt_median_s": 0.6739261094480753,
+      "cuda_median_s": 0.13731958251446486,
+      "flat_1t_over_best_cpu_mt": 10.10553662464822,
+      "flat_1t_over_cuda": 49.59514773223857,
+      "best_cpu_mt_over_cuda": 4.907720349186802,
+      "cpu_complete_processes": 8,
+      "cpu_inter_process_cv": 0.003276464954576169,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.13725936226546764,
+        0.1371139921247959,
+        0.13743652030825615,
+        0.1368639674037695,
+        0.1376738678663969,
+        0.13737298548221588,
+        0.13876246847212315,
+        0.137434097006917,
+        0.13726617954671383,
+        0.13682355359196663
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "high",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 6.7949626836925745,
+      "best_cpu_mt_median_s": 0.6723967865109444,
+      "cuda_median_s": 0.13619982637465,
+      "flat_1t_over_best_cpu_mt": 10.105584708326049,
+      "flat_1t_over_cuda": 49.889657458163086,
+      "best_cpu_mt_over_cuda": 4.936840261905747,
+      "cpu_complete_processes": 8,
+      "cpu_inter_process_cv": 0.0072973258945273674,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.13655195571482182,
+        0.1356269009411335,
+        0.1345092784613371,
+        0.13725559040904045,
+        0.13566367700695992,
+        0.13565526716411114,
+        0.1365148089826107,
+        0.13628873974084854,
+        0.13628852926194668,
+        0.13611112348735332
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "moderate",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 6.809899875894189,
+      "best_cpu_mt_median_s": 0.6758070327341557,
+      "cuda_median_s": 0.13679999485611916,
+      "flat_1t_over_best_cpu_mt": 10.076692822125485,
+      "flat_1t_over_cuda": 49.77997172482772,
+      "best_cpu_mt_over_cuda": 4.940110074162963,
+      "cpu_complete_processes": 8,
+      "cpu_inter_process_cv": 0.00450313251765145,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.1366773135960102,
+        0.1369226761162281,
+        0.13557405769824982,
+        0.13626493513584137,
+        0.13601391948759556,
+        0.13774019852280617,
+        0.13606125116348267,
+        0.1381067167967558,
+        0.1377248726785183,
+        0.13768075592815876
+      ],
+      "stable_cpu_reference": true
+    },
+    {
+      "case_id": "ssc-mspt-8790-optical-reference",
+      "state_id": "morning",
+      "best_revalidated_cpu_threads": 24,
+      "revalidated_candidate_counts": [
+        24,
+        1,
+        12
+      ],
+      "flat_1t_median_s": 6.814951283857226,
+      "best_cpu_mt_median_s": 0.6797582926228642,
+      "cuda_median_s": 0.13993795309215784,
+      "flat_1t_over_best_cpu_mt": 10.025550784473063,
+      "flat_1t_over_cuda": 48.69980683059697,
+      "best_cpu_mt_over_cuda": 4.857569212658135,
+      "cpu_complete_processes": 8,
+      "cpu_inter_process_cv": 0.006162910312042501,
+      "cpu_1t_complete_processes": 5,
+      "cuda_samples_s": [
+        0.14058297872543335,
+        0.1397644504904747,
+        0.13944598101079464,
+        0.14068136364221573,
+        0.13917561061680317,
+        0.13951171189546585,
+        0.14011145569384098,
+        0.14064043201506138,
+        0.13897511921823025,
+        0.1406814306974411
+      ],
+      "stable_cpu_reference": true
+    }
+  ],
+  "scope": "Best stable revalidated count among the per-state candidates listed in each row; no universal CPU optimum is claimed.",
+  "gpu_provenance": {
+    "metadata": {
+      "commits": {
+        ".": "e15065f227a519a3432e0884e5bb0dd6ebc6035f",
+        "ssc": "0fd069b30343a08787f76247c4b1bb637e83bbe0",
+        "SolarPILOT": "84f00a1a9212900aba09806bdf9878a0dd47b505",
+        "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+      },
+      "precision": "double",
+      "fast_math": false,
+      "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "build_settings": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CUDA_ARCHITECTURES": "89",
+        "CMAKE_CUDA_FLAGS": "",
+        "CMAKE_CUDA_FLAGS_RELEASE": "-O3 -DNDEBUG",
+        "CMAKE_CXX_FLAGS": "",
+        "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+        "SOLARPILOT_ENABLE_CORE_PROFILE": "ON",
+        "SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS": "ON"
+      },
+      "library_sha256": "545775e26ca3588c9a65c56c93e6f3f93d480446e4a04272497fad27acb5e017",
+      "topology": {
+        "logical_cpus": [
+          {
+            "cpu": 0,
+            "core": 0,
+            "socket": 0,
+            "siblings": "0,12"
+          },
+          {
+            "cpu": 1,
+            "core": 1,
+            "socket": 0,
+            "siblings": "1,13"
+          },
+          {
+            "cpu": 2,
+            "core": 2,
+            "socket": 0,
+            "siblings": "2,14"
+          },
+          {
+            "cpu": 3,
+            "core": 3,
+            "socket": 0,
+            "siblings": "3,15"
+          },
+          {
+            "cpu": 4,
+            "core": 4,
+            "socket": 0,
+            "siblings": "4,16"
+          },
+          {
+            "cpu": 5,
+            "core": 5,
+            "socket": 0,
+            "siblings": "5,17"
+          },
+          {
+            "cpu": 6,
+            "core": 6,
+            "socket": 0,
+            "siblings": "6,18"
+          },
+          {
+            "cpu": 7,
+            "core": 7,
+            "socket": 0,
+            "siblings": "7,19"
+          },
+          {
+            "cpu": 8,
+            "core": 8,
+            "socket": 0,
+            "siblings": "8,20"
+          },
+          {
+            "cpu": 9,
+            "core": 9,
+            "socket": 0,
+            "siblings": "9,21"
+          },
+          {
+            "cpu": 10,
+            "core": 10,
+            "socket": 0,
+            "siblings": "10,22"
+          },
+          {
+            "cpu": 11,
+            "core": 11,
+            "socket": 0,
+            "siblings": "11,23"
+          },
+          {
+            "cpu": 12,
+            "core": 0,
+            "socket": 0,
+            "siblings": "0,12"
+          },
+          {
+            "cpu": 13,
+            "core": 1,
+            "socket": 0,
+            "siblings": "1,13"
+          },
+          {
+            "cpu": 14,
+            "core": 2,
+            "socket": 0,
+            "siblings": "2,14"
+          },
+          {
+            "cpu": 15,
+            "core": 3,
+            "socket": 0,
+            "siblings": "3,15"
+          },
+          {
+            "cpu": 16,
+            "core": 4,
+            "socket": 0,
+            "siblings": "4,16"
+          },
+          {
+            "cpu": 17,
+            "core": 5,
+            "socket": 0,
+            "siblings": "5,17"
+          },
+          {
+            "cpu": 18,
+            "core": 6,
+            "socket": 0,
+            "siblings": "6,18"
+          },
+          {
+            "cpu": 19,
+            "core": 7,
+            "socket": 0,
+            "siblings": "7,19"
+          },
+          {
+            "cpu": 20,
+            "core": 8,
+            "socket": 0,
+            "siblings": "8,20"
+          },
+          {
+            "cpu": 21,
+            "core": 9,
+            "socket": 0,
+            "siblings": "9,21"
+          },
+          {
+            "cpu": 22,
+            "core": 10,
+            "socket": 0,
+            "siblings": "10,22"
+          },
+          {
+            "cpu": 23,
+            "core": 11,
+            "socket": 0,
+            "siblings": "11,23"
+          }
+        ],
+        "physical_cores": 12,
+        "sockets": 1,
+        "affinity_sets": {
+          "1": [
+            0
+          ],
+          "2": [
+            0,
+            1
+          ],
+          "4": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "8": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "12": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "24": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        "lscpu": {
+          "lscpu": [
+            {
+              "field": "Architecture:",
+              "data": "x86_64"
+            },
+            {
+              "field": "Vendor ID:",
+              "data": "GenuineIntel"
+            },
+            {
+              "field": "Model name:",
+              "data": "Intel(R) Xeon(R) w5-3423"
+            },
+            {
+              "field": "CPU family:",
+              "data": "6"
+            },
+            {
+              "field": "Model:",
+              "data": "143"
+            },
+            {
+              "field": "Thread(s) per core:",
+              "data": "2"
+            },
+            {
+              "field": "Core(s) per socket:",
+              "data": "12"
+            },
+            {
+              "field": "Socket(s):",
+              "data": "1"
+            },
+            {
+              "field": "Stepping:",
+              "data": "8"
+            },
+            {
+              "field": "CPU max MHz:",
+              "data": "4200.0000"
+            },
+            {
+              "field": "CPU min MHz:",
+              "data": "800.0000"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "complete_annual_matrix_rows": 8,
+  "new_complete_annual_campaigns": 6,
+  "reused_accepted_annual_campaigns": 2,
+  "all_expected_outputs_produced": true,
+  "every_annual_payload_persisted_and_verified": true,
+  "cpu_original_refactored_full_annual_bitwise": true,
+  "gpu_annual_existing_cpu_tolerances_unchanged": true,
+  "no_interpolation": true,
+  "no_extrapolation": true,
+  "private_input_hash_checks_passed": true,
+  "public_asset_hash_checks_passed": true,
+  "private_per_state_details_exported": false,
+  "failed_or_incomplete_campaign_ids": [],
+  "validation_is_outside_timing": true,
+  "fresh_pre_campaign_probes": {
+    "cesa": {
+      "fresh_serial_probes": 13,
+      "full_outputs_and215_flat_original_bitwise": true
+    },
+    "commercial": {
+      "fresh_serial_probes": 13,
+      "full_outputs_and215_flat_original_bitwise": true
+    }
+  },
+  "nested_source_pins": {
+    "SolarPILOT": "84f00a1a9212900aba09806bdf9878a0dd47b505",
+    "ssc": "1233c8eb99f2650071b4386e918844d67709178b",
+    "SolTrace": "699263f12b2de1c6f12e211e3e8906a80054cc1b"
+  },
+  "output_boundary": "Fixed aggregate JSON/CSV/validation whitelist; CESA private plans/weather/site/aims/timestamps/maps remain on server"
+}

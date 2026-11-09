@@ -23,7 +23,7 @@ STAGE_FIELDS=('preparation_inclusive_s','image_input_preparation_s','image_host_
  'image_input_h2d_bytes','image_tables_h2d_bytes','density_metadata_h2d_bytes','density_cells_h2d_bytes',
  'image_full_d2h_bytes','density_allocations','image_allocations','temporal_input_update_s')
 OUT=ROOT/'artifacts/phase5b'
-REFERENCE=Path(os.environ.get('COPILOT_PHASE5A_REFERENCE','/phase5a-reference'))
+REFERENCE=Path(os.environ.get('COPILOT_CPU_REFERENCE_ROOT',str(ROOT)))
 
 
 def compare(expected,actual,bitwise=False):
@@ -45,7 +45,8 @@ def cpu_reference(case,point):
     p=REFERENCE/'artifacts/phase5a'
     fresh=p/'correctness'/case/(str(point['id'])+'.npz')
     if fresh.exists():return fresh
-    if case=='commercial':return p/'campaigns/Y2-commercial-24x1'/(str(point['id'])+'.npz')
+    if os.environ.get('COPILOT_CPU_REFERENCE_CAMPAIGN'):
+        return Path(os.environ['COPILOT_CPU_REFERENCE_CAMPAIGN'])/(str(point['id'])+'.npz')
     raise RuntimeError('Missing established CPU observation')
 
 

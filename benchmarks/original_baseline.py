@@ -94,7 +94,7 @@ def host_run(a):
     host={'campaign_id':a.id,'utc':f.utc(),'policy_before':f.policy(),'sensors_before':f.sensors(),'sampling_interval_s':.1,'frames':[]}
     start=time.monotonic();initial=f.process_ticks();pid=None;tokens={}
     with Path(str(prefix)+'.log').open('x') as log:
-        child=subprocess.Popen([str(ROOT/'scripts/remote_container.sh'),'bash','-c',command],stdout=log,stderr=subprocess.STDOUT)
+        child=subprocess.Popen([str(ROOT/'scripts/annual_container.sh'),'bash','-c',command],stdout=log,stderr=subprocess.STDOUT)
         while child.poll() is None:
             if pid is None:
                 for p in Path('/proc').glob('[0-9]*'):

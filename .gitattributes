@@ -1,2 +1,5 @@
 # Preserve compiler diagnostics verbatim, including their trailing spaces.
 benchmarks/results/**/*.log whitespace=-blank-at-eol
+
+# Keep the upstream license copy byte-for-byte.
+licenses/RapidXML-license.txt whitespace=-blank-at-eol

@@ -1,0 +1,1341 @@
+{
+  "status": "DRAFT: no final root license applied",
+  "scope": "root files and local patch paths; upstream dependencies retain their own complete notices",
+  "components": [
+    {
+      "component": "SSC",
+      "upstream_license_path": "ssc/LICENSE",
+      "visible_license_copy": "licenses/SSC-LICENSE.txt",
+      "sha256": "97d6e9413cc269ff41171f4639dad07b1fca4a6073c550efe989423b03214a62"
+    },
+    {
+      "component": "SolarPILOT and CoPylot Python API",
+      "upstream_license_path": "SolarPILOT/LICENSE.md",
+      "visible_license_copy": "licenses/SolarPILOT-LICENSE.md",
+      "sha256": "edf48ba9e31edd9896df5abd4d493d020059a0fad14c8de831c17ce11586dd74"
+    },
+    {
+      "component": "SolTrace",
+      "upstream_license_path": "SolTrace/LICENSE.md",
+      "visible_license_copy": "licenses/SolTrace-LICENSE.md",
+      "sha256": "13ea70830f7519d580659b805e83b908fb55c916a9a5a8bffc9bc1b0707e530e"
+    },
+    {
+      "component": "NLopt",
+      "upstream_license_path": "ssc/nlopt/LICENSE.htm",
+      "visible_license_copy": "licenses/NLopt-LICENSE.htm",
+      "sha256": "78cd5fd2247e79f1386f12f6c32770df40fd88004acc630c5f3029420a23a09a"
+    },
+    {
+      "component": "lp_solve",
+      "upstream_license_path": "ssc/lpsolve/LICENSE.htm",
+      "visible_license_copy": "licenses/lp_solve-LICENSE.htm",
+      "sha256": "78cd5fd2247e79f1386f12f6c32770df40fd88004acc630c5f3029420a23a09a"
+    },
+    {
+      "component": "RapidXML",
+      "upstream_license_path": "SolarPILOT/rapidxml/license.txt",
+      "visible_license_copy": "licenses/RapidXML-license.txt",
+      "sha256": "6094a09542ee0835df4c212203ae0a19c93b47a24d78ccf4951b0282268570ae"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": ".gitignore",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "README.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/__init__.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/annual_figure_data.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/common.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/gpu_temporal_data.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/original_baseline_data.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/performance_data.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/temporal_data.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analysis/validate.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/analyze_cpu_stack.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/annual_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/annual_matrix_report.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/audit_original_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cases.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/check_gpu_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/commercial_reference.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_allocation_probe.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_fp_probe.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_hardening.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_hardening_equivalence.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_hardening_layout.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_layout_gdb.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_layout_probe.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_multicore.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cpu_repeatability.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cuda_flux_correctness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cuda_flux_performance.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/cuda_kernel_resources.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/export_overhead.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/flat_compatibility.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/flux_density_scaling.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/gpu_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/gpu_temporal_pipeline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_cpu_correctness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_cuda_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_cuda_correctness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_cuda_performance.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_pipeline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/image_plane_pipeline_correctness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/original_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/profile_gpu_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/profile_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/project_grid_campaign.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/publish_cpu_hardening_validation.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/receiver_grid.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/receiver_grid_convergence.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-matrix.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/annual-benchmark-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/cpu-final.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/cpu-original.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/export-overhead.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/large-timings.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/large.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/measured-toolchain.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/medium-timings.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/medium.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-single-state.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-single-state.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/original-baseline-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-flat-extraction.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-flat.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy-before.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy-extraction.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-legacy.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-verify-extraction.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2a-native-verify.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2b-cuda-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-baseline.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-block-sweep.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-block-sweep.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-end-to-end.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-final.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-kernel-resources.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2c-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-call-counts.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-cpu-performance.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-cuda-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-direct-tests.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-end-to-end.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-legacy-profile.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2da-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-cpu-optics-regression.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-density-regression.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-downstream-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-imageplane-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-preliminary-timing.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-resource-usage.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2db-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-block-sweep.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-block-sweep.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-correctness.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-cpu-optics-regression.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-density-regression.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-final-performance.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-final-profile.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-handoff-analysis.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-profile-calibration.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-resource-usage.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-v1-baseline.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase2dc-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-commercial-case.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-cpu-gpu-resolution-performance.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence-capture.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-convergence.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-0.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-1.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-2.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-3.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-4.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-5.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/afternoon-level-6.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-0.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-1.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-2.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-3.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-4.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-5.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/high-level-6.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-0.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-1.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-2.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-3.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-4.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-5.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/moderate-level-6.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-0.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-1.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-2.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-3.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-4.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-5.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-grid-maps/morning-level-6.npz",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-reference-inventory.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3a-validation.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase3c-cesa1-grid-convergence-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cpu-gpu-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase4s-cuda-control-timings.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase4s-final-cpu-baseline.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase5a-campaign-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/phase5b-annual-summary.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/public-evidence-manifest.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/small-timings.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/results/small.csv",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "benchmarks/run_cpu.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/run_gpu_temporal_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/run_temporal_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/smoke_test.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_annual_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_cpu_hardening.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_cpu_multicore.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_cpu_perf.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_cpu_repeatability.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_gpu_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_image_plane.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_original_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_phase2c.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_phase2db.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_phase2dc.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_phase3a.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_project_grid.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/summarize_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/temporal_campaign.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/timing_counters.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/validate_annual_publication.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/verify_annual_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "benchmarks/verify_temporal_outputs.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "cases/commercial-reference/case_manifest.json",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/backend.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/build.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/commercial-reference-case.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/cpu-multicore-design.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/cpu-profile.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/cuda-flux-density.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/cuda-imageplane-fluxdensity-handoff.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/dataset-manifest.json",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/dependencies.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/flux-density-analysis.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/flux-density-cuda-design.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/flux-density-scaling.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/gpu-data-model.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/history-map.csv",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/image-plane-cuda-design.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/image-plane-intercept-analysis.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/licensing-inventory.json",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2a-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2b-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2c-methodology.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2c-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2da-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2db-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2dc-plan.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase2dc-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase3a-plan.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase3a-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase3b-design.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/phase3b-report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/plan.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/public-export.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/public-reproducibility.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/receiver-grid-convergence.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/report.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/result-history-allowlist.json",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/soltrace-convergence-plan.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "docs/soltrace.md",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "licenses/NLopt-LICENSE.htm",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "licenses/RapidXML-license.txt",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "licenses/SSC-LICENSE.txt",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "licenses/SolTrace-LICENSE.md",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "licenses/SolarPILOT-LICENSE.md",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "licenses/lp_solve-LICENSE.htm",
+      "classification": "upstream license text; original terms retained"
+    },
+    {
+      "path": "patches/SolTrace.patch",
+      "classification": "mixed upstream-derived changes and new project code; file-level notices govern"
+    },
+    {
+      "path": "patches/SolarPILOT.patch",
+      "classification": "mixed upstream-derived changes and new project code; file-level notices govern"
+    },
+    {
+      "path": "patches/ssc.patch",
+      "classification": "mixed upstream-derived changes and new project code; file-level notices govern"
+    },
+    {
+      "path": "repos.lock.json",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "requirements.txt",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/annual_container.sh",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/bootstrap.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/build_cpu.sh",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/check_phase2da_boundaries.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/check_phase2dc_boundaries.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/check_phase3a_boundaries.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/export_patches.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/profile_cpu.sh",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/summarize_profile.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/test_cpu.sh",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "scripts/validate_cuda_api.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/baselines/large.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "tests/baselines/medium.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "tests/baselines/small.json",
+      "classification": "generated scientific evidence; original contribution/data licensing decision pending"
+    },
+    {
+      "path": "tests/capture_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cpu_multicore_state.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cpu_optical_state_bridge.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cuda_flat_image_plane_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cuda_flux_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cuda_image_plane_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/cuda_image_plane_resources.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/flat_image_plane_fixtures.h",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/flat_image_plane_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/flux_density_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_access.h",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_benchmark.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_cuda_benchmark.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_fixtures.h",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_gpu_window.h",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_numerics.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/image_plane_pipeline_state.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/native_smoke.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/project_state_check.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/static_parallel.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/temporal_gpu_allocation_failure.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/temporal_gpu_cache.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/temporal_image_partition.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/temporal_sun_bridge.cpp",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_annual_matrix.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_backend.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_allocation_probe.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_fp_probe.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_hardening.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_multicore.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_repeatability.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cpu_scaling_summary.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cuda_flux.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_cuda_image_plane.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_flat_project.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_flux_density.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_gpu_temporal.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_gpu_temporal_api.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_gpu_temporal_publication.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_grid_publication.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_image_plane_harness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_image_plane_performance.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_original_baseline.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_performance_harness.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_project_grid_campaign.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_public_evidence.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_receiver_grid.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_regression.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_result_exports.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_spt.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    },
+    {
+      "path": "tests/test_temporal_campaign.py",
+      "classification": "apparent project contribution or adaptation; root license/ownership decision pending"
+    }
+  ],
+  "upstream_patch_paths": {
+    "SolTrace.patch": [
+      "coretrace/treemesh.cpp"
+    ],
+    "SolarPILOT.patch": [
+      "deploy/api/copylot.py"
+    ],
+    "ssc.patch": [
+      "solarpilot/CMakeLists.txt",
+      "solarpilot/CoPilot_API.cpp",
+      "solarpilot/CoPilot_API.h",
+      "solarpilot/ComputeBackend.cpp",
+      "solarpilot/ComputeBackend.h",
+      "solarpilot/CoreProfile.cpp",
+      "solarpilot/CoreProfile.h",
+      "solarpilot/CudaProbe.cu",
+      "solarpilot/Flux.cpp",
+      "solarpilot/Flux.h",
+      "solarpilot/FluxDensityCuda.cpp",
+      "solarpilot/FluxDensityKernels.cu",
+      "solarpilot/FluxDensityNumerics.h",
+      "solarpilot/IOUtil.cpp",
+      "solarpilot/ImagePlaneIntercept.cpp",
+      "solarpilot/ImagePlaneIntercept.h",
+      "solarpilot/ImagePlaneInterceptAdapter.cpp",
+      "solarpilot/ImagePlaneInterceptComparison.h",
+      "solarpilot/ImagePlaneInterceptCuda.cpp",
+      "solarpilot/ImagePlaneInterceptCuda.h",
+      "solarpilot/ImagePlaneInterceptKernels.cu",
+      "solarpilot/ImagePlaneInterceptNumerics.h",
+      "solarpilot/OpticalMesh.h",
+      "solarpilot/SolarField.cpp",
+      "solarpilot/SolarField.h",
+      "solarpilot/StaticParallel.h",
+      "solarpilot/TemporalUploadCache.h",
+      "solarpilot/Toolbox.cpp",
+      "solarpilot/interop.cpp"
+    ]
+  },
+  "unresolved": [
+    "Root license and ownership approval for original contributions",
+    "Licensing of original generated study outputs",
+    "Modified-version naming/reference conditions in SolarPILOT and SolTrace texts",
+    "Individual third-party obligations for any future binary release",
+    "Input-asset redistribution terms if raw upstream data are bundled later"
+  ],
+  "python_dependencies": [
+    {
+      "component": "numpy",
+      "version": "1.26.4",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "numpy-1.26.4.dist-info/LICENSE.txt",
+        "numpy/core/include/numpy/random/LICENSE.txt",
+        "numpy/ma/LICENSE",
+        "numpy/random/LICENSE.md"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "Copyright (c) 2005-2023, NumPy Developers."
+      ]
+    },
+    {
+      "component": "pandas",
+      "version": "2.2.3",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "pandas-2.2.3.dist-info/LICENSE"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "BSD 3-Clause License"
+      ]
+    },
+    {
+      "component": "python-dateutil",
+      "version": "2.9.0.post0",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "python_dateutil-2.9.0.post0.dist-info/LICENSE"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "Dual License"
+      ]
+    },
+    {
+      "component": "pytz",
+      "version": "2026.5",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "pytz-2026.5.dist-info/LICENSE.txt"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "MIT"
+      ]
+    },
+    {
+      "component": "tzdata",
+      "version": "2026.5",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "tzdata-2026.5.dist-info/licenses/LICENSE",
+        "tzdata-2026.5.dist-info/licenses/licenses/LICENSE_APACHE"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "component": "six",
+      "version": "1.17.0",
+      "distribution": "installed dependency, not vendored in root Git",
+      "license_files_in_distribution": [
+        "six-1.17.0.dist-info/LICENSE"
+      ],
+      "metadata_license_expression": null,
+      "license_metadata_first_line": [
+        "MIT"
+      ]
+    }
+  ],
+  "external_cuda_toolchain": "External NVIDIA CUDA toolkit/runtime; not bundled in root Git. Review applicable terms before binary redistribution."
+}

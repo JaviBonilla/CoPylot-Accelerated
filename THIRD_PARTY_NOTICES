@@ -1,0 +1,40 @@
+DRAFT THIRD-PARTY NOTICES — ROOT LICENSE NOT SELECTED
+
+This inventory does not grant a new repository-wide license or replace upstream
+terms. The original project contributions and generated scientific evidence await
+an explicit licensing/ownership decision. Existing upstream headers are preserved.
+
+SSC
+  Pinned source: repos.lock.json; local changes: patches/ssc.patch.
+  License: licenses/SSC-LICENSE.txt (BSD 3-Clause).
+  Individual source-file notices also apply, including separately licensed vendors.
+
+SolarPILOT / CoPylot
+  Pinned source: repos.lock.json; Python API changes: patches/SolarPILOT.patch.
+  License: licenses/SolarPILOT-LICENSE.md.
+  This text includes government-rights notices, research-entity corresponding-source
+  conditions and modified-version designation/reference conditions. Do not replace
+  it with a generic BSD label. Review project naming and distribution terms.
+
+SolTrace
+  Pinned source: repos.lock.json; portability patch: patches/SolTrace.patch.
+  License: licenses/SolTrace-LICENSE.md; analogous additional conditions appear there.
+
+Included third-party components
+  NLopt: ssc/nlopt/LICENSE.htm -> licenses/NLopt-LICENSE.htm.
+  lp_solve: ssc/lpsolve/LICENSE.htm -> licenses/lp_solve-LICENSE.htm.
+  These texts include LGPL 2.1 provisions. Review individual components and any
+  future binary distribution separately.
+  RapidXML: SolarPILOT/rapidxml/license.txt -> licenses/RapidXML-license.txt
+  (Boost/MIT alternatives in the upstream text).
+
+Data and generated evidence
+  The commercial case manifest identifies layout/weather assets from pinned public
+  upstream repositories. Raw assets are reconstructed, not copied into root Git.
+  Their online availability is not a statement about redistribution permission.
+  The committed commercial receiver maps are generated study outputs, not copied
+  upstream inputs; no private receiver maps are included. The license for original
+  study outputs still requires a decision along with other original contributions.
+
+See docs/licensing-inventory.json for the per-file contribution classification and
+patch path inventory. No final legal-compliance determination is made here.

@@ -11,7 +11,7 @@ class GridPublication(unittest.TestCase):
                'inputs':{'fluxsim.0.flux_month':1,'fluxsim.0.flux_day':2,'fluxsim.0.flux_hour':3,'fluxsim.0.flux_dni':800},
                'resolved':{'fluxsim.0.flux_solar_az':150,'fluxsim.0.flux_solar_el':40}}
         out=safe_point(point)
-        self.assertEqual(out['id'],'public-state');self.assertEqual(out['dni_w_m2'],800)
+        self.assertEqual(out,{'id':'public-state'})
         self.assertNotIn('site',out);self.assertNotIn('inputs',out);self.assertNotIn('project',out)
         self.assertNotIn('/private',str(out));self.assertNotIn('flux_day',str(out))
 

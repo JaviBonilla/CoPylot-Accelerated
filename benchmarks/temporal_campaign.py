@@ -77,7 +77,7 @@ def partitions(topology, workers, threads):
 
 
 def sun_function():
-    bridge = ctypes.CDLL(str(OUT/'libtemporal_sun_bridge.so'))
+    bridge = ctypes.CDLL(str(Path(os.environ.get('COPILOT_SUN_BRIDGE',Path(os.environ['COPILOT_LIB_DIR']).parent/'libtemporal_sun_bridge.so'))))
     f = bridge.phase5a_sun
     f.argtypes = [ctypes.c_double]*3+[ctypes.c_int]*2+[ctypes.c_double,ctypes.POINTER(ctypes.c_double)]
     f.restype = ctypes.c_bool
@@ -196,7 +196,7 @@ def signature(values):
 
 
 def optics_function():
-    bridge=ctypes.CDLL(str(ROOT/'build/phase4s-cuda/libcpu_optical_state_bridge.so'))
+    bridge=ctypes.CDLL(str(Path(os.environ['COPILOT_LIB_DIR']).parent/'libcpu_optical_state_bridge.so'))
     bridge.phase4_optical_capture.argtypes=[ctypes.c_void_p];bridge.phase4_optical_capture.restype=ctypes.c_void_p
     bridge.phase4_optical_size.argtypes=[ctypes.c_void_p];bridge.phase4_optical_size.restype=ctypes.c_size_t
     bridge.phase4_optical_copy.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];bridge.phase4_optical_copy.restype=ctypes.c_bool

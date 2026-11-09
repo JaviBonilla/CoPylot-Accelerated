@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "numerical_source_unchanged": true,
+  "private_source_inputs_byte_identical": true,
+  "public_assets_byte_identical": true,
+  "state_groups": 8,
+  "formal_processes": 10,
+  "process_state_blocks_retained": 40,
+  "measured_samples_retained": 200,
+  "samples_trimmed": 0,
+  "all_eight_timing_populations_pass_declared_gates": true,
+  "all_full_outputs_and_215_optical_values_bitwise_legacy_flat": true,
+  "historical_control_maps_bitwise": true,
+  "existing_phase4s_timings_reused_without_performance_rerun": true,
+  "annual_original_executed": false
+}

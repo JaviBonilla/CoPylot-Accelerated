@@ -15,7 +15,7 @@ def rows(folder):
 
 def normalized_point(point):return {k:v for k,v in point.items() if k!='dispatch_index'}
 
-def verify(case,mode,identifier):
+def verify(case,mode,identifier,reference=None):
     gpu=mode=='gpu';folder=(a.OUT/'gpu/runs' if gpu else a.OUT/'cpu/campaigns')/identifier
     result=json.loads((folder/'result.json').read_text());plan=json.loads((t.OUT/(case+'-plan.json')).read_text());records=rows(folder)
     t.require(result['status']=='passed' and result['cpu_window']['accepted'],'Campaign status/window not qualified')
@@ -23,9 +23,19 @@ def verify(case,mode,identifier):
     t.require(len(records)==len(expected)==result['completed'] and {r['id'] for r in records}==set(expected),'Missing/duplicate annual states')
     t.require(all(normalized_point(r['state'])==expected[r['id']] for r in records),'Annual calendar/weather metadata differ')
     if not gpu:verify_cpu_storage(folder,plan)
-    if case=='commercial':reference=Path('/annual-cpu-reference/artifacts/phase5a/campaigns/Y2-commercial-24x1')
-    else:reference=a.OUT/'cpu/campaigns/A-cesa-cpu-12x2'
-    direct_gpu=Path('/annual-gpu-reference/artifacts/phase5b/runs/F-commercial-K24') if case=='commercial' else None
+    # Explicit local reference; no archived server paths and no implicit self-oracle.
+    t.require(reference is not None,'An explicit full CPU reference campaign is required')
+    reference=Path(reference).resolve()
+    t.require(reference.is_dir(),'CPU reference campaign directory is missing')
+    t.require(reference!=folder.resolve(),'Independent cross-mode reference required')
+    ref_result=json.loads((reference/'result.json').read_text())
+    t.require(ref_result['status']=='passed' and ref_result['case']==case and
+              ref_result['completed']==len(expected),'Reference case/count/status differ')
+    ref_records=rows(reference)
+    t.require(len(ref_records)==len(expected) and
+              {r['id'] for r in ref_records}==set(expected),'Reference coverage differs')
+    t.require(all(normalized_point(r['state'])==expected[r['id']] for r in ref_records),
+              'Reference annual calendar/weather differs')
     checked=0;maximum=0.;total=0;zero=0
     for record in records:
         file=folder/(str(record['id'])+'.npz')
@@ -53,5 +63,10 @@ def verify(case,mode,identifier):
     return v
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--case',choices=['cesa','commercial'],required=True);p.add_argument('--mode',choices=['original','refactored','cpu','gpu'],required=True);p.add_argument('--id',required=True);args=p.parse_args();verify(args.case,args.mode,args.id)
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--case',choices=['commercial'],default='commercial')
+    p.add_argument('--mode',choices=['original','refactored','cpu','gpu'],required=True)
+    p.add_argument('--id',required=True)
+    p.add_argument('--reference',type=Path,required=True,help='Another complete local CPU campaign; never the campaign being checked')
+    args=p.parse_args();verify(args.case,args.mode,args.id,args.reference)
 if __name__=='__main__':main()
