@@ -8,13 +8,13 @@ Phase 2D is not implemented.
 
 ## Reproducible evidence
 
-* [Initial repository state](../benchmarks/results/phase2c-initial-state.json): all four working trees clean; Phase 2B and SPT committed.
+* Initial repository state: all four working trees clean; Phase 2B and SPT committed.
 * [Immutable instrumented CUDA v1 baseline](../benchmarks/results/phase2c-baseline.json), captured before any kernel modification (none was subsequently made).
 * [36-case instrumented block sweep](../benchmarks/results/phase2c-block-sweep.json) and [compact CSV](../benchmarks/results/phase2c-block-sweep.csv).
 * [Primary event/file-output-free end-to-end control](../benchmarks/results/phase2c-end-to-end.json).
 * [Fresh final production-default profile](../benchmarks/results/phase2c-final.json).
 * [Kernel resources](../benchmarks/results/phase2c-kernel-resources.json), [derived metrics and paired intervals](../benchmarks/results/phase2c-summary.json).
-* [Unchanged Phase 2B suite rerun](../benchmarks/results/phase2c-correctness.json), [validation logs](../benchmarks/results/phase2c-validation/).
+* [Unchanged Phase 2B suite rerun](../benchmarks/results/phase2c-correctness.json). The public archive carries this summary.
 * [Detailed protocol](phase2c-methodology.md); analysis is reproducible with `benchmarks/summarize_phase2c.py`.
 
 The baseline, sweep, plain control and final profile have identical shared-library

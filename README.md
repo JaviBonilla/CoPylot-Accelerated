@@ -1,6 +1,52 @@
-# CoPylot GPU: optical simulation and reproducibility
+# CoPylot-GPU
 
-This local publication candidate preserves the software development of the retained SolarPILOT Hermite execution path, refactored CPU implementation, multicore CPU and CUDA implementation. It contains source patches, tests, public commercial-case reconstruction and reviewed computational evidence.
+CoPylot-GPU evaluates heliostat-field optical performance and receiver flux for
+concentrating solar power research. It builds a headless SolarPILOT numerical
+library from pinned upstream sources and patches, with CoPylot as its Python
+interface. All four execution approaches retain the Hermite optical formulation.
+
+| Approach | Execution |
+| --- | --- |
+| Original | Retained Legacy image-plane and flux-density paths, with one CPU thread |
+| Refactored CPU | Flat numerical paths, with one CPU thread |
+| Multicore CPU | Flat numerical paths, with parallel work within a state and optional independent contexts across states |
+| GPU (CUDA) | CUDA image-plane and flux-density stages, with CPU preparation and result handling |
+
+The API supports generated and assigned fields, compatible saved SolarPILOT
+layouts, receiver flux maps, receiver summaries and per-heliostat results.
+CUDA has an explicit [configuration envelope](docs/backend.md).
+
+## Quick start
+
+The verified CPU environment is x86-64 Linux with GCC 13.3 and Python 3.12.
+Linux CUDA evidence covers an RTX 6000 Ada with CUDA 13.0. See the
+[build guide](docs/build.md) for prerequisites, flags and platform limits.
+
+From the repository root, reconstruct the pinned dependencies and build the CPU
+library. The diagnostics flag enables the optional Original comparison.
+
+```sh
+python3 scripts/bootstrap.py
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+scripts/build_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
+.venv/bin/python examples/optical_simulation.py --flux-csv artifacts/example/receiver-flux.csv
+```
+
+The example assigns a synthetic 1,000-heliostat field, runs a single optical
+state, prints the receiver summary and writes the incident flux map. See
+[mode selection and comparison](docs/build.md#run-the-example) for the other
+execution approaches.
+
+## Benchmarks and reproducibility
+
+- [Reproducibility workflow](docs/public-reproducibility.md) covers numerical checks, the public commercial case, short and temporal measurements, and optional annual campaigns.
+- [Benchmark evidence](docs/benchmark-evidence.md) indexes the archived datasets, validation criteria and timing boundaries.
+- [Annual measurements](benchmarks/results/annual-benchmark-matrix.csv) contain all four approaches for both study cases. CESA-I is available as approved aggregate evidence.
+
+## Publication
+
+Associated scientific publication and DOI to be added when available.
 
 ## Licensing
 
@@ -12,39 +58,8 @@ The root MIT grant is limited to original project code. Existing notices and ter
 
 See [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) and the [licensing inventory](docs/licensing-inventory.json) for the file-level exceptions, data provenance, and upstream terms.
 
-## Build and test
+## Acknowledgements
 
-Requirements: Git, Python 3.11 or newer, CMake 3.24 or newer, Ninja, a C/C++ toolchain and Linux for the affinity/counter diagnostics. The pinned dependency downloads require network access. CUDA builds also require a compatible CUDA toolkit and NVIDIA device.
-
-```sh
-python3 scripts/bootstrap.py
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-scripts/test_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON -DSOLARPILOT_ENABLE_CORE_PROFILE=ON
-```
-
-Bootstrap reconstructs the three exact dependency revisions from pinned public upstream commits plus the committed mailboxes. It refuses to overwrite incompatible or dirty dependency checkouts. The upstream repositories are ignored working dependencies, not submodules or vendored source trees.
-
-For CUDA, use a separate build and specify the target architecture explicitly, for example `BUILD_DIR="$PWD/build/cuda" scripts/test_cpu.sh -DSOLARPILOT_ENABLE_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=89 -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON`. Architecture 89 corresponds to the measured Ada GPU; select the appropriate value for your hardware.
-
-## Public commercial case
-
-```sh
-COPILOT_LIB_DIR="$PWD/build/cpu/lib" .venv/bin/python benchmarks/commercial_reference.py \
-  --output artifacts/commercial-check.json
-```
-
-`cases/commercial-reference/case_manifest.json` records the upstream source, exact asset hashes and parameter classifications. Layout and weather assets are reconstructed from those dependencies; raw upstream input assets are not copied into this repository.
-
-See `docs/public-reproducibility.md` for the complete commercial annual workflow and validation boundaries. Small functional tests are distinct from full annual benchmark campaigns.
-
-## Reviewed evidence
-
-```sh
-.venv/bin/python -m benchmarks.analysis.validate
-.venv/bin/python -m unittest discover -s tests -p 'test_public_evidence.py' -v
-```
-
-`benchmarks/results/public-evidence-manifest.json` binds the reviewed aggregate replacements to their authoritative source-report hashes. Values are retained without rounding or new benchmark measurements. Historical measured binary hashes remain historical identities; a local rebuild must declare its own identity. Private case inputs and state records are not distributed, so those results cannot be independently rerun from this public candidate.
-
-`docs/public-export.md` describes history selection, privacy exclusions and remaining publication decisions. `docs/history-map.csv` maps retained private integration revision identifiers to the filtered public history. Author attribution and upstream patch histories are retained.
+This work builds on SolarPILOT, its CoPylot API, SSC and SolTrace. Upstream
+revisions and credits are recorded in [repos.lock.json](repos.lock.json) and
+[THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).

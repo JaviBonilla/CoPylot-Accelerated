@@ -978,6 +978,11 @@
       "license": "CC-BY-4.0"
     },
     {
+      "path": "docs/benchmark-evidence.md",
+      "classification": "Original documentation",
+      "license": "CC-BY-4.0"
+    },
+    {
       "path": "docs/build.md",
       "classification": "Original documentation",
       "license": "CC-BY-4.0"
@@ -1161,6 +1166,11 @@
       "path": "docs/soltrace.md",
       "classification": "Original documentation",
       "license": "CC-BY-4.0"
+    },
+    {
+      "path": "examples/optical_simulation.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
     },
     {
       "path": "licenses/NLopt-LICENSE.htm",

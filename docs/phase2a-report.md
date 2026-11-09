@@ -44,7 +44,7 @@ CPU development, main suites, profiling and timing used native Servidor GPU at `
 | CUDA ON, pinned existing Docker image, sm_89 | Build, CTest 2/2, Python smoke and 8/8 suite PASS |
 | CUDA existing probe | Exactly one visible device; successful setter checks readback==42; backend remains CPU; functional PASS, no timings collected |
 
-Evidence is in [validation logs](../benchmarks/results/phase2a-validation). Compiler/build transcripts are retained as full ignored artifacts; versioned logs include test results and selected build tails, not full warning streams. The CUDA snapshot is `/workspace/work/copilot-gpu/phase2a-cuda`, built using unchanged image `sha256:8e6e3752946ff2dde451b313cbaec2ea8e7b52221b21bfbcf53fb68dd4f4c42e`. Existing CudaProbe.cu and GPU context source are unchanged. Native host CUDA was not installed. Driver 580.159.03 and GPU services were untouched; final vLLM remains healthy, GPU usage ~43,160 MiB. No GPU timings are published.
+The table above summarizes validation. The CUDA snapshot was built using image `sha256:8e6e3752946ff2dde451b313cbaec2ea8e7b52221b21bfbcf53fb68dd4f4c42e`. Existing CudaProbe.cu and GPU context source are unchanged. Native host CUDA was not installed. Driver 580.159.03 and GPU services were untouched; final vLLM remains healthy, GPU usage ~43,160 MiB. No GPU timings are published.
 
 ## Scope, commits and limits
 

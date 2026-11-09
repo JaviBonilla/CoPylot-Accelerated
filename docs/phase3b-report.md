@@ -42,8 +42,7 @@ corrected without changing the SPT representation.
 Weather resolution occurs only in memory during load: existing stored path;
 otherwise project-relative reference; otherwise the same stored basename beside
 the SPT. No arbitrary EPW selection or private-file rewrite occurs. Missing files
-still fail weather-dependent operations. See [SPT API](spt-files.md) and
-[design trace](phase3b-design.md) for the dependency matrix and API contract.
+still fail weather-dependent operations. See the [design trace](phase3b-design.md) for the dependency matrix and API contract.
 
 ## Numerical architecture and public gates
 
