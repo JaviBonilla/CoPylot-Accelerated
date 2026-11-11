@@ -34,7 +34,7 @@ runs:
           python scripts/native_package.py build --platform "$PACKAGE_PLATFORM" \
             --backend "$PACKAGE_BACKEND" "${args[@]}"
         fi
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: hermite-optics-${{ inputs.backend }}-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
         path: build/native-package/artifact/
@@ -42,7 +42,7 @@ runs:
         compression-level: 0
     - name: Upload native build diagnostics
       if: failure() && runner.os != 'Linux'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: hermite-optics-diagnostics-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
         path: build/native-package/diagnostics/*.log
