@@ -59,27 +59,77 @@
   ],
   "files": [
     {
-      "path": ".github/workflows/package-linux-cuda-portable.yml",
+      "path": ".github/workflows/build-linux-cpu.yml",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },
     {
-      "path": ".github/workflows/package-linux-portable.yml",
+      "path": ".github/workflows/build-linux-cuda.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/build-macos-cpu.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/build-windows-cpu.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/validate-linux-cpu.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/validate-linux-cuda.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/validate-macos-cpu.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/workflows/validate-windows-cpu.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/actions/build-package/action.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/actions/resolve-package/action.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/actions/validate-package/action.yml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": ".github/actionlint.yaml",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/native_package.py",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/package_linux_ci.sh",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },
     {
       "path": ".gitattributes",
-      "classification": "Original code or build configuration",
-      "license": "MIT"
-    },
-    {
-      "path": ".github/workflows/package-check.yml",
-      "classification": "Original code or build configuration",
-      "license": "MIT"
-    },
-    {
-      "path": ".github/workflows/package-cuda-check.yml",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },

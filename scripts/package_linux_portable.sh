@@ -3,6 +3,16 @@ set -euo pipefail
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$root"
 
+verify_args=()
+if [[ ${1:-} == --inspect-only ]]; then
+  verify_args=(--inspect-only)
+  shift
+fi
+if (($#)); then
+  echo "Usage: $0 [--inspect-only]" >&2
+  exit 2
+fi
+
 build=build/package-linux-portable
 jobs=${BUILD_JOBS:-4}
 python3 scripts/bootstrap.py
@@ -23,4 +33,4 @@ cpack --config "$build/CPackConfig.cmake" -C Release
 revision="$(git rev-parse --short=12 HEAD)"
 if [[ -n $(git status --porcelain) ]]; then revision+=-dirty; fi
 archive="$build/packages/hermite-optics-local-$revision-linux-x86_64-cpu-glibc2.34.tar.gz"
-python3 scripts/verify_package.py "$archive"
+python3 scripts/verify_package.py "$archive" "${verify_args[@]}"

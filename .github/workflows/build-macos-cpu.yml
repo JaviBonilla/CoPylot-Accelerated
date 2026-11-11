@@ -1,0 +1,27 @@
+name: Build · macOS · CPU
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: macos-15-intel, platform: macos-x86_64, python_arch: x64 }
+          - { runner: macos-15, platform: macos-arm64, python_arch: arm64 }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/build-package
+        with:
+          platform: ${{ matrix.platform }}
+          backend: cpu
+          python_arch: ${{ matrix.python_arch }}

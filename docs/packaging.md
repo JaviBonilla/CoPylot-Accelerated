@@ -21,11 +21,43 @@ clearance is pending.
 | macOS CUDA | Outside the packaging targets. |
 | SolarPILOT desktop executable | Blocked on a separately pinned and tested GUI build. Upstream uses a distinct CMake entry point, wxWidgets, LK, WEX, RapidJSON and other platform dependencies and resources. The headless CUDA dispatch does not establish GUI CUDA support. |
 
-The manual [native CUDA workflow](../.github/workflows/package-cuda-check.yml) requires an
-isolated, disposable x86-64 Linux runner labelled `cuda-13-0` with a compatible
-host compiler and the toolkit preinstalled. It builds and verifies the archive
-using CPU modes. Use that runner only for trusted refs. It has no upload or
-release step.
+## Package workflows
+
+| Target | Build | Validate |
+| --- | --- | --- |
+| Linux CPU | [Build · Linux · CPU](../.github/workflows/build-linux-cpu.yml) | [Validate · Linux · CPU](../.github/workflows/validate-linux-cpu.yml) |
+| Linux CUDA | [Build · Linux · CUDA](../.github/workflows/build-linux-cuda.yml) | [Validate · Linux · CUDA](../.github/workflows/validate-linux-cuda.yml) |
+| Windows CPU | [Build · Windows · CPU](../.github/workflows/build-windows-cpu.yml) | [Validate · Windows · CPU](../.github/workflows/validate-windows-cpu.yml) |
+| macOS CPU | [Build · macOS · CPU](../.github/workflows/build-macos-cpu.yml) | [Validate · macOS · CPU](../.github/workflows/validate-macos-cpu.yml) |
+
+Dispatch a Build workflow and wait for it to succeed. Each job uploads
+the CPack archive, its SHA-256 sidecar and `artifact.json`. Then dispatch
+the matching Validate workflow with the numeric `build_run_id` from the build
+run URL. Validation checks the build workflow and repository, checks out
+the full source revision and downloads the artifact from its
+latest attempt after it succeeds. It verifies the manifest, archive checksum, source
+revision, architecture and backend before testing the extracted library.
+For a partial macOS rerun, rerun all jobs or dispatch a new Build so both
+architecture artifacts come from the same attempt.
+
+Artifact names use
+`hermite-optics-<backend>-<platform>-<run-id>-<attempt>`.
+For Linux, `platform` is `linux-x86_64` for both backends.
+Both Linux Build workflows use the pinned AlmaLinux 9 builder and retain
+the glibc 2.34 ABI. Each Validate workflow checks the same archive in
+Ubuntu 22.04, Debian 12, Ubuntu 24.04 and AlmaLinux 9. The normal CUDA
+validation uses an external CUDA runtime to check loading and the CPU modes.
+
+Enable `run_gpu` in **Validate · Linux · CUDA** to also run the packaged
+CUDA example on a self-hosted Linux x64 runner labelled `cuda-13-0` and
+`gpu`. The job requires an SM 89 NVIDIA device and compatible driver.
+It checks GPU utilization, GPU processes and vLLM before running CUDA.
+When it detects activity, it stops the GPU job before launching the example.
+The hosted runtime job finishes independently of GPU availability.
+
+These packages are validation artifacts subject to the redistribution
+requirements below. Use access-controlled runs while redistribution
+clearance is pending.
 
 ## Portable Linux x86-64 CPU
 
@@ -101,10 +133,6 @@ are installed separately, and the optical example exercises their used
 native extensions. The separate SolTrace ray-tracing API is outside the
 bundle.
 
-The manual [portable Linux workflow](../.github/workflows/package-linux-portable.yml)
-uses one CPack archive for all four runtime environments. It verifies the
-archive inside each runner and has no upload or publication step.
-
 ## Portable Linux x86-64 CUDA
 
 The CUDA recipe reuses the AlmaLinux 9 CPU builder and adds the
@@ -137,10 +165,7 @@ The script builds and checks the package without device access by default.
 It checks the host optical paths, the ELF ABI and the device code embedded
 in the library. CPack places the archive and SHA-256 sidecar under
 `build/package-linux-cuda-portable/packages/`. The archive name ends in
-`linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz`. The
-[manual workflow](../.github/workflows/package-linux-cuda-portable.yml)
-also verifies the same archive across four fresh Linux images without
-mounting GPU devices or uploading the package.
+`linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz`.
 
 ### Runtime and driver
 
@@ -216,19 +241,6 @@ available device before invoking either GPU check.
 
 ## Windows and macOS CPU workflows
 
-1. Dispatch **Build Windows and macOS CPU packages**
-   ([package-check.yml](../.github/workflows/package-check.yml)). Each job
-   reconstructs the pinned sources, builds the CPU library and checks the
-   archive structure, PE or Mach-O architecture and license bytes. It
-   uploads the CPack archive, its SHA-256 sidecar and `artifact.json`.
-2. After the build succeeds, dispatch **Validate Windows and macOS CPU
-   package artifacts** ([package-validate.yml](../.github/workflows/package-validate.yml)).
-   Supply the numeric `build_run_id` from the build run URL. The latest attempt
-   must have completed successfully. Validation checks out that commit
-   and selects its per-platform artifact by name. If a partial rerun left
-   some platforms in a different attempt, rerun all jobs or dispatch a new
-   build so all three artifacts come from the same attempt.
-
 | Runner | Actions artifact name | Archive inside it |
 | --- | --- | --- |
 | `windows-2022` | `hermite-optics-cpu-windows-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-windows-x86_64-cpu.zip` |
@@ -261,9 +273,8 @@ take the architecture from CMake after removing the pinned Intel-only
 flags on the packaged targets. Signing, notarization and testing on earlier
 macOS releases are outside these checks.
 
-These workflows have not run on the hosted runners yet. The packages are
-validation artifacts subject to the redistribution requirements below.
-Use access-controlled runs while redistribution clearance is pending.
+Windows and macOS platform verification requires successful native build
+and validation runs.
 
 ## Native Linux and macOS
 

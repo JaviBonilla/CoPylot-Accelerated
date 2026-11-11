@@ -156,7 +156,7 @@ def version_tuple(value):
     return tuple(map(int, value.split(".")))
 
 
-def linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir):
+def linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir, *, resolve=True):
     environment = {key: value for key, value in os.environ.items() if not key.startswith("LD_")}
     environment["LC_ALL"] = "C"
     if cuda_runtime_dir:
@@ -188,6 +188,7 @@ def linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir):
                     for family, value in imports), f"Portable ELF ABI ceiling exceeded: {imports}")
         require(set(symbols) == set(PORTABLE_MAX), "Incomplete portable ELF version requirements")
         require(all(level.strip() == "x86-64-baseline" for level in isa), f"Unexpected x86 ISA: {isa}")
+    if portable and resolve:
         resolved = subprocess.check_output(["ldd", "-r", str(library)], text=True,
                                            stderr=subprocess.STDOUT, env=environment)
         require(not re.search(r"not found|undefined symbol", resolved), resolved)
@@ -213,9 +214,9 @@ def find_dumpbin():
     return str(vc / "Tools/MSVC" / toolset / "bin/Hostx64/x64/dumpbin.exe")
 
 
-def runtime_dependencies(library, os_name, portable, portable_cuda, cuda_runtime_dir):
+def runtime_dependencies(library, os_name, portable, portable_cuda, cuda_runtime_dir, *, resolve=True):
     if os_name == "linux":
-        return linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir)
+        return linux_dependencies(library, portable, portable_cuda, cuda_runtime_dir, resolve=resolve)
     if os_name == "windows":
         output = subprocess.check_output([find_dumpbin(), "/DEPENDENTS", str(library)],
                                          text=True, errors="replace")
@@ -240,7 +241,7 @@ def cuda_images(library, cuobjdump, architecture):
     return images
 
 
-def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None):
+def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None, inspect_only=False):
     portable_cuda = info["variant"] == PORTABLE_CUDA
     portable = portable_cuda or info["variant"] == PORTABLE_CPU
     if portable:
@@ -251,7 +252,8 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None):
                 "Portable profile and CUDA metadata differ")
         require([name for name, data in files.items() if data.startswith(b"\x7fELF")] == [info["library"]],
                 "Expected exactly one bundled ELF")
-    require(not cuda or info["cuda_architecture"], "--cuda needs a CUDA build")
+    require(not cuda or (info["cuda_architecture"] and not inspect_only),
+            "--cuda needs a CUDA build and runtime validation")
     require(not cuobjdump or portable_cuda, "--cuobjdump needs a portable CUDA build")
     if runtime_dir:
         runtime_dir = runtime_dir.resolve()
@@ -265,7 +267,8 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None):
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(content)
         library = root / info["library"]
-        dependencies = runtime_dependencies(library, info["os"], portable, portable_cuda, runtime_dir)
+        dependencies = runtime_dependencies(library, info["os"], portable, portable_cuda, runtime_dir,
+                                            resolve=not inspect_only)
         if cuobjdump:
             dependencies["cuda_images"] = cuda_images(library, cuobjdump.resolve(), info["cuda_architecture"])
         require(dependencies["needed"], "No dynamic runtime dependencies reported")
@@ -273,6 +276,8 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None):
                          for name in dependencies["needed"])
         require(links_cuda == bool(info["cuda_architecture"]),
                 "CUDA runtime linkage differs from build metadata")
+        if inspect_only:
+            return {"runtime": dependencies, "smoke_modes": []}
         if info["os"] in {"windows", "macos"}:
             print(f'Native imports: {", ".join(dependencies["needed"])}', flush=True)
         if info["os"] == "windows" and info["variant"] == "cpu":
@@ -313,6 +318,7 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
+    parser.add_argument("--inspect-only", action="store_true", help="Check structure and ABI without running the example")
     parser.add_argument("--cuda", action="store_true", help="Also run one CUDA/CPU check on an available GPU")
     parser.add_argument("--runtime-only", action="store_true",
                         help="Validate a trusted archive on a host without the pinned source checkout")
@@ -323,7 +329,7 @@ def main():
     args = parser.parse_args()
     files, info = inspect(args.archive, runtime_only=args.runtime_only)
     report = check_runtime(files, info, cuda=args.cuda, runtime_dir=args.cuda_runtime_dir,
-                           cuobjdump=args.cuobjdump)
+                           cuobjdump=args.cuobjdump, inspect_only=args.inspect_only)
     print(json.dumps({"sha256": hashlib.sha256(args.archive.read_bytes()).hexdigest(),
                       "members": sorted(files), **report}, indent=2))
 

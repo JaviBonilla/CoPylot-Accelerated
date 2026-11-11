@@ -1,0 +1,47 @@
+name: Validate · Linux · CPU
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Run ID of Build · Linux · CPU
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    outputs:
+      run_id: ${{ steps.build.outputs.run_id }}
+      attempt: ${{ steps.build.outputs.attempt }}
+      revision: ${{ steps.build.outputs.revision }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - id: build
+        uses: ./.github/actions/resolve-package
+        with:
+          build_run_id: ${{ inputs.build_run_id }}
+          workflow: build-linux-cpu.yml
+
+  runtime:
+    needs: resolve
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+          persist-credentials: false
+      - uses: ./.github/actions/validate-package
+        with:
+          platform: linux-x86_64
+          backend: cpu
+          run_id: ${{ needs.resolve.outputs.run_id }}
+          attempt: ${{ needs.resolve.outputs.attempt }}
+          revision: ${{ needs.resolve.outputs.revision }}

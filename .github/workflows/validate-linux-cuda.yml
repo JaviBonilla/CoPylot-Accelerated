@@ -1,0 +1,73 @@
+name: Validate · Linux · CUDA
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Run ID of Build · Linux · CUDA
+        required: true
+        type: string
+      run_gpu:
+        description: Also run the packaged CUDA example on an idle SM 89 runner
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    outputs:
+      run_id: ${{ steps.build.outputs.run_id }}
+      attempt: ${{ steps.build.outputs.attempt }}
+      revision: ${{ steps.build.outputs.revision }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - id: build
+        uses: ./.github/actions/resolve-package
+        with:
+          build_run_id: ${{ inputs.build_run_id }}
+          workflow: build-linux-cuda.yml
+
+  runtime:
+    needs: resolve
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+          persist-credentials: false
+      - uses: ./.github/actions/validate-package
+        with:
+          platform: linux-x86_64
+          backend: cuda
+          run_id: ${{ needs.resolve.outputs.run_id }}
+          attempt: ${{ needs.resolve.outputs.attempt }}
+          revision: ${{ needs.resolve.outputs.revision }}
+
+  gpu:
+    if: inputs.run_gpu
+    needs: [resolve, runtime]
+    runs-on: [self-hosted, linux, x64, cuda-13-0, gpu]
+    timeout-minutes: 15
+    concurrency:
+      group: portable-cuda-gpu-validation
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+          persist-credentials: false
+      - uses: ./.github/actions/validate-package
+        with:
+          platform: linux-x86_64
+          backend: cuda
+          gpu: "true"
+          run_id: ${{ needs.resolve.outputs.run_id }}
+          attempt: ${{ needs.resolve.outputs.attempt }}
+          revision: ${{ needs.resolve.outputs.revision }}

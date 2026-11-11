@@ -1,0 +1,46 @@
+name: Resolve the selected package build
+description: Check the source workflow and resolve the successful run attempt
+inputs:
+  build_run_id:
+    description: Selected build run ID
+    required: true
+  workflow:
+    description: Expected build workflow filename
+    required: true
+outputs:
+  run_id:
+    description: Selected run ID
+    value: ${{ steps.build.outputs.run_id }}
+  attempt:
+    description: Successful attempt number
+    value: ${{ steps.build.outputs.attempt }}
+  revision:
+    description: Full source revision
+    value: ${{ steps.build.outputs.revision }}
+runs:
+  using: composite
+  steps:
+    - id: build
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        BUILD_WORKFLOW: ${{ inputs.workflow }}
+      run: |
+        if ! [[ "$BUILD_RUN_ID" =~ ^[1-9][0-9]*$ ]]; then
+          echo "Expected a numeric build run ID" >&2
+          exit 1
+        fi
+        run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$BUILD_RUN_ID")"
+        if ! jq -e --arg id "$BUILD_RUN_ID" --arg repo "$GITHUB_REPOSITORY" \
+          --arg path ".github/workflows/$BUILD_WORKFLOW" '
+            (.id | tostring) == $id and .head_repository.full_name == $repo
+            and (.path | split("@")[0]) == $path
+            and .event == "workflow_dispatch" and .status == "completed" and .conclusion == "success"
+            and (.head_sha | test("^[0-9a-f]{40}$")) and .run_attempt >= 1
+          ' <<<"$run" >/dev/null; then
+          echo "Run $BUILD_RUN_ID must be a successful manual run of $BUILD_WORKFLOW in this repository" >&2
+          exit 1
+        fi
+        echo "run_id=$BUILD_RUN_ID" >>"$GITHUB_OUTPUT"
+        jq -er '"attempt=\(.run_attempt)", "revision=\(.head_sha)"' <<<"$run" >>"$GITHUB_OUTPUT"

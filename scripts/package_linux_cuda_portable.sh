@@ -3,24 +3,28 @@ set -euo pipefail
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$root"
 
-gpu_args=()
+verify_args=()
 ctest_args=()
 if [[ ${1:-} == --gpu ]]; then
-  gpu_args=(--cuda)
+  verify_args=(--cuda)
   shift
 else
+  if [[ ${1:-} == --inspect-only ]]; then
+    verify_args=(--inspect-only)
+    shift
+  fi
   export CUDA_VISIBLE_DEVICES=-1
   ctest_args=(-E '^(cuda_|temporal_gpu_|image_plane_pipeline_state$)')
 fi
 if (($#)); then
-  echo "Usage: $0 [--gpu]" >&2
+  echo "Usage: $0 [--gpu | --inspect-only]" >&2
   exit 2
 fi
 
 build=build/package-linux-cuda-portable
 jobs=${BUILD_JOBS:-4}
 toolkit=${CUDAToolkit_ROOT:-/opt/copilot-cuda}
-if ((${#gpu_args[@]})) && [[ -n ${LD_LIBRARY_PATH:-} ]]; then
+if [[ ${verify_args[0]:-} == --cuda ]] && [[ -n ${LD_LIBRARY_PATH:-} ]]; then
   export LD_LIBRARY_PATH="$toolkit/lib:$LD_LIBRARY_PATH"
 else
   export LD_LIBRARY_PATH="$toolkit/lib"
@@ -38,7 +42,7 @@ ctest --test-dir "$build" --output-on-failure "${ctest_args[@]}"
 ln -sfn hermite_optics.so "$build/lib/solarpilot.so"
 export COPILOT_LIB_DIR="$root/$build/lib"
 python3 benchmarks/smoke_test.py
-if ((${#gpu_args[@]})); then
+if [[ ${verify_args[0]:-} == --cuda ]]; then
   python3 -m unittest discover -s tests -v
 else
   # These suites check optical maps and outputs without probing a CUDA driver.
@@ -51,4 +55,4 @@ revision="$(git rev-parse --short=12 HEAD)"
 if [[ -n $(git status --porcelain) ]]; then revision+=-dirty; fi
 archive="$build/packages/hermite-optics-local-$revision-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz"
 python3 scripts/verify_package.py "$archive" --cuda-runtime-dir "$toolkit/lib" \
-  --cuobjdump "$toolkit/bin/cuobjdump" "${gpu_args[@]}"
+  --cuobjdump "$toolkit/bin/cuobjdump" "${verify_args[@]}"

@@ -1,0 +1,51 @@
+name: Validate · Windows · CPU
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Run ID of Build · Windows · CPU
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    outputs:
+      run_id: ${{ steps.build.outputs.run_id }}
+      attempt: ${{ steps.build.outputs.attempt }}
+      revision: ${{ steps.build.outputs.revision }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - id: build
+        uses: ./.github/actions/resolve-package
+        with:
+          build_run_id: ${{ inputs.build_run_id }}
+          workflow: build-windows-cpu.yml
+
+  runtime:
+    needs: resolve
+    runs-on: windows-2022
+    timeout-minutes: 30
+    env:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: "false"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.resolve.outputs.revision }}
+          persist-credentials: false
+      - uses: ./.github/actions/validate-package
+        with:
+          platform: windows-x86_64
+          backend: cpu
+          run_id: ${{ needs.resolve.outputs.run_id }}
+          attempt: ${{ needs.resolve.outputs.attempt }}
+          revision: ${{ needs.resolve.outputs.revision }}

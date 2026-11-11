@@ -1,0 +1,62 @@
+name: Validate one downloaded package
+description: Download the selected immutable artifact and test its binary
+inputs:
+  platform:
+    description: Package OS and architecture
+    required: true
+  backend:
+    description: Package backend
+    default: cpu
+  python_arch:
+    description: Python architecture on the runner
+    default: x64
+  run_id:
+    description: Selected run ID
+    required: true
+  attempt:
+    description: Selected run attempt
+    required: true
+  revision:
+    description: Full build revision
+    required: true
+  gpu:
+    description: Execute the Linux CUDA package on a GPU
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@v5
+      with:
+        github-token: ${{ github.token }}
+        run-id: ${{ inputs.run_id }}
+        name: hermite-optics-${{ inputs.backend }}-${{ inputs.platform }}-${{ inputs.run_id }}-${{ inputs.attempt }}
+        path: build/selected-artifact
+    - if: runner.os != 'Linux' || inputs.gpu == 'true'
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.12"
+        architecture: ${{ inputs.python_arch }}
+    - if: runner.os != 'Linux' || inputs.gpu == 'true'
+      shell: bash
+      run: |
+        python -m pip install --only-binary=:all: -r requirements.txt
+    - name: Verify identity, checksum and extracted package
+      shell: bash
+      env:
+        PACKAGE_PLATFORM: ${{ inputs.platform }}
+        PACKAGE_BACKEND: ${{ inputs.backend }}
+        BUILD_REVISION: ${{ inputs.revision }}
+        BUILD_RUN_ID: ${{ inputs.run_id }}
+        BUILD_ATTEMPT: ${{ inputs.attempt }}
+        RUN_GPU: ${{ inputs.gpu }}
+      run: |
+        directory=build/selected-artifact
+        args=(--revision "$BUILD_REVISION" --run-id "$BUILD_RUN_ID" --run-attempt "$BUILD_ATTEMPT")
+        if [[ "$RUNNER_OS" == Linux ]]; then
+          operation=validate
+          if [[ "$RUN_GPU" == true ]]; then operation=validate-gpu; fi
+          scripts/package_linux_ci.sh "$operation" "$PACKAGE_BACKEND" "$directory" "${args[@]}"
+        else
+          python scripts/native_package.py validate --directory "$directory" \
+            --platform "$PACKAGE_PLATFORM" --backend "$PACKAGE_BACKEND" "${args[@]}"
+        fi
