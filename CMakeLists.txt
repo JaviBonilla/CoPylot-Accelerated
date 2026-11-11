@@ -95,8 +95,14 @@ if(UNIX)
   set(nlopt_config_dir "${CMAKE_BINARY_DIR}/nlopt-config")
   file(MAKE_DIRECTORY "${nlopt_config_dir}")
   if(NOT EXISTS "${nlopt_config_dir}/config.h")
+    set(nlopt_environment "CC=${CMAKE_C_COMPILER}" "CXX=${CMAKE_CXX_COMPILER}")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      include(cmake/NLoptMacOS.cmake)
+      nlopt_macos_environment(nlopt_macos_env "${nlopt_config_dir}")
+      list(APPEND nlopt_environment ${nlopt_macos_env})
+    endif()
     execute_process(COMMAND "${CMAKE_COMMAND}" -E env
-      "CC=${CMAKE_C_COMPILER}" "CXX=${CMAKE_CXX_COMPILER}"
+      ${nlopt_environment}
       "${CMAKE_CURRENT_SOURCE_DIR}/ssc/nlopt/configure"
       WORKING_DIRECTORY "${nlopt_config_dir}"
       RESULT_VARIABLE nlopt_config_status

@@ -253,6 +253,11 @@ NLopt configuration failures, the job log also includes the configure
 output and the last probe diagnostics available from `config.log`. The
 artifact excludes raw Autoconf logs and CMake caches.
 
+On macOS, CMake first links a small C program with the SDK, architecture
+and deployment target it passes to NLopt. If SDK discovery or linking
+fails, the configure log includes the selected Xcode developer directory
+and the relevant tool error.
+
 The validation workflow uses the downloaded bytes. It checks the archive
 checksum, run and attempt, source revision, host architecture, archive
 contents and license inventory. It checks native imports and uses the
