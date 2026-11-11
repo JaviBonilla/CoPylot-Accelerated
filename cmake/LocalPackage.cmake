@@ -31,6 +31,10 @@ endif()
 
 set_target_properties(solarpilot PROPERTIES
   OUTPUT_NAME hermite_optics SUFFIX "${package_suffix}" SKIP_BUILD_RPATH TRUE)
+if(WIN32 AND MSVC AND NOT SOLARPILOT_ENABLE_CUDA)
+  # If the linker emits CodeView metadata, record only the PDB basename.
+  target_link_options(solarpilot PRIVATE "$<$<CONFIG:Release>:/PDBALTPATH:hermite_optics.pdb>")
+endif()
 set(package_library "hermite_optics${package_suffix}")
 set(package_variant cpu)
 if(COPILOT_PORTABLE_LINUX_CPU)

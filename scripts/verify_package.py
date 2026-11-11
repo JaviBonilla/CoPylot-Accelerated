@@ -18,6 +18,8 @@ import tarfile
 from tempfile import TemporaryDirectory
 import zipfile
 
+from verify_windows_paths import verify_windows_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 PORTABLE_CPU = "cpu-glibc2.34"
 PORTABLE_CUDA = "cuda13.0-sm89-glibc2.34"
@@ -100,7 +102,10 @@ def inspect(path, runtime_only=False):
     private = re.compile(rb"/(?:home|tmp|Users|workspace|Volumes|_work)/"
                          rb"|[A-Za-z]:[\\/]+(?:Users|repositories|a|_work)[\\/]", re.I)
     for name, content in files.items():
-        require(not private.search(content), f"Local path in archive member: {name}")
+        if info["os"] == "windows" and name == library:
+            verify_windows_paths(content, name)
+        else:
+            require(not private.search(content), f"Local path in archive member: {name}")
     if not runtime_only:
         verify_sources(files, info)
     return files, info
