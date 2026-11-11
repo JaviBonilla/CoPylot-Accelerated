@@ -6,6 +6,10 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
   message(FATAL_ERROR "Configure a Release build for local packaging")
 endif()
 
+# Reference the excluded SSC project from the root solution for Visual Studio.
+add_custom_target(copilot_package_library)
+add_dependencies(copilot_package_library solarpilot)
+
 set(package_arch x86_64)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
   set(package_os linux)

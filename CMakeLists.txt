@@ -102,8 +102,10 @@ if(UNIX)
       RESULT_VARIABLE nlopt_config_status
       OUTPUT_FILE "${nlopt_config_dir}/configure.log"
       ERROR_FILE "${nlopt_config_dir}/configure-error.log")
-    if(NOT nlopt_config_status EQUAL 0)
-      message(FATAL_ERROR "NLopt configure failed; see ${nlopt_config_dir}/configure*.log")
+    if(NOT nlopt_config_status STREQUAL "0")
+      file(REMOVE "${nlopt_config_dir}/config.h")
+      message(FATAL_ERROR "NLopt configure failed (${nlopt_config_status}); see "
+        "${nlopt_config_dir}/configure-error.log and ${nlopt_config_dir}/config.log")
     endif()
   endif()
   target_include_directories(nlopt PRIVATE "${nlopt_config_dir}")

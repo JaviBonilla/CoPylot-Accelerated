@@ -247,6 +247,12 @@ available device before invoking either GPU check.
 | `macos-15-intel` | `hermite-optics-cpu-macos-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-x86_64-cpu.tar.gz` |
 | `macos-15` | `hermite-optics-cpu-macos-arm64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-arm64-cpu.tar.gz` |
 
+If native configuration, compilation or packaging fails, the build job
+uploads `hermite-optics-diagnostics-<platform>-<run-id>-<attempt>`. For
+NLopt configuration failures, the job log also includes the configure
+output and the last probe diagnostics available from `config.log`. The
+artifact excludes raw Autoconf logs and CMake caches.
+
 The validation workflow uses the downloaded bytes. It checks the archive
 checksum, run and attempt, source revision, host architecture, archive
 contents and license inventory. It checks native imports and uses the
@@ -333,7 +339,7 @@ $build = "build/package-cpu"
 & $cmake -S . -B $build -G "Visual Studio 17 2022" -A x64 `
   -DBUILD_TESTING=OFF -DCOPILOT_LOCAL_PACKAGE=ON `
   -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
-& $cmake --build $build --target solarpilot --config Release --parallel 4
+& $cmake --build $build --target copilot_package_library --config Release --parallel 4
 $env:SOURCE_DATE_EPOCH = git show -s --format=%ct HEAD
 & $cpack --config "$build/CPackConfig.cmake" -C Release
 $archives = @(Get-ChildItem "$build/packages/hermite-optics-local-*.zip")

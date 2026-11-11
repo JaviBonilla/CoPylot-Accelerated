@@ -2,6 +2,7 @@
 """Build or validate one CPack package artifact."""
 
 import argparse
+from collections import deque
 import hashlib
 import json
 import os
@@ -17,6 +18,16 @@ PLATFORMS = ("linux-x86_64", "windows-x86_64", "macos-x86_64", "macos-arm64")
 BUILD = ROOT / "build/native-package"
 BUNDLE = BUILD / "artifact"
 MANIFEST = "artifact.json"
+SENSITIVE_LOG_LINE = re.compile(
+    r"authorization\s*:|(?:password|passwd|token|secret|credentials?)\s*[:=]|"
+    r"(?:https?|ssh)://[^/\s]+@|[?&](?:signature|sig|access_token)=|"
+    r"\b(?:gh[pousr]_|github_pat_)[a-z0-9_]+|-----BEGIN .*PRIVATE KEY-----",
+    re.IGNORECASE,
+)
+NLOPT_DIAGNOSTIC = re.compile(
+    r"\b(?:fatal error|error|warning):|^ld:|Undefined symbols|symbol\(s\) not found",
+    re.IGNORECASE,
+)
 
 
 def git(*args):
@@ -39,6 +50,63 @@ def verify_archive(archive, identity, variant, *, upstream):
     return digest, files, info
 
 
+def diagnostic_line(line):
+    if SENSITIVE_LOG_LINE.search(line):
+        return "[credential-like diagnostic omitted]\n"
+    for path in (ROOT, Path(os.environ.get("RUNNER_TEMP") or BUILD), Path.home()):
+        for spelling in (path.as_posix(), str(path)):
+            line = re.sub(re.escape(spelling), "<runner-path>", line, flags=re.IGNORECASE)
+    return line
+
+
+def report_nlopt_failure(diagnostics):
+    directory = BUILD / "nlopt-config"
+    with (diagnostics / "nlopt.log").open("w", encoding="utf-8") as log:
+        for name in ("configure.log", "configure-error.log", "config.log"):
+            path = directory / name
+            if not path.is_file():
+                continue
+            # config.log also contains raw probe commands and a cache/environment dump.
+            # Keep compiler diagnostics from the last probe and the configure failure.
+            lines = deque(maxlen=40)
+            with path.open(encoding="utf-8", errors="replace") as source:
+                for line in source:
+                    if name == "config.log":
+                        if line.startswith("## Cache variables."):
+                            break
+                        if re.match(r"configure:\d+: checking ", line):
+                            lines.clear()
+                        elif line.startswith("configure:"):
+                            if not re.match(r"configure:\d+: (?:result:|error:|\$\? = )", line):
+                                continue
+                        elif not NLOPT_DIAGNOSTIC.search(line):
+                            continue
+                    lines.append(diagnostic_line(line))
+            if lines:
+                summary = f"NLopt {name} (tail)\n" + "".join(lines)
+                print(summary, end="\n", flush=True)
+                log.write(summary + "\n")
+
+
+def run_native_phase(phase, command, *, env=None):
+    diagnostics = BUILD / "diagnostics"
+    diagnostics.mkdir(parents=True, exist_ok=True)
+    log_path = diagnostics / f"{phase}.log"
+    with log_path.open("w", encoding="utf-8") as log:
+        with subprocess.Popen(command, cwd=ROOT, env=env, stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT, encoding="utf-8", errors="replace") as process:
+            for line in process.stdout:
+                line = diagnostic_line(line)
+                print(line, end="", flush=True)
+                log.write(line)
+            status = process.wait()
+        log.write(f"Exit status: {status}\n")
+    if status:
+        if phase == "configure" and "NLopt configure failed" in log_path.read_text(encoding="utf-8"):
+            report_nlopt_failure(diagnostics)
+        raise subprocess.CalledProcessError(status, command)
+
+
 def build_native(identity):
     subprocess.run([sys.executable, "scripts/bootstrap.py"], cwd=ROOT, check=True)
     os_name, architecture = identity["platform"].split("-", 1)
@@ -47,16 +115,16 @@ def build_native(identity):
     else:
         generator = ["-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release",
                      f"-DCMAKE_OSX_ARCHITECTURES={architecture}", "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0"]
-    subprocess.run([
+    run_native_phase("configure", [
         "cmake", "-S", ".", "-B", str(BUILD), *generator,
         "-DBUILD_TESTING=OFF", "-DCOPILOT_LOCAL_PACKAGE=ON", "-DSOLARPILOT_ENABLE_CUDA=OFF",
         "-DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON",
-    ], cwd=ROOT, check=True)
-    subprocess.run(["cmake", "--build", str(BUILD), "--target", "solarpilot", "--config", "Release",
-                    "--parallel", "4"], cwd=ROOT, check=True)
+    ])
+    run_native_phase("build", ["cmake", "--build", str(BUILD), "--target", "copilot_package_library",
+                               "--config", "Release", "--parallel", "4"])
     environment = dict(os.environ, SOURCE_DATE_EPOCH=git("show", "-s", "--format=%ct", "HEAD"))
-    subprocess.run(["cpack", "--config", str(BUILD / "CPackConfig.cmake"), "-C", "Release"],
-                   cwd=ROOT, check=True, env=environment)
+    run_native_phase("cpack", ["cpack", "--config", str(BUILD / "CPackConfig.cmake"), "-C", "Release"],
+                     env=environment)
     return BUILD / "packages" / identity["archive"]
 
 

@@ -40,3 +40,10 @@ runs:
         path: build/native-package/artifact/
         if-no-files-found: error
         compression-level: 0
+    - name: Upload native build diagnostics
+      if: failure() && runner.os != 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: hermite-optics-diagnostics-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: build/native-package/diagnostics/*.log
+        if-no-files-found: ignore
