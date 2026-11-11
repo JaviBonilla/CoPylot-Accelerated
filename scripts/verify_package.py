@@ -32,6 +32,11 @@ LICENSES = {
     "licenses/SolTrace-LICENSE.md", "licenses/NLopt-LICENSE.htm",
     "licenses/lp_solve-LICENSE.htm", "licenses/RapidXML-license.txt",
 }
+PROJECT_LICENSES = {
+    "LICENSE": "Project code",
+    "licenses/Project-documentation-CC-BY-4.0.txt": "Project documentation",
+}
+PACKAGE_LICENSES = LICENSES | set(PROJECT_LICENSES)
 SOURCES = {
     "README.md": "packaging/README.md",
     "licenses/Project-documentation-CC-BY-4.0.txt": "docs/LICENSE",
@@ -95,6 +100,9 @@ def inspect(path, runtime_only=False):
     suffix = ".dll" if info["os"] == "windows" else ".so"
     library = f"lib/hermite_optics{suffix}"
     require(info["library"] == library, "Unexpected library path")
+    missing_licenses = PACKAGE_LICENSES - files.keys()
+    if missing_licenses:
+        verify_licenses(files, names=missing_licenses)
     require(set(files) == set(SOURCES) | {"BUILD.json", "python/copylot.py", library},
             "Archive differs from the package allowlist")
     if info["os"] != "linux":
@@ -129,30 +137,91 @@ def verify_binary_header(data, os_name, architecture):
                 f"Expected a Mach-O dylib for {architecture}")
 
 
+def verify_license(component, name, packaged, reference_label, reference, expected_sha):
+    packaged_sha = hashlib.sha256(packaged).hexdigest() if packaged is not None else None
+    if packaged is not None and packaged == reference and (expected_sha is None or packaged_sha == expected_sha):
+        return
+
+    normalized_equal = None
+    if packaged is not None and reference is not None:
+        normalized_equal = packaged.replace(b"\r\n", b"\n") == reference.replace(b"\r\n", b"\n")
+    if packaged is None:
+        category = "missing archive member"
+    elif reference is None:
+        category = "missing or unavailable reference"
+    elif packaged == reference:
+        category = "inventory checksum mismatch"
+    elif normalized_equal:
+        category = "CRLF/LF difference only"
+    else:
+        category = "license content differs"
+
+    packaged_info = f"{len(packaged)} bytes, SHA-256 {packaged_sha}" if packaged is not None else "missing"
+    reference_info = (f"{len(reference)} bytes, SHA-256 {hashlib.sha256(reference).hexdigest()}"
+                      if reference is not None else "unavailable")
+    normalized = "unavailable" if normalized_equal is None else ("yes" if normalized_equal else "no")
+    inventory = f"\n  inventory SHA-256 {expected_sha}" if expected_sha is not None else ""
+    raise ValueError(
+        f"License verification failed for {component} ({category})\n"
+        f"  archive member {name}: {packaged_info}\n"
+        f"  {reference_label}: {reference_info}\n"
+        f"  CRLF/LF-normalized equality: {normalized}{inventory}"
+    )
+
+
+def verify_licenses(files, *, lock=None, names=PACKAGE_LICENSES):
+    inventory = json.loads((ROOT / "docs/licensing-inventory.json").read_text(encoding="utf-8"))
+    components = {item["visible_license_copy"]: item for item in inventory["components"]}
+    require(components.keys() == LICENSES, "Third-party license inventory differs from the package allowlist")
+    for name in sorted(names):
+        packaged = files.get(name)
+        if name in PROJECT_LICENSES:
+            component, expected_sha = PROJECT_LICENSES[name], None
+        else:
+            item = components[name]
+            component, expected_sha = item["component"], item["sha256"]
+            if lock is not None:
+                dependency = item["pin_in_repos_lock"]
+                source = item["upstream_license_path"]
+                relative = PurePosixPath(source).relative_to(dependency).as_posix()
+                pin = lock[dependency]["patched_sha"]
+                # Read the committed bytes without Git's working-tree filters.
+                try:
+                    result = subprocess.run(
+                        ["git", "cat-file", "blob", f"{pin}:{relative}"],
+                        cwd=ROOT / dependency, capture_output=True, check=False,
+                    )
+                    pinned = result.stdout if result.returncode == 0 else None
+                except FileNotFoundError:
+                    pinned = None
+                verify_license(component, name, packaged, f"pinned source {source}", pinned, expected_sha)
+        source = SOURCES[name]
+        try:
+            checkout_copy = (ROOT / source).read_bytes()
+        except FileNotFoundError:
+            checkout_copy = None
+        verify_license(component, name, packaged, f"checkout {source}", checkout_copy, expected_sha)
+
+
 def verify_sources(files, info, *, upstream=True):
     checkout = str(ROOT).encode()
     checkout_windows = str(ROOT).replace("/", "\\").encode()
     for name, content in files.items():
         require(checkout not in content and checkout_windows not in content,
                 f"Checkout path in archive member: {name}")
+    lock = json.loads((ROOT / "repos.lock.json").read_text())
+    verify_licenses(files, lock=lock if upstream else None)
     for target, source in SOURCES.items():
+        if target in PACKAGE_LICENSES:
+            continue
         if not upstream and source == "SolarPILOT/deploy/api/pysoltrace.py":
             continue
         require(files[target] == (ROOT / source).read_bytes(), f"Altered package file: {target}")
-    inventory = json.loads((ROOT / "docs/licensing-inventory.json").read_text(encoding="utf-8"))
-    for component in inventory["components"]:
-        license_copy = files[component["visible_license_copy"]]
-        require(hashlib.sha256(license_copy).hexdigest() == component["sha256"],
-                f'License checksum differs from inventory: {component["component"]}')
-        if upstream:
-            require(license_copy == (ROOT / component["upstream_license_path"]).read_bytes(),
-                    f'License differs from pinned source: {component["component"]}')
     if upstream:
         wrapper = (ROOT / "SolarPILOT/deploy/api/copylot.py").read_text(encoding="utf-8")
         wrapper = re.sub(r"\n[ \t]*# self\.pdll = CDLL\([^\n]*", "", wrapper)
         require(files["python/copylot.py"].decode().replace("\r\n", "\n") == wrapper,
                 "Upstream wrapper differs beyond removed developer-path comments")
-    lock = json.loads((ROOT / "repos.lock.json").read_text())
     require(info["dependencies"] == {name: pin["patched_sha"] for name, pin in lock.items()},
             "Dependency metadata differs from the pins")
 
