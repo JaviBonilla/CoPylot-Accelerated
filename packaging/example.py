@@ -5,6 +5,7 @@ import argparse
 import csv
 from datetime import datetime, timedelta
 import hashlib
+from itertools import combinations
 import json
 import os
 from pathlib import Path
@@ -14,8 +15,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "python"))
-from hermite_optics import CoPylot, build_info
+CPU_MODES = ("original", "refactored", "multicore")
 
 
 def synthetic_weather(path):
@@ -36,7 +36,9 @@ def synthetic_weather(path):
                              80 if daylight else 0, 25, 10, 40, 1013, 2, 0])
 
 
-def simulate(weather, mode):
+def simulate(weather, mode, *, check_flux=True):
+    from hermite_optics import CoPylot
+
     selection = "legacy" if mode == "original" else ""
     with patch.dict(os.environ, {
         "SOLARPILOT_INTERCEPT_PATH": selection,
@@ -80,17 +82,123 @@ def simulate(weather, mode):
                 raise RuntimeError("Unexpected heliostat count")
         finally:
             api.data_free(context)
-    if flux.shape != (25, 25) or not np.isfinite(flux).all() or flux.max() <= 0:
+    if check_flux and not valid_flux(flux):
         raise RuntimeError("Invalid receiver flux")
     return flux, summary, details
 
 
+def valid_flux(flux):
+    return flux.shape == (25, 25) and np.isfinite(flux).all() and flux.max() > 0
+
+
+def array_comparison(actual, reference, *, sample_limit=3):
+    """Compare logical indices as little-endian binary64 in row-major order."""
+    actual = np.asarray(actual, dtype="<f8", order="C")
+    reference = np.asarray(reference, dtype="<f8", order="C")
+    if actual.shape != reference.shape:
+        return {"bitwise": False, "actual_shape": list(actual.shape), "reference_shape": list(reference.shape)}
+
+    left, right = actual.view("<u8"), reference.view("<u8")
+    different = left != right
+    count = int(np.count_nonzero(different))
+    finite = np.isfinite(actual) & np.isfinite(reference)
+    has_nonfinite = not finite.all()
+    result = {
+        "bitwise": count == 0 and not has_nonfinite,
+        "elements": actual.size,
+        "differing_elements": count,
+        "differing_percent": 100 * count / actual.size if actual.size else 0.0,
+        "signed_zero_only": count > 0 and bool(np.all(((actual == 0) & (reference == 0)) | ~different)),
+        "has_nonfinite": has_nonfinite,
+        "max_abs_difference": None,
+        "max_relative_difference": None,
+        "max_ulp_difference": None,
+    }
+    if has_nonfinite:
+        result["nonfinite"] = {
+            label: {kind: int(np.count_nonzero(predicate(values)))
+                    for kind, predicate in (("nan", np.isnan), ("pos_inf", np.isposinf), ("neg_inf", np.isneginf))}
+            for label, values in (("actual", actual), ("reference", reference))
+        }
+    if finite.any():
+        a, b = actual[finite], reference[finite]
+        with np.errstate(over="ignore", divide="ignore", invalid="ignore"):
+            absolute = np.abs(a - b)
+            relative = np.where(absolute == 0, 0.0, absolute / np.abs(b))
+            # Avoid an overflowing subtraction before division when both values are large.
+            overflow = np.isinf(absolute)
+            relative[overflow] = np.abs(a[overflow] / b[overflow] - 1.0)
+        for key, maximum in (("max_abs_difference", absolute.max()),
+                             ("max_relative_difference", relative.max())):
+            result[key] = float(maximum) if np.isfinite(maximum) else "inf"
+        # Map adjacent binary64 values to adjacent integers, folding +0 and -0
+        # together for ULP distance. The bitwise check still distinguishes zeros.
+        sign = np.uint64(1 << 63)
+        ranks = []
+        for bits in (left[finite], right[finite]):
+            magnitude = bits & (sign - np.uint64(1))
+            ranks.append(np.where(bits & sign, sign - magnitude, sign + magnitude))
+        result["max_ulp_difference"] = int((np.maximum(*ranks) - np.minimum(*ranks)).max())
+    if not result["bitwise"]:
+        result["samples"] = [
+            {"index": [int(i) for i in np.unravel_index(index, actual.shape)],
+             "actual": repr(float(actual.flat[index])), "reference": repr(float(reference.flat[index])),
+             "actual_bits": f"{left.flat[index]:016x}", "reference_bits": f"{right.flat[index]:016x}"}
+            for index in np.flatnonzero(different | ~finite)[:sample_limit]
+        ]
+    return result
+
+
+def output_differences(actual, reference):
+    differences = {}
+    if actual.keys() != reference.keys():
+        differences["schema"] = {"only_actual": sorted(actual.keys() - reference.keys()),
+                                 "only_reference": sorted(reference.keys() - actual.keys())}
+    for key in sorted(actual.keys() & reference.keys()):
+        if isinstance(actual[key], dict) and isinstance(reference[key], dict):
+            result = output_differences(actual[key], reference[key])
+        elif isinstance(actual[key], dict) or isinstance(reference[key], dict):
+            result = {"schema": "nested output differs from numeric output"}
+        else:
+            result = array_comparison(actual[key], reference[key], sample_limit=1)
+            if result["bitwise"]:
+                continue
+        if result:
+            differences[key] = result
+    return differences
+
+
+def compare_cpu_modes(weather):
+    states = {mode: simulate(weather, mode, check_flux=False) for mode in CPU_MODES}
+    invalid = [mode for mode, (flux, _, _) in states.items() if not valid_flux(flux)]
+    passed = not invalid
+    print(json.dumps({"cpu_flux_sha256": {
+        mode: hashlib.sha256(flux.astype("<f8", copy=False).tobytes()).hexdigest()
+        for mode, (flux, _, _) in states.items()
+    }, "invalid_flux_modes": invalid}), flush=True)
+    for actual_mode, reference_mode in combinations(CPU_MODES, 2):
+        actual, summary, details = states[actual_mode]
+        reference, reference_summary, reference_details = states[reference_mode]
+        flux = array_comparison(actual, reference)
+        summary_differences = output_differences(summary, reference_summary)
+        detail_differences = output_differences(details, reference_details)
+        bitwise = flux["bitwise"] and not summary_differences and not detail_differences
+        passed = passed and bitwise
+        print(json.dumps({"actual_mode": actual_mode, "reference_mode": reference_mode,
+                          "cpu_outputs_bitwise": bitwise, "flux_kw_m2": flux,
+                          "summary_differences": summary_differences, "detail_differences": detail_differences},
+                         allow_nan=False), flush=True)
+    if not passed:
+        raise RuntimeError("CPU modes failed bitwise or receiver flux validation")
+
+
 def compare_bits(actual, reference, label):
-    actual = np.asarray(actual, dtype="<f8")
-    reference = np.asarray(reference, dtype="<f8")
+    actual = np.asarray(actual, dtype="<f8", order="C")
+    reference = np.asarray(reference, dtype="<f8", order="C")
     if (actual.shape != reference.shape or not np.isfinite(actual).all()
             or actual.tobytes() != reference.tobytes()):
-        raise RuntimeError(f"CPU {label} differs bitwise from the refactored run")
+        comparison = array_comparison(actual, reference)
+        raise RuntimeError(f"CPU {label} differs bitwise from the refactored run: {json.dumps(comparison)}")
 
 
 def compare_outputs(actual, reference, label):
@@ -104,11 +212,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("original", "refactored", "multicore", "cuda"),
                         default="refactored")
-    parser.add_argument("--compare", action="store_true",
-                        help="Compare outputs against a fresh refactored CPU run")
+    comparison = parser.add_mutually_exclusive_group()
+    comparison.add_argument("--compare", action="store_true",
+                            help="Compare outputs against a fresh refactored CPU run")
+    comparison.add_argument("--compare-cpu-modes", action="store_true",
+                            help="Compare all three CPU modes bitwise and report every pair")
+    parser.add_argument("--package-directory", type=Path, default=Path(__file__).resolve().parent,
+                        help="Use the Python wrapper and library from this extracted package")
     args = parser.parse_args()
+    sys.path.insert(0, str(args.package_directory.resolve() / "python"))
+    from hermite_optics import build_info
+
     info = build_info()
-    if args.mode == "original" and not info["diagnostics"]:
+    if (args.mode == "original" or args.compare_cpu_modes) and not info["diagnostics"]:
         parser.error("Original mode requires a diagnostics-enabled package")
     if args.mode == "cuda" and not info["cuda_architecture"]:
         parser.error("CUDA mode requires a CUDA-enabled package")
@@ -116,6 +232,9 @@ def main():
     with TemporaryDirectory() as temp:
         weather = Path(temp) / "synthetic.csv"
         synthetic_weather(weather)
+        if args.compare_cpu_modes:
+            compare_cpu_modes(weather)
+            return
         flux, summary, details = simulate(weather, args.mode)
         result = {"mode": args.mode, "flux_shape": list(flux.shape),
                   "peak_incident_flux_kw_m2": float(flux.max()),

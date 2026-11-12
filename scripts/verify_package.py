@@ -385,9 +385,14 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None, 
             modes.append("original")
         if cuda:
             modes.append("cuda")
-        for mode in modes:
-            subprocess.run([sys.executable, str(root / "example.py"), "--mode", mode, "--compare"],
-                           cwd=temp, env=environment, check=True, timeout=90)
+        if info["os"] == "macos" and info["diagnostics"]:
+            # Use the current diagnostic example with the selected Build's immutable library and wrapper.
+            subprocess.run([sys.executable, str(ROOT / "packaging/example.py"), "--package-directory", str(root),
+                            "--compare-cpu-modes"], cwd=temp, env=environment, check=True, timeout=90)
+        else:
+            for mode in modes:
+                subprocess.run([sys.executable, str(root / "example.py"), "--mode", mode, "--compare"],
+                               cwd=temp, env=environment, check=True, timeout=90)
     return {"runtime": dependencies, "smoke_modes": modes}
 
 

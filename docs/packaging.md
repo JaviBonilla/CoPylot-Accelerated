@@ -276,6 +276,21 @@ Multicore modes. The receiver map, receiver summary and per-heliostat details
 must match bitwise. Validation reports missing DLLs and dyld or loader errors.
 The jobs install Python requirements from the matching checkout.
 
+macOS validation reports all three CPU mode pairs. Each comparison reports
+the count and percentage of changed flux cells, the maximum absolute and
+relative differences and the maximum finite ULP distance. Relative differences
+use the second mode as the reference. Sample indices are zero-based receiver
+map indices. Signed zeros and non-finite values are reported and still fail
+the bitwise gate. The log also reports differences in the receiver summary and
+heliostat details.
+
+The macOS workflow can run these diagnostics against existing Build artifacts.
+To run the same checks against an extracted CPU package on a compatible host:
+
+```sh
+python packaging/example.py --package-directory ./extracted-package --compare-cpu-modes
+```
+
 To validate a downloaded artifact manually on a matching host, provide a
 checkout of the Build's full source revision:
 
