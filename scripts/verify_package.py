@@ -70,7 +70,7 @@ def archive_files(path):
         raise ValueError("Expected a CPack .zip or .tar.gz archive")
 
 
-def inspect(path, runtime_only=False):
+def inspect(path, runtime_only=False, *, source_root=None):
     prefix = path.name.removesuffix(".tar.gz").removesuffix(".zip")
     files = {}
     for name, content in archive_files(path):
@@ -102,9 +102,9 @@ def inspect(path, runtime_only=False):
     require(info["library"] == library, "Unexpected library path")
     missing_licenses = PACKAGE_LICENSES - files.keys()
     if missing_licenses:
-        verify_licenses(files, names=missing_licenses)
+        verify_licenses(files, names=missing_licenses, source_root=source_root)
     require(set(files) == set(SOURCES) | {"BUILD.json", "python/copylot.py", library},
-            "Archive differs from the package allowlist")
+            "Archive differs from the package allowlist for this validator (unsupported package layout)")
     if info["os"] != "linux":
         verify_binary_header(files[library], info["os"], architecture)
     private = re.compile(rb"/(?:home|tmp|Users|workspace|Volumes|_work)/"
@@ -115,7 +115,7 @@ def inspect(path, runtime_only=False):
         else:
             require(not private.search(content), f"Local path in archive member: {name}")
     if not runtime_only:
-        verify_sources(files, info)
+        verify_sources(files, info, source_root=source_root)
     return files, info
 
 
@@ -169,8 +169,9 @@ def verify_license(component, name, packaged, reference_label, reference, expect
     )
 
 
-def verify_licenses(files, *, lock=None, names=PACKAGE_LICENSES):
-    inventory = json.loads((ROOT / "docs/licensing-inventory.json").read_text(encoding="utf-8"))
+def verify_licenses(files, *, lock=None, names=PACKAGE_LICENSES, source_root=None):
+    source_root = source_root or ROOT
+    inventory = json.loads((source_root / "docs/licensing-inventory.json").read_text(encoding="utf-8"))
     components = {item["visible_license_copy"]: item for item in inventory["components"]}
     require(components.keys() == LICENSES, "Third-party license inventory differs from the package allowlist")
     for name in sorted(names):
@@ -189,7 +190,7 @@ def verify_licenses(files, *, lock=None, names=PACKAGE_LICENSES):
                 try:
                     result = subprocess.run(
                         ["git", "cat-file", "blob", f"{pin}:{relative}"],
-                        cwd=ROOT / dependency, capture_output=True, check=False,
+                        cwd=source_root / dependency, capture_output=True, check=False,
                     )
                     pinned = result.stdout if result.returncode == 0 else None
                 except FileNotFoundError:
@@ -197,28 +198,29 @@ def verify_licenses(files, *, lock=None, names=PACKAGE_LICENSES):
                 verify_license(component, name, packaged, f"pinned source {source}", pinned, expected_sha)
         source = SOURCES[name]
         try:
-            checkout_copy = (ROOT / source).read_bytes()
+            checkout_copy = (source_root / source).read_bytes()
         except FileNotFoundError:
             checkout_copy = None
         verify_license(component, name, packaged, f"checkout {source}", checkout_copy, expected_sha)
 
 
-def verify_sources(files, info, *, upstream=True):
-    checkout = str(ROOT).encode()
-    checkout_windows = str(ROOT).replace("/", "\\").encode()
+def verify_sources(files, info, *, upstream=True, source_root=None):
+    source_root = source_root or ROOT
+    checkout_paths = {path.as_posix().encode() for path in (source_root, ROOT)}
+    checkout_paths |= {path.replace(b"/", b"\\") for path in checkout_paths}
     for name, content in files.items():
-        require(checkout not in content and checkout_windows not in content,
+        require(all(path not in content for path in checkout_paths),
                 f"Checkout path in archive member: {name}")
-    lock = json.loads((ROOT / "repos.lock.json").read_text())
-    verify_licenses(files, lock=lock if upstream else None)
+    lock = json.loads((source_root / "repos.lock.json").read_text())
+    verify_licenses(files, lock=lock if upstream else None, source_root=source_root)
     for target, source in SOURCES.items():
         if target in PACKAGE_LICENSES:
             continue
         if not upstream and source == "SolarPILOT/deploy/api/pysoltrace.py":
             continue
-        require(files[target] == (ROOT / source).read_bytes(), f"Altered package file: {target}")
+        require(files[target] == (source_root / source).read_bytes(), f"Altered package file: {target}")
     if upstream:
-        wrapper = (ROOT / "SolarPILOT/deploy/api/copylot.py").read_text(encoding="utf-8")
+        wrapper = (source_root / "SolarPILOT/deploy/api/copylot.py").read_text(encoding="utf-8")
         wrapper = re.sub(r"\n[ \t]*# self\.pdll = CDLL\([^\n]*", "", wrapper)
         require(files["python/copylot.py"].decode().replace("\r\n", "\n") == wrapper,
                 "Upstream wrapper differs beyond removed developer-path comments")

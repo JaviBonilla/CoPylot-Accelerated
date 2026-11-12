@@ -30,23 +30,28 @@ NLOPT_DIAGNOSTIC = re.compile(
 )
 
 
-def git(*args):
-    return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
+def git(*args, directory=None):
+    return subprocess.check_output(["git", *args], cwd=directory or ROOT, text=True).strip()
 
 
-def verify_archive(archive, identity, variant, *, upstream):
+def verify_archive(archive, identity, variant, *, upstream, source_root=None):
     checksum = archive.with_name(f"{archive.name}.sha256").read_text(encoding="ascii").split()
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     require(checksum == [digest, archive.name], f"SHA-256 sidecar does not match {archive.name}")
-    files, info = inspect(archive, runtime_only=True)
-    os_name, architecture = identity["platform"].split("-", 1)
-    require(info["source_revision"] == identity["source_revision"] and not info["source_dirty_at_configure"],
-            "Archive source revision does not match the selected clean build")
-    cuda_metadata = ("13.0.88", "89") if variant == PORTABLE_CUDA else ("", "")
-    require((info["os"], info["architecture"], info["variant"]) == (os_name, architecture, variant)
-            and info["diagnostics"] and (info["cuda_toolkit"], info["cuda_architecture"]) == cuda_metadata,
-            "Archive platform, backend or diagnostics do not match the selected package")
-    verify_sources(files, info, upstream=upstream)
+    try:
+        files, info = inspect(archive, runtime_only=True, source_root=source_root)
+        os_name, architecture = identity["platform"].split("-", 1)
+        require(info["source_revision"] == identity["source_revision"] and not info["source_dirty_at_configure"],
+                "Archive source revision does not match the selected clean build")
+        cuda_metadata = ("13.0.88", "89") if variant == PORTABLE_CUDA else ("", "")
+        require((info["os"], info["architecture"], info["variant"]) == (os_name, architecture, variant)
+                and info["diagnostics"] and (info["cuda_toolkit"], info["cuda_architecture"]) == cuda_metadata,
+                "Archive platform, backend or diagnostics do not match the selected package")
+        verify_sources(files, info, upstream=upstream, source_root=source_root)
+    except KeyError as error:
+        raise ValueError(f"Unsupported package layout for this validator (missing {error})") from None
+    except FileNotFoundError as error:
+        raise ValueError("Build source checkout lacks files required by this package validator") from error
     return digest, files, info
 
 
@@ -146,15 +151,20 @@ def build(identity, variant):
     print(json.dumps({**identity, "sha256": digest, "members": sorted(files)}, indent=2))
 
 
-def validate(directory, identity, variant, *, cuda=False, runtime_dir=None):
+def validate(directory, identity, variant, *, source_root, cuda=False, runtime_dir=None):
+    tooling_revision = git("rev-parse", "HEAD")
+    print(f"Validation tooling revision: {tooling_revision}", flush=True)
     archive = directory / identity["archive"]
     require({p.name for p in directory.iterdir()} == {archive.name, f"{archive.name}.sha256", MANIFEST},
-            "Unexpected files or archive name in the selected artifact")
+            "Unsupported package layout for this validator (unexpected files or archive name in the selected artifact)")
     actual_identity = json.loads((directory / MANIFEST).read_text(encoding="utf-8"))
+    require(isinstance(actual_identity, dict) and actual_identity.keys() == identity.keys(),
+            "Unsupported artifact manifest layout for this validator")
     require(actual_identity == identity, "Artifact identity differs from the selected build run and attempt")
-    digest, files, info = verify_archive(archive, identity, variant, upstream=False)
+    digest, files, info = verify_archive(archive, identity, variant, upstream=False, source_root=source_root)
     report = check_runtime(files, info, cuda=cuda, runtime_dir=runtime_dir)
-    print(json.dumps({**identity, "sha256": digest, "members": sorted(files), **report}, indent=2))
+    print(json.dumps({**identity, "validation_revision": tooling_revision, "sha256": digest,
+                      "members": sorted(files), **report}, indent=2))
 
 
 def main():
@@ -168,9 +178,15 @@ def main():
     parser.add_argument("--run-id", type=int, required=True)
     parser.add_argument("--run-attempt", type=int, required=True)
     parser.add_argument("--directory", type=Path, help="Downloaded artifact directory for validation")
+    parser.add_argument("--source-directory", type=Path,
+                        help="Build source checkout for validation (defaults to the tooling checkout)")
     args = parser.parse_args()
-    require(re.fullmatch(r"[0-9a-f]{40}", args.revision) and git("rev-parse", "HEAD") == args.revision,
-            "Checkout does not match the full selected source revision")
+    require(args.source_directory is None or args.operation == "validate",
+            "--source-directory is only for package validation")
+    source_root = (args.source_directory or ROOT).resolve()
+    require(re.fullmatch(r"[0-9a-f]{40}", args.revision)
+            and git("rev-parse", "HEAD", directory=source_root) == args.revision,
+            "Build source checkout does not match the full selected Build revision")
     require(args.run_id > 0 and args.run_attempt > 0, "Build run identifiers must be positive")
     require(args.backend != "cuda" or args.platform == "linux-x86_64", "CUDA packages require Linux x86-64")
     if args.platform == "linux-x86_64":
@@ -191,7 +207,8 @@ def main():
         build(identity, variant)
     else:
         require(args.directory is not None, "Validation requires the downloaded --directory")
-        validate(args.directory, identity, variant, cuda=args.cuda, runtime_dir=args.cuda_runtime_dir)
+        validate(args.directory, identity, variant, source_root=source_root,
+                 cuda=args.cuda, runtime_dir=args.cuda_runtime_dir)
 
 
 if __name__ == "__main__":

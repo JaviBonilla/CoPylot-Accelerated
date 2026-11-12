@@ -31,22 +31,32 @@ clearance is pending.
 | macOS CPU | [Build · macOS · CPU](../.github/workflows/build-macos-cpu.yml) | [Validate · macOS · CPU](../.github/workflows/validate-macos-cpu.yml) |
 
 Dispatch a Build workflow and wait for it to succeed. Each job uploads
-the CPack archive, its SHA-256 sidecar and `artifact.json`. Then dispatch
-the matching Validate workflow with the numeric `build_run_id` from the build
-run URL. Validation checks the build workflow and repository, checks out
-the full source revision and downloads the artifact from its
-latest attempt after it succeeds. It verifies the manifest, archive checksum, source
-revision, architecture and backend before testing the extracted library.
+the CPack archive, its SHA-256 sidecar and `artifact.json`. Then dispatch the
+matching Validate workflow. Leave `build_run_id` blank to use the latest
+successful Build on `main` with all required artifacts still available. The
+resolver orders candidates by the last job completion in each attempt. To
+validate a particular Build on `main`, enter its numeric run ID.
+The resolver checks the workflow, repository, revision and attempt and logs
+the Build URL and artifact IDs. The validator downloads those artifacts by ID
+and verifies the manifest, archive checksum, architecture, backend and licenses.
 For a partial macOS rerun, rerun all jobs or dispatch a new Build so both
 architecture artifacts come from the same attempt.
+
+Validation runs scripts from the revision of the dispatched Validate workflow
+and checks archive contents against a separate checkout of the Build revision.
+Both revisions appear in the validation log. Existing packages with the
+supported layout can be validated without recompilation.
 
 Artifact names use
 `hermite-optics-<backend>-<platform>-<run-id>-<attempt>`.
 For Linux, `platform` is `linux-x86_64` for both backends.
 Both Linux Build workflows use the pinned AlmaLinux 9 builder and retain
 the glibc 2.34 ABI. Each Validate workflow checks the same archive in
-Ubuntu 22.04, Debian 12, Ubuntu 24.04 and AlmaLinux 9. The normal CUDA
-validation uses an external CUDA runtime to check loading and the CPU modes.
+Ubuntu 22.04, Debian 12, Ubuntu 24.04 and AlmaLinux 9. Docker prepares the
+validation images using the host network and the Build revision's pinned Python
+requirements. The tests then run with Docker networking disabled and the
+archive mounted read-only. The normal CUDA validation uses an external CUDA
+runtime to check loading and the CPU modes.
 
 Enable `run_gpu` in **Validate · Linux · CUDA** to also run the packaged
 CUDA example on a self-hosted Linux x64 runner labelled `cuda-13-0` and
@@ -266,12 +276,13 @@ Multicore modes. The receiver map, receiver summary and per-heliostat details
 must match bitwise. Validation reports missing DLLs and dyld or loader errors.
 The jobs install Python requirements from the matching checkout.
 
-To validate a downloaded artifact manually on a matching host, check out
-the build's full source revision and run:
+To validate a downloaded artifact manually on a matching host, provide a
+checkout of the Build's full source revision:
 
 ```sh
-python -m pip install --only-binary=:all: -r requirements.txt
+python -m pip install --only-binary=:all: -r ./build-source/requirements.txt
 python scripts/native_package.py validate --directory ./downloaded-artifact \
+  --source-directory ./build-source \
   --platform PLATFORM --revision FULL_SHA --run-id BUILD_RUN_ID --run-attempt ATTEMPT
 ```
 

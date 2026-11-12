@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       build_run_id:
-        description: Run ID of Build · Linux · CPU
-        required: true
+        description: Optional Build Run ID (blank selects the latest successful Build)
+        required: false
+        default: ""
         type: string
 
 permissions:
@@ -19,9 +20,11 @@ jobs:
       run_id: ${{ steps.build.outputs.run_id }}
       attempt: ${{ steps.build.outputs.attempt }}
       revision: ${{ steps.build.outputs.revision }}
+      artifact_ids: ${{ steps.build.outputs.artifact_ids }}
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.workflow_sha }}
           persist-credentials: false
       - id: build
         uses: ./.github/actions/resolve-package
@@ -36,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ needs.resolve.outputs.revision }}
+          ref: ${{ github.workflow_sha }}
           persist-credentials: false
       - uses: ./.github/actions/validate-package
         with:
@@ -45,3 +48,4 @@ jobs:
           run_id: ${{ needs.resolve.outputs.run_id }}
           attempt: ${{ needs.resolve.outputs.attempt }}
           revision: ${{ needs.resolve.outputs.revision }}
+          artifact_id: ${{ fromJSON(needs.resolve.outputs.artifact_ids)['linux-x86_64'] }}

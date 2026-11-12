@@ -32,16 +32,17 @@ case "$operation" in
   validate|validate-gpu)
     artifact=$(cd "$1" && pwd)
     shift
-    runtime_args=()
+    source_dir=${PACKAGE_SOURCE_DIRECTORY:-.}
+    runtime_args=(--source-directory "$source_dir")
     mounts=()
+    temp=$(mktemp -d)
+    trap 'rm -rf -- "$temp"' EXIT
     if [[ $backend == cuda ]]; then
-      temp=$(mktemp -d)
-      trap 'rm -rf -- "$temp"' EXIT
       packaging/install_cuda_linux.sh "$temp/runtime" --runtime-only
       if [[ $operation == validate-gpu ]]; then
-        runtime_args=(--cuda --cuda-runtime-dir "$temp/runtime/lib")
+        runtime_args+=(--cuda --cuda-runtime-dir "$temp/runtime/lib")
       else
-        runtime_args=(--cuda-runtime-dir /cuda-runtime/lib)
+        runtime_args+=(--cuda-runtime-dir /cuda-runtime/lib)
         mounts=(--volume "$temp/runtime:/cuda-runtime:ro")
       fi
     fi
@@ -76,27 +77,22 @@ case "$operation" in
       ubuntu:24.04@sha256:78d4744ead1f5b19b04d0df558ab182a5300903900755e515b2ca4d10eb2044d
       almalinux:9@sha256:465a5007813f19b5ac8a88cd161f3d8dcc6b1958e0c03c31f7c9a1b079d0a7da
     )
+    mkdir "$temp/context"
+    cp "$source_dir/requirements.txt" "$temp/context/requirements.txt"
     for image in "${images[@]}"; do
-      echo "$image"
-      docker run --rm --platform linux/amd64 \
+      echo "Provisioning validation image from $image"
+      # Only dependency provisioning uses host DNS. The build context contains
+      # requirements.txt, and the selected binary is mounted only for offline tests.
+      docker build --platform linux/amd64 --network=host --iidfile "$temp/image-id" \
+        --build-arg "BASE_IMAGE=$image" -f packaging/linux-validation.Dockerfile "$temp/context"
+      validation_image=$(cat "$temp/image-id")
+      rm "$temp/image-id"
+      docker run --rm --pull=never --platform linux/amd64 --network=none \
+        --user "$(id -u):$(id -g)" \
         --volume "$root:/workspace:ro" --workdir /workspace \
-        --volume "$artifact:/packages:ro" "${mounts[@]}" "$image" bash -ec '
+        --volume "$artifact:/packages:ro" "${mounts[@]}" "$validation_image" bash -ec '
           cat /etc/os-release
-          if command -v dnf >/dev/null; then
-            dnf -y --setopt=install_weak_deps=False install \
-              python3.12 python3.12-pip libstdc++ libgcc binutils git-core
-            python=python3.12
-          else
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update
-            apt-get install -y --no-install-recommends \
-              ca-certificates python3 python3-venv libstdc++6 libgcc-s1 binutils git
-            python=python3
-          fi
-          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0=/workspace
-          "$python" -m venv /tmp/verify-python
-          /tmp/verify-python/bin/python -m pip install --only-binary=:all: -r requirements.txt
-          /tmp/verify-python/bin/python scripts/native_package.py validate \
+          /opt/package-validation/bin/python scripts/native_package.py validate \
             --platform linux-x86_64 --directory /packages "$@"
         ' -- --backend "$backend" "${runtime_args[@]}" "$@"
     done

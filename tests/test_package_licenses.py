@@ -93,7 +93,7 @@ class PackageLicenses(unittest.TestCase):
         with TemporaryDirectory() as temp:
             archive = Path(temp) / f"{prefix}.zip"
 
-            def verify_zip(contents):
+            def verify_zip(contents, source_root=None):
                 with zipfile.ZipFile(archive, "w") as package:
                     for name, data in contents.items():
                         package.writestr(f"{prefix}/{name}", data)
@@ -101,10 +101,23 @@ class PackageLicenses(unittest.TestCase):
                 archive.with_suffix(".zip.sha256").write_text(f"{digest}  {archive.name}\n", encoding="ascii")
                 with patch("verify_package.platform.system", return_value="Windows"), \
                         patch("verify_package.platform.machine", return_value="AMD64"):
-                    verify_archive(archive, identity, "cpu", upstream=False)
+                    verify_archive(archive, identity, "cpu", upstream=False, source_root=source_root)
 
             verify_zip(members)
             with self.assertRaisesRegex(ValueError, "License verification failed for SSC .*missing archive member"):
                 verify_zip({name: data for name, data in members.items() if name != SSC_LICENSE})
             with self.assertRaisesRegex(ValueError, "License verification failed for SSC .*license content differs"):
                 verify_zip({**members, SSC_LICENSE: members["licenses/SolTrace-LICENSE.md"]})
+
+            # Current validation code checks text files against the selected Build source.
+            build_source = Path(temp) / "build-source"
+            for name in {*SOURCES.values(), INVENTORY, "repos.lock.json"} - {"SolarPILOT/deploy/api/pysoltrace.py"}:
+                destination = build_source / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((ROOT / name).read_bytes())
+            old_readme = members["README.md"] + b"\nBuild revision fixture.\n"
+            (build_source / SOURCES["README.md"]).write_bytes(old_readme)
+            old_members = {**members, "README.md": old_readme}
+            verify_zip(old_members, source_root=build_source)
+            with self.assertRaisesRegex(ValueError, "Altered package file: README.md"):
+                verify_zip(old_members)
