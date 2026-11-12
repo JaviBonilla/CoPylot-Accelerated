@@ -1,0 +1,38 @@
+name: Release · Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version tag (for example v0.1.0-rc1)
+        required: true
+        type: string
+      build_validate_run_id:
+        description: Optional global run ID (blank selects the latest available successful run)
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: release-publish
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify evidence and create a draft release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          GLOBAL_RUN_ID: ${{ inputs.build_validate_run_id }}
+        run: python3 scripts/release_pipeline.py draft

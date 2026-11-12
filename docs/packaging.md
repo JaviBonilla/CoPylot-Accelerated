@@ -17,7 +17,7 @@ clearance is pending.
 | Windows x64 CPU | Native MSVC 2022 build and artifact validation passed on `windows-2022`. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
 | Intel macOS CPU | Native build and artifact validation passed on `macos-15-intel`. |
-| Apple Silicon macOS CPU | Native build passed on `macos-15`. The run with the original bitwise gate measured the rounding differences below. Native validation with the updated policy is pending. |
+| Apple Silicon macOS CPU | Native build and artifact validation passed on `macos-15` with the architecture-specific numerical policy below. |
 | macOS CUDA | Outside the packaging targets. |
 | SolarPILOT desktop executable | Blocked on a separately pinned and tested GUI build. Upstream uses a distinct CMake entry point, wxWidgets, LK, WEX, RapidJSON and other platform dependencies and resources. The headless CUDA dispatch does not establish GUI CUDA support. |
 
@@ -45,7 +45,9 @@ architecture artifacts come from the same attempt.
 Validation runs scripts from the revision of the dispatched Validate workflow
 and checks archive contents against a separate checkout of the Build revision.
 Both revisions appear in the validation log. Existing packages with the
-supported layout can be validated without recompilation.
+supported layout can be validated without recompilation. After successful
+host validation, each platform job uploads `validation.json` with the
+Build artifact ID, the archive checksum and the validation run identity.
 
 Artifact names use
 `hermite-optics-<backend>-<platform>-<run-id>-<attempt>`.
@@ -68,6 +70,53 @@ The hosted runtime job finishes independently of GPU availability.
 These packages are validation artifacts subject to the redistribution
 requirements below. Use access-controlled runs while redistribution
 clearance is pending.
+
+### Build and validate all platforms
+
+In Actions, run [**Build & Validate · All**](../.github/workflows/build-validate-all.yml)
+from `main`. It captures the dispatch commit, requests the four Build run IDs
+directly from GitHub, and waits for their jobs and five packages. It then
+dispatches each matching Validate workflow with its specific `build_run_id`.
+Both macOS architecture jobs must pass. Linux CUDA runs the hosted load and
+CPU checks, with device execution available separately through `run_gpu`.
+
+Keep `main` at the selected commit until both waves have been dispatched. The
+GitHub dispatch API uses a branch or tag, and the orchestrator checks each
+child's full SHA. If `main` moved before or during dispatch and a child uses a
+different commit, start a new global run at the intended revision. The summary
+links to the child runs. Download `build-validate-manifest-<run-id>-<attempt>`
+for machine-readable evidence. A failed run keeps the available diagnostics
+and cannot be used for a release draft. If the parent is cancelled or times
+out, independently dispatched children may still be running. Rerun the global
+workflow to create a fresh set after a failure or child rerun.
+
+### Prepare a release draft
+
+In Actions, run [**Release · Publish**](../.github/workflows/release-publish.yml)
+from `main` with a SemVer `version` such as `v0.1.0-rc1`. The `v` prefix is
+added if omitted. An existing version tag, draft or release stops the workflow.
+Set `build_validate_run_id` to use one exact successful global run. Leave it
+blank to try successful dispatches from newest to oldest until one has all
+its original attempts, artifacts and validation records available. Skipped
+runs and their reasons appear in the job log. An explicit run ID has no fallback.
+
+The draft uses the source SHA of the selected global run for its target and
+version tag. It contains five [versioned archives](#draft-release-assets),
+`SHA256SUMS.txt` and release notes with compatibility, prerequisites and CI
+provenance. The archives retain their original bytes and embedded metadata.
+SemVer build metadata keeps its `+` in the tag and uses `_` in asset names.
+Each package already includes its synthetic example, Python wrappers,
+requirements, README and license notices.
+
+The workflow checks all evidence and stages the files before creating the
+draft. If an upload or tag operation fails, inspect the linked draft. The
+workflow leaves it for review and refuses to overwrite the version on retry.
+Use a new version or resolve the incomplete draft and any associated tag
+manually before retrying. GitHub uses the repository's built-in Actions token.
+Repository policies must allow workflow dispatches and draft creation. Tag
+rules or GitHub's workflow-file permissions can restrict tagging historical
+commits. Resolve those restrictions with a repository maintainer if GitHub
+rejects the request. Public redistribution remains a separate decision.
 
 ## Portable Linux x86-64 CPU
 
@@ -338,8 +387,8 @@ take the architecture from CMake after removing the pinned Intel-only
 flags on the packaged targets. Signing, notarization and testing on earlier
 macOS releases are outside these checks.
 
-Windows and macOS platform verification requires successful native build
-and validation runs.
+The Windows and macOS package workflows run native build and validation jobs
+for each architecture in the platform table above.
 
 ## Native Linux and macOS
 
@@ -486,16 +535,14 @@ configuration and satisfies applicable license terms. The neutral local name
 is provisional. A modified desktop GUI or a separately distributed SolTrace
 binary would require its own packaging and license review.
 
-## Proposed release asset names
+## Draft release assets
 
-These names illustrate the layout after the designation and redistribution
-requirements are resolved.
+The draft contains these five archives and `SHA256SUMS.txt`.
 
-| Target | Proposed asset |
+| Target | Asset |
 | --- | --- |
 | Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu-glibc2.34.tar.gz` |
 | Linux portable CUDA | `hermite-optics-<version>-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz` |
 | Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
-| Windows CUDA | `hermite-optics-<version>-windows-x86_64-cuda13.0-sm89.zip` |
 | Intel macOS CPU | `hermite-optics-<version>-macos-x86_64-cpu.tar.gz` |
 | Apple Silicon macOS CPU | `hermite-optics-<version>-macos-arm64-cpu.tar.gz` |

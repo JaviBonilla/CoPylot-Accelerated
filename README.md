@@ -40,9 +40,10 @@ execution approaches.
 
 ## Binary packaging
 
-The [packaging guide](docs/packaging.md) covers the verified Linux CPU
-validation bundle, other platform recipes and the upstream redistribution
-requirements.
+Run **Build & Validate · All** on `main` to build and validate the five native
+packages for Linux, Windows and macOS. **Release · Publish** can then assemble
+the exact validated archives and `SHA256SUMS.txt` in a GitHub draft for review.
+See [binary packaging, release drafts and redistribution](docs/packaging.md#build-and-validate-all-platforms).
 
 ## Benchmarks and reproducibility
 

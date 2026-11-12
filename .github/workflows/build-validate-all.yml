@@ -1,0 +1,33 @@
+name: Build & Validate · All
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: build-validate-all
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 145
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Dispatch and verify builds and validations
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/release_pipeline.py orchestrate
+      - name: Upload the manifest and available failure evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: build-validate-manifest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/release-evidence/manifest.json
+          if-no-files-found: error

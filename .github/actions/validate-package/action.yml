@@ -70,3 +70,26 @@ runs:
             --platform "$PACKAGE_PLATFORM" --backend "$PACKAGE_BACKEND" \
             --source-directory "$PACKAGE_SOURCE_DIRECTORY" "${args[@]}"
         fi
+    - name: Record the validated archive identity
+      if: inputs.gpu != 'true'
+      shell: bash
+      env:
+        PACKAGE_PLATFORM: ${{ inputs.platform }}
+        PACKAGE_BACKEND: ${{ inputs.backend }}
+        BUILD_REVISION: ${{ inputs.revision }}
+        BUILD_RUN_ID: ${{ inputs.run_id }}
+        BUILD_ATTEMPT: ${{ inputs.attempt }}
+        BUILD_ARTIFACT_ID: ${{ inputs.artifact_id }}
+      run: |
+        if [[ "$RUNNER_OS" == Linux ]]; then
+          python3 scripts/release_pipeline.py receipt
+        else
+          python scripts/release_pipeline.py receipt
+        fi
+    - name: Upload package validation evidence
+      if: inputs.gpu != 'true'
+      uses: actions/upload-artifact@v6
+      with:
+        name: package-validation-${{ inputs.backend }}-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: build/package-validation/validation.json
+        if-no-files-found: error

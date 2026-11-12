@@ -33,6 +33,7 @@ jobs:
           workflow: build-macos-cpu.yml
 
   runtime:
+    name: runtime (${{ matrix.platform }})
     needs: resolve
     strategy:
       fail-fast: false
