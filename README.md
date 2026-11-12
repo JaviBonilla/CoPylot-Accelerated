@@ -1,72 +1,111 @@
-# CoPylot-GPU
+# Hermite Optics
 
-CoPylot-GPU evaluates heliostat-field optical performance and receiver flux for
-concentrating solar power research. It builds a headless SolarPILOT numerical
-library from pinned upstream sources and patches, with CoPylot as its Python
-interface. All four execution approaches retain the Hermite optical formulation.
+Hermite Optics simulates the optical performance of heliostat fields in concentrating
+solar power towers. Its Python interface lets researchers assign a field, calculate
+the flux incident on the receiver, and inspect receiver summaries and per-heliostat
+results on a CPU or a supported NVIDIA GPU.
 
-| Approach | Execution |
+The accelerated numerical implementation builds on the Hermite optical model and
+CoPylot Python API of the original SolarPILOT(TM) project. [Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
+
+<p align="center">
+  <a href="https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/workflows/build-validate-all.yml"><img alt="Build &amp; Validate · All status" src="https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/workflows/build-validate-all.yml/badge.svg?branch=main"></a>
+  <a href="docs/packaging.md#platform-status"><img alt="Platforms: Linux, Windows and macOS" src="https://img.shields.io/badge/platforms-Linux%20%2F%20Windows%20%2F%20macOS-blue"></a>
+  <a href="docs/backend.md"><img alt="Backends: CPU and CUDA" src="https://img.shields.io/badge/backends-CPU%20%2F%20CUDA-blue"></a>
+  <a href="LICENSE"><img alt="Eligible original project code: MIT" src="https://img.shields.io/badge/project%20code-MIT-green"></a>
+</p>
+
+## Execution modes
+
+All four modes use the same Hermite optical formulation.
+
+| Mode | Execution |
 | --- | --- |
-| Original | Retained Legacy image-plane and flux-density paths, with one CPU thread |
-| Refactored CPU | Flat numerical paths, with one CPU thread |
-| Multicore CPU | Flat numerical paths, with parallel work within a state and optional independent contexts across states |
-| GPU (CUDA) | CUDA image-plane and flux-density stages, with CPU preparation and result handling |
+| Original | Retained legacy image-plane and flux-density paths on one CPU thread |
+| Refactored CPU | Refactored image-plane and flux-density paths on one CPU thread |
+| Multicore CPU | Refactored paths with parallel work within a state and optional independent contexts across states |
+| GPU (CUDA) | GPU image-plane evaluation and receiver flux accumulation, with CPU preparation and result handling |
 
-The API supports generated and assigned fields, compatible saved SolarPILOT
-layouts, receiver flux maps, receiver summaries and per-heliostat results.
-CUDA has an explicit [configuration envelope](docs/backend.md).
+The API supports generated and assigned fields and compatible saved layouts.
+See the [backend guide](docs/backend.md) for mode selection and CUDA's supported configurations.
 
-## Quick start
+## Quick start with a binary package
 
-The verified CPU environment is x86-64 Linux with GCC 13.3 and Python 3.12.
-Linux CUDA evidence covers an RTX 6000 Ada with CUDA 13.0. See the
-[build guide](docs/build.md) for prerequisites, flags and platform limits.
+When a published release is available, choose the archive for your OS, architecture
+and backend, then check it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/SolarPILOT-Accelerated/releases)
 
-From the repository root, reconstruct the pinned dependencies and build the CPU
-library. The diagnostics flag enables the optional Original comparison.
+Extract the archive and open its top-level directory. Activate a Python 3.12
+virtual environment and run the included synthetic example.
+
+```sh
+python -m pip install -r requirements.txt
+python example.py --mode refactored
+```
+
+Use `--mode multicore --compare` to compare the multicore result with Refactored.
+The CUDA package can run `--mode cuda --compare` after you install the external
+runtime and meet the device requirements. [Package installation and usage](docs/packaging.md#install-and-run-an-extracted-archive)
+
+## Build from source
+
+On Linux, install the prerequisites and run these commands from the repository
+root to build and exercise the CPU library.
 
 ```sh
 python3 scripts/bootstrap.py
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements.txt
 scripts/build_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
 .venv/bin/python examples/optical_simulation.py --flux-csv artifacts/example/receiver-flux.csv
 ```
 
-The example assigns a synthetic 1,000-heliostat field, runs a single optical
-state, prints the receiver summary and writes the incident flux map. See
-[mode selection and comparison](docs/build.md#run-the-example) for the other
-execution approaches.
+The diagnostics flag enables the retained Original path. See the [build guide](docs/build.md)
+for toolchains and tests and the [packaging guide](docs/packaging.md) for native package builds.
 
-## Binary packaging
+## Platforms and compatibility
 
-Run **Build & Validate · All** on `main` to build and validate the five native
-packages for Linux, Windows and macOS. **Release · Publish** can then assemble
-the exact validated archives and `SHA256SUMS.txt` in a GitHub draft for review.
-See [binary packaging, release drafts and redistribution](docs/packaging.md#build-and-validate-all-platforms).
+| Platform | Package backends | Runtime requirements |
+| --- | --- | --- |
+| Linux x86-64 | CPU and CUDA | glibc 2.34 or later and a compatible C++ runtime. The CUDA package also needs external CUDA Runtime 13.0.88. Device execution requires an SM 89 NVIDIA GPU and a compatible driver. |
+| Windows x86-64 | CPU | x64 Visual C++ runtime |
+| macOS Intel and Apple Silicon | CPU | macOS 15 or later and a matching Python architecture |
+
+The hosted CUDA validation checks loading and CPU modes across Linux distributions.
+A separate device test exercised an earlier portable archive on an RTX 6000 Ada.
+[Platform and GPU validation evidence](docs/packaging.md#gpu-execution-of-the-reference-archive)
 
 ## Benchmarks and reproducibility
 
-- [Reproducibility workflow](docs/public-reproducibility.md) covers numerical checks, the public commercial case, short and temporal measurements, and optional annual campaigns.
-- [Benchmark evidence](docs/benchmark-evidence.md) indexes the archived datasets, validation criteria and timing boundaries.
-- [Annual measurements](benchmarks/results/annual-benchmark-matrix.csv) contain all four approaches for both study cases. CESA-I is available as approved aggregate evidence.
+The repository includes numerical checks, benchmark protocols and measured results
+for the public commercial case. The CESA-I results are available as approved
+aggregate evidence. For the packaged synthetic check on Apple Silicon, Original
+receiver maps use a per-cell tolerance against both optimized CPU modes.
+Refactored and Multicore maps and all CPU summaries and heliostat details are
+checked bitwise. [Package validation policy](docs/packaging.md#windows-and-macos-cpu-workflows)
 
-## Publication
+- [Reproducibility guide](docs/public-reproducibility.md)
+- [Benchmark evidence and timing boundaries](docs/benchmark-evidence.md)
+- [Annual benchmark results](benchmarks/results/annual-benchmark-matrix.csv)
 
-Associated scientific publication and DOI to be added when available.
+## Citation
 
-## Licensing
-
-- [MIT](LICENSE) covers eligible original project code, including the build and benchmark tooling.
-- [CC0 1.0](benchmarks/results/LICENSE) covers eligible original benchmark results and datasets, including the generated receiver maps and the synthetic baselines in `tests/baselines/`.
-- [CC BY 4.0](docs/LICENSE) covers original project documentation, including this README. When sharing, credit Javier Bonilla and CoPylot-GPU, link to the license, and indicate any changes.
-
-The root MIT grant is limited to original project code. Existing notices and terms continue to govern upstream-derived patches, separately marked files, and reconstructed dependencies. Copied external inputs and excerpts retain their source terms, including where they appear in results or case metadata. Public availability alone does not establish redistribution rights.
-
-See [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) and the [licensing inventory](docs/licensing-inventory.json) for the file-level exceptions, data provenance, and upstream terms.
+For work that uses Hermite Optics, cite Javier Bonilla, the software name and
+the exact release tag or Git commit used. Cite M. J. Wagner and T. Wendelin
+(2018) for the underlying optical software. [SolarPILOT(TM) paper](https://doi.org/10.1016/j.solener.2018.06.063)
 
 ## Acknowledgements
 
-This work builds on SolarPILOT, its CoPylot API, SSC and SolTrace. Upstream
-revisions and credits are recorded in [repos.lock.json](repos.lock.json) and
-[THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+We thank the original SolarPILOT(TM), CoPylot, SSC and SolTrace developers and
+acknowledge Alliance for Sustainable Energy, LLC. The source pins and notices
+record the upstream components and their attribution. [SSC upstream](https://github.com/NatLabRockies/ssc) · [SolTrace upstream](https://github.com/NLR-SolTrace/SolTrace) · [Pinned revisions](repos.lock.json)
+
+## Licensing
+
+- Eligible original project code is licensed under [MIT](LICENSE).
+- Eligible original benchmark results and datasets are released under [CC0 1.0](benchmarks/results/LICENSE).
+- Original documentation is licensed under [CC BY 4.0](docs/LICENSE). Credit Javier Bonilla and the Hermite Optics project, link to the license and indicate changes.
+
+Upstream components, patches derived from upstream code and third-party inputs
+retain their applicable terms and notices. Review designation, corresponding
+source and LGPL relinking obligations before redistributing binaries.
+[Third-party notices](THIRD_PARTY_NOTICES) · [Licensing inventory](docs/licensing-inventory.json) · [Binary redistribution review](docs/packaging.md#contents-and-redistribution-review)

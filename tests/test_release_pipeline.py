@@ -22,6 +22,13 @@ import release_pipeline as pipeline
 
 SHA = "a" * 40
 GLOBAL_ID = 100
+ASSET_SUFFIXES = {
+    "linux-x86_64-cpu": "linux-x86_64-cpu.tar.gz",
+    "linux-x86_64-cuda": "linux-x86_64-cuda.tar.gz",
+    "windows-x86_64-cpu": "windows-x86_64-cpu.zip",
+    "macos-x86_64-cpu": "macos-x86_64-cpu.tar.gz",
+    "macos-arm64-cpu": "macos-arm64-cpu.tar.gz",
+}
 
 
 def zipped(files):
@@ -333,19 +340,54 @@ class ReleasePipeline(unittest.TestCase):
                 pipeline.create_draft(self.api)
         create, *uploads, tag = self.api.writes
         self.assertEqual(create[0], "releases")
-        self.assertTrue(create[1]["draft"] and create[1]["prerelease"])
-        self.assertEqual(create[1]["target_commitish"], manifest["global"]["source_revision"])
-        self.assertIn("Device execution is a separate check", create[1]["body"])
+        payload = create[1]
+        self.assertIs(payload["draft"], True)
+        self.assertIs(payload["prerelease"], True)
+        self.assertEqual(payload["name"], "Hermite Optics v1.2.3-rc1+build.7")
+        self.assertEqual(payload["tag_name"], "v1.2.3-rc1+build.7")
+        self.assertEqual(payload["target_commitish"], manifest["global"]["source_revision"])
         self.assertEqual(len(uploads), 6)
-        names = {name for _, name in uploads}
-        self.assertIn("SHA256SUMS.txt", names)
-        self.assertTrue(all("v1.2.3-rc1_build.7-" in name for name in names - {"SHA256SUMS.txt"}))
-        sums = [line.split() for line in self.api.asset_bytes["SHA256SUMS.txt"].decode().splitlines()]
-        self.assertEqual({name for _, name in sums}, names - {"SHA256SUMS.txt"})
-        self.assertEqual({digest for digest, _ in sums}, {p["sha256"] for p in manifest["packages"].values()})
-        self.assertTrue(all(hashlib.sha256(self.api.asset_bytes[name]).hexdigest() == digest
-                            for digest, name in sums))
+        names = {key: f"hermite-optics-v1.2.3-rc1_build.7-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
+        self.assertEqual({name for _, name in uploads}, {*names.values(), "SHA256SUMS.txt"})
+        sums = self.api.asset_bytes["SHA256SUMS.txt"].decode().splitlines()
+        self.assertEqual(len(sums), 5)
+        self.assertEqual(set(sums), {f"{manifest['packages'][key]['sha256']}  {name}" for key, name in names.items()})
+        for key, name in names.items():
+            package = manifest["packages"][key]
+            original_artifact = self.api.contents[package["artifact_id"]]
+            with zipfile.ZipFile(BytesIO(original_artifact)) as archive:
+                self.assertEqual(self.api.asset_bytes[name], archive.read(package["identity"]["archive"]))
+            self.assertEqual(hashlib.sha256(self.api.asset_bytes[name]).hexdigest(), package["sha256"])
         self.assertEqual(tag, ("git/refs", {"ref": "refs/tags/v1.2.3-rc1+build.7", "sha": SHA}))
+
+    def test_release_notes_list_stable_assets_and_link_exact_provenance(self):
+        self.complete_global()
+        manifest = pipeline.select_global(self.api, str(GLOBAL_ID), self.directory)
+        _, names = pipeline.stage_assets(manifest, "v1.2.3", self.directory)
+        expected = {key: f"hermite-optics-v1.2.3-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
+        self.assertEqual(names, expected)
+        notes = pipeline.release_notes(self.api, manifest, names)
+        self.assertEqual([line for line in notes.splitlines() if line.startswith("## ")],
+                         ["## Overview", "## Downloads", "## Quick start", "## Requirements", "## Source and validation"])
+        self.assertNotRegex(notes, r"(?i)\bdraft\b|ready for review|distribution review")
+        self.assertIn("https://github.com/NatLabRockies/SolarPILOT", notes)
+        self.assertIn("| Platform | Backend | Filename |", notes)
+        self.assertIn("python example.py --mode refactored", notes)
+        self.assertIn("The hosted CUDA job checks library loading and CPU modes", notes)
+        self.assertIn("earlier portable archive", notes)
+        self.assertIn("`rtol=1e-15` and `atol=1e-15 kW/m²` per cell", notes)
+        self.assertIn(f"https://github.com/{self.api.repo}/tree/{SHA}", notes)
+        self.assertIn(self.api.run_url(GLOBAL_ID, 1), notes)
+        self.assertIn("`SHA256SUMS.txt`", notes)
+        details = notes.split("<details>", 1)[1].split("</details>", 1)[0]
+        for key, package in manifest["packages"].items():
+            self.assertIn(f"`{expected[key]}`", notes)
+            build = manifest["builds"][package["build_workflow"]]
+            validation = manifest["validations"][package["validate_workflow"]]
+            self.assertIn(self.api.run_url(build["run_id"], build["attempt"]), details)
+            self.assertIn(self.api.run_url(validation["run_id"], validation["attempt"]), details)
+            self.assertIn(f"{self.api.run_url(build['run_id'])}/artifacts/{package['artifact_id']}", details)
+            self.assertIn(f"{self.api.run_url(validation['run_id'])}/artifacts/{package['validation_artifact_id']}", details)
 
     def test_validation_receipt_uses_downloaded_bytes_and_actual_tooling_revision(self):
         build_id = self.api.dispatch("build-linux-cpu.yml")

@@ -1,21 +1,25 @@
-# Hermite Optics local validation bundle
+# Hermite Optics
 
-This headless bundle exposes the CoPylot Python API and its Hermite optical
-simulation library, based on the original SolarPILOT(TM) software and
-SolTrace from Alliance for Sustainable Energy, LLC. It is a local build
-and test artifact. Redistribution is
-blocked pending naming, corresponding-source and relinking review. See
-`THIRD_PARTY_NOTICES` and `licenses/` for the terms and upstream attribution.
+This headless bundle exposes the CoPylot Python API for Hermite optical
+simulations. It builds on the original SolarPILOT(TM) software, SSC and SolTrace.
+See the [original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
+and the Alliance for Sustainable Energy, LLC and contributor notices in
+`THIRD_PARTY_NOTICES` and `licenses/`.
+
 `BUILD.json` records the source revision, pinned dependencies, compiler and
-binary configuration. Credit Javier Bonilla and CoPylot-GPU when reusing
-this documentation under the included CC BY 4.0 license.
+binary configuration. A GitHub Release may use a shorter download filename
+for this archive. Use the release's `SHA256SUMS.txt` to verify a Release download.
+The archive records its local-validation status. Redistribution is blocked
+pending designation, corresponding-source and relinking review. Credit Javier
+Bonilla and the Hermite Optics project when reusing this documentation under
+CC BY 4.0.
 
 ## Run from the extracted directory
 
 Use Python 3.12 on the matching OS and CPU architecture. Portable Linux
 (`variant: cpu-glibc2.34` in `BUILD.json`) was also tested with distro Python
-3.10 and 3.11. Install the Python requirements and run the example. It generates a small field and synthetic
-weather in a temporary directory.
+3.10 and 3.11. Install the Python requirements and run the example. It
+generates a small field and synthetic weather in a temporary directory.
 
 ```sh
 python -m pip install -r requirements.txt
@@ -45,18 +49,21 @@ coretrace API library. The bundle is for headless optical simulation.
   `libgcc` on EL9, if absent. Ubuntu 22.04 and 24.04, Debian 12 and
   AlmaLinux 9 were verified with the same portable archive.
 - Windows uses the x64 Visual C++ runtime and Windows system libraries.
-- macOS uses system libraries. The Mach-O library keeps the `.so`
-  suffix used by the pinned build's post-build copy step.
+- The macOS CI packages target macOS 15 or later. Use a Python interpreter
+  matching the Intel or Apple Silicon archive. The library uses system
+  runtimes and keeps the `.so` suffix used by the pinned build's copy step.
 - CUDA builds use the host NVIDIA driver and the matching CUDA runtime
   shared library. For the portable Linux CUDA archive, provide external
   `libcudart.so.13` from NVIDIA CUDA Runtime 13.0.88, even when using CPU
   modes. Make it visible via the system linker configuration or
   `LD_LIBRARY_PATH`. GPU execution additionally requires an Ada SM 89
   device and a compatible NVIDIA driver. NVIDIA lists 580.82.07 or newer
-  for CUDA 13.0 Update 1. This archive was verified in CPU modes, and GPU
-  execution is unverified. On Windows set `CUDA_PATH` to the matching
-  toolkit installation so the loader can find its `bin` directory. The compiled
-  architecture and toolkit version are in `BUILD.json`.
+  for CUDA 13.0 Update 1. Standard hosted Linux CUDA validation checks loading
+  and CPU modes. Device execution was verified separately for an earlier
+  portable archive on an RTX 6000 Ada. Check the validation record for your
+  archive. On Windows set `CUDA_PATH` to the matching toolkit installation so
+  the loader can find its `bin` directory. The compiled architecture and toolkit
+  version are in `BUILD.json`.
 
 Runtime libraries and Python wheels are installed separately. Each extracted
 archive is self-contained with respect to its project scripts and generated

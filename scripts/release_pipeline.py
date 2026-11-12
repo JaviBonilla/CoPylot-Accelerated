@@ -23,6 +23,12 @@ from release_github import ApiError, EvidenceError, GitHub
 
 MANIFEST = Path("build/release-evidence/manifest.json")
 RECEIPT = Path("build/package-validation/validation.json")
+RELEASE_PLATFORMS = {
+    "linux-x86_64": "Linux x86-64",
+    "windows-x86_64": "Windows x86-64",
+    "macos-x86_64": "macOS Intel (x86-64)",
+    "macos-arm64": "macOS Apple Silicon (arm64)",
+}
 NUMERIC = r"(?:0|[1-9][0-9]*)"
 IDENTIFIER = rf"(?:{NUMERIC}|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
 SEMVER = re.compile(rf"v?{NUMERIC}\.{NUMERIC}\.{NUMERIC}"
@@ -231,13 +237,13 @@ def stage_assets(manifest, version, directory):
     assets = directory / "assets"
     assets.mkdir()
     filenames = {}
+    # GitHub may normalize punctuation in asset filenames. Keep + in the tag only.
+    asset_version = version.replace("+", "_")
     for key, package in manifest["packages"].items():
         identity = package["identity"]
         source = directory / str(package["artifact_id"]) / identity["archive"]
-        original_prefix = f"hermite-optics-local-{identity['source_revision'][:12]}-"
-        # GitHub may normalize punctuation in asset filenames. Keep + in the tag only.
-        asset_version = version.replace("+", "_")
-        target = assets / f"hermite-optics-{asset_version}-{source.name.removeprefix(original_prefix)}"
+        extension = ".zip" if source.suffix == ".zip" else ".tar.gz"
+        target = assets / f"hermite-optics-{asset_version}-{key}{extension}"
         shutil.copyfile(source, target)
         digest = hashlib.sha256(target.read_bytes()).hexdigest()
         require(digest == package["sha256"], f"Staged asset SHA-256 mismatch for {key}")
@@ -250,50 +256,100 @@ def stage_assets(manifest, version, directory):
 
 def release_notes(api, manifest, filenames):
     global_run = manifest["global"]
-    url = api.run_url(global_run["run_id"], global_run["attempt"])
     revision = global_run["source_revision"]
-    source_url = f"{api.server}/{api.repo}/tree/{revision}"
-    lines = [
-        "Draft for distribution review. Public redistribution requires separate clearance.",
-        "",
-        f"[Source revision `{revision}`]({source_url}). "
-        f"[Global build and validation run {global_run['run_id']}]({url}).",
-        "",
-        "| Asset | Build | Validation |",
-        "| --- | --- | --- |",
-    ]
-    for key, filename in sorted(filenames.items()):
+    repository = f"{api.server}/{api.repo}"
+    source_docs = f"{repository}/blob/{revision}"
+    run_url = api.run_url(global_run["run_id"], global_run["attempt"])
+    downloads = []
+    provenance = []
+    for key, filename in filenames.items():
+        platform, backend = key.rsplit("-", 1)
+        target = RELEASE_PLATFORMS[platform]
         package = manifest["packages"][key]
         build = manifest["builds"][package["build_workflow"]]
         validation = manifest["validations"][package["validate_workflow"]]
-        build_url = api.run_url(build["run_id"], build["attempt"])
-        validation_url = api.run_url(validation["run_id"], validation["attempt"])
-        lines.append(f"| `{filename}` | [{build['run_id']}]({build_url}) "
-                     f"(artifact {package['artifact_id']}) | [Passed]({validation_url}) |")
-    lines += [
+        build_id, validate_id = build["run_id"], validation["run_id"]
+        build_url = api.run_url(build_id, build["attempt"])
+        validate_url = api.run_url(validate_id, validation["attempt"])
+        artifact = package["artifact_id"]
+        record = package["validation_artifact_id"]
+        downloads.append(f"| {target} | {backend.upper()} | `{filename}` |")
+        provenance.append(f"| {target} · {backend.upper()} | [{build_id}]({build_url}) · "
+                          f"[artifact {artifact}]({api.run_url(build_id)}/artifacts/{artifact}) | "
+                          f"[{validate_id}]({validate_url}) · "
+                          f"[record {record}]({api.run_url(validate_id)}/artifacts/{record}) |")
+    lines = [
+        "## Overview",
         "",
-        "Compare the downloaded archives with `SHA256SUMS.txt`. Each archive contains the synthetic example, "
-        "Python wrappers, requirements and license notices. Use a Python virtual environment "
-        "and follow the README inside the archive.",
+        "Hermite Optics evaluates heliostat-field optical performance and receiver flux in concentrating solar "
+        "power towers. The Original, Refactored CPU, Multicore CPU and CUDA modes use the same Hermite optical "
+        "formulation. The project builds on SSC, SolTrace and the CoPylot Python API of the original "
+        "SolarPILOT(TM) software from Alliance for Sustainable Energy, LLC. "
+        "[Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)",
         "",
-        "- Linux x86-64 requires glibc 2.34, GLIBCXX 3.4.29 and CXXABI 1.3.13. "
-        "Host tests covered Ubuntu 22.04 and 24.04, Debian 12 and AlmaLinux 9.",
-        "- The Linux CUDA package additionally requires external CUDA Runtime 13.0.88 (`libcudart.so.13`). "
-        "For device execution use an SM 89 GPU and a compatible NVIDIA Linux driver (580.82.07 or newer). "
-        "This run tested loading and CPU modes across distributions. Device execution is a separate check.",
-        "- Windows x86-64 requires the x64 Visual C++ runtime. Validation ran on `windows-2022`.",
-        "- macOS packages target macOS 15.0 or later. Choose the Intel or Apple Silicon archive "
-        "and use a matching Python architecture. Signing and notarization are outside these checks.",
-        "- On Apple Silicon, Original receiver maps use the documented per-cell tolerance. "
-        "Refactored and Multicore agree bitwise, as do summaries and heliostat details.",
+        "## Downloads",
+        "",
+        "| Platform | Backend | Filename |",
+        "| --- | --- | --- |",
+        *downloads,
+        "",
+        "## Quick start",
+        "",
+        "Extract the archive, open the extracted directory and activate a Python 3.12 virtual environment.",
+        "",
+        "```sh",
+        "python -m pip install -r requirements.txt",
+        "python example.py --mode refactored",
+        "```",
+        "",
+        "The example uses a synthetic field and weather. With the CUDA package and a compatible GPU, "
+        "run `python example.py --mode cuda --compare`.",
+        "",
+        "## Requirements",
+        "",
+        "- **Linux x86-64.** glibc 2.34 or later and a C++ runtime providing `GLIBCXX_3.4.29` and "
+        "`CXXABI_1.3.13`. Host validation covered Ubuntu 22.04 and 24.04, Debian 12 and AlmaLinux 9.",
+        "- **Linux CUDA.** Install NVIDIA CUDA Runtime 13.0.88 (`libcudart.so.13`) separately, including "
+        "for CPU modes. Device execution requires an SM 89 NVIDIA GPU and Linux driver 580.82.07 or newer.",
+        "- **Windows x86-64.** Install the x64 Visual C++ runtime.",
+        "- **macOS.** Use macOS 15 or later and a Python interpreter matching the Intel or Apple Silicon archive. "
+        "Signing and notarization are outside the validation scope.",
+        "",
+        "## Source and validation",
+        "",
+        "Verify the downloaded archives with `SHA256SUMS.txt`. "
+        f"[Source commit `{revision}`]({repository}/tree/{revision}) · "
+        f"[Build & Validate run {global_run['run_id']}]({run_url})",
+        "",
+        "The hosted CUDA job checks library loading and CPU modes. GPU execution was verified separately on "
+        f"an RTX 6000 Ada with an [earlier portable archive]({source_docs}/docs/packaging.md"
+        "#gpu-execution-of-the-reference-archive).",
+        "",
+        "On Apple Silicon, Original's receiver map is compared with each optimized mode using "
+        "`rtol=1e-15` and `atol=1e-15 kW/m²` per cell. Refactored and Multicore maps, all receiver "
+        "summaries and all per-heliostat outputs agree bitwise in the synthetic check.",
+        "",
+        "<details>",
+        "<summary>Build and validation provenance by platform</summary>",
+        "",
+        "| Target | Build | Validation |",
+        "| --- | --- | --- |",
+        *provenance,
+        "",
+        "</details>",
+        "",
+        "Each archive includes its license texts and upstream notices. See the "
+        f"[third-party notices]({source_docs}/THIRD_PARTY_NOTICES) and "
+        f"[licensing inventory]({source_docs}/docs/licensing-inventory.json) for attribution and terms.",
     ]
     return "\n".join(lines) + "\n"
 
 
 def publish_draft(api, version, prerelease, manifest, assets, notes):
     revision = manifest["global"]["source_revision"]
-    release = api.request("releases", payload={"tag_name": version, "target_commitish": revision, "name": version,
-                                               "body": notes, "draft": True, "prerelease": prerelease})
+    release = api.request("releases", payload={"tag_name": version, "target_commitish": revision,
+                                               "name": f"Hermite Optics {version}", "body": notes,
+                                               "draft": True, "prerelease": prerelease})
     release_id = release["id"]
     link = release.get("html_url") or f"{api.server}/{api.repo}/releases"
     try:

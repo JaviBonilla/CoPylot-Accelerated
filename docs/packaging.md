@@ -1,11 +1,10 @@
-# Build and verify local binary packages
+# Build and verify Hermite Optics packages
 
 The headless CMake target exposes the CoPylot Python API. With
-`COPILOT_LOCAL_PACKAGE=ON`, CPack stages the library under the provisional
-name **Hermite Optics**, with a relocatable loader, synthetic example, build
-metadata and license notices. The ordinary source build keeps its existing
-name and behavior. The packages are for local validation while redistribution
-clearance is pending.
+`COPILOT_LOCAL_PACKAGE=ON`, CPack stages the library as **Hermite Optics**
+with a relocatable loader, synthetic example, build metadata and license
+notices. CI uses the original CPack filenames for local validation. GitHub
+Releases use shorter versioned asset names. Redistribution clearance is pending.
 
 ## Platform status
 
@@ -13,7 +12,7 @@ clearance is pending.
 | --- | --- |
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
-| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. GPU execution passed on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
+| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. An earlier portable archive passed device tests on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
 | Windows x64 CPU | Native MSVC 2022 build and artifact validation passed on `windows-2022`. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
 | Intel macOS CPU | Native build and artifact validation passed on `macos-15-intel`. |
@@ -100,8 +99,9 @@ blank to try successful dispatches from newest to oldest until one has all
 its original attempts, artifacts and validation records available. Skipped
 runs and their reasons appear in the job log. An explicit run ID has no fallback.
 
-The draft uses the source SHA of the selected global run for its target and
-version tag. It contains five [versioned archives](#draft-release-assets),
+The workflow creates a draft titled **Hermite Optics vX.Y.Z**, with the tag
+`vX.Y.Z` pointing to the source SHA of the selected global run. It contains
+five [versioned archives](#release-assets),
 `SHA256SUMS.txt` and release notes with compatibility, prerequisites and CI
 provenance. The archives retain their original bytes and embedded metadata.
 SemVer build metadata keeps its `+` in the tag and uses `_` in asset names.
@@ -531,18 +531,26 @@ Clear the public designation, source access and LGPL redistribution
 requirements before publishing any binary. The source reconstruction script,
 patches, toolchain and build instructions should be part of the corresponding
 source plan. Verify that the published material can rebuild the exact release
-configuration and satisfies applicable license terms. The neutral local name
-is provisional. A modified desktop GUI or a separately distributed SolTrace
-binary would require its own packaging and license review.
+configuration and satisfies applicable license terms. A modified desktop GUI or
+a separately distributed SolTrace binary would require its own packaging and
+license review.
 
-## Draft release assets
+## Release assets
 
-The draft contains these five archives and `SHA256SUMS.txt`.
+The release contains these five archives and `SHA256SUMS.txt`. The `<version>`
+in each filename includes the `v` prefix. Only the external asset names change.
+The CPack filenames used in CI, the archive contents and `BUILD.json` still
+identify the original validated builds. Use `SHA256SUMS.txt` for Release downloads
+and the original CI artifacts when running the repository's package verifier.
 
 | Target | Asset |
 | --- | --- |
-| Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu-glibc2.34.tar.gz` |
-| Linux portable CUDA | `hermite-optics-<version>-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz` |
+| Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu.tar.gz` |
+| Linux portable CUDA | `hermite-optics-<version>-linux-x86_64-cuda.tar.gz` |
 | Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
 | Intel macOS CPU | `hermite-optics-<version>-macos-x86_64-cpu.tar.gz` |
 | Apple Silicon macOS CPU | `hermite-optics-<version>-macos-arm64-cpu.tar.gz` |
+
+If the repository is renamed to `CoPylot-Accelerated`, update the workflow badge
+and Releases links in the root README and the historical macOS Build link in
+this guide. Generated release notes use the repository name from GitHub Actions.

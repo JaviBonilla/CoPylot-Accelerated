@@ -1,8 +1,8 @@
-# Build and run CoPylot-GPU
+# Build and run Hermite Optics
 
-Run the commands from the repository root. The build links the headless SSC
-SolarPILOT library and SolTrace coretrace, then uses the pinned CoPylot wrapper
-from the reconstructed SolarPILOT checkout.
+Run the commands from the repository root. The build links the headless optical
+library from SSC and SolTrace coretrace, then uses the pinned CoPylot wrapper
+from the reconstructed SolarPILOT(TM) checkout. [Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
 
 ## Verified environments
 
