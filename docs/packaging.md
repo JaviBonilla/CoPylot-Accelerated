@@ -14,10 +14,10 @@ clearance is pending.
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
 | Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. GPU execution passed on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
-| Windows x64 CPU | Native MSVC 2022 build and artifact validation prepared. Runner results are pending. |
+| Windows x64 CPU | Native MSVC 2022 build and artifact validation passed on `windows-2022`. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
-| Intel macOS CPU | Native build and artifact validation prepared on `macos-15-intel`. Runner results are pending. |
-| Apple Silicon macOS CPU | Native arm64 build and artifact validation prepared on `macos-15`. Runner results are pending. |
+| Intel macOS CPU | Native build and artifact validation passed on `macos-15-intel`. |
+| Apple Silicon macOS CPU | Native build passed on `macos-15`. The run with the original bitwise gate measured the rounding differences below. Native validation with the updated policy is pending. |
 | macOS CUDA | Outside the packaging targets. |
 | SolarPILOT desktop executable | Blocked on a separately pinned and tested GUI build. Upstream uses a distinct CMake entry point, wxWidgets, LK, WEX, RapidJSON and other platform dependencies and resources. The headless CUDA dispatch does not establish GUI CUDA support. |
 
@@ -272,20 +272,48 @@ The validation workflow uses the downloaded bytes. It checks the archive
 checksum, run and attempt, source revision, host architecture, archive
 contents and license inventory. It checks native imports and uses the
 packaged Python loader to run the synthetic case in Original, Refactored and
-Multicore modes. The receiver map, receiver summary and per-heliostat details
-must match bitwise. Validation reports missing DLLs and dyld or loader errors.
+Multicore modes. Validation reports missing DLLs and dyld or loader errors.
 The jobs install Python requirements from the matching checkout.
+
+The receiver map, receiver summaries and per-heliostat details agreed bitwise
+in the tested Linux CPU, Linux CUDA (CPU modes), Windows CPU and macOS Intel
+packages, and these comparisons require bitwise equality. macOS Apple Silicon
+also requires bitwise equality for Refactored versus Multicore and for all CPU
+receiver summaries and per-heliostat details.
+
+On a native macOS arm64 host with a macOS arm64 package, the receiver map from
+Original may differ from Refactored or Multicore because of floating-point
+rounding consistent with fused multiply-add (FMA) contraction. FMA remains
+enabled under the normal compiler settings. Each cell must satisfy
+`abs(original - optimized) <= 1e-15 kW/m² + 1e-15 * abs(optimized)`, with the
+optimized result as the reference. The relative term covers the observed maximum
+relative difference with roughly a factor of 2.4, and the absolute term sets the
+limit at zero. Both maps must have the expected shape and contain finite,
+nonnegative values with a positive peak. Opposite signs on zero-valued pairs
+fail validation. The CUDA-versus-CPU tolerance is unchanged.
+
+In the 25 × 25 synthetic example from [macOS Build 43024746862](https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/runs/43024746862)
+(`368599e`), each Original comparison differed at 88 of 625 cells (14.08%).
+The largest differences were `1.4210854715202004e-14 kW/m²`,
+`4.131375826319544e-16` relative, and 3 ULP. Refactored and Multicore maps,
+all receiver summaries and all per-heliostat details agreed bitwise. These
+measurements describe this example and build.
 
 macOS validation reports all three CPU mode pairs. Each comparison reports
 the count and percentage of changed flux cells, the maximum absolute and
 relative differences and the maximum finite ULP distance. Relative differences
 use the second mode as the reference. Sample indices are zero-based receiver
-map indices. Signed zeros and non-finite values are reported and still fail
-the bitwise gate. The log also reports differences in the receiver summary and
-heliostat details.
+map indices. The log includes signed-zero and non-finite diagnostics, plus
+differences in the receiver summary and heliostat details. `cpu_outputs_bitwise`
+reports exact agreement. `validation_passed` reports whether the comparison
+satisfies the indicated `flux_policy` and the other output checks.
 
-The macOS workflow can run these diagnostics against existing Build artifacts.
-To run the same checks against an extracted CPU package on a compatible host:
+The macOS workflow uses `packaging/example.py` from the validation checkout
+and loads the selected Build's packaged wrapper and library. To revalidate
+Build `43024746862`, select that run in **Validate · macOS · CPU** at a revision
+that includes this policy. The archive and checksum are reused as produced.
+Future Builds include the updated standalone example. To run the same checks
+against an extracted CPU package on a compatible host:
 
 ```sh
 python packaging/example.py --package-directory ./extracted-package --compare-cpu-modes
@@ -392,9 +420,10 @@ environment, then run `python example.py --mode refactored --compare`.
 The portable Linux variant was also verified with distro Python 3.10 and 3.11.
 Use `--mode original` or `--mode multicore` to select the other CPU paths.
 The example creates synthetic weather and a 12-heliostat field and evaluates
-one optical state. The two comparison modes check the receiver map bitwise
-against Refactored. For other programs, add the extracted `python/` directory
-to `PYTHONPATH` and use `from hermite_optics import CoPylot`.
+one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows)
+in packages built with the updated example. For other programs, add the
+extracted `python/` directory to `PYTHONPATH` and use
+`from hermite_optics import CoPylot`.
 
 The host-built Linux reference binary requires glibc symbols up to
 `GLIBC_2.38` and libstdc++ symbols up to `GLIBCXX_3.4.32`. For the older

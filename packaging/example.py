@@ -9,6 +9,7 @@ from itertools import combinations
 import json
 import os
 from pathlib import Path
+import platform
 import sys
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
@@ -16,6 +17,7 @@ from unittest.mock import patch
 import numpy as np
 
 CPU_MODES = ("original", "refactored", "multicore")
+MACOS_ARM64_FLUX_TOLERANCE = (1e-15, 1e-15)  # rtol, atol in kW/m²
 
 
 def synthetic_weather(path):
@@ -88,32 +90,37 @@ def simulate(weather, mode, *, check_flux=True):
 
 
 def valid_flux(flux):
-    return flux.shape == (25, 25) and np.isfinite(flux).all() and flux.max() > 0
+    return (flux.shape == (25, 25) and bool(np.isfinite(flux).all())
+            and bool(np.all(flux >= 0)) and bool(flux.max() > 0))
 
 
-def array_comparison(actual, reference, *, sample_limit=3):
+def array_comparison(actual, reference, *, sample_limit=3, tolerance=None):
     """Compare logical indices as little-endian binary64 in row-major order."""
     actual = np.asarray(actual, dtype="<f8", order="C")
     reference = np.asarray(reference, dtype="<f8", order="C")
+    result = {} if tolerance is None else {"within_tolerance": False}
     if actual.shape != reference.shape:
-        return {"bitwise": False, "actual_shape": list(actual.shape), "reference_shape": list(reference.shape)}
+        return {**result, "bitwise": False, "actual_shape": list(actual.shape),
+                "reference_shape": list(reference.shape)}
 
     left, right = actual.view("<u8"), reference.view("<u8")
     different = left != right
     count = int(np.count_nonzero(different))
     finite = np.isfinite(actual) & np.isfinite(reference)
     has_nonfinite = not finite.all()
-    result = {
+    signed_zero_mismatches = int(np.count_nonzero(different & (actual == 0) & (reference == 0)))
+    result.update({
         "bitwise": count == 0 and not has_nonfinite,
         "elements": actual.size,
         "differing_elements": count,
         "differing_percent": 100 * count / actual.size if actual.size else 0.0,
-        "signed_zero_only": count > 0 and bool(np.all(((actual == 0) & (reference == 0)) | ~different)),
+        "signed_zero_only": 0 < count == signed_zero_mismatches,
+        "signed_zero_mismatches": signed_zero_mismatches,
         "has_nonfinite": has_nonfinite,
         "max_abs_difference": None,
         "max_relative_difference": None,
         "max_ulp_difference": None,
-    }
+    })
     if has_nonfinite:
         result["nonfinite"] = {
             label: {kind: int(np.count_nonzero(predicate(values)))
@@ -128,6 +135,9 @@ def array_comparison(actual, reference, *, sample_limit=3):
             # Avoid an overflowing subtraction before division when both values are large.
             overflow = np.isinf(absolute)
             relative[overflow] = np.abs(a[overflow] / b[overflow] - 1.0)
+        if tolerance is not None and not has_nonfinite and not signed_zero_mismatches:
+            rtol, atol = tolerance
+            result["within_tolerance"] = bool(np.all(absolute <= atol + rtol * np.abs(b)))
         for key, maximum in (("max_abs_difference", absolute.max()),
                              ("max_relative_difference", relative.max())):
             result[key] = float(maximum) if np.isfinite(maximum) else "inf"
@@ -168,7 +178,40 @@ def output_differences(actual, reference):
     return differences
 
 
-def compare_cpu_modes(weather):
+def is_apple_silicon_package(info):
+    return (info["os"] == "macos" and info["architecture"] == "arm64"
+            and platform.system() == "Darwin" and platform.machine() == "arm64")
+
+
+def cpu_comparison(actual_mode, reference_mode, actual_state, reference_state, *, apple_silicon):
+    actual, summary, details = actual_state
+    reference, reference_summary, reference_details = reference_state
+    # Both comparison entry points put Original first and the optimized mode second.
+    use_tolerance = (apple_silicon and actual_mode == "original"
+                     and reference_mode in ("refactored", "multicore"))
+    tolerance = MACOS_ARM64_FLUX_TOLERANCE if use_tolerance else None
+    flux = array_comparison(actual, reference, tolerance=tolerance)
+    summary_differences = output_differences(summary, reference_summary)
+    detail_differences = output_differences(details, reference_details)
+    outputs_match = not summary_differences and not detail_differences
+    flux_matches = flux["within_tolerance"] if use_tolerance else flux["bitwise"]
+    result = {
+        "actual_mode": actual_mode,
+        "reference_mode": reference_mode,
+        "cpu_outputs_bitwise": flux["bitwise"] and outputs_match,
+        "validation_passed": flux_matches and outputs_match and valid_flux(actual) and valid_flux(reference),
+        "flux_policy": "tolerance" if use_tolerance else "bitwise",
+        "flux_kw_m2": flux,
+        "summary_differences": summary_differences,
+        "detail_differences": detail_differences,
+    }
+    if use_tolerance:
+        rtol, atol = tolerance
+        result["flux_tolerance"] = {"rtol": rtol, "atol_kw_m2": atol}
+    return result
+
+
+def compare_cpu_modes(weather, *, apple_silicon):
     states = {mode: simulate(weather, mode, check_flux=False) for mode in CPU_MODES}
     invalid = [mode for mode, (flux, _, _) in states.items() if not valid_flux(flux)]
     passed = not invalid
@@ -177,35 +220,12 @@ def compare_cpu_modes(weather):
         for mode, (flux, _, _) in states.items()
     }, "invalid_flux_modes": invalid}), flush=True)
     for actual_mode, reference_mode in combinations(CPU_MODES, 2):
-        actual, summary, details = states[actual_mode]
-        reference, reference_summary, reference_details = states[reference_mode]
-        flux = array_comparison(actual, reference)
-        summary_differences = output_differences(summary, reference_summary)
-        detail_differences = output_differences(details, reference_details)
-        bitwise = flux["bitwise"] and not summary_differences and not detail_differences
-        passed = passed and bitwise
-        print(json.dumps({"actual_mode": actual_mode, "reference_mode": reference_mode,
-                          "cpu_outputs_bitwise": bitwise, "flux_kw_m2": flux,
-                          "summary_differences": summary_differences, "detail_differences": detail_differences},
-                         allow_nan=False), flush=True)
+        result = cpu_comparison(actual_mode, reference_mode, states[actual_mode], states[reference_mode],
+                                apple_silicon=apple_silicon)
+        passed = passed and result["validation_passed"]
+        print(json.dumps(result, allow_nan=False), flush=True)
     if not passed:
-        raise RuntimeError("CPU modes failed bitwise or receiver flux validation")
-
-
-def compare_bits(actual, reference, label):
-    actual = np.asarray(actual, dtype="<f8", order="C")
-    reference = np.asarray(reference, dtype="<f8", order="C")
-    if (actual.shape != reference.shape or not np.isfinite(actual).all()
-            or actual.tobytes() != reference.tobytes()):
-        comparison = array_comparison(actual, reference)
-        raise RuntimeError(f"CPU {label} differs bitwise from the refactored run: {json.dumps(comparison)}")
-
-
-def compare_outputs(actual, reference, label):
-    if actual.keys() != reference.keys():
-        raise RuntimeError(f"CPU {label} schema differs from the refactored run")
-    for key, values in actual.items():
-        compare_bits(values, reference[key], f"{label}.{key}")
+        raise RuntimeError("CPU modes failed numerical validation")
 
 
 def main():
@@ -216,7 +236,7 @@ def main():
     comparison.add_argument("--compare", action="store_true",
                             help="Compare outputs against a fresh refactored CPU run")
     comparison.add_argument("--compare-cpu-modes", action="store_true",
-                            help="Compare all three CPU modes bitwise and report every pair")
+                            help="Validate and report every pair of CPU modes")
     parser.add_argument("--package-directory", type=Path, default=Path(__file__).resolve().parent,
                         help="Use the Python wrapper and library from this extracted package")
     args = parser.parse_args()
@@ -224,6 +244,7 @@ def main():
     from hermite_optics import build_info
 
     info = build_info()
+    apple_silicon = is_apple_silicon_package(info)
     if (args.mode == "original" or args.compare_cpu_modes) and not info["diagnostics"]:
         parser.error("Original mode requires a diagnostics-enabled package")
     if args.mode == "cuda" and not info["cuda_architecture"]:
@@ -233,7 +254,7 @@ def main():
         weather = Path(temp) / "synthetic.csv"
         synthetic_weather(weather)
         if args.compare_cpu_modes:
-            compare_cpu_modes(weather)
+            compare_cpu_modes(weather, apple_silicon=apple_silicon)
             return
         flux, summary, details = simulate(weather, args.mode)
         result = {"mode": args.mode, "flux_shape": list(flux.shape),
@@ -245,13 +266,12 @@ def main():
             if args.mode == "cuda":
                 np.testing.assert_allclose(flux, reference, rtol=1e-9, atol=1e-10)
             else:
-                compare_bits(flux, reference, "receiver map")
-                compare_outputs(details, reference_details, "heliostat details")
-                if summary.keys() != reference_summary.keys():
-                    raise RuntimeError("CPU receiver summary schema differs from the refactored run")
-                for receiver, values in summary.items():
-                    compare_outputs(values, reference_summary[receiver], f"summary.{receiver}")
-                result["cpu_outputs_bitwise"] = True
+                cpu_result = cpu_comparison(args.mode, "refactored", (flux, summary, details),
+                                            (reference, reference_summary, reference_details),
+                                            apple_silicon=apple_silicon)
+                if not cpu_result["validation_passed"]:
+                    raise RuntimeError(f"CPU modes failed numerical validation: {json.dumps(cpu_result)}")
+                result.update(cpu_result)
             result["max_abs_flux_difference_kw_m2"] = float(np.max(np.abs(flux - reference)))
         print(json.dumps(result, indent=2, allow_nan=False))
 

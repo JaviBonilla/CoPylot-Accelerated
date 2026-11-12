@@ -101,8 +101,9 @@ and the heliostat rows with `detail_results`. `--flux-csv PATH` saves the
 
 Original requires the diagnostics build above. Refactored and Multicore both
 select the CPU backend, with one or multiple simulation threads respectively.
-The CPU comparisons check bitwise agreement of the receiver map against a
-fresh refactored run.
+This source-tree example checks CPU receiver maps bitwise against a fresh
+refactored run. The packaged synthetic example uses the architecture-specific
+policy described in the [package validation documentation](packaging.md#windows-and-macos-cpu-workflows).
 
 On a suitable CUDA build and device, the same example can compare the CUDA
 map with the CPU map using `rtol=1e-9` and `atol=1e-10`.
