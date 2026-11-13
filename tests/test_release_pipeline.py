@@ -343,11 +343,14 @@ class ReleasePipeline(unittest.TestCase):
         payload = create[1]
         self.assertIs(payload["draft"], True)
         self.assertIs(payload["prerelease"], True)
-        self.assertEqual(payload["name"], "Hermite Optics v1.2.3-rc1+build.7")
+        self.assertEqual(payload["name"], "CoPylot-Accelerated v1.2.3-rc1+build.7")
         self.assertEqual(payload["tag_name"], "v1.2.3-rc1+build.7")
         self.assertEqual(payload["target_commitish"], manifest["global"]["source_revision"])
         self.assertEqual(len(uploads), 6)
-        names = {key: f"hermite-optics-v1.2.3-rc1_build.7-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
+        names = {key: f"copylot-accelerated-v1.2.3-rc1_build.7-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
+        download_base = f"{self.api.server}/{self.api.repo}/releases/download/v1.2.3-rc1%2Bbuild.7"
+        for name in (*names.values(), "SHA256SUMS.txt"):
+            self.assertIn(f"]({download_base}/{name})", payload["body"])
         self.assertEqual({name for _, name in uploads}, {*names.values(), "SHA256SUMS.txt"})
         sums = self.api.asset_bytes["SHA256SUMS.txt"].decode().splitlines()
         self.assertEqual(len(sums), 5)
@@ -364,24 +367,36 @@ class ReleasePipeline(unittest.TestCase):
         self.complete_global()
         manifest = pipeline.select_global(self.api, str(GLOBAL_ID), self.directory)
         _, names = pipeline.stage_assets(manifest, "v1.2.3", self.directory)
-        expected = {key: f"hermite-optics-v1.2.3-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
+        expected = {key: f"copylot-accelerated-v1.2.3-{suffix}" for key, suffix in ASSET_SUFFIXES.items()}
         self.assertEqual(names, expected)
-        notes = pipeline.release_notes(self.api, manifest, names)
+        notes = pipeline.release_notes(self.api, manifest, "v1.2.3", names)
         self.assertEqual([line for line in notes.splitlines() if line.startswith("## ")],
                          ["## Overview", "## Downloads", "## Quick start", "## Requirements", "## Source and validation"])
-        self.assertNotRegex(notes, r"(?i)\bdraft\b|ready for review|distribution review")
+        self.assertNotRegex(notes, r"(?i)\bdraft\b|ready for review|distribution review|untagged-|/releases/latest")
+        self.assertIn("CoPylot is its Python API", notes)
+        self.assertIn("paths in a patched build as a numerical reference", notes)
+        self.assertIn("All four modes use the same Hermite optical formulation", notes)
+        for mode in ("Original SolarPILOT/CoPylot", "Refactored CPU", "Multicore CPU", "CUDA GPU"):
+            self.assertIn(f"| {mode} |", notes)
         self.assertIn("https://github.com/NatLabRockies/SolarPILOT", notes)
-        self.assertIn("| Platform | Backend | Filename |", notes)
-        self.assertIn("python example.py --mode refactored", notes)
+        self.assertIn("| Platform | Backend | Download |", notes)
+        self.assertIn("python3.12 -m venv .venv\n.venv/bin/python -m pip install -r requirements.txt\n"
+                      ".venv/bin/python example.py --mode refactored", notes)
+        self.assertIn("py -3.12 -m venv .venv\n"
+                      r".\.venv\Scripts\python.exe -m pip install -r requirements.txt" "\n"
+                      r".\.venv\Scripts\python.exe example.py --mode refactored", notes)
         self.assertIn("The hosted CUDA job checks library loading and CPU modes", notes)
         self.assertIn("earlier portable archive", notes)
         self.assertIn("`rtol=1e-15` and `atol=1e-15 kW/m²` per cell", notes)
         self.assertIn(f"https://github.com/{self.api.repo}/tree/{SHA}", notes)
         self.assertIn(self.api.run_url(GLOBAL_ID, 1), notes)
-        self.assertIn("`SHA256SUMS.txt`", notes)
+        download_base = f"{self.api.server}/{self.api.repo}/releases/download/v1.2.3"
+        self.assertIn(f"[Download SHA256SUMS.txt]({download_base}/SHA256SUMS.txt)", notes)
+        downloads = notes.split("## Downloads\n", 1)[1].split("## Quick start\n", 1)[0]
+        self.assertNotIn("/actions/", downloads)
         details = notes.split("<details>", 1)[1].split("</details>", 1)[0]
         for key, package in manifest["packages"].items():
-            self.assertIn(f"`{expected[key]}`", notes)
+            self.assertIn(f"[{expected[key]}]({download_base}/{expected[key]})", downloads)
             build = manifest["builds"][package["build_workflow"]]
             validation = manifest["validations"][package["validate_workflow"]]
             self.assertIn(self.api.run_url(build["run_id"], build["attempt"]), details)

@@ -243,7 +243,7 @@ def stage_assets(manifest, version, directory):
         identity = package["identity"]
         source = directory / str(package["artifact_id"]) / identity["archive"]
         extension = ".zip" if source.suffix == ".zip" else ".tar.gz"
-        target = assets / f"hermite-optics-{asset_version}-{key}{extension}"
+        target = assets / f"copylot-accelerated-{asset_version}-{key}{extension}"
         shutil.copyfile(source, target)
         digest = hashlib.sha256(target.read_bytes()).hexdigest()
         require(digest == package["sha256"], f"Staged asset SHA-256 mismatch for {key}")
@@ -254,10 +254,11 @@ def stage_assets(manifest, version, directory):
     return assets, filenames
 
 
-def release_notes(api, manifest, filenames):
+def release_notes(api, manifest, version, filenames):
     global_run = manifest["global"]
     revision = global_run["source_revision"]
     repository = f"{api.server}/{api.repo}"
+    download_base = f"{repository}/releases/download/{quote(version, safe='')}"
     source_docs = f"{repository}/blob/{revision}"
     run_url = api.run_url(global_run["run_id"], global_run["attempt"])
     downloads = []
@@ -273,7 +274,8 @@ def release_notes(api, manifest, filenames):
         validate_url = api.run_url(validate_id, validation["attempt"])
         artifact = package["artifact_id"]
         record = package["validation_artifact_id"]
-        downloads.append(f"| {target} | {backend.upper()} | `{filename}` |")
+        downloads.append(f"| {target} | {backend.upper()} | "
+                         f"[{filename}]({download_base}/{quote(filename, safe='')}) |")
         provenance.append(f"| {target} · {backend.upper()} | [{build_id}]({build_url}) · "
                           f"[artifact {artifact}]({api.run_url(build_id)}/artifacts/{artifact}) | "
                           f"[{validate_id}]({validate_url}) · "
@@ -281,31 +283,59 @@ def release_notes(api, manifest, filenames):
     lines = [
         "## Overview",
         "",
-        "Hermite Optics evaluates heliostat-field optical performance and receiver flux in concentrating solar "
-        "power towers. The Original, Refactored CPU, Multicore CPU and CUDA modes use the same Hermite optical "
-        "formulation. The project builds on SSC, SolTrace and the CoPylot Python API of the original "
-        "SolarPILOT(TM) software from Alliance for Sustainable Energy, LLC. "
+        "SolarPILOT(TM) is the original scientific software for optical simulation of concentrating solar "
+        "power towers, and CoPylot is its Python API. CoPylot-Accelerated evaluates heliostat-field optics "
+        "and receiver flux. It retains the original CPU calculation paths in a patched build as a numerical "
+        "reference and adds three accelerated implementations. "
+        "All four modes use the same Hermite optical formulation. The project builds on the original software "
+        "from Alliance for Sustainable Energy, LLC, and uses SSC and SolTrace. "
         "[Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)",
+        "",
+        "| Mode | Description |",
+        "| --- | --- |",
+        "| Original SolarPILOT/CoPylot | Retained original image-plane and receiver-flux paths on one CPU thread |",
+        "| Refactored CPU | Optimized single-threaded CPU implementation |",
+        "| Multicore CPU | Parallel CPU implementation |",
+        "| CUDA GPU | Accelerated image-plane evaluation and receiver flux accumulation on supported NVIDIA hardware |",
         "",
         "## Downloads",
         "",
-        "| Platform | Backend | Filename |",
+        "| Platform | Backend | Download |",
         "| --- | --- | --- |",
         *downloads,
         "",
+        f"[Download SHA256SUMS.txt]({download_base}/SHA256SUMS.txt) to verify the archives.",
+        "",
         "## Quick start",
         "",
-        "Extract the archive, open the extracted directory and activate a Python 3.12 virtual environment.",
+        "Download the archive for your platform and extract it. From the directory containing `requirements.txt` "
+        "and `example.py`, create a virtual environment with the recommended Python 3.12, install the pinned "
+        "requirements, and run the synthetic example.",
+        "",
+        "**Linux and macOS**",
         "",
         "```sh",
-        "python -m pip install -r requirements.txt",
-        "python example.py --mode refactored",
+        "python3.12 -m venv .venv",
+        ".venv/bin/python -m pip install -r requirements.txt",
+        ".venv/bin/python example.py --mode refactored",
         "```",
         "",
-        "The example uses a synthetic field and weather. With the CUDA package and a compatible GPU, "
-        "run `python example.py --mode cuda --compare`.",
+        "**Windows PowerShell**",
+        "",
+        "```powershell",
+        "py -3.12 -m venv .venv",
+        r".\.venv\Scripts\python.exe -m pip install -r requirements.txt",
+        r".\.venv\Scripts\python.exe example.py --mode refactored",
+        "```",
+        "",
+        "Use the same interpreter with `--mode multicore --compare` or `--mode original --compare`. "
+        "Original requires `diagnostics: true` in `BUILD.json`. Use `--mode cuda --compare` with the CUDA "
+        "package and a compatible GPU.",
         "",
         "## Requirements",
+        "",
+        "The virtual environment manages Python packages. Native runtimes such as glibc, Visual C++ and CUDA "
+        "are provided by the host.",
         "",
         "- **Linux x86-64.** glibc 2.34 or later and a C++ runtime providing `GLIBCXX_3.4.29` and "
         "`CXXABI_1.3.13`. Host validation covered Ubuntu 22.04 and 24.04, Debian 12 and AlmaLinux 9.",
@@ -317,7 +347,6 @@ def release_notes(api, manifest, filenames):
         "",
         "## Source and validation",
         "",
-        "Verify the downloaded archives with `SHA256SUMS.txt`. "
         f"[Source commit `{revision}`]({repository}/tree/{revision}) · "
         f"[Build & Validate run {global_run['run_id']}]({run_url})",
         "",
@@ -348,7 +377,7 @@ def release_notes(api, manifest, filenames):
 def publish_draft(api, version, prerelease, manifest, assets, notes):
     revision = manifest["global"]["source_revision"]
     release = api.request("releases", payload={"tag_name": version, "target_commitish": revision,
-                                               "name": f"Hermite Optics {version}", "body": notes,
+                                               "name": f"CoPylot-Accelerated {version}", "body": notes,
                                                "draft": True, "prerelease": prerelease})
     release_id = release["id"]
     link = release.get("html_url") or f"{api.server}/{api.repo}/releases"
@@ -396,7 +425,7 @@ def create_draft(api):
         directory = Path(temp)
         manifest = select_global(api, os.environ.get("GLOBAL_RUN_ID", ""), directory)
         assets, filenames = stage_assets(manifest, version, directory)
-        notes = release_notes(api, manifest, filenames)
+        notes = release_notes(api, manifest, version, filenames)
         run = manifest["global"]
         successful_run(api, GLOBAL_WORKFLOW, run["run_id"], run["attempt"], run["source_revision"])
         check_child_attempts(api, manifest)

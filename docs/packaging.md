@@ -1,10 +1,10 @@
-# Build and verify Hermite Optics packages
+# Build and verify CoPylot-Accelerated packages
 
 The headless CMake target exposes the CoPylot Python API. With
-`COPILOT_LOCAL_PACKAGE=ON`, CPack stages the library as **Hermite Optics**
-with a relocatable loader, synthetic example, build metadata and license
-notices. CI uses the original CPack filenames for local validation. GitHub
-Releases use shorter versioned asset names. Redistribution clearance is pending.
+`COPILOT_LOCAL_PACKAGE=ON`, CPack stages a relocatable loader, synthetic example,
+build metadata and license notices. CI uses the internal `hermite-optics-local-`
+archive prefix. GitHub Release downloads use the public `copylot-accelerated-`
+prefix. Redistribution clearance is pending.
 
 ## Platform status
 
@@ -99,7 +99,7 @@ blank to try successful dispatches from newest to oldest until one has all
 its original attempts, artifacts and validation records available. Skipped
 runs and their reasons appear in the job log. An explicit run ID has no fallback.
 
-The workflow creates a draft titled **Hermite Optics vX.Y.Z**, with the tag
+The workflow creates a draft titled **CoPylot-Accelerated vX.Y.Z**, with the tag
 `vX.Y.Z` pointing to the source SHA of the selected global run. It contains
 five [versioned archives](#release-assets),
 `SHA256SUMS.txt` and release notes with compatibility, prerequisites and CI
@@ -182,7 +182,7 @@ The example also prints a SHA-256 of the receiver map to compare across hosts.
 The full verification in the build checks the exact pinned sources and notices.
 
 ```sh
-python /path/to/verify_package.py --runtime-only /path/to/package.tar.gz
+.venv/bin/python /path/to/verify_package.py --runtime-only /path/to/package.tar.gz
 ```
 
 lp_solve embeds optional loader entry points for external factorization,
@@ -246,7 +246,7 @@ Update 1. The reference archive passed device tests on driver 580.159.03.
 The driver supplies `libcuda.so.1` when CUDA initializes. A driver and GPU are unnecessary for CPU-mode execution from
 the CUDA archive, but `libcudart.so.13` is needed even for loading it.
 
-With Python requirements installed from the extracted archive, provide the
+With Python requirements installed in the repository's `.venv`, provide the
 runtime through the system linker configuration or an explicit directory.
 The following commands use a fresh, external runtime directory under the
 user's home. The installer checks NVIDIA's checksum and preserves the
@@ -255,7 +255,7 @@ vendor's license with the separately installed files.
 ```sh
 runtime="$HOME/.local/cuda-runtime-13.0.88"
 packaging/install_cuda_linux.sh "$runtime" --runtime-only
-python scripts/verify_package.py --runtime-only --cuda-runtime-dir "$runtime/lib" /path/to/package.tar.gz
+.venv/bin/python scripts/verify_package.py --runtime-only --cuda-runtime-dir "$runtime/lib" /path/to/package.tar.gz
 ```
 
 Ubuntu 22.04.5 (glibc 2.35), Debian 12 (2.36), Ubuntu 24.04.5 (2.39) and
@@ -341,7 +341,7 @@ limit at zero. Both maps must have the expected shape and contain finite,
 nonnegative values with a positive peak. Opposite signs on zero-valued pairs
 fail validation. The CUDA-versus-CPU tolerance is unchanged.
 
-In the 25 × 25 synthetic example from [macOS Build 43024746862](https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/runs/43024746862)
+In the 25 × 25 synthetic example from [macOS Build 43024746862](https://github.com/JaviBonilla/CoPylot-Accelerated/actions/runs/43024746862)
 (`368599e`), each Original comparison differed at 88 of 625 cells (14.08%).
 The largest differences were `1.4210854715202004e-14 kW/m²`,
 `4.131375826319544e-16` relative, and 3 ULP. Refactored and Multicore maps,
@@ -362,18 +362,23 @@ and loads the selected Build's packaged wrapper and library. To revalidate
 Build `43024746862`, select that run in **Validate · macOS · CPU** at a revision
 that includes this policy. The archive and checksum are reused as produced.
 Future Builds include the updated standalone example. To run the same checks
-against an extracted CPU package on a compatible host:
+against an extracted CPU package on a matching macOS host, use the interpreter
+from a Python 3.12 environment with the pinned requirements installed:
 
 ```sh
-python packaging/example.py --package-directory ./extracted-package --compare-cpu-modes
+.venv/bin/python packaging/example.py --package-directory ./extracted-package --compare-cpu-modes
 ```
 
 To validate a downloaded artifact manually on a matching host, provide a
-checkout of the Build's full source revision:
+checkout of the Build's full source revision. On Linux or macOS, use the
+following commands. In Windows Developer PowerShell, create the environment
+with `py -3.12 -m venv .venv` and use `.\.venv\Scripts\python.exe` for both
+Python commands.
 
 ```sh
-python -m pip install --only-binary=:all: -r ./build-source/requirements.txt
-python scripts/native_package.py validate --directory ./downloaded-artifact \
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --only-binary=:all: -r ./build-source/requirements.txt
+.venv/bin/python scripts/native_package.py validate --directory ./downloaded-artifact \
   --source-directory ./build-source \
   --platform PLATFORM --revision FULL_SHA --run-id BUILD_RUN_ID --run-attempt ATTEMPT
 ```
@@ -402,18 +407,17 @@ on Apple Silicon.
 
 ```sh
 python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install cmake==3.30.5 -r requirements.txt
-python scripts/bootstrap.py
+.venv/bin/python -m pip install cmake==3.30.5 -r requirements.txt
+.venv/bin/python scripts/bootstrap.py
 
 build=build/package-cpu
-cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
+.venv/bin/cmake -S . -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_TESTING=OFF -DCOPILOT_LOCAL_PACKAGE=ON \
   -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
-cmake --build "$build" --target solarpilot --config Release --parallel 4
+.venv/bin/cmake --build "$build" --target solarpilot --config Release --parallel 4
 export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
-cpack --config "$build/CPackConfig.cmake" -C Release
-python scripts/verify_package.py "$build"/packages/hermite-optics-local-*.tar.gz
+.venv/bin/cpack --config "$build/CPackConfig.cmake" -C Release
+.venv/bin/python scripts/verify_package.py "$build"/packages/hermite-optics-local-*.tar.gz
 ```
 
 For Linux CUDA use a fresh `build/package-cuda` and append
@@ -463,18 +467,39 @@ when explicitly requested.
 
 ## Install and run an extracted archive
 
-Extract the archive to a user directory. From the extracted top level run
-`python -m pip install -r requirements.txt` in a Python 3.12 virtual
-environment, then run `python example.py --mode refactored --compare`.
-The portable Linux variant was also verified with distro Python 3.10 and 3.11.
-Use `--mode original` or `--mode multicore` to select the other CPU paths.
+Extract the archive and enter the directory containing `requirements.txt`
+and `example.py`. Python 3.12 is recommended. The portable Linux CPU archive
+was also verified with distro Python 3.10 and 3.11.
+
+**Linux and macOS**
+
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python example.py --mode refactored
+```
+
+**Windows PowerShell**
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe example.py --mode refactored
+```
+
+Use the same interpreter with `--mode multicore --compare` or
+`--mode original --compare`. Original requires `diagnostics: true` in
+`BUILD.json`. Use `--mode cuda --compare` with the CUDA archive and a
+compatible GPU and driver.
 The example creates synthetic weather and a 12-heliostat field and evaluates
 one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows)
 in packages built with the updated example. For other programs, add the
 extracted `python/` directory to `PYTHONPATH` and use
 `from hermite_optics import CoPylot`.
 
-The host-built Linux reference binary requires glibc symbols up to
+The virtual environment manages Python packages. Install native runtimes such
+as glibc, Visual C++ and CUDA separately. The host-built Linux reference binary
+requires glibc symbols up to
 `GLIBC_2.38` and libstdc++ symbols up to `GLIBCXX_3.4.32`. For the older
 runtime baseline use the portable variant described above. Windows expects a
 compatible x64 Visual C++ runtime. macOS expects system libraries. CUDA
@@ -545,12 +570,8 @@ and the original CI artifacts when running the repository's package verifier.
 
 | Target | Asset |
 | --- | --- |
-| Linux portable CPU | `hermite-optics-<version>-linux-x86_64-cpu.tar.gz` |
-| Linux portable CUDA | `hermite-optics-<version>-linux-x86_64-cuda.tar.gz` |
-| Windows CPU | `hermite-optics-<version>-windows-x86_64-cpu.zip` |
-| Intel macOS CPU | `hermite-optics-<version>-macos-x86_64-cpu.tar.gz` |
-| Apple Silicon macOS CPU | `hermite-optics-<version>-macos-arm64-cpu.tar.gz` |
-
-If the repository is renamed to `CoPylot-Accelerated`, update the workflow badge
-and Releases links in the root README and the historical macOS Build link in
-this guide. Generated release notes use the repository name from GitHub Actions.
+| Linux portable CPU | `copylot-accelerated-<version>-linux-x86_64-cpu.tar.gz` |
+| Linux portable CUDA | `copylot-accelerated-<version>-linux-x86_64-cuda.tar.gz` |
+| Windows CPU | `copylot-accelerated-<version>-windows-x86_64-cpu.zip` |
+| Intel macOS CPU | `copylot-accelerated-<version>-macos-x86_64-cpu.tar.gz` |
+| Apple Silicon macOS CPU | `copylot-accelerated-<version>-macos-arm64-cpu.tar.gz` |

@@ -1,15 +1,16 @@
-# Hermite Optics
+# CoPylot-Accelerated
 
-Hermite Optics simulates the optical performance of heliostat fields in concentrating
-solar power towers. Its Python interface lets researchers assign a field, calculate
-the flux incident on the receiver, and inspect receiver summaries and per-heliostat
-results on a CPU or a supported NVIDIA GPU.
+CoPylot-Accelerated simulates heliostat-field optics in concentrating solar power
+towers. Use it from Python to assign a field, calculate receiver flux, and inspect
+receiver summaries and per-heliostat results.
 
-The accelerated numerical implementation builds on the Hermite optical model and
-CoPylot Python API of the original SolarPILOT(TM) project. [Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
+SolarPILOT(TM) is the original optical simulation software, and CoPylot is its
+Python API. CoPylot-Accelerated retains the original CPU calculation paths in a
+patched build as a numerical reference and adds three accelerated implementations.
+[Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
 
 <p align="center">
-  <a href="https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/workflows/build-validate-all.yml"><img alt="Build &amp; Validate · All status" src="https://github.com/JaviBonilla/SolarPILOT-Accelerated/actions/workflows/build-validate-all.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/JaviBonilla/CoPylot-Accelerated/actions/workflows/build-validate-all.yml"><img alt="Build &amp; Validate · All status" src="https://github.com/JaviBonilla/CoPylot-Accelerated/actions/workflows/build-validate-all.yml/badge.svg?branch=main"></a>
   <a href="docs/packaging.md#platform-status"><img alt="Platforms: Linux, Windows and macOS" src="https://img.shields.io/badge/platforms-Linux%20%2F%20Windows%20%2F%20macOS-blue"></a>
   <a href="docs/backend.md"><img alt="Backends: CPU and CUDA" src="https://img.shields.io/badge/backends-CPU%20%2F%20CUDA-blue"></a>
   <a href="LICENSE"><img alt="Eligible original project code: MIT" src="https://img.shields.io/badge/project%20code-MIT-green"></a>
@@ -21,10 +22,10 @@ All four modes use the same Hermite optical formulation.
 
 | Mode | Execution |
 | --- | --- |
-| Original | Retained legacy image-plane and flux-density paths on one CPU thread |
-| Refactored CPU | Refactored image-plane and flux-density paths on one CPU thread |
+| Original SolarPILOT/CoPylot | Retained original image-plane and receiver-flux paths on one CPU thread |
+| Refactored CPU | Optimized image-plane and receiver-flux paths on one CPU thread |
 | Multicore CPU | Refactored paths with parallel work within a state and optional independent contexts across states |
-| GPU (CUDA) | GPU image-plane evaluation and receiver flux accumulation, with CPU preparation and result handling |
+| CUDA GPU | GPU image-plane evaluation and receiver flux accumulation, with CPU preparation and result handling |
 
 The API supports generated and assigned fields and compatible saved layouts.
 See the [backend guide](docs/backend.md) for mode selection and CUDA's supported configurations.
@@ -32,19 +33,32 @@ See the [backend guide](docs/backend.md) for mode selection and CUDA's supported
 ## Quick start with a binary package
 
 When a published release is available, choose the archive for your OS, architecture
-and backend, then check it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/SolarPILOT-Accelerated/releases)
+and backend, then check it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/CoPylot-Accelerated/releases)
 
-Extract the archive and open its top-level directory. Activate a Python 3.12
-virtual environment and run the included synthetic example.
+Extract the archive and open the directory containing `requirements.txt` and
+`example.py`. Python 3.12 is recommended.
+
+**Linux and macOS**
 
 ```sh
-python -m pip install -r requirements.txt
-python example.py --mode refactored
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python example.py --mode refactored
 ```
 
-Use `--mode multicore --compare` to compare the multicore result with Refactored.
-The CUDA package can run `--mode cuda --compare` after you install the external
-runtime and meet the device requirements. [Package installation and usage](docs/packaging.md#install-and-run-an-extracted-archive)
+**Windows PowerShell**
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe example.py --mode refactored
+```
+
+Use the same interpreter with `--mode multicore --compare` or
+`--mode original --compare`. Original requires `diagnostics: true` in
+`BUILD.json`. Use `--mode cuda --compare` with the CUDA package and a compatible
+GPU. Native runtimes such as glibc, Visual C++ and CUDA come from the host.
+[Package installation and usage](docs/packaging.md#install-and-run-an-extracted-archive)
 
 ## Build from source
 
@@ -52,8 +66,8 @@ On Linux, install the prerequisites and run these commands from the repository
 root to build and exercise the CPU library.
 
 ```sh
-python3 scripts/bootstrap.py
-python3 -m venv .venv
+python3.12 -m venv .venv
+.venv/bin/python scripts/bootstrap.py
 .venv/bin/python -m pip install -r requirements.txt
 scripts/build_cpu.sh -DSOLARPILOT_ENABLE_FLUX_DIAGNOSTICS=ON
 .venv/bin/python examples/optical_simulation.py --flux-csv artifacts/example/receiver-flux.csv
@@ -89,7 +103,7 @@ checked bitwise. [Package validation policy](docs/packaging.md#windows-and-macos
 
 ## Citation
 
-For work that uses Hermite Optics, cite Javier Bonilla, the software name and
+For work that uses CoPylot-Accelerated, cite Javier Bonilla, the software name and
 the exact release tag or Git commit used. Cite M. J. Wagner and T. Wendelin
 (2018) for the underlying optical software. [SolarPILOT(TM) paper](https://doi.org/10.1016/j.solener.2018.06.063)
 
@@ -103,7 +117,7 @@ record the upstream components and their attribution. [SSC upstream](https://git
 
 - Eligible original project code is licensed under [MIT](LICENSE).
 - Eligible original benchmark results and datasets are released under [CC0 1.0](benchmarks/results/LICENSE).
-- Original documentation is licensed under [CC BY 4.0](docs/LICENSE). Credit Javier Bonilla and the Hermite Optics project, link to the license and indicate changes.
+- Original documentation is licensed under [CC BY 4.0](docs/LICENSE). Credit Javier Bonilla and CoPylot-Accelerated, link to the license and indicate changes.
 
 Upstream components, patches derived from upstream code and third-party inputs
 retain their applicable terms and notices. Review designation, corresponding

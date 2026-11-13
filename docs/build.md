@@ -1,4 +1,4 @@
-# Build and run Hermite Optics
+# Build and run CoPylot-Accelerated
 
 Run the commands from the repository root. The build links the headless optical
 library from SSC and SolTrace coretrace, then uses the pinned CoPylot wrapper
@@ -25,10 +25,15 @@ workflow and release drafts, see the [packaging guide](packaging.md#package-work
 
 ## Reconstruct the dependencies
 
+Use the recommended Python 3.12 for the bootstrap and project dependencies.
+The virtual environment manages Python packages. Install the native toolchain
+and runtimes separately. For Windows source packaging, use the
+[Developer PowerShell recipe](packaging.md#windows-x64).
+
 ```sh
-python3 scripts/bootstrap.py
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+python3.12 -m venv .venv
+.venv/bin/python scripts/bootstrap.py
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
 Bootstrap requires access to the public URLs in [repos.lock.json](../repos.lock.json).

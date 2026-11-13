@@ -1,4 +1,4 @@
-# Hermite Optics
+# CoPylot-Accelerated
 
 This headless bundle exposes the CoPylot Python API for Hermite optical
 simulations. It builds on the original SolarPILOT(TM) software, SSC and SolTrace.
@@ -11,27 +11,36 @@ binary configuration. A GitHub Release may use a shorter download filename
 for this archive. Use the release's `SHA256SUMS.txt` to verify a Release download.
 The archive records its local-validation status. Redistribution is blocked
 pending designation, corresponding-source and relinking review. Credit Javier
-Bonilla and the Hermite Optics project when reusing this documentation under
+Bonilla and CoPylot-Accelerated when reusing this documentation under
 CC BY 4.0.
 
 ## Run from the extracted directory
 
-Use Python 3.12 on the matching OS and CPU architecture. Portable Linux
-(`variant: cpu-glibc2.34` in `BUILD.json`) was also tested with distro Python
-3.10 and 3.11. Install the Python requirements and run the example. It
-generates a small field and synthetic weather in a temporary directory.
+Open the directory containing `requirements.txt` and `example.py`. Python 3.12
+is recommended on the matching OS and CPU architecture. The portable Linux CPU
+archive was also tested with distro Python 3.10 and 3.11. The example generates
+a small field and synthetic weather in a temporary directory.
+
+**Linux and macOS**
 
 ```sh
-python -m pip install -r requirements.txt
-python example.py --mode refactored
-python example.py --mode multicore --compare
-python example.py --mode original --compare
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python example.py --mode refactored
 ```
 
-Original requires `diagnostics: true` in the build metadata. The example checks
-receiver maps against a fresh single-thread refactored CPU run. Use
-`python example.py --mode cuda --compare` only with a CUDA-enabled bundle and
-an available compatible GPU.
+**Windows PowerShell**
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe example.py --mode refactored
+```
+
+Use the same interpreter with `--mode multicore --compare` or
+`--mode original --compare` to compare with a fresh single-thread Refactored
+run. Original requires `diagnostics: true` in `BUILD.json`. Use
+`--mode cuda --compare` with a CUDA-enabled bundle and a compatible GPU.
 
 For your own Python script, add the extracted `python/` directory to
 `PYTHONPATH` and use `from hermite_optics import CoPylot`. This loader locates
@@ -41,6 +50,9 @@ convention. SolTrace ray-tracing convenience methods need an additional
 coretrace API library. The bundle is for headless optical simulation.
 
 ## Runtime prerequisites
+
+The virtual environment manages Python packages. Native runtimes such as
+glibc, Visual C++ and CUDA are provided by the host.
 
 - Linux uses the host glibc, libstdc++ and GCC runtime. Start with the OS
   generation used to build a native bundle. The portable Linux variant
