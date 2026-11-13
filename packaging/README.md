@@ -43,7 +43,7 @@ run. Original requires `diagnostics: true` in `BUILD.json`. Use
 `--mode cuda --compare` with a CUDA-enabled bundle and a compatible GPU.
 
 For your own Python script, add the extracted `python/` directory to
-`PYTHONPATH` and use `from hermite_optics import CoPylot`. This loader locates
+`PYTHONPATH` and use `from copylot_accelerated import CoPylot`. This loader locates
 the bundled library relative to the archive layout. Direct imports of the
 upstream `copylot` module retain its original filename and working-directory
 convention. SolTrace ray-tracing convenience methods need an additional

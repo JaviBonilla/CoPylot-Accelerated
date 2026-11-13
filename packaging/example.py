@@ -39,7 +39,7 @@ def synthetic_weather(path):
 
 
 def simulate(weather, mode, *, check_flux=True):
-    from hermite_optics import CoPylot
+    from copylot_accelerated import CoPylot
 
     selection = "legacy" if mode == "original" else ""
     with patch.dict(os.environ, {
@@ -241,7 +241,7 @@ def main():
                         help="Use the Python wrapper and library from this extracted package")
     args = parser.parse_args()
     sys.path.insert(0, str(args.package_directory.resolve() / "python"))
-    from hermite_optics import build_info
+    from copylot_accelerated import build_info
 
     info = build_info()
     apple_silicon = is_apple_silicon_package(info)

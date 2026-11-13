@@ -1,6 +1,7 @@
 import copy
-from contextlib import redirect_stdout
+from contextlib import nullcontext, redirect_stdout
 import hashlib
+import importlib.util
 from io import BytesIO, StringIO
 import json
 import os
@@ -8,13 +9,15 @@ from pathlib import Path
 import sys
 import tarfile
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 from urllib.parse import unquote
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from package_names import package_identity
 import release_evidence as evidence
 import release_github as github
 import release_pipeline as pipeline
@@ -39,23 +42,29 @@ def zipped(files):
     return output.getvalue()
 
 
-def native_archive(identity, backend):
+def native_archive(identity, backend, *, library_name=None, omit=None):
     name = identity["archive"]
     root = name.removesuffix(".tar.gz").removesuffix(".zip")
     os_name, architecture = identity["platform"].split("-", 1)
     variant = root.split(identity["platform"] + "-", 1)[1]
     cuda = backend == "cuda"
+    library = "lib/copylot_accelerated.dll" if os_name == "windows" else "lib/copylot_accelerated.so"
     metadata = json.dumps({"source_revision": identity["source_revision"], "source_dirty_at_configure": False,
                            "os": os_name, "architecture": architecture, "variant": variant,
+                           "library": library if library_name is None else library_name,
                            "cuda_toolkit": "13.0.88" if cuda else "", "cuda_architecture": "89" if cuda else ""})
-    member = root + "/BUILD.json"
+    files = {"BUILD.json": metadata.encode(), library: b"native fixture",
+             "python/copylot_accelerated.py": b"wrapper fixture", "python/copylot.py": b"upstream fixture"}
+    if omit:
+        del files[omit]
     if name.endswith(".zip"):
-        return zipped({member: metadata})
+        return zipped({f"{root}/{path}": data for path, data in files.items()})
     output = BytesIO()
     with tarfile.open(fileobj=output, mode="w:gz") as archive:
-        info = tarfile.TarInfo(member)
-        info.size = len(metadata)
-        archive.addfile(info, BytesIO(metadata.encode()))
+        for path, data in files.items():
+            info = tarfile.TarInfo(f"{root}/{path}")
+            info.size = len(data)
+            archive.addfile(info, BytesIO(data))
     return output.getvalue()
 
 
@@ -110,7 +119,7 @@ class FakeGitHub(github.GitHub):
         for platform in platforms:
             self.add_job(run_id, f"{role} ({platform})" if len(platforms) > 1 else role)
             build_id = int(inputs["build_run_id"]) if validating else run_id
-            identity = evidence.package_identity(platform, backend, build_id, 1, SHA)
+            identity = package_identity(platform, backend, build_id, 1, SHA)
             name = identity["archive"]
             if validating:
                 build_artifact, = [a for a in self.artifacts[build_id] if f"-{platform}-" in a["name"]]
@@ -122,7 +131,7 @@ class FakeGitHub(github.GitHub):
             else:
                 data = native_archive(identity, backend)
                 digest = hashlib.sha256(data).hexdigest()
-                self.add_artifact(run_id, f"hermite-optics-{backend}-{platform}-{run_id}-1",
+                self.add_artifact(run_id, f"copylot-accelerated-{backend}-{platform}-{run_id}-1",
                                   {name: data, name + ".sha256": f"{digest}  {name}\n",
                                    "artifact.json": json.dumps(identity)})
         if workflow == "validate-linux-cuda.yml":
@@ -313,6 +322,50 @@ class ReleasePipeline(unittest.TestCase):
         with self.assertRaisesRegex(github.EvidenceError, "Duplicate JSON"):
             evidence.checked_json('{"schema": 1, "schema": 2}')
 
+    def test_package_names_and_library_metadata_on_all_targets(self):
+        variants = {"linux-x86_64-cpu": "cpu-glibc2.34",
+                    "linux-x86_64-cuda": "cuda13.0-sm89-glibc2.34"}
+        for key, suffix in ASSET_SUFFIXES.items():
+            platform, backend = key.rsplit("-", 1)
+            identity = package_identity(platform, backend, 20, 1, SHA)
+            ext = "zip" if suffix.endswith(".zip") else "tar.gz"
+            variant = variants.get(key, "cpu")
+            with self.subTest(target=key):
+                self.assertEqual(identity["archive"],
+                                 f"copylot-accelerated-local-{SHA[:12]}-{platform}-{variant}.{ext}")
+                path = self.directory / identity["archive"]
+                path.write_bytes(native_archive(identity, backend))
+                evidence.check_package_metadata(path, identity, backend)
+                path.write_bytes(native_archive(identity, backend, library_name="lib/wrong.so"))
+                with self.assertRaisesRegex(github.EvidenceError, "expected platform, library"):
+                    evidence.check_package_metadata(path, identity, backend)
+                path.write_bytes(native_archive(identity, backend, omit="python/copylot_accelerated.py"))
+                with self.assertRaisesRegex(github.EvidenceError, "Missing or duplicate"):
+                    evidence.check_package_metadata(path, identity, backend)
+
+    def test_packaged_wrapper_loads_the_renamed_library_by_absolute_path(self):
+        wrapper_path = Path(__file__).resolve().parents[1] / "packaging/copylot_accelerated.py"
+        spec = importlib.util.spec_from_file_location("copylot_accelerated", wrapper_path)
+        wrapper = importlib.util.module_from_spec(spec)
+        upstream = type("UpstreamCoPylot", (), {})
+        with patch.dict(sys.modules, {"copylot": SimpleNamespace(CoPylot=upstream)}):
+            spec.loader.exec_module(wrapper)
+        for platform, library in (("linux", "lib/copylot_accelerated.so"),
+                                  ("macos", "lib/copylot_accelerated.so"),
+                                  ("windows", "lib/copylot_accelerated.dll")):
+            metadata = {"library": library, "cuda_toolkit": ""}
+            (self.directory / "BUILD.json").write_text(json.dumps(metadata), encoding="utf-8")
+            fake_os = SimpleNamespace(name="nt" if platform == "windows" else "posix", environ={},
+                                      add_dll_directory=Mock(return_value=nullcontext()))
+            with (self.subTest(platform=platform), patch.object(wrapper, "PACKAGE", self.directory),
+                  patch.object(wrapper, "os", fake_os), patch.object(wrapper.ctypes, "CDLL") as load):
+                instance = wrapper.CoPylot()
+                self.assertIsInstance(instance, upstream)
+                self.assertIs(instance.pdll, load.return_value)
+                load.assert_called_once_with(str(self.directory / library))
+                if platform == "windows":
+                    fake_os.add_dll_directory.assert_called_once_with(str(self.directory / "lib"))
+
     def test_latest_falls_back_as_a_whole_but_explicit_selection_does_not(self):
         manifest = self.complete_global()
         second_id = GLOBAL_ID + 1
@@ -420,7 +473,7 @@ class ReleasePipeline(unittest.TestCase):
         with (patch.dict(os.environ, env), patch.object(pipeline, "RECEIPT", receipt),
               patch.object(pipeline, "Path", return_value=directory)):
             pipeline.emit_receipt()
-        identity = evidence.package_identity("linux-x86_64", "cpu", build_id, 1, SHA)
+        identity = package_identity("linux-x86_64", "cpu", build_id, 1, SHA)
         digest = hashlib.sha256((directory / identity["archive"]).read_bytes()).hexdigest()
         self.assertEqual(json.loads(receipt.read_text(encoding="utf-8")),
                          evidence.validation_receipt(identity, artifact["id"], digest, GLOBAL_ID, 1, revision))

@@ -6,9 +6,10 @@ import re
 import tarfile
 import zipfile
 
+from package_names import WRAPPER, build_artifact_name, native_library, package_identity, package_variant
 from release_github import EvidenceError
 from resolve_package import BUILDS
-from verify_package import PORTABLE_CPU, PORTABLE_CUDA, archive_files
+from verify_package import archive_files
 
 
 GLOBAL_WORKFLOW = "build-validate-all.yml"
@@ -88,14 +89,6 @@ def jobs_for(api, run_id, attempt, revision, role, platforms, optional_gpu=False
     return expected
 
 
-def package_identity(platform, backend, run_id, attempt, revision):
-    variant = (PORTABLE_CUDA if backend == "cuda" else PORTABLE_CPU) if platform == "linux-x86_64" else "cpu"
-    suffix = ".zip" if platform.startswith("windows-") else ".tar.gz"
-    archive = f"hermite-optics-local-{revision[:12]}-{platform}-{variant}{suffix}"
-    return {"build_run_id": run_id, "build_run_attempt": attempt, "source_revision": revision,
-            "platform": platform, "archive": archive}
-
-
 def package_files(names, read, identity):
     archive = identity["archive"]
     sidecar = f"{archive}.sha256"
@@ -111,20 +104,25 @@ def package_files(names, read, identity):
 def check_package_metadata(path, identity, backend):
     archive = identity["archive"]
     prefix = archive.removesuffix(".tar.gz").removesuffix(".zip")
+    os_name, architecture = identity["platform"].split("-", 1)
+    library = native_library(os_name)
+    expected = ("BUILD.json", library, WRAPPER, "python/copylot.py")
     try:
-        entries = [data for name, data in archive_files(path) if name == f"{prefix}/BUILD.json"]
+        members = [(name.removeprefix(f"{prefix}/"), data) for name, data in archive_files(path)
+                   if name.startswith(f"{prefix}/") and name.removeprefix(f"{prefix}/") in expected]
     except (ValueError, tarfile.TarError, zipfile.BadZipFile, OSError, EOFError) as error:
         raise EvidenceError(f"Cannot read the native archive {archive}: {error}") from error
-    require(len(entries) == 1, f"Missing or duplicate BUILD.json in {archive}")
-    metadata = checked_json(entries[0])
-    os_name, architecture = identity["platform"].split("-", 1)
-    variant = prefix.removeprefix(f"hermite-optics-local-{identity['source_revision'][:12]}-{identity['platform']}-")
+    require(sorted(name for name, _ in members) == sorted(expected),
+            f"Missing or duplicate BUILD.json, native library or Python modules in {archive}")
+    metadata = checked_json(dict(members)["BUILD.json"])
+    variant = package_variant(identity["platform"], backend)
     expected_cuda = ("13.0.88", "89") if backend == "cuda" else ("", "")
     require(isinstance(metadata, dict) and metadata.get("source_dirty_at_configure") is False
             and (metadata.get("source_revision"), metadata.get("os"), metadata.get("architecture"),
-                 metadata.get("variant"), metadata.get("cuda_toolkit"), metadata.get("cuda_architecture"))
-            == (identity["source_revision"], os_name, architecture, variant, *expected_cuda),
-            f"Native archive metadata differs from the expected platform, backend or source for {archive}")
+                 metadata.get("library"), metadata.get("variant"), metadata.get("cuda_toolkit"),
+                 metadata.get("cuda_architecture"))
+            == (identity["source_revision"], os_name, architecture, library, variant, *expected_cuda),
+            f"Native archive metadata differs from the expected platform, library, backend or source for {archive}")
 
 
 def validation_receipt(identity, artifact_id, digest, run_id, attempt, revision):
@@ -158,7 +156,7 @@ def collect_build(api, workflow, run_id, attempt, revision, directory):
     packages = {}
     for platform in platforms:
         identity = package_identity(platform, backend, run_id, attempt, revision)
-        name = f"hermite-optics-{backend}-{platform}-{run_id}-{attempt}"
+        name = build_artifact_name(backend, platform, run_id, attempt)
         artifact = api.artifact(run_ref(run_id, attempt, revision), name)
         with api.download(artifact) as archive:
             data, digest = package_files(archive.namelist(), archive.read, identity)

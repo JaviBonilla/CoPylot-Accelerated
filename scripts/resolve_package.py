@@ -7,6 +7,8 @@ from pathlib import Path
 import re
 import subprocess
 
+from package_names import build_artifact_name
+
 
 BUILDS = {
     "build-linux-cpu.yml": ("cpu", ("linux-x86_64",)),
@@ -62,7 +64,7 @@ def resolve(repo, workflow, override="", *, request=api):
         available = request(f"{run_path}/artifacts?per_page=100", "artifacts")
         artifacts = {}
         for platform in platforms:
-            name = f"hermite-optics-{backend}-{platform}-{run_id}-{attempt}"
+            name = build_artifact_name(backend, platform, run_id, attempt)
             matches = []
             for artifact in available:
                 if (artifact.get("name") != name or artifact.get("expired") is not False

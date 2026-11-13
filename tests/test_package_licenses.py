@@ -89,7 +89,7 @@ class PackageLicenses(unittest.TestCase):
         members.update({"BUILD.json": json.dumps(info).encode("utf-8"), LIBRARY: pe_fixture(),
                         "python/copylot.py": b"# fixture\n", "python/pysoltrace.py": b"# fixture\n"})
         identity = {"platform": "windows-x86_64", "source_revision": REVISION}
-        prefix = f"hermite-optics-local-{REVISION[:12]}-windows-x86_64-cpu"
+        prefix = f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu"
         with TemporaryDirectory() as temp:
             archive = Path(temp) / f"{prefix}.zip"
 

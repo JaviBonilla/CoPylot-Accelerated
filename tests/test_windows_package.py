@@ -12,13 +12,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from verify_package import SOURCES, inspect
 
 
-LIBRARY = "lib/hermite_optics.dll"
+LIBRARY = "lib/copylot_accelerated.dll"
 REVISION = "a" * 40
 STRING_OFFSET = 0x280
 CODEVIEW_OFFSET = 0x340
 
 
-def pe_fixture(payload=b"", pdb=b"hermite_optics.pdb", signature=b"RSDS", machine=0x8664):
+def pe_fixture(payload=b"", pdb=b"copylot_accelerated.pdb", signature=b"RSDS", machine=0x8664):
     """A minimal PE32+ DLL header and file-backed section for archive inspection."""
     data = bytearray(0x600)
     pe = 0x80
@@ -50,7 +50,7 @@ class WindowsPackagePaths(unittest.TestCase):
             "distribution": "local-validation-only", "redistribution": "blocked-pending-review",
             "library": LIBRARY,
         }
-        prefix = f"hermite-optics-local-{REVISION[:12]}-windows-x86_64-cpu"
+        prefix = f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu"
         with TemporaryDirectory() as temp:
             path = Path(temp) / f"{prefix}.zip"
             with zipfile.ZipFile(path, "w") as archive:
@@ -101,7 +101,7 @@ class WindowsPackagePaths(unittest.TestCase):
     def test_rejects_structured_codeview_pdb_paths(self):
         for signature, header_size in ((b"RSDS", 24), (b"NB10", 16)):
             with self.subTest(signature=signature):
-                path = r"X:\fixture\debug\hermite_optics.pdb"
+                path = r"X:\fixture\debug\copylot_accelerated.pdb"
                 dll = pe_fixture(pdb=path.encode(), signature=signature)
                 self.assert_rejected(dll, "PE CodeView local PDB path", CODEVIEW_OFFSET + header_size, path)
 
@@ -112,4 +112,4 @@ class WindowsPackagePaths(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Expected an x64 PE32"):
             self.inspect_dll(pe_fixture(machine=0xAA64))
         with self.assertRaisesRegex(ValueError, "package allowlist"):
-            self.inspect_dll(pe_fixture(), extra="lib/hermite_optics.pdb")
+            self.inspect_dll(pe_fixture(), extra="lib/copylot_accelerated.pdb")

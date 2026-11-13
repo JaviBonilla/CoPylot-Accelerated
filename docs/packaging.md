@@ -2,7 +2,7 @@
 
 The headless CMake target exposes the CoPylot Python API. With
 `COPILOT_LOCAL_PACKAGE=ON`, CPack stages a relocatable loader, synthetic example,
-build metadata and license notices. CI uses the internal `hermite-optics-local-`
+build metadata and license notices. CI uses the internal `copylot-accelerated-local-`
 archive prefix. GitHub Release downloads use the public `copylot-accelerated-`
 prefix. Redistribution clearance is pending.
 
@@ -49,7 +49,7 @@ host validation, each platform job uploads `validation.json` with the
 Build artifact ID, the archive checksum and the validation run identity.
 
 Artifact names use
-`hermite-optics-<backend>-<platform>-<run-id>-<attempt>`.
+`copylot-accelerated-<backend>-<platform>-<run-id>-<attempt>`.
 For Linux, `platform` is `linux-x86_64` for both backends.
 Both Linux Build workflows use the pinned AlmaLinux 9 builder and retain
 the glibc 2.34 ABI. Each Validate workflow checks the same archive in
@@ -145,7 +145,7 @@ builds and tests the same shared library that CPack puts in
 `build/package-linux-portable/packages/`. It uses GCC's `-march=x86-64
 -mtune=generic` and keeps the standard project build separate. The final
 archive is named
-`hermite-optics-local-<revision>-linux-x86_64-cpu-glibc2.34.tar.gz`.
+`copylot-accelerated-local-<revision>-linux-x86_64-cpu-glibc2.34.tar.gz`.
 CPack writes a SHA-256 sidecar alongside it.
 
 The verified binary requires up to `GLIBC_2.34`, `GLIBCXX_3.4.29` and
@@ -228,7 +228,7 @@ in the library. CPack places the archive and SHA-256 sidecar under
 
 ### Runtime and driver
 
-The archive has one ELF, `lib/hermite_optics.so`. It requires
+The archive has one ELF, `lib/copylot_accelerated.so`. It requires
 `GLIBC_2.34`, `GLIBCXX_3.4.29` and `CXXABI_1.3.13`, with the same
 system libraries as the portable CPU archive and one additional ELF
 dependency, `libcudart.so.13`. Install NVIDIA CUDA Runtime 13.0.88
@@ -302,12 +302,12 @@ available device before invoking either GPU check.
 
 | Runner | Actions artifact name | Archive inside it |
 | --- | --- | --- |
-| `windows-2022` | `hermite-optics-cpu-windows-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-windows-x86_64-cpu.zip` |
-| `macos-15-intel` | `hermite-optics-cpu-macos-x86_64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-x86_64-cpu.tar.gz` |
-| `macos-15` | `hermite-optics-cpu-macos-arm64-<run-id>-<attempt>` | `hermite-optics-local-<sha12>-macos-arm64-cpu.tar.gz` |
+| `windows-2022` | `copylot-accelerated-cpu-windows-x86_64-<run-id>-<attempt>` | `copylot-accelerated-local-<sha12>-windows-x86_64-cpu.zip` |
+| `macos-15-intel` | `copylot-accelerated-cpu-macos-x86_64-<run-id>-<attempt>` | `copylot-accelerated-local-<sha12>-macos-x86_64-cpu.tar.gz` |
+| `macos-15` | `copylot-accelerated-cpu-macos-arm64-<run-id>-<attempt>` | `copylot-accelerated-local-<sha12>-macos-arm64-cpu.tar.gz` |
 
 If native configuration, compilation or packaging fails, the build job
-uploads `hermite-optics-diagnostics-<platform>-<run-id>-<attempt>`. For
+uploads `copylot-accelerated-diagnostics-<platform>-<run-id>-<attempt>`. For
 NLopt configuration failures, the job log also includes the configure
 output and the last probe diagnostics available from `config.log`. The
 artifact excludes raw Autoconf logs and CMake caches.
@@ -358,10 +358,10 @@ reports exact agreement. `validation_passed` reports whether the comparison
 satisfies the indicated `flux_policy` and the other output checks.
 
 The macOS workflow uses `packaging/example.py` from the validation checkout
-and loads the selected Build's packaged wrapper and library. To revalidate
-Build `43024746862`, select that run in **Validate · macOS · CPU** at a revision
-that includes this policy. The archive and checksum are reused as produced.
-Future Builds include the updated standalone example. To run the same checks
+and loads the selected Build's packaged wrapper and library. Run a new Build
+with the `copylot-accelerated-local-` layout before validating or staging a new
+release. Older artifacts keep the filenames, contents and checksums recorded
+by their original build. To run the same checks
 against an extracted CPU package on a matching macOS host, use the interpreter
 from a Python 3.12 environment with the pinned requirements installed:
 
@@ -417,7 +417,7 @@ build=build/package-cpu
 .venv/bin/cmake --build "$build" --target solarpilot --config Release --parallel 4
 export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
 .venv/bin/cpack --config "$build/CPackConfig.cmake" -C Release
-.venv/bin/python scripts/verify_package.py "$build"/packages/hermite-optics-local-*.tar.gz
+.venv/bin/python scripts/verify_package.py "$build"/packages/copylot-accelerated-local-*.tar.gz
 ```
 
 For Linux CUDA use a fresh `build/package-cuda` and append
@@ -454,7 +454,7 @@ $build = "build/package-cpu"
 & $cmake --build $build --target copilot_package_library --config Release --parallel 4
 $env:SOURCE_DATE_EPOCH = git show -s --format=%ct HEAD
 & $cpack --config "$build/CPackConfig.cmake" -C Release
-$archives = @(Get-ChildItem "$build/packages/hermite-optics-local-*.zip")
+$archives = @(Get-ChildItem "$build/packages/copylot-accelerated-local-*.zip")
 if ($archives.Count -ne 1) { throw "Expected exactly one package in the build directory" }
 & $python scripts/verify_package.py $archives[0].FullName
 ```
@@ -495,7 +495,7 @@ The example creates synthetic weather and a 12-heliostat field and evaluates
 one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows)
 in packages built with the updated example. For other programs, add the
 extracted `python/` directory to `PYTHONPATH` and use
-`from hermite_optics import CoPylot`.
+`from copylot_accelerated import CoPylot`.
 
 The virtual environment manages Python packages. Install native runtimes such
 as glibc, Visual C++ and CUDA separately. The host-built Linux reference binary
@@ -510,8 +510,10 @@ The archive contains no host runtimes or Python wheels.
 
 ## Contents and redistribution review
 
-The archive allowlist consists of the library, the Python loader and the
-pinned upstream Python modules, the example and Python requirements, the
+The archive contains `lib/copylot_accelerated.so` on Linux and macOS or
+`lib/copylot_accelerated.dll` on Windows. It includes the loader
+`python/copylot_accelerated.py`, the pinned upstream Python modules including
+`python/copylot.py`, the example and Python requirements, the
 readme, `BUILD.json`, and the project and upstream license materials.
 It contains no compiled development objects, benchmark data, stored weather,
 or field files. Build metadata identifies the source and dependency revisions,

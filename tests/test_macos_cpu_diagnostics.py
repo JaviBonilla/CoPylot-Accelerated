@@ -187,7 +187,7 @@ class CpuAcceptance(unittest.TestCase):
         actual = self.state(np.nextafter(ref[0], 2.0))
         for mode in ("original", "refactored"):
             log = io.StringIO()
-            with (self.subTest(mode=mode), patch.dict(example.sys.modules, {"hermite_optics": loader}),
+            with (self.subTest(mode=mode), patch.dict(example.sys.modules, {"copylot_accelerated": loader}),
                   patch.object(example.sys, "argv", ["example.py", "--mode", mode, "--compare"]),
                   patch.object(example.sys, "path", example.sys.path.copy()),
                   patch.object(example, "is_apple_silicon_package", return_value=True),

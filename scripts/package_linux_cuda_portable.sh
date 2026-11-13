@@ -39,7 +39,7 @@ cmake --build "$build" --parallel "$jobs"
 ctest --test-dir "$build" --output-on-failure "${ctest_args[@]}"
 
 # Exercise the packaged ELF under the filename used by the repository tests.
-ln -sfn hermite_optics.so "$build/lib/solarpilot.so"
+ln -sfn copylot_accelerated.so "$build/lib/solarpilot.so"
 export COPILOT_LIB_DIR="$root/$build/lib"
 python3 benchmarks/smoke_test.py
 if [[ ${verify_args[0]:-} == --cuda ]]; then
@@ -53,6 +53,6 @@ export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
 cpack --config "$build/CPackConfig.cmake" -C Release
 revision="$(git rev-parse --short=12 HEAD)"
 if [[ -n $(git status --porcelain) ]]; then revision+=-dirty; fi
-archive="$build/packages/hermite-optics-local-$revision-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz"
+archive="$build/packages/copylot-accelerated-local-$revision-linux-x86_64-cuda13.0-sm89-glibc2.34.tar.gz"
 python3 scripts/verify_package.py "$archive" --cuda-runtime-dir "$toolkit/lib" \
   --cuobjdump "$toolkit/bin/cuobjdump" "${verify_args[@]}"

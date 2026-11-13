@@ -13,9 +13,10 @@ import time
 from urllib.parse import quote
 import zipfile
 
+from package_names import PACKAGE_PREFIX, package_identity
 from release_evidence import (
     BUILDS, GLOBAL_WORKFLOW, WORKFLOW_NAMES, check_child_attempts, collect_build, collect_validation,
-    complete_manifest, new_manifest, package_files, package_identity, require, run_identity,
+    complete_manifest, new_manifest, package_files, require, run_identity,
     run_ref, successful_run, validation_receipt,
 )
 from release_github import ApiError, EvidenceError, GitHub
@@ -243,7 +244,7 @@ def stage_assets(manifest, version, directory):
         identity = package["identity"]
         source = directory / str(package["artifact_id"]) / identity["archive"]
         extension = ".zip" if source.suffix == ".zip" else ".tar.gz"
-        target = assets / f"copylot-accelerated-{asset_version}-{key}{extension}"
+        target = assets / f"{PACKAGE_PREFIX}-{asset_version}-{key}{extension}"
         shutil.copyfile(source, target)
         digest = hashlib.sha256(target.read_bytes()).hexdigest()
         require(digest == package["sha256"], f"Staged asset SHA-256 mismatch for {key}")

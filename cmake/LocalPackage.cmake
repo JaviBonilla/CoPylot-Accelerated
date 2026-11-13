@@ -29,13 +29,14 @@ else()
   message(FATAL_ERROR "No native package recipe for this OS/compiler/architecture")
 endif()
 
+set(package_basename copylot_accelerated)
 set_target_properties(solarpilot PROPERTIES
-  OUTPUT_NAME hermite_optics SUFFIX "${package_suffix}" SKIP_BUILD_RPATH TRUE)
+  OUTPUT_NAME "${package_basename}" SUFFIX "${package_suffix}" SKIP_BUILD_RPATH TRUE)
 if(WIN32 AND MSVC AND NOT SOLARPILOT_ENABLE_CUDA)
   # If the linker emits CodeView metadata, record only the PDB basename.
-  target_link_options(solarpilot PRIVATE "$<$<CONFIG:Release>:/PDBALTPATH:hermite_optics.pdb>")
+  target_link_options(solarpilot PRIVATE "$<$<CONFIG:Release>:/PDBALTPATH:${package_basename}.pdb>")
 endif()
-set(package_library "hermite_optics${package_suffix}")
+set(package_library "${package_basename}${package_suffix}")
 set(package_variant cpu)
 if(COPILOT_PORTABLE_LINUX_CPU)
   set(package_variant cpu-glibc2.34)
@@ -109,7 +110,7 @@ install(CODE [[
 ]] COMPONENT local_runtime)
 install(FILES "$<TARGET_FILE:solarpilot>" DESTINATION lib COMPONENT local_runtime)
 install(FILES "${package_generated}/copylot.py" "${upstream_api}/pysoltrace.py"
-  packaging/hermite_optics.py DESTINATION python COMPONENT local_runtime)
+  "packaging/${package_basename}.py" DESTINATION python COMPONENT local_runtime)
 install(FILES packaging/example.py requirements.txt LICENSE THIRD_PARTY_NOTICES
   "${package_generated}/BUILD.json" DESTINATION . COMPONENT local_runtime)
 install(FILES packaging/README.md DESTINATION . RENAME README.md COMPONENT local_runtime)
@@ -120,9 +121,9 @@ install(FILES
   licenses/NLopt-LICENSE.htm licenses/lp_solve-LICENSE.htm licenses/RapidXML-license.txt
   DESTINATION licenses COMPONENT local_runtime)
 
-set(CPACK_PACKAGE_NAME "hermite-optics-local")
+set(CPACK_PACKAGE_NAME "copylot-accelerated-local")
 set(CPACK_PACKAGE_VERSION "0.0.0")
-set(CPACK_PACKAGE_FILE_NAME "hermite-optics-local-${package_revision_short}-${package_os}-${package_arch}-${package_variant}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${package_revision_short}-${package_os}-${package_arch}-${package_variant}")
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 set(CPACK_VERBATIM_VARIABLES ON)

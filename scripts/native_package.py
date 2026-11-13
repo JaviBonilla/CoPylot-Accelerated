@@ -12,7 +12,8 @@ import shutil
 import subprocess
 import sys
 
-from verify_package import PORTABLE_CPU, PORTABLE_CUDA, ROOT, check_runtime, inspect, require, verify_sources
+from package_names import PORTABLE_CUDA, package_identity, package_variant
+from verify_package import ROOT, check_runtime, inspect, require, verify_sources
 
 PLATFORMS = ("linux-x86_64", "windows-x86_64", "macos-x86_64", "macos-arm64")
 BUILD = ROOT / "build/native-package"
@@ -189,20 +190,10 @@ def main():
             "Build source checkout does not match the full selected Build revision")
     require(args.run_id > 0 and args.run_attempt > 0, "Build run identifiers must be positive")
     require(args.backend != "cuda" or args.platform == "linux-x86_64", "CUDA packages require Linux x86-64")
-    if args.platform == "linux-x86_64":
-        variant = PORTABLE_CUDA if args.backend == "cuda" else PORTABLE_CPU
-    else:
-        variant = "cpu"
+    variant = package_variant(args.platform, args.backend)
     require(not (args.cuda or args.cuda_runtime_dir) or (args.operation == "validate" and variant == PORTABLE_CUDA),
             "CUDA runtime options require validation of a portable CUDA artifact")
-    suffix = ".zip" if args.platform.startswith("windows-") else ".tar.gz"
-    identity = {
-        "build_run_id": args.run_id,
-        "build_run_attempt": args.run_attempt,
-        "source_revision": args.revision,
-        "platform": args.platform,
-        "archive": f"hermite-optics-local-{args.revision[:12]}-{args.platform}-{variant}{suffix}",
-    }
+    identity = package_identity(args.platform, args.backend, args.run_id, args.run_attempt, args.revision)
     if args.operation == "build":
         build(identity, variant)
     else:

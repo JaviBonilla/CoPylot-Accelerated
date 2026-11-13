@@ -36,7 +36,7 @@ runs:
         fi
     - uses: actions/upload-artifact@v6
       with:
-        name: hermite-optics-${{ inputs.backend }}-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+        name: copylot-accelerated-${{ inputs.backend }}-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
         path: build/native-package/artifact/
         if-no-files-found: error
         compression-level: 0
@@ -44,6 +44,6 @@ runs:
       if: failure() && runner.os != 'Linux'
       uses: actions/upload-artifact@v6
       with:
-        name: hermite-optics-diagnostics-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+        name: copylot-accelerated-diagnostics-${{ inputs.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
         path: build/native-package/diagnostics/*.log
         if-no-files-found: ignore

@@ -18,11 +18,10 @@ import tarfile
 from tempfile import TemporaryDirectory
 import zipfile
 
+from package_names import PORTABLE_CPU, PORTABLE_CUDA, WRAPPER, archive_prefix, native_library
 from verify_windows_paths import verify_windows_paths
 
 ROOT = Path(__file__).resolve().parents[1]
-PORTABLE_CPU = "cpu-glibc2.34"
-PORTABLE_CUDA = "cuda13.0-sm89-glibc2.34"
 CUDART_SONAME = "libcudart.so.13"
 PORTABLE_MAX = {"GLIBC": (2, 34), "GLIBCXX": (3, 4, 29), "CXXABI": (1, 3, 13)}
 PORTABLE_NEEDED = {"libc.so.6", "libm.so.6", "libstdc++.so.6", "libgcc_s.so.1",
@@ -41,7 +40,7 @@ SOURCES = {
     "README.md": "packaging/README.md",
     "licenses/Project-documentation-CC-BY-4.0.txt": "docs/LICENSE",
     "example.py": "packaging/example.py",
-    "python/hermite_optics.py": "packaging/hermite_optics.py",
+    WRAPPER: f"packaging/{Path(WRAPPER).name}",
     "python/pysoltrace.py": "SolarPILOT/deploy/api/pysoltrace.py",
     **{name: name for name in LICENSES | {"requirements.txt", "LICENSE", "THIRD_PARTY_NOTICES"}},
 }
@@ -94,11 +93,10 @@ def inspect(path, runtime_only=False, *, source_root=None):
     revision = info["source_revision"]
     require(re.fullmatch(r"[0-9a-f]{40}", revision), "Invalid source revision")
     configured_revision = revision[:12] + ("-dirty" if info["source_dirty_at_configure"] else "")
-    expected_prefix = f'hermite-optics-local-{configured_revision}-{info["os"]}-{architecture}-{info["variant"]}'
+    expected_prefix = archive_prefix(configured_revision, f'{info["os"]}-{architecture}', info["variant"])
     require(prefix == expected_prefix and info["build_type"] == "Release",
             "Archive name or build configuration differs from metadata")
-    suffix = ".dll" if info["os"] == "windows" else ".so"
-    library = f"lib/hermite_optics{suffix}"
+    library = native_library(info["os"])
     require(info["library"] == library, "Unexpected library path")
     missing_licenses = PACKAGE_LICENSES - files.keys()
     if missing_licenses:

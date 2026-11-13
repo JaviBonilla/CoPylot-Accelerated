@@ -24,7 +24,7 @@ def run(run_id, workflow=LINUX, **overrides):
 def artifacts(build, workflow=LINUX):
     backend, platforms = BUILDS[workflow]
     run_id, attempt = build["id"], build["run_attempt"]
-    return [{"name": f"hermite-optics-{backend}-{platform}-{run_id}-{attempt}", "id": run_id * 10 + index,
+    return [{"name": f"copylot-accelerated-{backend}-{platform}-{run_id}-{attempt}", "id": run_id * 10 + index,
              "expired": False, "expires_at": "2099-01-01T00:00:00Z",
              "workflow_run": {"id": run_id, "head_sha": build["head_sha"], "head_branch": "main"}}
             for index, platform in enumerate(platforms, start=1)]
@@ -63,7 +63,7 @@ class ResolvePackage(unittest.TestCase):
         result = resolve(REPO, LINUX, request=self.request)
         self.assertEqual(result, {"run_id": 11, "attempt": 3, "revision": REVISION,
                                   "artifacts": {"linux-x86_64": {
-                                      "name": "hermite-optics-cpu-linux-x86_64-11-3", "id": "111"}}})
+                                      "name": "copylot-accelerated-cpu-linux-x86_64-11-3", "id": "111"}}})
 
     def test_skips_failed_and_in_progress_runs(self):
         completed = run(11)

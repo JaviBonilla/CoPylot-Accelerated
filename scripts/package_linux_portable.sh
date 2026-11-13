@@ -23,7 +23,7 @@ cmake --build "$build" --parallel "$jobs"
 ctest --test-dir "$build" --output-on-failure
 
 # The repository tests use the upstream filename. Exercise the very same ELF.
-ln -sfn hermite_optics.so "$build/lib/solarpilot.so"
+ln -sfn copylot_accelerated.so "$build/lib/solarpilot.so"
 export COPILOT_LIB_DIR="$root/$build/lib"
 python3 benchmarks/smoke_test.py
 python3 -m unittest discover -s tests -v
@@ -32,5 +32,5 @@ export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
 cpack --config "$build/CPackConfig.cmake" -C Release
 revision="$(git rev-parse --short=12 HEAD)"
 if [[ -n $(git status --porcelain) ]]; then revision+=-dirty; fi
-archive="$build/packages/hermite-optics-local-$revision-linux-x86_64-cpu-glibc2.34.tar.gz"
+archive="$build/packages/copylot-accelerated-local-$revision-linux-x86_64-cpu-glibc2.34.tar.gz"
 python3 scripts/verify_package.py "$archive" "${verify_args[@]}"

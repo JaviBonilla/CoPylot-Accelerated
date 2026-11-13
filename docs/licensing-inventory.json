@@ -1307,7 +1307,7 @@
       "license": "MIT"
     },
     {
-      "path": "packaging/hermite_optics.py",
+      "path": "packaging/copylot_accelerated.py",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },
@@ -1378,6 +1378,11 @@
     },
     {
       "path": "scripts/package_linux_portable.sh",
+      "classification": "Original code or build configuration",
+      "license": "MIT"
+    },
+    {
+      "path": "scripts/package_names.py",
       "classification": "Original code or build configuration",
       "license": "MIT"
     },
