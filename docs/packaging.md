@@ -12,7 +12,7 @@ prefix. CPack gives both the same single extraction directory, `copylot-accelera
 | --- | --- |
 | Linux x86-64 portable CPU | Built with AlmaLinux 9 and GCC 11.5. Tested the same archive on AlmaLinux 9, Debian 12, and Ubuntu 22.04 and 24.04. |
 | Linux x86-64 native CPU | Host-specific build verified with GCC 13.3, CMake 3.30.5 and Python 3.12. |
-| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. An earlier portable archive passed device tests on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
+| Linux x86-64 portable CUDA | Built on AlmaLinux 9 with CUDA 13.0 Update 1. Host loading and three CPU modes passed on four distributions. The v0.1.0 release package passed a manual functional GPU check on an RTX 6000 Ada (SM 89) under Ubuntu 24.04.4. |
 | Windows x64 CPU | Native MSVC 2022 build and artifact validation passed on `windows-2022`. |
 | Windows x64 CUDA | Manual recipe prepared, conditional on a CUDA 13.0 toolkit supporting the installed MSVC toolset. DLL exports, CUDA linkage and device execution remain unverified. |
 | Intel macOS CPU | Native build and artifact validation passed on `macos-15-intel`. |
@@ -74,8 +74,8 @@ directly from GitHub, and waits for their jobs and five packages. It then
 dispatches each matching Validate workflow with its specific `build_run_id`.
 Both macOS architecture jobs must pass. Linux CUDA runs the hosted load and
 CPU checks, with device execution available separately through `run_gpu`. Run
-this workflow again to produce release packages with `BUILD.json` schema version
-`1`. Historical archives keep the metadata and hashes from their original build.
+release packages with `BUILD.json` schema version `1`. Historical archives
+keep the metadata and hashes from their original build.
 
 Keep `main` at the selected commit until both waves have been dispatched. The
 GitHub dispatch API uses a branch or tag, and the orchestrator checks each
@@ -266,6 +266,24 @@ CPU archive's synthetic result. These are host checks. The tests did not
 use an NVIDIA GPU.
 
 ### GPU execution of the reference archive
+
+#### v0.1.0 release package: physical GPU verification
+
+The `copylot-accelerated-v0.1.0-linux-x86_64-cuda.tar.gz` package
+(SHA-256 `186794d22e22f07681a63760a2c52805975310f12da742f076a8cd9224050670`)
+was transferred to an NVIDIA RTX 6000 Ada (SM 89) host running Ubuntu 24.04.4,
+driver `580.159.03` and CUDA Runtime `13.0.88`. The transferred archive's SHA-256
+matched the source package. The test loaded the native library from the extracted
+package and used embedded SM 89 device code with PTX JIT disabled.
+
+For the synthetic case, Original, Refactored and Multicore CPU results agreed
+bitwise. The CUDA 25 × 25 receiver-flux map agreed with CPU at `rtol=1e-9` and
+`atol=1e-10`, with a maximum absolute difference of `1.07e-14 kW/m²`.
+All 29 receiver summary values and 25 detail columns for each of 12 heliostats
+agreed bitwise. This was an independently performed functional device check, not
+an automated hosted CI job or a complete performance campaign.
+
+#### Earlier reference archive
 
 The archive built at `7c7ce27` was tested on an NVIDIA RTX 6000 Ada
 Generation (SM 89) under Ubuntu 24.04.4 with driver 580.159.03 and external
@@ -556,13 +574,10 @@ an archive.
   [Third-party notices](../THIRD_PARTY_NOTICES) and
   [NVIDIA CUDA Toolkit terms](https://docs.nvidia.com/cuda/eula/index.html).
 
-Clear the public designation, source access and LGPL redistribution
-requirements before publishing any binary. The source reconstruction script,
-patches, toolchain and build instructions should be part of the corresponding
-source plan. Verify that the published material can rebuild the exact release
-configuration and satisfies applicable license terms. A modified desktop GUI or
-a separately distributed SolTrace binary would require its own packaging and
-license review.
+Published packages retain their applicable notices and corresponding-source
+reconstruction information, including pinned revisions, patches, toolchains and
+build instructions. The upstream terms above continue to apply to distributions
+and to any separately distributed modified desktop GUI or SolTrace components.
 
 ## Release assets
 
