@@ -55,7 +55,9 @@ jobs:
           artifact_id: ${{ fromJSON(needs.resolve.outputs.artifact_ids)['linux-x86_64'] }}
 
   gpu:
-    if: inputs.run_gpu
+    # Keep self-hosted GPU execution unavailable after the repository becomes public.
+    # Public repository runners require a separate security review and isolation.
+    if: inputs.run_gpu && github.event.repository.private
     needs: [resolve, runtime]
     runs-on: [self-hosted, linux, x64, cuda-13-0, gpu]
     timeout-minutes: 15
