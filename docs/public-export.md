@@ -59,7 +59,8 @@ removed. These utilities entered the candidate as reviewed new files.
 The [README licensing section](../README.md#licensing) records the grants for
 original code, data and documentation. The [third-party notices](../THIRD_PARTY_NOTICES)
 record the upstream naming, source-availability and redistribution conditions for
-future packages or raw input assets. No remote or upload is authorized
-by this local export. CPU tests, asset reconstruction and exact commercial plan
-regeneration can be checked locally. CUDA execution requires a suitable toolkit
-and device; no fresh GPU or complete annual timing campaign is claimed here.
+future packages or raw input assets. This document records the original local export process, not the subsequent
+GitHub release workflow. CPU tests, asset reconstruction and exact commercial
+plan regeneration can be checked locally. The v0.1.0 release also passed a
+manual synthetic-case device check on an RTX 6000 Ada; no complete annual
+performance campaign is claimed for that package.
