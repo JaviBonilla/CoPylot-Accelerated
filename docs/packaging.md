@@ -5,7 +5,6 @@ The headless CMake target exposes the CoPylot Python API. With
 build metadata and license notices. CI uses the internal `copylot-accelerated-local-`
 archive prefix. GitHub Release downloads use the public `copylot-accelerated-`
 prefix. CPack gives both the same single extraction directory, `copylot-accelerated/`.
-Redistribution clearance is pending.
 
 ## Platform status
 
@@ -67,10 +66,6 @@ It checks GPU utilization, GPU processes and vLLM before running CUDA.
 When it detects activity, it stops the GPU job before launching the example.
 The hosted runtime job finishes independently of GPU availability.
 
-These packages are validation artifacts subject to the redistribution
-requirements below. Use access-controlled runs while redistribution
-clearance is pending.
-
 ### Build and validate all platforms
 
 In Actions, run [**Build & Validate · All**](../.github/workflows/build-validate-all.yml)
@@ -78,7 +73,9 @@ from `main`. It captures the dispatch commit, requests the four Build run IDs
 directly from GitHub, and waits for their jobs and five packages. It then
 dispatches each matching Validate workflow with its specific `build_run_id`.
 Both macOS architecture jobs must pass. Linux CUDA runs the hosted load and
-CPU checks, with device execution available separately through `run_gpu`.
+CPU checks, with device execution available separately through `run_gpu`. Run
+this workflow again to produce release packages with `BUILD.json` schema version
+`1`. Historical archives keep the metadata and hashes from their original build.
 
 Keep `main` at the selected commit until both waves have been dispatched. The
 GitHub dispatch API uses a branch or tag, and the orchestrator checks each
@@ -104,7 +101,9 @@ The workflow creates a draft titled **CoPylot-Accelerated vX.Y.Z**, with the tag
 `vX.Y.Z` pointing to the source SHA of the selected global run. It contains
 five [versioned archives](#release-assets),
 `SHA256SUMS.txt` and release notes with compatibility, prerequisites and CI
-provenance. The archives retain their original bytes and embedded metadata.
+provenance. The tag, release title and download filenames in `SHA256SUMS.txt`
+identify the release version. The archives retain their original bytes and
+embedded build metadata.
 SemVer build metadata keeps its `+` in the tag and uses `_` in asset names.
 Each package already includes its synthetic example, Python wrappers,
 requirements, README and license notices.
@@ -117,7 +116,7 @@ manually before retrying. GitHub uses the repository's built-in Actions token.
 Repository policies must allow workflow dispatches and draft creation. Tag
 rules or GitHub's workflow-file permissions can restrict tagging historical
 commits. Resolve those restrictions with a repository maintainer if GitHub
-rejects the request. Public redistribution remains a separate decision.
+rejects the request.
 
 ## Portable Linux x86-64 CPU
 
@@ -517,11 +516,13 @@ The archive contains `lib/copylot_accelerated.so` on Linux and macOS or
 `python/copylot.py`, the example and Python requirements, the
 readme, `BUILD.json`, and the project and upstream license materials.
 It contains no compiled development objects, benchmark data, stored weather,
-or field files. Build metadata identifies the source and dependency revisions,
-compiler, toolchain, architecture, and options. A dirty checkout is labelled
-in the archive name and metadata. Use separate build directories for each
-variant and a clean checkout for reproducibility. CPack source archiving
-is disabled to prevent copying the working directory into an archive.
+or field files. `BUILD.json` has `schema_version: 1` and
+`package_name: copylot-accelerated`. It records the full source revision, dirty
+status, pinned dependency revisions, platform, toolchain, library path and build
+options. A dirty checkout is also labelled in the CI archive name. Use separate
+build directories for each variant and a clean checkout for reproducibility.
+CPack source archiving is disabled to prevent copying the working directory into
+an archive.
 
 - The Alliance licenses require binary notices, a distinct non-confusing
   designation for a modified distribution, and attribution to the underlying

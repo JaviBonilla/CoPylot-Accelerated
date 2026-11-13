@@ -44,11 +44,23 @@ SOURCES = {
     "python/pysoltrace.py": "SolarPILOT/deploy/api/pysoltrace.py",
     **{name: name for name in LICENSES | {"requirements.txt", "LICENSE", "THIRD_PARTY_NOTICES"}},
 }
+BUILD_METADATA_FIELDS = {
+    "schema_version", "package_name", "source_revision", "source_dirty_at_configure",
+    "os", "architecture", "variant", "build_type", "library", "compiler", "cmake",
+    "diagnostics", "cuda_toolkit", "cuda_architecture", "dependencies",
+}
 
 
 def require(ok, message):
     if not ok:
         raise ValueError(message)
+
+
+def verify_build_metadata(info):
+    require(isinstance(info, dict) and type(info.get("schema_version")) is int and info["schema_version"] == 1,
+            "Unsupported BUILD.json schema; expected schema_version 1")
+    require(info.get("package_name") == PACKAGE_PREFIX, f"Expected {PACKAGE_PREFIX} in BUILD.json package_name")
+    require(info.keys() == BUILD_METADATA_FIELDS, "BUILD.json fields differ from schema version 1")
 
 
 def archive_entries(path):
@@ -95,6 +107,7 @@ def inspect(path, runtime_only=False, *, source_root=None):
     prefix = path.name.removesuffix(".tar.gz").removesuffix(".zip")
     files = archive_files(path)
     info = json.loads(files["BUILD.json"])
+    verify_build_metadata(info)
     os_names = {"Linux": "linux", "Windows": "windows", "Darwin": "macos"}
     host_arch = {"amd64": "x86_64", "x86_64": "x86_64", "arm64": "arm64"}
     architecture = info["architecture"]
@@ -102,8 +115,6 @@ def inspect(path, runtime_only=False, *, source_root=None):
             and architecture == host_arch.get(platform.machine().lower())
             and (architecture == "x86_64" or (architecture == "arm64" and info["os"] == "macos")),
             "Use a matching native host")
-    require(info["distribution"] == "local-validation-only"
-            and info["redistribution"] == "blocked-pending-review", "Incorrect distribution status")
     revision = info["source_revision"]
     require(re.fullmatch(r"[0-9a-f]{40}", revision), "Invalid source revision")
     configured_revision = revision[:12] + ("-dirty" if info["source_dirty_at_configure"] else "")

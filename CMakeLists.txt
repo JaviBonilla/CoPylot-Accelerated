@@ -6,7 +6,7 @@ option(SOLARPILOT_ENABLE_FLUX_DIAGNOSTICS "Enable internal legacy/flat different
 option(SOLARPILOT_ENABLE_CUDA "Enable hybrid CUDA Hermite flux density and device probe" OFF)
 option(SOLARPILOT_ENABLE_SANITIZERS "Enable CPU Address/Undefined sanitizers" OFF)
 option(SOLARPILOT_ENABLE_THREAD_SANITIZER "Enable CPU ThreadSanitizer" OFF)
-option(COPILOT_LOCAL_PACKAGE "Build a local binary package for validation only" OFF)
+option(COPILOT_LOCAL_PACKAGE "Build a native binary archive with CPack" OFF)
 option(COPILOT_PORTABLE_LINUX_CPU "Target the Linux x86-64 CPU package ABI baseline" OFF)
 option(COPILOT_PORTABLE_LINUX_CUDA "Target the Linux x86-64 CUDA package ABI baseline" OFF)
 if(COPILOT_PORTABLE_LINUX_CPU OR COPILOT_PORTABLE_LINUX_CUDA)

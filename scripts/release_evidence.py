@@ -9,7 +9,7 @@ import zipfile
 from package_names import WRAPPER, build_artifact_name, native_library, package_identity, package_variant
 from release_github import EvidenceError
 from resolve_package import BUILDS
-from verify_package import archive_files
+from verify_package import archive_files, verify_build_metadata
 
 
 GLOBAL_WORKFLOW = "build-validate-all.yml"
@@ -112,9 +112,13 @@ def check_package_metadata(path, identity, backend):
         raise EvidenceError(f"Cannot read the native archive {archive}: {error}") from error
     require(expected <= members.keys(), f"Missing package files in {archive}: {sorted(expected - members.keys())}")
     metadata = checked_json(members["BUILD.json"])
+    try:
+        verify_build_metadata(metadata)
+    except ValueError as error:
+        raise EvidenceError(f"{archive}: {error}") from error
     variant = package_variant(identity["platform"], backend)
     expected_cuda = ("13.0.88", "89") if backend == "cuda" else ("", "")
-    require(isinstance(metadata, dict) and metadata.get("source_dirty_at_configure") is False
+    require(metadata.get("source_dirty_at_configure") is False
             and (metadata.get("source_revision"), metadata.get("os"), metadata.get("architecture"),
                  metadata.get("library"), metadata.get("variant"), metadata.get("cuda_toolkit"),
                  metadata.get("cuda_architecture"))

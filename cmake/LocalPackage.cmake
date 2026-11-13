@@ -1,4 +1,4 @@
-# Explicit opt-in for local verification. No release or source archive target.
+# Explicit opt-in for native binary archives. Release staging runs separately.
 if(CMAKE_CROSSCOMPILING)
   message(FATAL_ERROR "Use a native build to create a local package")
 endif()

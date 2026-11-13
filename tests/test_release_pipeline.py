@@ -42,17 +42,21 @@ def zipped(files):
     return output.getvalue()
 
 
-def native_archive(identity, backend, *, library_name=None, omit=None, root="copylot-accelerated"):
+def native_archive(identity, backend, *, library_name=None, omit=None, root="copylot-accelerated", update_info=None):
     name = identity["archive"]
     os_name, architecture = identity["platform"].split("-", 1)
     variant = name.removesuffix(".tar.gz").removesuffix(".zip").split(identity["platform"] + "-", 1)[1]
     cuda = backend == "cuda"
     library = "lib/copylot_accelerated.dll" if os_name == "windows" else "lib/copylot_accelerated.so"
-    metadata = json.dumps({"source_revision": identity["source_revision"], "source_dirty_at_configure": False,
-                           "os": os_name, "architecture": architecture, "variant": variant,
-                           "library": library if library_name is None else library_name,
-                           "cuda_toolkit": "13.0.88" if cuda else "", "cuda_architecture": "89" if cuda else ""})
-    files = {"BUILD.json": metadata.encode(), library: b"native fixture",
+    info = {"schema_version": 1, "package_name": "copylot-accelerated", "source_revision": identity["source_revision"],
+            "source_dirty_at_configure": False, "os": os_name, "architecture": architecture, "variant": variant,
+            "build_type": "Release", "library": library if library_name is None else library_name,
+            "compiler": "test compiler", "cmake": "3.30.5", "diagnostics": True,
+            "cuda_toolkit": "13.0.88" if cuda else "", "cuda_architecture": "89" if cuda else "",
+            "dependencies": {"SolarPILOT": "b" * 40, "ssc": "c" * 40, "SolTrace": "d" * 40}}
+    if update_info:
+        update_info(info)
+    files = {"BUILD.json": json.dumps(info).encode(), library: b"native fixture",
              "python/copylot_accelerated.py": b"wrapper fixture", "python/copylot.py": b"upstream fixture"}
     if omit:
         del files[omit]
@@ -347,6 +351,32 @@ class ReleasePipeline(unittest.TestCase):
                 path.write_bytes(native_archive(identity, backend, root="unexpected-root"))
                 with self.assertRaisesRegex(github.EvidenceError, "Unsafe archive path"):
                     evidence.check_package_metadata(path, identity, backend)
+
+    def test_release_requires_build_schema_and_rejects_release_or_status_fields(self):
+        identity = package_identity("linux-x86_64", "cpu", 20, 1, SHA)
+        path = self.directory / identity["archive"]
+        for field, value, error in (
+            ("schema_version", None, "Unsupported BUILD.json schema"),
+            ("schema_version", 2, "Unsupported BUILD.json schema"),
+            ("package_name", None, "BUILD.json package_name"),
+            ("package_name", "other", "BUILD.json package_name"),
+            ("compiler", None, "fields differ from schema version 1"),
+            ("version", "0.0.0", "fields differ from schema version 1"),
+            ("version", "1.2.3", "fields differ from schema version 1"),
+            ("distribution", "obsolete", "fields differ from schema version 1"),
+            ("redistribution", "obsolete", "fields differ from schema version 1"),
+            ("source_revision", "0" * 40, "expected platform, library, backend or source"),
+        ):
+            def update(info):
+                if value is None:
+                    del info[field]
+                else:
+                    info[field] = value
+
+            with self.subTest(field=field, value=value):
+                path.write_bytes(native_archive(identity, "cpu", update_info=update))
+                with self.assertRaisesRegex(github.EvidenceError, error):
+                    evidence.check_package_metadata(path, identity, "cpu")
 
     def test_packaged_wrapper_loads_the_renamed_library_by_absolute_path(self):
         wrapper_path = Path(__file__).resolve().parents[1] / "packaging/copylot_accelerated.py"

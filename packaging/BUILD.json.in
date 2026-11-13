@@ -1,7 +1,6 @@
 {
-  "distribution": "local-validation-only",
-  "redistribution": "blocked-pending-review",
-  "version": "0.0.0+g@package_revision_short@",
+  "schema_version": 1,
+  "package_name": "copylot-accelerated",
   "source_revision": "@package_revision@",
   "source_dirty_at_configure": @package_dirty@,
   "os": "@package_os@",

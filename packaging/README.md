@@ -6,13 +6,12 @@ See the [original SolarPILOT(TM) project](https://github.com/NatLabRockies/Solar
 and the Alliance for Sustainable Energy, LLC and contributor notices in
 `THIRD_PARTY_NOTICES` and `licenses/`.
 
-`BUILD.json` records the source revision, pinned dependencies, compiler and
-binary configuration. A GitHub Release may use a shorter download filename
-for this archive. Use the release's `SHA256SUMS.txt` to verify a Release download.
-The archive records its local-validation status. Redistribution is blocked
-pending designation, corresponding-source and relinking review. Credit Javier
-Bonilla and CoPylot-Accelerated when reusing this documentation under
-CC BY 4.0.
+`BUILD.json` uses schema version `1` and identifies the package as
+`copylot-accelerated`. It records the full source revision, pinned dependencies,
+toolchain and binary configuration. The Git tag, GitHub Release and versioned
+download filenames listed in `SHA256SUMS.txt` identify the release version.
+Use `SHA256SUMS.txt` to verify a release download. Credit Javier Bonilla and
+CoPylot-Accelerated when reusing this documentation under CC BY 4.0.
 
 ## Run from the extracted directory
 

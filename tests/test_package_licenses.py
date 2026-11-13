@@ -78,7 +78,7 @@ class PackageLicenses(unittest.TestCase):
         info = {
             "os": "windows", "architecture": "x86_64", "source_revision": REVISION,
             "source_dirty_at_configure": False, "build_type": "Release", "variant": "cpu",
-            "distribution": "local-validation-only", "redistribution": "blocked-pending-review",
+            "schema_version": 1, "package_name": "copylot-accelerated", "compiler": "MSVC fixture", "cmake": "3.30.5",
             "library": LIBRARY, "diagnostics": True, "cuda_toolkit": "", "cuda_architecture": "",
             "dependencies": {name: dependency["patched_sha"] for name, dependency in lock.items()},
         }

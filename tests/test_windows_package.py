@@ -43,13 +43,15 @@ def pe_fixture(payload=b"", pdb=b"copylot_accelerated.pdb", signature=b"RSDS", m
 
 
 class WindowsPackagePaths(unittest.TestCase):
-    def inspect_dll(self, dll, *, extra=None, root="copylot-accelerated", outer_prefix=None):
+    def inspect_dll(self, dll, *, extra=None, root="copylot-accelerated", outer_prefix=None, metadata_overrides=None):
         metadata = {
             "os": "windows", "architecture": "x86_64", "source_revision": REVISION,
             "source_dirty_at_configure": False, "build_type": "Release", "variant": "cpu",
-            "distribution": "local-validation-only", "redistribution": "blocked-pending-review",
-            "library": LIBRARY,
+            "schema_version": 1, "package_name": "copylot-accelerated", "library": LIBRARY,
+            "compiler": "MSVC fixture", "cmake": "3.30.5", "diagnostics": True,
+            "cuda_toolkit": "", "cuda_architecture": "", "dependencies": {},
         }
+        metadata.update(metadata_overrides or {})
         prefix = f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu"
         with TemporaryDirectory() as temp:
             path = Path(temp) / f"{outer_prefix or prefix}.zip"
@@ -121,6 +123,13 @@ class WindowsPackagePaths(unittest.TestCase):
             self.inspect_dll(pe_fixture(), root=f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu")
         with self.assertRaisesRegex(ValueError, "Archive name or build configuration"):
             self.inspect_dll(pe_fixture(), outer_prefix="copylot-accelerated-v1.2.3-windows-x86_64-cpu")
+
+    def test_inspection_rejects_wrong_build_metadata_identity(self):
+        for overrides, error in (({"schema_version": True}, "Unsupported BUILD.json schema"),
+                                 ({"package_name": "other"}, "BUILD.json package_name"),
+                                 ({"version": "0.0.0"}, "fields differ from schema version 1")):
+            with self.subTest(overrides=overrides), self.assertRaisesRegex(ValueError, error):
+                self.inspect_dll(pe_fixture(), metadata_overrides=overrides)
 
     def test_rejects_unsafe_paths_and_unexpected_directories(self):
         for path in ("second-root/", "top-level.txt", "/copylot-accelerated/bad", "copylot-accelerated/../bad",
