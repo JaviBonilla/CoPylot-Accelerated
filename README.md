@@ -32,8 +32,8 @@ See the [backend guide](docs/backend.md) for mode selection and CUDA's supported
 
 ## Quick start with a binary package
 
-When a published release is available, choose the archive for your OS, architecture
-and backend, then check it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/CoPylot-Accelerated/releases)
+Choose the release archive for your OS, architecture and backend, then check
+it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/CoPylot-Accelerated/releases)
 
 Extract the archive and open `copylot-accelerated/`, which contains
 `requirements.txt` and `example.py`. Python 3.12 is recommended.
@@ -85,8 +85,13 @@ for toolchains and tests and the [packaging guide](docs/packaging.md) for native
 | macOS Intel and Apple Silicon | CPU | macOS 15 or later and a matching Python architecture |
 
 The hosted CUDA validation checks loading and CPU modes across Linux distributions.
-A separate device test exercised an earlier portable archive on an RTX 6000 Ada.
-[Platform and GPU validation evidence](docs/packaging.md#gpu-execution-of-the-reference-archive)
+The **v0.1.0 Linux CUDA package** was also tested manually on an NVIDIA RTX 6000 Ada
+(SM 89) with Ubuntu 24.04.4, driver 580.159.03 and CUDA Runtime 13.0.88.
+Its 25 × 25 receiver-flux map agreed with CPU (`rtol=1e-9`, `atol=1e-10`;
+maximum absolute difference `1.07e-14 kW/m²`). All 29 receiver summary
+values and 25 detail columns for 12 heliostats agreed bitwise. The test used
+embedded SM 89 code with PTX JIT disabled. This was a functional synthetic-case
+check, not a performance benchmark. [Platform and GPU validation evidence](docs/packaging.md#gpu-execution-of-the-reference-archive)
 
 ## Benchmarks and reproducibility
 
@@ -120,6 +125,6 @@ record the upstream components and their attribution. [SSC upstream](https://git
 - Original documentation is licensed under [CC BY 4.0](docs/LICENSE). Credit Javier Bonilla and CoPylot-Accelerated, link to the license and indicate changes.
 
 Upstream components, patches derived from upstream code and third-party inputs
-retain their applicable terms and notices. Review designation, corresponding
-source and LGPL relinking obligations before redistributing binaries.
-[Third-party notices](THIRD_PARTY_NOTICES) · [Licensing inventory](docs/licensing-inventory.json) · [Binary redistribution review](docs/packaging.md#contents-and-redistribution-review)
+retain their applicable terms and notices. The project includes upstream
+attribution, source reconstruction details and the relevant redistribution terms.
+[Third-party notices](THIRD_PARTY_NOTICES) · [Licensing inventory](docs/licensing-inventory.json) · [Package contents and third-party terms](docs/packaging.md#contents-and-redistribution-review)
