@@ -16,7 +16,8 @@ CC BY 4.0.
 
 ## Run from the extracted directory
 
-Open the directory containing `requirements.txt` and `example.py`. Python 3.12
+Open the extracted `copylot-accelerated/` directory containing `requirements.txt`
+and `example.py`. Python 3.12
 is recommended on the matching OS and CPU architecture. The portable Linux CPU
 archive was also tested with distro Python 3.10 and 3.11. The example generates
 a small field and synthetic weather in a temporary directory.

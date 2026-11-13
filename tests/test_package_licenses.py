@@ -96,7 +96,7 @@ class PackageLicenses(unittest.TestCase):
             def verify_zip(contents, source_root=None):
                 with zipfile.ZipFile(archive, "w") as package:
                     for name, data in contents.items():
-                        package.writestr(f"{prefix}/{name}", data)
+                        package.writestr(f"copylot-accelerated/{name}", data)
                 digest = hashlib.sha256(archive.read_bytes()).hexdigest()
                 archive.with_suffix(".zip.sha256").write_text(f"{digest}  {archive.name}\n", encoding="ascii")
                 with patch("verify_package.platform.system", return_value="Windows"), \

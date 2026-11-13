@@ -103,18 +103,15 @@ def package_files(names, read, identity):
 
 def check_package_metadata(path, identity, backend):
     archive = identity["archive"]
-    prefix = archive.removesuffix(".tar.gz").removesuffix(".zip")
     os_name, architecture = identity["platform"].split("-", 1)
     library = native_library(os_name)
-    expected = ("BUILD.json", library, WRAPPER, "python/copylot.py")
+    expected = {"BUILD.json", library, WRAPPER, "python/copylot.py"}
     try:
-        members = [(name.removeprefix(f"{prefix}/"), data) for name, data in archive_files(path)
-                   if name.startswith(f"{prefix}/") and name.removeprefix(f"{prefix}/") in expected]
+        members = archive_files(path)
     except (ValueError, tarfile.TarError, zipfile.BadZipFile, OSError, EOFError) as error:
         raise EvidenceError(f"Cannot read the native archive {archive}: {error}") from error
-    require(sorted(name for name, _ in members) == sorted(expected),
-            f"Missing or duplicate BUILD.json, native library or Python modules in {archive}")
-    metadata = checked_json(dict(members)["BUILD.json"])
+    require(expected <= members.keys(), f"Missing package files in {archive}: {sorted(expected - members.keys())}")
+    metadata = checked_json(members["BUILD.json"])
     variant = package_variant(identity["platform"], backend)
     expected_cuda = ("13.0.88", "89") if backend == "cuda" else ("", "")
     require(isinstance(metadata, dict) and metadata.get("source_dirty_at_configure") is False

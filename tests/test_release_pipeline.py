@@ -42,11 +42,10 @@ def zipped(files):
     return output.getvalue()
 
 
-def native_archive(identity, backend, *, library_name=None, omit=None):
+def native_archive(identity, backend, *, library_name=None, omit=None, root="copylot-accelerated"):
     name = identity["archive"]
-    root = name.removesuffix(".tar.gz").removesuffix(".zip")
     os_name, architecture = identity["platform"].split("-", 1)
-    variant = root.split(identity["platform"] + "-", 1)[1]
+    variant = name.removesuffix(".tar.gz").removesuffix(".zip").split(identity["platform"] + "-", 1)[1]
     cuda = backend == "cuda"
     library = "lib/copylot_accelerated.dll" if os_name == "windows" else "lib/copylot_accelerated.so"
     metadata = json.dumps({"source_revision": identity["source_revision"], "source_dirty_at_configure": False,
@@ -58,9 +57,12 @@ def native_archive(identity, backend, *, library_name=None, omit=None):
     if omit:
         del files[omit]
     if name.endswith(".zip"):
-        return zipped({f"{root}/{path}": data for path, data in files.items()})
+        return zipped({f"{root}/": b"", **{f"{root}/{path}": data for path, data in files.items()}})
     output = BytesIO()
     with tarfile.open(fileobj=output, mode="w:gz") as archive:
+        directory = tarfile.TarInfo(root)
+        directory.type = tarfile.DIRTYPE
+        archive.addfile(directory)
         for path, data in files.items():
             info = tarfile.TarInfo(f"{root}/{path}")
             info.size = len(data)
@@ -340,7 +342,10 @@ class ReleasePipeline(unittest.TestCase):
                 with self.assertRaisesRegex(github.EvidenceError, "expected platform, library"):
                     evidence.check_package_metadata(path, identity, backend)
                 path.write_bytes(native_archive(identity, backend, omit="python/copylot_accelerated.py"))
-                with self.assertRaisesRegex(github.EvidenceError, "Missing or duplicate"):
+                with self.assertRaisesRegex(github.EvidenceError, "Missing package files"):
+                    evidence.check_package_metadata(path, identity, backend)
+                path.write_bytes(native_archive(identity, backend, root="unexpected-root"))
+                with self.assertRaisesRegex(github.EvidenceError, "Unsafe archive path"):
                     evidence.check_package_metadata(path, identity, backend)
 
     def test_packaged_wrapper_loads_the_renamed_library_by_absolute_path(self):

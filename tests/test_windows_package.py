@@ -43,7 +43,7 @@ def pe_fixture(payload=b"", pdb=b"copylot_accelerated.pdb", signature=b"RSDS", m
 
 
 class WindowsPackagePaths(unittest.TestCase):
-    def inspect_dll(self, dll, *, extra=None):
+    def inspect_dll(self, dll, *, extra=None, root="copylot-accelerated", outer_prefix=None):
         metadata = {
             "os": "windows", "architecture": "x86_64", "source_revision": REVISION,
             "source_dirty_at_configure": False, "build_type": "Release", "variant": "cpu",
@@ -52,14 +52,15 @@ class WindowsPackagePaths(unittest.TestCase):
         }
         prefix = f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu"
         with TemporaryDirectory() as temp:
-            path = Path(temp) / f"{prefix}.zip"
+            path = Path(temp) / f"{outer_prefix or prefix}.zip"
             with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr(f"{root}/", "")
                 for name in (*SOURCES, "python/copylot.py"):
-                    archive.writestr(f"{prefix}/{name}", "placeholder")
-                archive.writestr(f"{prefix}/BUILD.json", json.dumps(metadata))
-                archive.writestr(f"{prefix}/{LIBRARY}", dll)
+                    archive.writestr(f"{root}/{name}", "placeholder")
+                archive.writestr(f"{root}/BUILD.json", json.dumps(metadata))
+                archive.writestr(f"{root}/{LIBRARY}", dll)
                 if extra:
-                    archive.writestr(f"{prefix}/{extra}", "placeholder")
+                    archive.writestr(extra, "" if extra.endswith("/") else "placeholder")
             with patch("verify_package.platform.system", return_value="Windows"), \
                     patch("verify_package.platform.machine", return_value="AMD64"):
                 return inspect(path, runtime_only=True)
@@ -112,4 +113,19 @@ class WindowsPackagePaths(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Expected an x64 PE32"):
             self.inspect_dll(pe_fixture(machine=0xAA64))
         with self.assertRaisesRegex(ValueError, "package allowlist"):
-            self.inspect_dll(pe_fixture(), extra="lib/copylot_accelerated.pdb")
+            self.inspect_dll(pe_fixture(), extra="copylot-accelerated/lib/copylot_accelerated.pdb")
+
+    def test_archive_root_and_outer_name_are_checked_independently(self):
+        self.inspect_dll(pe_fixture())
+        with self.assertRaisesRegex(ValueError, "Unsafe archive path"):
+            self.inspect_dll(pe_fixture(), root=f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu")
+        with self.assertRaisesRegex(ValueError, "Archive name or build configuration"):
+            self.inspect_dll(pe_fixture(), outer_prefix="copylot-accelerated-v1.2.3-windows-x86_64-cpu")
+
+    def test_rejects_unsafe_paths_and_unexpected_directories(self):
+        for path in ("second-root/", "top-level.txt", "/copylot-accelerated/bad", "copylot-accelerated/../bad",
+                     "copylot-accelerated/./bad", "copylot-accelerated/lib\\bad", "copylot-accelerated/lib:bad"):
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Unsafe archive path"):
+                self.inspect_dll(pe_fixture(), extra=path)
+        with self.assertRaisesRegex(ValueError, "unexpected directories"):
+            self.inspect_dll(pe_fixture(), extra="copylot-accelerated/empty/")

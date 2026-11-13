@@ -18,7 +18,7 @@ import tarfile
 from tempfile import TemporaryDirectory
 import zipfile
 
-from package_names import PORTABLE_CPU, PORTABLE_CUDA, WRAPPER, archive_prefix, native_library
+from package_names import PACKAGE_PREFIX, PORTABLE_CPU, PORTABLE_CUDA, WRAPPER, archive_prefix, native_library
 from verify_windows_paths import verify_windows_paths
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,17 +51,18 @@ def require(ok, message):
         raise ValueError(message)
 
 
-def archive_files(path):
+def archive_entries(path):
     if path.name.endswith(".zip"):
         with zipfile.ZipFile(path) as archive:
             for item in archive.infolist():
                 require(not stat.S_ISLNK(item.external_attr >> 16), "ZIP links are forbidden")
-                if not item.is_dir():
-                    yield item.filename, archive.read(item)
+                yield item.filename, None if item.is_dir() else archive.read(item)
     elif path.name.endswith(".tar.gz"):
         with tarfile.open(path, "r:gz") as archive:
             for item in archive:
-                if not item.isdir():
+                if item.isdir():
+                    yield item.name, None
+                else:
                     require(item.isfile(), "TAR members must be regular files")
                     with archive.extractfile(item) as stream:
                         yield item.name, stream.read()
@@ -69,17 +70,30 @@ def archive_files(path):
         raise ValueError("Expected a CPack .zip or .tar.gz archive")
 
 
-def inspect(path, runtime_only=False, *, source_root=None):
-    prefix = path.name.removesuffix(".tar.gz").removesuffix(".zip")
+def archive_files(path):
+    """Read regular files beneath the fixed package root without extracting them."""
     files = {}
-    for name, content in archive_files(path):
-        parts = PurePosixPath(name).parts
-        require(len(parts) > 1 and parts[0] == prefix and ".." not in parts
+    directories = set()
+    for name, content in archive_entries(path):
+        parts = (name.removesuffix("/") if content is None else name).split("/")
+        require(parts[0] == PACKAGE_PREFIX and all(part not in {"", ".", ".."} for part in parts)
                 and "\\" not in name and ":" not in name, f"Unsafe archive path: {name}")
         relative = "/".join(parts[1:])
+        if content is None:
+            directories.add(relative)
+            continue
+        require(relative, f"Archive root must be a directory: {name}")
         require(relative not in files, f"Duplicate archive member: {relative}")
         files[relative] = content
+    parents = {str(parent) for name in files for parent in PurePosixPath(name).parents} - {"."}
+    require(not parents.intersection(files) and not (directories - parents - {""}),
+            "Archive contains unexpected directories or file/directory conflicts")
+    return files
 
+
+def inspect(path, runtime_only=False, *, source_root=None):
+    prefix = path.name.removesuffix(".tar.gz").removesuffix(".zip")
+    files = archive_files(path)
     info = json.loads(files["BUILD.json"])
     os_names = {"Linux": "linux", "Windows": "windows", "Darwin": "macos"}
     host_arch = {"amd64": "x86_64", "x86_64": "x86_64", "arm64": "arm64"}

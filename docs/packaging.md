@@ -4,7 +4,8 @@ The headless CMake target exposes the CoPylot Python API. With
 `COPILOT_LOCAL_PACKAGE=ON`, CPack stages a relocatable loader, synthetic example,
 build metadata and license notices. CI uses the internal `copylot-accelerated-local-`
 archive prefix. GitHub Release downloads use the public `copylot-accelerated-`
-prefix. Redistribution clearance is pending.
+prefix. CPack gives both the same single extraction directory, `copylot-accelerated/`.
+Redistribution clearance is pending.
 
 ## Platform status
 
@@ -358,10 +359,10 @@ reports exact agreement. `validation_passed` reports whether the comparison
 satisfies the indicated `flux_policy` and the other output checks.
 
 The macOS workflow uses `packaging/example.py` from the validation checkout
-and loads the selected Build's packaged wrapper and library. Run a new Build
-with the `copylot-accelerated-local-` layout before validating or staging a new
-release. Older artifacts keep the filenames, contents and checksums recorded
-by their original build. To run the same checks
+and loads the selected Build's packaged wrapper and library. For a new release,
+use a fresh Build & Validate run that produces archives with the short
+`copylot-accelerated/` directory. Older artifacts keep the contents and checksums
+recorded by their original build. To run the same checks
 against an extracted CPU package on a matching macOS host, use the interpreter
 from a Python 3.12 environment with the pinned requirements installed:
 
@@ -467,7 +468,7 @@ when explicitly requested.
 
 ## Install and run an extracted archive
 
-Extract the archive and enter the directory containing `requirements.txt`
+Extract the archive and enter `copylot-accelerated/`, which contains `requirements.txt`
 and `example.py`. Python 3.12 is recommended. The portable Linux CPU archive
 was also verified with distro Python 3.10 and 3.11.
 
@@ -565,10 +566,12 @@ license review.
 ## Release assets
 
 The release contains these five archives and `SHA256SUMS.txt`. The `<version>`
-in each filename includes the `v` prefix. Only the external asset names change.
-The CPack filenames used in CI, the archive contents and `BUILD.json` still
-identify the original validated builds. Use `SHA256SUMS.txt` for Release downloads
-and the original CI artifacts when running the repository's package verifier.
+in each filename includes the `v` prefix. Each archive extracts to
+`copylot-accelerated/`. Extract different variants into separate parent
+directories to keep their files apart. Release staging copies the validated
+archives byte for byte under the versioned filenames. Use `SHA256SUMS.txt` for
+Release downloads and the original CI artifacts when running the repository's
+package verifier.
 
 | Target | Asset |
 | --- | --- |

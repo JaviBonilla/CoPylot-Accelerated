@@ -35,8 +35,8 @@ See the [backend guide](docs/backend.md) for mode selection and CUDA's supported
 When a published release is available, choose the archive for your OS, architecture
 and backend, then check it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/CoPylot-Accelerated/releases)
 
-Extract the archive and open the directory containing `requirements.txt` and
-`example.py`. Python 3.12 is recommended.
+Extract the archive and open `copylot-accelerated/`, which contains
+`requirements.txt` and `example.py`. Python 3.12 is recommended.
 
 **Linux and macOS**
 
