@@ -9,6 +9,8 @@ Python API. CoPylot-Accelerated retains the original CPU calculation paths in a
 patched build as a numerical reference and adds three accelerated implementations.
 [Original SolarPILOT(TM) project](https://github.com/NatLabRockies/SolarPILOT)
 
+**[Official project website](https://copylot-accelerated.github.io/)**
+
 <p align="center">
   <a href="https://github.com/JaviBonilla/CoPylot-Accelerated/actions/workflows/build-validate-all.yml"><img alt="Build &amp; Validate · All status" src="https://github.com/JaviBonilla/CoPylot-Accelerated/actions/workflows/build-validate-all.yml/badge.svg?branch=main"></a>
   <a href="docs/packaging.md#platform-status"><img alt="Platforms: Linux, Windows and macOS" src="https://img.shields.io/badge/platforms-Linux%20%2F%20Windows%20%2F%20macOS-blue"></a>
