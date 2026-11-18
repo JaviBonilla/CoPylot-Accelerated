@@ -32,20 +32,25 @@ All four modes use the same Hermite optical formulation.
 The API supports generated and assigned fields and compatible saved layouts.
 See the [backend guide](docs/backend.md) for mode selection and CUDA's supported configurations.
 
-## Quick start with a binary package
+## Quick Start with a binary package
 
 Choose the release archive for your OS, architecture and backend, then check
 it against `SHA256SUMS.txt`. [GitHub Releases](https://github.com/JaviBonilla/CoPylot-Accelerated/releases)
 
+Quick Start and Commercial Demo are included in all five v0.1.1 distributions.
+With a v0.1.0 archive, use the same Python setup and run
+`example.py --mode refactored`.
+
 Extract the archive and open `copylot-accelerated/`, which contains
-`requirements.txt` and `example.py`. Python 3.12 is recommended.
+`requirements.txt` and `quickstart.py` in v0.1.1. Use Python 3.12 for your OS
+and architecture.
 
 **Linux and macOS**
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python example.py --mode refactored
+.venv/bin/python quickstart.py
 ```
 
 **Windows PowerShell**
@@ -53,14 +58,53 @@ python3.12 -m venv .venv
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe example.py --mode refactored
+.\.venv\Scripts\python.exe quickstart.py
 ```
 
-Use the same interpreter with `--mode multicore --compare` or
-`--mode original --compare`. Original requires `diagnostics: true` in
-`BUILD.json`. Use `--mode cuda --compare` with the CUDA package and a compatible
-GPU. Native runtimes such as glibc, Visual C++ and CUDA come from the host.
-[Package installation and usage](docs/packaging.md#install-and-run-an-extracted-archive)
+```text
+CoPylot-Accelerated Quick Start
+Heliostats simulated: 12
+Solar-field optical efficiency: 86.52%
+Receiver absorbed power: 1,268.1 kW
+Peak incident receiver flux: 52.35 kW/m²
+Receiver flux map: 25 rows × 25 columns
+```
+
+Quick Start runs on one CPU thread in every distribution, including CUDA builds.
+It uses a synthetic heliostat layout and weather file. The script sets the sun
+position and direct normal irradiance (DNI) explicitly for one optical state.
+It requires no source checkout. The CUDA package still needs the external CUDA
+runtime to load its library. [Quick Start guide](examples/quickstart/README.md)
+
+## Commercial Demo
+
+Next, simulate a representative commercial-scale solar field with 8,790
+heliostats. The demo writes receiver flux and per-heliostat CSVs, a JSON summary
+and an interactive, offline HTML report. From the extracted directory, install
+the additional Plotly dependency and run the demo in the same environment.
+
+**Linux and macOS**
+
+```sh
+.venv/bin/python -m pip install -r commercial_demo/requirements.txt
+.venv/bin/python commercial_demo/commercial_demo.py --no-open
+```
+
+**Windows PowerShell**
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r commercial_demo/requirements.txt
+.\.venv\Scripts\python.exe commercial_demo\commercial_demo.py --no-open
+```
+
+The default is Refactored CPU. Add `--mode cuda` on a CUDA package with a
+compatible GPU. The script prints the path to `report.html`.
+[Commercial Demo guide](examples/commercial_demo/README.md)
+
+Use the packaged `example.py --compare-cpu-modes` to compare CPU modes or
+`example.py --mode cuda --compare` to compare CUDA with CPU on a compatible
+system. Original requires `diagnostics: true` in `BUILD.json`.
+[Package installation and advanced usage](docs/packaging.md#install-and-run-an-extracted-archive)
 
 ## Build from source
 
