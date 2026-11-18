@@ -79,6 +79,11 @@ case "$operation" in
     )
     mkdir "$temp/context"
     cp "$source_dir/requirements.txt" "$temp/context/requirements.txt"
+    commercial="$source_dir/examples/commercial_demo/requirements.txt"
+    if [[ -f "$commercial" ]]; then
+      printf '\n' >> "$temp/context/requirements.txt"
+      cat "$commercial" >> "$temp/context/requirements.txt"
+    fi
     for image in "${images[@]}"; do
       echo "Provisioning validation image from $image"
       # Only dependency provisioning uses host DNS. The build context contains

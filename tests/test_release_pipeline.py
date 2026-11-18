@@ -473,6 +473,11 @@ class ReleasePipeline(unittest.TestCase):
         self.assertIn("py -3.12 -m venv .venv\n"
                       r".\.venv\Scripts\python.exe -m pip install -r requirements.txt" "\n"
                       r".\.venv\Scripts\python.exe example.py --mode refactored", notes)
+        example_notes = pipeline.release_notes(self.api, manifest, "v1.2.3", names, with_examples=True)
+        self.assertIn(".venv/bin/python quickstart.py", example_notes)
+        self.assertIn(r".\.venv\Scripts\python.exe quickstart.py", example_notes)
+        self.assertIn("commercial_demo/requirements.txt", example_notes)
+        self.assertIn("python commercial_demo/commercial_demo.py --no-open", example_notes)
         self.assertIn("The hosted CUDA job checks library loading and CPU modes", notes)
         self.assertIn("earlier portable archive", notes)
         self.assertIn("`rtol=1e-15` and `atol=1e-15 kW/m²` per cell", notes)

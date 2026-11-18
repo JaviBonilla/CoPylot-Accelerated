@@ -20,6 +20,7 @@ from release_evidence import (
     run_ref, successful_run, validation_receipt,
 )
 from release_github import ApiError, EvidenceError, GitHub
+from verify_package import archive_files, has_packaged_examples
 
 
 MANIFEST = Path("build/release-evidence/manifest.json")
@@ -255,7 +256,7 @@ def stage_assets(manifest, version, directory):
     return assets, filenames
 
 
-def release_notes(api, manifest, version, filenames):
+def release_notes(api, manifest, version, filenames, *, with_examples=False):
     global_run = manifest["global"]
     revision = global_run["source_revision"]
     repository = f"{api.server}/{api.repo}"
@@ -281,6 +282,21 @@ def release_notes(api, manifest, version, filenames):
                           f"[artifact {artifact}]({api.run_url(build_id)}/artifacts/{artifact}) | "
                           f"[{validate_id}]({validate_url}) · "
                           f"[record {record}]({api.run_url(validate_id)}/artifacts/{record}) |")
+    quickstart = "quickstart.py" if with_examples else "example.py --mode refactored"
+    standalone = [
+        "Quick Start runs one synthetic optical state on the CPU. Its weather file supplies layout inputs. "
+        "The optical calculation uses a fixed sun position and DNI.",
+        "",
+        "To run the Commercial Demo, install `commercial_demo/requirements.txt` with the same interpreter "
+        "and run `python commercial_demo/commercial_demo.py --no-open`. See its packaged README for options.",
+        "",
+        "Use `example.py --compare-cpu-modes` for the packaged CPU comparison, or "
+        "`example.py --mode cuda --compare` with the CUDA package and a compatible GPU.",
+    ] if with_examples else [
+        "Use the same interpreter with `--mode multicore --compare` or `--mode original --compare`. "
+        "Original requires `diagnostics: true` in `BUILD.json`. Use `--mode cuda --compare` with the CUDA "
+        "package and a compatible GPU.",
+    ]
     lines = [
         "## Overview",
         "",
@@ -310,7 +326,7 @@ def release_notes(api, manifest, version, filenames):
         "## Quick start",
         "",
         "Download the archive for your platform and extract it. From the directory containing `requirements.txt` "
-        "and `example.py`, create a virtual environment with the recommended Python 3.12, install the pinned "
+        f"and `{quickstart.split()[0]}`, create a virtual environment with the recommended Python 3.12, install the pinned "
         "requirements, and run the synthetic example.",
         "",
         "**Linux and macOS**",
@@ -318,7 +334,7 @@ def release_notes(api, manifest, version, filenames):
         "```sh",
         "python3.12 -m venv .venv",
         ".venv/bin/python -m pip install -r requirements.txt",
-        ".venv/bin/python example.py --mode refactored",
+        f".venv/bin/python {quickstart}",
         "```",
         "",
         "**Windows PowerShell**",
@@ -326,12 +342,10 @@ def release_notes(api, manifest, version, filenames):
         "```powershell",
         "py -3.12 -m venv .venv",
         r".\.venv\Scripts\python.exe -m pip install -r requirements.txt",
-        r".\.venv\Scripts\python.exe example.py --mode refactored",
+        rf".\.venv\Scripts\python.exe {quickstart}",
         "```",
         "",
-        "Use the same interpreter with `--mode multicore --compare` or `--mode original --compare`. "
-        "Original requires `diagnostics: true` in `BUILD.json`. Use `--mode cuda --compare` with the CUDA "
-        "package and a compatible GPU.",
+        *standalone,
         "",
         "## Requirements",
         "",
@@ -426,7 +440,9 @@ def create_draft(api):
         directory = Path(temp)
         manifest = select_global(api, os.environ.get("GLOBAL_RUN_ID", ""), directory)
         assets, filenames = stage_assets(manifest, version, directory)
-        notes = release_notes(api, manifest, version, filenames)
+        example_layouts = {has_packaged_examples(archive_files(assets / name)) for name in filenames.values()}
+        require(len(example_layouts) == 1, "Validated archives disagree on the packaged examples")
+        notes = release_notes(api, manifest, version, filenames, with_examples=example_layouts.pop())
         run = manifest["global"]
         successful_run(api, GLOBAL_WORKFLOW, run["run_id"], run["attempt"], run["source_revision"])
         check_child_attempts(api, manifest)

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commercial Solar Tower - Optical Simulation | CoPylot-Accelerated</title>
+<style>
+:root{color-scheme:light;--ink:#172e3b;--muted:#48606a;--teal:#075e64;--line:#dbe6e7;--paper:#fff;--background:#eff4f3}
+*{box-sizing:border-box}body{margin:0;background:var(--background);color:var(--ink);font:15px/1.55 system-ui,sans-serif}
+header{background:#12343e;color:#f0fffb;padding:clamp(18px,4vw,44px) 0 28px;border-bottom:4px solid #83c9bf}
+.wrap{max-width:1180px;margin:auto;padding-inline:clamp(14px,4vw,36px)}
+.brand{font-weight:650;color:#9eddd2;letter-spacing:.035em;margin:0 0 .6rem}h1,h2,h3{line-height:1.15;margin:0}
+h1{font-size:clamp(27px,4.3vw,50px);letter-spacing:-.04em}h2{font-size:clamp(23px,3.5vw,32px);letter-spacing:-.025em}
+h3{font-size:18px}p{margin:10px 0 0}.context{color:#cce6e2;margin-top:12px}
+.cards{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.cards>div{padding:13px 14px;border:1px solid #517777;border-radius:9px;background:#1b444d}
+.cards span,.cards strong{display:block}.cards span{color:#c8e3df;font-size:13px}
+.cards strong{font-size:23px;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:5px}.cards small{font-size:13px;font-weight:550}
+main{padding-block:24px 52px}nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+button[role=tab]{font:inherit;font-weight:650;background:transparent;border:1px solid transparent;color:var(--teal);border-radius:8px;padding:9px 13px;cursor:pointer}
+button[aria-selected=true]{background:var(--teal);color:white}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #ba662d;outline-offset:2px}
+article,details{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:clamp(14px,3vw,28px)}
+.caption{color:var(--muted);max-width:82ch}.chart{width:100%;height:clamp(305px,50vw,480px);margin-top:6px}
+.flux-cylinder{margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.chart-unavailable{height:auto;padding:14px;background:var(--background);border-radius:8px;color:var(--muted)}
+.field{height:clamp(385px,70vw,650px)}.columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+#geometry .elevation-only{grid-template-columns:minmax(0,1fr)}
+dl{margin:16px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:0 20px}
+dl>div{min-width:0;padding:8px 0;border-top:1px solid var(--line)}dt{font-size:13px;color:var(--muted)}
+dd{font-weight:650;margin:1px 0 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+details{margin-top:16px}summary{font-weight:700;cursor:pointer;color:var(--teal)}details h3{margin-top:18px}
+a{color:var(--teal)}li{margin:4px 0}ul{padding-left:1.35em}
+@media(max-width:680px){.columns{grid-template-columns:minmax(0,1fr)}nav{gap:2px}button[role=tab]{padding:8px;font-size:13px}}
+</style>
+<script>$plotly_js</script>
+</head>
+<body>
+<header><div class="wrap">
+<p class="brand">CoPylot-Accelerated</p>
+<h1>Commercial Solar Tower - Optical Simulation</h1>
+<p class="context">$site · $date at $time LST (UTC−08:00) · $mode</p>
+<div class="cards">$cards</div>
+</div></header>
+<main class="wrap">
+<nav role="tablist" aria-label="Simulation views">
+<button id="tab-flux" role="tab" aria-controls="flux" aria-selected="true">Receiver Flux</button>
+<button id="tab-field" role="tab" aria-controls="field" aria-selected="false" tabindex="-1">Heliostat Field</button>
+<button id="tab-geometry" role="tab" aria-controls="geometry" aria-selected="false" tabindex="-1">Receiver Geometry</button>
+</nav>
+<article id="flux" role="tabpanel" aria-labelledby="tab-flux">
+<h2>Incident flux on the unwrapped receiver</h2>
+<p class="caption">Colors show incident flux density before receiver absorption.</p>
+<div id="flux-chart" class="chart"></div>
+<dl>$flux_metrics</dl>
+<p class="caption">The unwrapped receiver starts at the south seam (180° azimuth). Arc position increases toward the east; height increases from the bottom. Coordinates refer to cell centers.</p>
+<section class="flux-cylinder">
+<h2>Incident flux on the cylindrical receiver</h2>
+<div id="cylinder-flux-chart" class="chart" data-webgl="3d"
+     data-unavailable="3D view unavailable. The unwrapped map above shows the same flux values."></div>
+</section>
+</article>
+<article id="field" role="tabpanel" aria-labelledby="tab-field" hidden>
+<h2>Heliostat field</h2>
+<p class="caption">Colors show per-heliostat optical efficiency, including receiver absorptance. Hover to inspect each heliostat's absorbed-power contribution.</p>
+<div id="field-chart" class="chart field" data-webgl="field"></div>
+<dl>$field_metrics</dl>
+</article>
+<article id="geometry" role="tabpanel" aria-labelledby="tab-geometry" hidden>
+<h2>Receiver and tower geometry</h2>
+<p class="caption" id="geometry-caption">The orange line shows the optical height from the heliostat pivot plane to the receiver center; the dashed line marks the south seam.</p>
+<div class="columns">
+<section><h3>Cylinder and optical height</h3><div id="geometry-chart" class="chart" data-webgl="3d"
+     data-unavailable="3D view unavailable (requires WebGL)."></div></section>
+<section><h3>Dimensioned receiver elevation</h3><div id="section-chart" class="chart"></div></section>
+</div>
+<dl>$geometry</dl>
+</article>
+<details>
+<summary>Operating point, provenance and limitations</summary>
+<dl>$operating</dl>
+<p>Daggett TMY2 provides representative historical weather data. The 2011 date is a solar-position reference, not a 2011 weather observation. Times use local standard time (UTC−08:00).</p>
+<p>Field optical efficiency excludes receiver absorption; absorbed receiver power includes it. Complete results and settings are available in <code>results.json</code>.</p>
+<p>Based on a public SSC commercial-scale reference. Results represent a simulated optical operating point, not measured plant performance. Thermal and electrical performance are outside the scope.</p>
+<h3>Sources</h3>
+<p>Optical engine and API from the original SolarPILOT(TM) and CoPylot projects. Field geometry and parameters from the pinned SSC reference.</p>
+<ul>$sources</ul>
+</details>
+<noscript>Enable JavaScript for the interactive plots. The CSV and JSON files contain the simulation results.</noscript>
+</main>
+$charts
+<script>
+const figures = JSON.parse(document.getElementById("figures").textContent);
+const tabs = Array.from(document.querySelectorAll("[role=tab]"));
+const rendered = new Map();
+let webgl;
+
+function supportsWebGL() {
+  if (webgl === undefined) {
+    const probe = document.createElement("canvas");
+    try {
+      const context = probe.getContext("webgl") || probe.getContext("experimental-webgl");
+      webgl = Boolean(context);
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+    } catch {
+      webgl = false;
+    }
+  }
+  return webgl;
+}
+
+function drawPlot(chart, data) {
+  return Plotly.newPlot(chart, data, figures[chart.id].layout, {
+    responsive: true, displaylogo: false,
+    toImageButtonOptions: {format: "png", filename: "copylot-" + chart.id}
+  });
+}
+
+function showUnavailable(chart) {
+  if (chart.id === "geometry-chart") {
+    chart.closest("section").hidden = true;
+    chart.closest(".columns").classList.add("elevation-only");
+    const caption = document.getElementById("geometry-caption");
+    caption.setAttribute("role", "status");
+    caption.textContent = chart.dataset.unavailable;
+    const elevation = document.getElementById("section-chart");
+    if (rendered.has(elevation)) {
+      void Plotly.Plots.resize(elevation).catch(() => {});
+    }
+  } else {
+    chart.classList.add("chart-unavailable");
+    chart.setAttribute("role", "status");
+    chart.textContent = chart.dataset.unavailable || "This view could not be displayed.";
+  }
+  rendered.set(chart, "unavailable");
+}
+
+async function fallback(chart) {
+  Plotly.purge(chart);
+  chart.replaceChildren();
+  if (chart.dataset.webgl === "field") {
+    const data = figures[chart.id].data.map(trace =>
+      trace.type === "scattergl" ? {...trace, type: "scatter"} : trace);
+    try {
+      await drawPlot(chart, data);
+      rendered.set(chart, "ready");
+      return;
+    } catch {
+      Plotly.purge(chart);
+    }
+  }
+  showUnavailable(chart);
+}
+
+async function render(chart) {
+  rendered.set(chart, "pending");
+  const usesWebGL = Boolean(chart.dataset.webgl);
+  if (usesWebGL && !supportsWebGL()) {
+    await fallback(chart);
+    return;
+  }
+  try {
+    await drawPlot(chart, figures[chart.id].data);
+    if (usesWebGL && (!chart.querySelector("canvas") || chart.querySelector(".no-webgl"))) {
+      await fallback(chart);
+      return;
+    }
+    if (usesWebGL) {
+      chart.addEventListener("webglcontextlost", event => {
+        event.stopPropagation();
+        rendered.set(chart, "pending");
+        void fallback(chart);
+      }, {capture: true, once: true});
+    }
+    rendered.set(chart, "ready");
+  } catch {
+    await fallback(chart);
+  }
+}
+
+function activate(tab) {
+  for (const item of tabs) {
+    const visible = item === tab;
+    item.setAttribute("aria-selected", String(visible));
+    item.tabIndex = visible ? 0 : -1;
+    document.getElementById(item.getAttribute("aria-controls")).hidden = !visible;
+  }
+  const panel = document.getElementById(tab.getAttribute("aria-controls"));
+  for (const chart of panel.querySelectorAll(".chart")) {
+    if (rendered.get(chart) === "ready") {
+      void Plotly.Plots.resize(chart).catch(() => {});
+    } else if (!rendered.has(chart)) {
+      void render(chart);
+    }
+  }
+}
+for (const tab of tabs) {
+  tab.addEventListener("click", () => activate(tab));
+  tab.addEventListener("keydown", event => {
+    const index = tabs.indexOf(tab);
+    const key = event.key;
+    const step = key === "ArrowLeft" ? -1 : key === "ArrowRight" ? 1 : 0;
+    if (!step && key !== "Home" && key !== "End") return;
+    event.preventDefault();
+    const next = key === "Home" ? tabs[0] : key === "End" ? tabs.at(-1) : tabs[(index + step + tabs.length) % tabs.length];
+    activate(next);
+    next.focus();
+  });
+}
+activate(tabs[0]);
+</script>
+</body>
+</html>

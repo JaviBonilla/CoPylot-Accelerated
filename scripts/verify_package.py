@@ -44,6 +44,24 @@ SOURCES = {
     "python/pysoltrace.py": "SolarPILOT/deploy/api/pysoltrace.py",
     **{name: name for name in LICENSES | {"requirements.txt", "LICENSE", "THIRD_PARTY_NOTICES"}},
 }
+EXAMPLE_SOURCES = {
+    "quickstart.py": "examples/quickstart/quickstart.py",
+    "quickstart_weather.csv": "examples/quickstart/quickstart_weather.csv",
+    "QUICKSTART.md": "examples/quickstart/README.md",
+    "commercial_demo/README.md": "packaging/CommercialDemo.md",
+    "commercial_demo/commercial_reference.py": "benchmarks/commercial_reference.py",
+    "commercial_demo/receiver_grid.py": "benchmarks/receiver_grid.py",
+    **{f"commercial_demo/{name}": f"examples/commercial_demo/{name}" for name in (
+        "commercial_demo.py", "simulation.py", "results.py", "report.py", "report.html.in", "requirements.txt",
+    )},
+    "commercial_demo/inputs/cases/commercial-reference/case_manifest.json": "cases/commercial-reference/case_manifest.json",
+}
+COMMERCIAL_ASSETS = {
+    "layout": "ssc/test/input_cases/moltensalt_data/helio_positions.csv",
+    "weather": "SolarPILOT/deploy/climate_files/USA CA Daggett (TMY2).csv",
+    "defaults": "ssc/solarpilot/definitions.cpp",
+}
+EXAMPLE_MEMBERS = EXAMPLE_SOURCES.keys() | {f"commercial_demo/inputs/{path}" for path in COMMERCIAL_ASSETS.values()}
 BUILD_METADATA_FIELDS = {
     "schema_version", "package_name", "source_revision", "source_dirty_at_configure",
     "os", "architecture", "variant", "build_type", "library", "compiler", "cmake",
@@ -61,6 +79,21 @@ def verify_build_metadata(info):
             "Unsupported BUILD.json schema; expected schema_version 1")
     require(info.get("package_name") == PACKAGE_PREFIX, f"Expected {PACKAGE_PREFIX} in BUILD.json package_name")
     require(info.keys() == BUILD_METADATA_FIELDS, "BUILD.json fields differ from schema version 1")
+
+
+def has_packaged_examples(files):
+    if not EXAMPLE_MEMBERS.intersection(files):
+        return False
+    missing = EXAMPLE_MEMBERS - files.keys()
+    require(not missing, f"Missing packaged example files: {sorted(missing)}")
+    manifest = json.loads(files["commercial_demo/inputs/cases/commercial-reference/case_manifest.json"])
+    assets = manifest["assets"]
+    require(assets.keys() == COMMERCIAL_ASSETS.keys(), "Unexpected commercial example input inventory")
+    for name, path in COMMERCIAL_ASSETS.items():
+        require(assets[name]["path"] == path, f"Unexpected commercial asset path for {name}")
+        digest = hashlib.sha256(files[f"commercial_demo/inputs/{path}"]).hexdigest()
+        require(digest == assets[name]["sha256"], f"Commercial input differs from its pinned hash: {path}")
+    return True
 
 
 def archive_entries(path):
@@ -126,7 +159,10 @@ def inspect(path, runtime_only=False, *, source_root=None):
     missing_licenses = PACKAGE_LICENSES - files.keys()
     if missing_licenses:
         verify_licenses(files, names=missing_licenses, source_root=source_root)
-    require(set(files) == set(SOURCES) | {"BUILD.json", "python/copylot.py", library},
+    expected = SOURCES.keys() | {"BUILD.json", "python/copylot.py", library}
+    if has_packaged_examples(files):
+        expected |= EXAMPLE_MEMBERS
+    require(files.keys() == expected,
             "Archive differs from the package allowlist for this validator (unsupported package layout)")
     if info["os"] != "linux":
         verify_binary_header(files[library], info["os"], architecture)
@@ -236,7 +272,12 @@ def verify_sources(files, info, *, upstream=True, source_root=None):
                 f"Checkout path in archive member: {name}")
     lock = json.loads((source_root / "repos.lock.json").read_text())
     verify_licenses(files, lock=lock if upstream else None, source_root=source_root)
-    for target, source in SOURCES.items():
+    sources = SOURCES
+    expects_examples = (source_root / EXAMPLE_SOURCES["quickstart.py"]).is_file()
+    require(has_packaged_examples(files) == expects_examples, "Packaged examples differ from the selected source")
+    if expects_examples:
+        sources = {**SOURCES, **EXAMPLE_SOURCES}
+    for target, source in sources.items():
         if target in PACKAGE_LICENSES:
             continue
         if not upstream and source == "SolarPILOT/deploy/api/pysoltrace.py":
@@ -402,7 +443,7 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None, 
                 environment["CUDA_VISIBLE_DEVICES"] = "-1"
         if info["os"] == "macos":
             environment = {k: v for k, v in environment.items() if not k.startswith("DYLD_")}
-        environment.update(PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1")
+        environment.update(PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1", PYTHONUTF8="1")
         modes = ["refactored", "multicore"]
         if info["diagnostics"]:
             modes.append("original")
@@ -416,7 +457,14 @@ def check_runtime(files, info, *, cuda=False, runtime_dir=None, cuobjdump=None, 
             for mode in modes:
                 subprocess.run([sys.executable, str(root / "example.py"), "--mode", mode, "--compare"],
                                cwd=temp, env=environment, check=True, timeout=90)
-    return {"runtime": dependencies, "smoke_modes": modes}
+        examples = []
+        if "quickstart.py" in files:
+            command = [sys.executable, str(ROOT / "scripts/validate_packaged_examples.py"), str(root)]
+            if cuda:
+                command.append("--cuda")
+            subprocess.run(command, cwd=temp, env=environment, check=True, timeout=120)
+            examples = ["quickstart", "commercial-demo"]
+    return {"runtime": dependencies, "smoke_modes": modes, "examples": examples}
 
 
 def main():

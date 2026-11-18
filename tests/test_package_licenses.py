@@ -92,8 +92,14 @@ class PackageLicenses(unittest.TestCase):
         prefix = f"copylot-accelerated-local-{REVISION[:12]}-windows-x86_64-cpu"
         with TemporaryDirectory() as temp:
             archive = Path(temp) / f"{prefix}.zip"
+            # Use a v0.1.0-style source tree for this historic package fixture.
+            build_source = Path(temp) / "build-source"
+            for name in {*SOURCES.values(), INVENTORY, "repos.lock.json"} - {"SolarPILOT/deploy/api/pysoltrace.py"}:
+                destination = build_source / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((ROOT / name).read_bytes())
 
-            def verify_zip(contents, source_root=None):
+            def verify_zip(contents, source_root=build_source):
                 with zipfile.ZipFile(archive, "w") as package:
                     for name, data in contents.items():
                         package.writestr(f"copylot-accelerated/{name}", data)
@@ -109,15 +115,12 @@ class PackageLicenses(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "License verification failed for SSC .*license content differs"):
                 verify_zip({**members, SSC_LICENSE: members["licenses/SolTrace-LICENSE.md"]})
 
-            # Current validation code checks text files against the selected Build source.
-            build_source = Path(temp) / "build-source"
-            for name in {*SOURCES.values(), INVENTORY, "repos.lock.json"} - {"SolarPILOT/deploy/api/pysoltrace.py"}:
-                destination = build_source / name
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                destination.write_bytes((ROOT / name).read_bytes())
+            # Current tooling checks text against the selected Build source.
             old_readme = members["README.md"] + b"\nBuild revision fixture.\n"
             (build_source / SOURCES["README.md"]).write_bytes(old_readme)
             old_members = {**members, "README.md": old_readme}
-            verify_zip(old_members, source_root=build_source)
+            verify_zip(old_members)
             with self.assertRaisesRegex(ValueError, "Altered package file: README.md"):
-                verify_zip(old_members)
+                verify_zip(members)
+            with self.assertRaisesRegex(ValueError, "Packaged examples differ from the selected source"):
+                verify_zip(members, source_root=ROOT)

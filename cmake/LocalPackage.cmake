@@ -113,6 +113,42 @@ install(FILES "${package_generated}/copylot.py" "${upstream_api}/pysoltrace.py"
   "packaging/${package_basename}.py" DESTINATION python COMPONENT local_runtime)
 install(FILES packaging/example.py requirements.txt LICENSE THIRD_PARTY_NOTICES
   "${package_generated}/BUILD.json" DESTINATION . COMPONENT local_runtime)
+install(FILES examples/quickstart/quickstart.py examples/quickstart/quickstart_weather.csv
+  DESTINATION . COMPONENT local_runtime)
+install(FILES examples/quickstart/README.md DESTINATION . RENAME QUICKSTART.md COMPONENT local_runtime)
+install(FILES
+  examples/commercial_demo/commercial_demo.py examples/commercial_demo/simulation.py
+  examples/commercial_demo/results.py examples/commercial_demo/report.py examples/commercial_demo/report.html.in
+  examples/commercial_demo/requirements.txt benchmarks/commercial_reference.py benchmarks/receiver_grid.py
+  DESTINATION commercial_demo COMPONENT local_runtime)
+install(FILES packaging/CommercialDemo.md DESTINATION commercial_demo RENAME README.md COMPONENT local_runtime)
+
+set(commercial_manifest "cases/commercial-reference/case_manifest.json")
+set(commercial_inputs "commercial_demo/inputs")
+install(FILES "${commercial_manifest}" DESTINATION "${commercial_inputs}/cases/commercial-reference"
+  COMPONENT local_runtime)
+file(READ "${CMAKE_SOURCE_DIR}/${commercial_manifest}" commercial_case)
+foreach(asset IN ITEMS layout weather defaults)
+  string(JSON asset_path GET "${commercial_case}" assets "${asset}" path)
+  string(JSON expected_hash GET "${commercial_case}" assets "${asset}" sha256)
+  if(NOT asset_path MATCHES "^(SolarPILOT|ssc)/(.+)$" OR asset_path MATCHES "(^|/)\\.\\.(/|$)")
+    message(FATAL_ERROR "Unexpected commercial case asset path: ${asset_path}")
+  endif()
+  string(REGEX REPLACE "^([^/]+)/.*$" "\\1" asset_checkout "${asset_path}")
+  string(REGEX REPLACE "^[^/]+/(.+)$" "\\1" asset_relative "${asset_path}")
+  get_filename_component(asset_directory "${asset_path}" DIRECTORY)
+  set(staged_asset "${package_generated}/${commercial_inputs}/${asset_path}")
+  file(MAKE_DIRECTORY "${package_generated}/${commercial_inputs}/${asset_directory}")
+  # Read the pinned blob so checkout line endings cannot change its manifest hash.
+  execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${CMAKE_SOURCE_DIR}/${asset_checkout}"
+    show "HEAD:${asset_relative}" OUTPUT_FILE "${staged_asset}" COMMAND_ERROR_IS_FATAL ANY)
+  file(SHA256 "${staged_asset}" actual_hash)
+  if(NOT actual_hash STREQUAL expected_hash)
+    message(FATAL_ERROR "Commercial case asset differs from manifest: ${asset_path}")
+  endif()
+  install(FILES "${staged_asset}" DESTINATION "${commercial_inputs}/${asset_directory}" COMPONENT local_runtime)
+endforeach()
+
 install(FILES packaging/README.md DESTINATION . RENAME README.md COMPONENT local_runtime)
 install(FILES docs/LICENSE DESTINATION licenses RENAME Project-documentation-CC-BY-4.0.txt
   COMPONENT local_runtime)

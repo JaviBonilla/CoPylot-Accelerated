@@ -30,9 +30,11 @@ def timestamp(value):
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
-def resolve(repo, workflow, override="", *, request=api):
+def resolve(repo, workflow, override="", *, branch="main", expected_revision="", request=api):
     backend, platforms = BUILDS[workflow]
     base = f"repos/{repo}/actions"
+    if branch != "main" and (not override or not re.fullmatch(r"[0-9a-f]{40}", expected_revision)):
+        raise ValueError("Branch validation requires an explicit Build Run ID and the validation commit SHA")
     if override:
         if not re.fullmatch(r"[1-9][0-9]*", override):
             raise ValueError("The optional Build Run ID must be a positive integer")
@@ -52,12 +54,13 @@ def resolve(repo, workflow, override="", *, request=api):
         if (not isinstance(run_id, int) or run_id < 1
                 or (override and str(run_id) != override)
                 or (run.get("head_repository") or {}).get("full_name", "").lower() != repo.lower()
-                or path != f".github/workflows/{workflow}" or run.get("head_branch") != "main"
+                or path != f".github/workflows/{workflow}" or run.get("head_branch") != branch
                 or run.get("event") != "workflow_dispatch"
                 or (run.get("status"), run.get("conclusion")) != ("completed", "success")
                 or not isinstance(attempt, int) or attempt < 1
-                or not re.fullmatch(r"[0-9a-f]{40}", revision)):
-            rejected.append(f"run {run_id} is not a successful main Build of {workflow} with valid provenance")
+                or not re.fullmatch(r"[0-9a-f]{40}", revision)
+                or (expected_revision and revision != expected_revision)):
+            rejected.append(f"run {run_id} is not a successful {branch} Build of {workflow} with valid provenance")
             continue
 
         run_path = f"{base}/runs/{run_id}"
@@ -72,7 +75,7 @@ def resolve(repo, workflow, override="", *, request=api):
                     continue
                 provenance = artifact.get("workflow_run")
                 if provenance is not None and (provenance.get("id"), provenance.get("head_sha"),
-                                               provenance.get("head_branch")) != (run_id, revision, "main"):
+                                               provenance.get("head_branch")) != (run_id, revision, branch):
                     continue
                 if isinstance(artifact.get("id"), int) and artifact["id"] > 0:
                     matches.append(artifact["id"])
@@ -104,7 +107,11 @@ def resolve(repo, workflow, override="", *, request=api):
 def main():
     repo = os.environ["GITHUB_REPOSITORY"]
     try:
-        build = resolve(repo, os.environ["BUILD_WORKFLOW"], os.environ.get("BUILD_RUN_ID", ""))
+        if os.environ["GITHUB_REF_TYPE"] != "branch":
+            raise ValueError("Dispatch package validation from a branch.")
+        branch = os.environ["GITHUB_REF_NAME"]
+        build = resolve(repo, os.environ["BUILD_WORKFLOW"], os.environ.get("BUILD_RUN_ID", ""), branch=branch,
+                        expected_revision=os.environ["GITHUB_SHA"] if branch != "main" else "")
     except (ValueError, subprocess.CalledProcessError) as error:
         raise SystemExit(str(error)) from None
     print(f"Build {build['run_id']} attempt {build['attempt']} at {build['revision']}")

@@ -59,12 +59,15 @@ requirements. The tests then run with Docker networking disabled and the
 archive mounted read-only. The normal CUDA validation uses an external CUDA
 runtime to check loading and the CPU modes.
 
-Enable `run_gpu` in **Validate · Linux · CUDA** to also run the packaged
-CUDA example on a self-hosted Linux x64 runner labelled `cuda-13-0` and
-`gpu`. The job requires an SM 89 NVIDIA device and compatible driver.
+In private repositories, enable `run_gpu` in **Validate · Linux · CUDA** to
+run the packaged CUDA example on a self-hosted Linux x64 runner labelled
+`cuda-13-0` and `gpu`. The job requires an SM 89 NVIDIA device and compatible driver.
 It checks GPU utilization, GPU processes and vLLM before running CUDA.
 When it detects activity, it stops the GPU job before launching the example.
 The hosted runtime job finishes independently of GPU availability.
+In the public repository, the self-hosted GPU job is disabled. Verify device
+execution separately on an idle SM 89 GPU and record the tested archive's
+SHA-256 with the results.
 
 ### Build and validate all platforms
 
@@ -73,7 +76,7 @@ from `main`. It captures the dispatch commit, requests the four Build run IDs
 directly from GitHub, and waits for their jobs and five packages. It then
 dispatches each matching Validate workflow with its specific `build_run_id`.
 Both macOS architecture jobs must pass. Linux CUDA runs the hosted load and
-CPU checks, with device execution available separately through `run_gpu`. Run
+CPU checks. Device execution is a separate check of the exact archive. Run
 release packages with `BUILD.json` schema version `1`. Historical archives
 keep the metadata and hashes from their original build.
 
@@ -485,16 +488,18 @@ when explicitly requested.
 
 ## Install and run an extracted archive
 
-Extract the archive and enter `copylot-accelerated/`, which contains `requirements.txt`
-and `example.py`. Python 3.12 is recommended. The portable Linux CPU archive
-was also verified with distro Python 3.10 and 3.11.
+Extract the archive and enter `copylot-accelerated/`. Use its `requirements.txt`
+and a Python 3.12 environment. The portable Linux CPU archive was also verified
+with distro Python 3.10 and 3.11. Start with Quick Start when the archive includes
+it (v0.1.1). For v0.1.0, replace `quickstart.py` in the commands below with
+`example.py --mode refactored`.
 
 **Linux and macOS**
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python example.py --mode refactored
+.venv/bin/python quickstart.py
 ```
 
 **Windows PowerShell**
@@ -502,17 +507,21 @@ python3.12 -m venv .venv
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe example.py --mode refactored
+.\.venv\Scripts\python.exe quickstart.py
 ```
 
-Use the same interpreter with `--mode multicore --compare` or
-`--mode original --compare`. Original requires `diagnostics: true` in
-`BUILD.json`. Use `--mode cuda --compare` with the CUDA archive and a
-compatible GPU and driver.
-The example creates synthetic weather and a 12-heliostat field and evaluates
-one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows)
-in packages built with the updated example. For other programs, add the
-extracted `python/` directory to `PYTHONPATH` and use
+Quick Start evaluates one optical state on CPU. See the
+[Quick Start guide](../examples/quickstart/README.md). For the commercial case,
+follow the extracted `commercial_demo/README.md` to install Plotly and run the
+demo. See the [repository commands](../README.md#commercial-demo).
+
+For backend comparisons, run `example.py --compare-cpu-modes` with the same
+interpreter. Original requires `diagnostics: true` in `BUILD.json`. Run
+`example.py --mode cuda --compare` with the CUDA archive and a compatible GPU
+and driver. To check a single CPU mode, run `example.py --mode multicore --compare`
+or `example.py --mode original --compare`. CPU comparisons follow the
+[package validation policy above](#windows-and-macos-cpu-workflows).
+For your own scripts, add the extracted `python/` directory to `PYTHONPATH` and use
 `from copylot_accelerated import CoPylot`.
 
 The virtual environment manages Python packages. Install native runtimes such
@@ -531,10 +540,12 @@ The archive contains no host runtimes or Python wheels.
 The archive contains `lib/copylot_accelerated.so` on Linux and macOS or
 `lib/copylot_accelerated.dll` on Windows. It includes the loader
 `python/copylot_accelerated.py`, the pinned upstream Python modules including
-`python/copylot.py`, the example and Python requirements, the
+`python/copylot.py`, the validation script and Python requirements, the
 readme, `BUILD.json`, and the project and upstream license materials.
-It contains no compiled development objects, benchmark data, stored weather,
-or field files. `BUILD.json` has `schema_version: 1` and
+The teaching examples add the Quick Start script, synthetic weather and guide,
+plus a `commercial_demo/` directory with the pinned inputs documented in its README.
+This archive contains no benchmark results or compiled development objects.
+`BUILD.json` has `schema_version: 1` and
 `package_name: copylot-accelerated`. It records the full source revision, dirty
 status, pinned dependency revisions, platform, toolchain, library path and build
 options. A dirty checkout is also labelled in the CI archive name. Use separate

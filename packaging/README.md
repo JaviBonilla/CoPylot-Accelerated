@@ -16,17 +16,14 @@ CoPylot-Accelerated when reusing this documentation under CC BY 4.0.
 ## Run from the extracted directory
 
 Open the extracted `copylot-accelerated/` directory containing `requirements.txt`
-and `example.py`. Python 3.12
-is recommended on the matching OS and CPU architecture. The portable Linux CPU
-archive was also tested with distro Python 3.10 and 3.11. The example generates
-a small field and synthetic weather in a temporary directory.
+and `quickstart.py`. Use Python 3.12 on the matching OS and CPU architecture.
 
 **Linux and macOS**
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python example.py --mode refactored
+.venv/bin/python quickstart.py
 ```
 
 **Windows PowerShell**
@@ -34,13 +31,33 @@ python3.12 -m venv .venv
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe example.py --mode refactored
+.\.venv\Scripts\python.exe quickstart.py
 ```
 
-Use the same interpreter with `--mode multicore --compare` or
-`--mode original --compare` to compare with a fresh single-thread Refactored
-run. Original requires `diagnostics: true` in `BUILD.json`. Use
-`--mode cuda --compare` with a CUDA-enabled bundle and a compatible GPU.
+Quick Start runs one optical calculation for 12 synthetic heliostats on one CPU
+thread. The weather CSV is required for layout preparation. The optical
+calculation uses the explicitly set sun position and irradiance (DNI). It
+prints field optical efficiency, absorbed receiver power (kW), peak incident
+flux (kW/m²) and the 25 × 25 flux grid. See [QUICKSTART.md](QUICKSTART.md).
+
+## Run the Commercial Demo
+
+The advanced example uses the bundled 8,790-heliostat reference case and
+generates an offline HTML report. Use the same Python environment.
+
+```sh
+.venv/bin/python -m pip install -r commercial_demo/requirements.txt
+.venv/bin/python commercial_demo/commercial_demo.py --no-open
+```
+
+On Windows, use the same `.\.venv\Scripts\python.exe` as above. See
+[the Commercial Demo guide](commercial_demo/README.md) for backend selection,
+inputs and outputs. Once the Python requirements have been installed, both
+examples run without internet access or a source checkout.
+
+`example.py` is the packaged validation script. Use
+`python example.py --compare-cpu-modes` to compare CPU modes or
+`python example.py --mode cuda --compare` on a CUDA build with a compatible GPU.
 
 For your own Python script, add the extracted `python/` directory to
 `PYTHONPATH` and use `from copylot_accelerated import CoPylot`. This loader locates
