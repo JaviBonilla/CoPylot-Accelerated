@@ -56,8 +56,9 @@ Data and generated evidence
 
 The commercial case uses the pinned SSC 8790-heliostat coordinate table and
 the SolarPILOT Daggett TMY2 weather file. Their paths, revisions and provenance
-are in cases/commercial-reference/case_manifest.json. The raw layout and
-weather files stay in the dependency checkouts. Source terms also continue
+are in cases/commercial-reference/case_manifest.json. The commercial demo
+archives include pinned layout, weather and definitions files from those
+checkouts, with attribution in commercial_demo/README.md. Source terms continue
 to apply to imported parameters in the case manifest, upstream receiver
 settings in benchmarks/results/phase3a-reference-inventory.json, and
 imported geometry and input settings in the Phase 3A commercial case and

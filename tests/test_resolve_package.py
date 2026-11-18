@@ -26,7 +26,7 @@ def artifacts(build, workflow=LINUX):
     run_id, attempt = build["id"], build["run_attempt"]
     return [{"name": f"copylot-accelerated-{backend}-{platform}-{run_id}-{attempt}", "id": run_id * 10 + index,
              "expired": False, "expires_at": "2099-01-01T00:00:00Z",
-             "workflow_run": {"id": run_id, "head_sha": build["head_sha"], "head_branch": "main"}}
+             "workflow_run": {"id": run_id, "head_sha": build["head_sha"], "head_branch": build["head_branch"]}}
             for index, platform in enumerate(platforms, start=1)]
 
 
@@ -123,3 +123,20 @@ class ResolvePackage(unittest.TestCase):
         with patch("resolve_package.subprocess.check_output", return_value=json.dumps(pages).encode()) as gh:
             self.assertEqual(api("endpoint", "artifacts"), [{"id": 1}, {"id": 2}])
         gh.assert_called_once_with(["gh", "api", "--paginate", "--slurp", "endpoint"])
+
+    def test_branch_validation_requires_explicit_build_at_same_commit(self):
+        branch = "codex/commercial-simulation-demo"
+        target = run(21, MACOS, head_branch=branch)
+        self.setup_runs(target, workflow=MACOS)
+        intel, arm = artifacts(target, MACOS)
+        self.add_artifacts(target, [intel, arm])
+        self.add_completed_jobs(target, "2026-11-05T12:10:00Z")
+        args = {"branch": branch, "expected_revision": REVISION, "request": self.request}
+        with self.assertRaisesRegex(ValueError, "requires an explicit Build Run ID"):
+            resolve(REPO, MACOS, **args)
+        with self.assertRaisesRegex(ValueError, "valid provenance"):
+            resolve(REPO, MACOS, "21", **{**args, "expected_revision": "0" * 40})
+        self.assertEqual(set(resolve(REPO, MACOS, "21", **args)["artifacts"]), {"macos-x86_64", "macos-arm64"})
+        self.add_artifacts(target, [intel, {**arm, "workflow_run": {**arm["workflow_run"], "head_branch": "main"}}])
+        with self.assertRaisesRegex(ValueError, "needs one unexpired artifact"):
+            resolve(REPO, MACOS, "21", **args)

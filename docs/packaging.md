@@ -509,9 +509,11 @@ Use the same interpreter with `--mode multicore --compare` or
 `--mode original --compare`. Original requires `diagnostics: true` in
 `BUILD.json`. Use `--mode cuda --compare` with the CUDA archive and a
 compatible GPU and driver.
-The example creates synthetic weather and a 12-heliostat field and evaluates
-one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows)
-in packages built with the updated example. For other programs, add the
+The validation script creates synthetic weather and a 12-heliostat field and evaluates
+one optical state. CPU comparisons apply the [package validation policy above](#windows-and-macos-cpu-workflows).
+In archives with the teaching examples, run `python quickstart.py` for the
+synthetic CPU case. Use `commercial_demo/README.md` to install the report
+dependency and run the commercial case. For other programs, add the
 extracted `python/` directory to `PYTHONPATH` and use
 `from copylot_accelerated import CoPylot`.
 
@@ -531,10 +533,12 @@ The archive contains no host runtimes or Python wheels.
 The archive contains `lib/copylot_accelerated.so` on Linux and macOS or
 `lib/copylot_accelerated.dll` on Windows. It includes the loader
 `python/copylot_accelerated.py`, the pinned upstream Python modules including
-`python/copylot.py`, the example and Python requirements, the
+`python/copylot.py`, the validation script and Python requirements, the
 readme, `BUILD.json`, and the project and upstream license materials.
-It contains no compiled development objects, benchmark data, stored weather,
-or field files. `BUILD.json` has `schema_version: 1` and
+The teaching examples add two Quick Start files and a `commercial_demo/`
+directory with the pinned inputs documented in its README. This archive
+contains no benchmark results or compiled development objects.
+`BUILD.json` has `schema_version: 1` and
 `package_name: copylot-accelerated`. It records the full source revision, dirty
 status, pinned dependency revisions, platform, toolchain, library path and build
 options. A dirty checkout is also labelled in the CI archive name. Use separate

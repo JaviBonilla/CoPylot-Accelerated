@@ -5,16 +5,16 @@ import hashlib
 import json
 from pathlib import Path
 import numpy as np
-from cases import ROOT, api
 from receiver_grid import physical_grid
 
+ROOT=Path(__file__).resolve().parents[1]
 MANIFEST=ROOT/'cases/commercial-reference/case_manifest.json'
 
 
-def load_manifest(path=MANIFEST):
+def load_manifest(path=MANIFEST, *, asset_root=ROOT):
     data=json.loads(Path(path).read_text())
     for asset in data['assets'].values():
-        if hashlib.sha256((ROOT/asset['path']).read_bytes()).hexdigest()!=asset['sha256']:
+        if hashlib.sha256((asset_root/asset['path']).read_bytes()).hexdigest()!=asset['sha256']:
             raise ValueError('Pinned public asset hash changed')
     for p in data['parameters'].values():
         if p['classification'] not in ['published','derived','assumed'] or p['source'] not in data['sources']:
@@ -22,20 +22,30 @@ def load_manifest(path=MANIFEST):
     return data
 
 
-def coordinates(manifest):
-    xy=np.loadtxt(ROOT/manifest['assets']['layout']['path'],delimiter=',')
+def coordinates(manifest, *, asset_root=ROOT):
+    xy=np.loadtxt(asset_root/manifest['assets']['layout']['path'],delimiter=',')
     if xy.shape!=(manifest['heliostats']['count'],2) or not np.isfinite(xy).all():
         raise ValueError('Invalid public coordinate table')
     return np.column_stack([np.zeros(len(xy)),xy,np.full(len(xy),manifest['heliostats']['z_m'])])
 
 
+def layout_settings(manifest, nx, ny, point):
+    """Return the pinned numeric inputs, including the initial point for layout assignment."""
+    settings = {name: parameter["value"] for name, parameter in manifest["parameters"].items()}
+    settings.update({
+        "fluxsim.0.x_res": nx,
+        "fluxsim.0.y_res": ny,
+        "fluxsim.0.flux_solar_az_in": point["azimuth_deg"],
+        "fluxsim.0.flux_solar_el_in": point["elevation_deg"],
+        "fluxsim.0.flux_dni": point["dni_w_m2"],
+    })
+    return settings
+
+
 def configure(cp,context,manifest,nx,ny,point):
     if not cp.data_set_string(context,'ambient.0.weather_file',str(ROOT/manifest['assets']['weather']['path'])):
         raise RuntimeError('Cannot configure public climate asset')
-    settings={k:p['value'] for k,p in manifest['parameters'].items()}
-    settings.update({'fluxsim.0.x_res':nx,'fluxsim.0.y_res':ny,'fluxsim.0.flux_solar_az_in':point['azimuth_deg'],
-                     'fluxsim.0.flux_solar_el_in':point['elevation_deg'],'fluxsim.0.flux_dni':point['dni_w_m2']})
-    for k,value in settings.items():
+    for k,value in layout_settings(manifest,nx,ny,point).items():
         if not cp.data_set_number(context,k,value):raise RuntimeError('Cannot set '+k)
     positions=coordinates(manifest)
     if not cp.assign_layout(context,positions.tolist(),nthreads=1):raise RuntimeError('Cannot assign public layout')
@@ -72,6 +82,8 @@ def sanity(cp,context,manifest,positions):
 
 
 def main():
+    from cases import api
+
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--save-spt',type=Path);args=parser.parse_args();m=load_manifest();cp=api();r=cp.data_create()
     try:
