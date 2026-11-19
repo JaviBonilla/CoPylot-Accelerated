@@ -154,9 +154,17 @@ checked bitwise. [Package validation policy](docs/packaging.md#windows-and-macos
 
 ## Citation
 
-For work that uses CoPylot-Accelerated, cite Javier Bonilla, the software name and
-the exact release tag or Git commit used. Cite M. J. Wagner and T. Wendelin
-(2018) for the underlying optical software. [SolarPILOT(TM) paper](https://doi.org/10.1016/j.solener.2018.06.063)
+If you use CoPylot-Accelerated in your research, cite the version you used.
+For a build from source, include the exact Git commit SHA.
+
+> Bonilla, J. (2026). *CoPylot-Accelerated* (Version v0.1.1) [Computer software]. [GitHub release v0.1.1](https://github.com/JaviBonilla/CoPylot-Accelerated/releases/tag/v0.1.1)
+
+Please also cite the papers describing the optical model and the Python interface.
+
+- **SolarPILOT optical model.** Wagner, M. J., & Wendelin, T. (2018). *Solar Energy*, 171, 185–196. [DOI](https://doi.org/10.1016/j.solener.2018.06.063)
+- **CoPylot Python API.** Hamilton, W. T., Wagner, M. J., & Zolan, A. J. (2022). *Journal of Solar Energy Engineering*, 144(3), 030906. [DOI](https://doi.org/10.1115/1.4053973)
+
+Citation formats, including BibTeX and RIS, are available in the [project citation guide](https://copylot-accelerated.github.io/docs/#citation).
 
 ## Acknowledgements
 
